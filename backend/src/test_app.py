@@ -20,12 +20,3 @@ class AppTest(unittest.TestCase):
 
     def tearDown(self):
         pass
-
-    def test_set_username_cookie(self):
-        result = self.app.post('/setcookie', data=dict(username='james'))
-        self.assertEqual(result.status_code, 302)
-
-    def test_render_homepage(self):
-        result = self.app.get('/')
-        self.assertEqual(result.status_code, 200)
-        self.assertTrue("Welcome" in str(result.data))

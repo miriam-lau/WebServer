@@ -6,7 +6,7 @@
   float:left;
 }
 
-.login-form {
+.login-bar {
   float: right;
 }
 
@@ -14,7 +14,7 @@
   clear: both;
 }
 
-.login-form form {
+.login-bar form {
   margin: 0px;
   padding: 0px;
   display: inline;

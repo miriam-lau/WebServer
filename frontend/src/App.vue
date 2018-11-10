@@ -4,6 +4,9 @@
   </div>
 </template>
 
+<style>
+  @import "./assets/style/style.css"
+</style>
 <script>
 export default {
   name: 'App'
