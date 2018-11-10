@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def render_homepage():
-    username = "guest"
+    username = DEFAULT_USERNAME
     if USERNAME_COOKIE_NAME in request.cookies:
         username = request.cookies.get(USERNAME_COOKIE_NAME)
     return render_template('homepage.html', **locals())
