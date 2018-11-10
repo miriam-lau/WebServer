@@ -1,8 +1,32 @@
-Welcome, {{username}}!<br/>
 <html>
+  <head>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
   <body>
-    <form action = "/setcookie" method = "POST">
-      Change username: <input type='text' name='username'/> <input type='submit' value='Change'/>
-    </form>
+    <div id="app">
+      <div class="welcome-bar">
+        <div class="welcome-message">
+          ${ message }
+        </div>
+        <div class="login-form">
+          <form class="login-form" action = "/setcookie" method = "POST">
+            Change username: <input type='text' name='username' placeholder='Username'/> <input type='submit' value='Login'/>
+          </form>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+    </div>
   </body>
 </html>
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+var app = new Vue({
+  delimiters:['${', '}'],
+  el: '#app',
+  data: {
+    message: 'Welcome, {{username}}!'
+  }
+});
+</script>
