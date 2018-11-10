@@ -1,0 +1,21 @@
+.welcome-bar {
+  background-color: #e6e6ff;
+}
+
+.welcome-message {
+  float:left;
+}
+
+.login-form {
+  float: right;
+}
+
+.clearfix {
+  clear: both;
+}
+
+.login-form form {
+  margin: 0px;
+  padding: 0px;
+  display: inline;
+}
