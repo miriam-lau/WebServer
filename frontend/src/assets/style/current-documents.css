@@ -1,0 +1,38 @@
+.current-documents {
+}
+
+.current-documents-title {
+  display: flex;
+  background-color: yellow;
+  justify-content: center;
+}
+
+.table {
+  width: 100%;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  margin: auto;
+}
+
+.table td, .table th {
+  padding: 8px;
+}
+
+.table td, .table th {
+  border: 1px solid #ddd;
+}
+
+.table tr:nth-child(even){background-color: #f2f2f2;}
+
+.table tr:hover {background-color: #ddd;}
+
+.table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: blue;
+  color: white;
+}
+
+.current-documents-edit:hover, .current-documents-cancel:hover, .current-documents-trash:hover {
+  cursor: pointer;
+}
