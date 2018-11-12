@@ -75,13 +75,14 @@ export default {
       Vue.set(this.currentDocuments[id], 'editable', true)
     },
     deleteRow (id) {
-      Vue.delete(this.currentDocuments, id)
-      axios.post(DELETE_DOCUMENT_URL, {id: id})
+      axios.post(DELETE_DOCUMENT_URL, {id: id}).then(
+        response => {
+          Vue.delete(this.currentDocuments, response.data.id)
+        })
     },
     cancelEditRow (id) {
       Vue.set(this.currentDocuments[id], 'editable', false)
     },
-    // TODO: Handle errors in axios saving for all endpoints.
     saveRow (id) {
       var document = this.currentDocuments[id]
       document.title = this._gev('current-document-title-' + id)
@@ -90,8 +91,10 @@ export default {
       document.category = this._gev('current-document-category-' + id)
       document.notes = this._gev('current-document-notes-' + id)
       document.editable = false
-      Vue.set(this.currentDocuments, id, document)
-      axios.post(EDIT_DOCUMENT_URL, {id: id, document: document})
+      axios.post(EDIT_DOCUMENT_URL, {id: id, document: document}).then(
+        response => {
+          Vue.set(this.currentDocuments, id, response.data.document)
+        })
     },
     addRow () {
       var document = {}
@@ -104,7 +107,6 @@ export default {
       axios.post(ADD_DOCUMENT_URL, {document: document}).then(
         response => {
           var id = response.data.id
-          console.log(response.data)
           document.id = id
           Vue.set(this.currentDocuments, id, document)
         })
