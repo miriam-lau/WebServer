@@ -1,27 +1,39 @@
 <template>
-  <div class="welcome-bar">
-    <div class="welcome-message">
-      Welcome, {{ username }}
+  <div>
+    <div class="welcome-bar">
+      <div class="welcome-message">
+        Welcome, {{ $store.state.username }}
+      </div>
+      <div class="login-bar">
+        <input v-model="loginUsername" placeholder='Username'/> <button v-on:click="saveUsername">Login</button>
+      </div>
+      <div class="clearfix"></div>
     </div>
-    <div class="login-bar">
-      <input v-model="loginUsername" placeholder='Username'/> <button v-on:click="saveUsername">Login</button>
-    </div>
-    <div class="clearfix"></div>
+    <Codenames />
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+import Codenames from './Codenames'
+
 export default {
   name: 'Home',
   data () {
     return {
-      username: this.$cookies.get('username'),
       loginUsername: ''
     }
   },
+  created: function () {
+    this.setUsername(this.$cookies.get('username'))
+  },
+  components: {
+    Codenames
+  },
   methods: {
+    ...mapMutations(['setUsername']),
     saveUsername () {
-      this.username = this.loginUsername
+      this.setUsername(this.loginUsername)
       this.$cookies.set('username', this.loginUsername)
     }
   }
