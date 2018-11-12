@@ -37,7 +37,7 @@ def delete_document():
     cur.execute("DELETE from current_documents where id = %s", (id,))
     conn.commit()
     cur.close()
-    return ""
+    return jsonify({"id": str(id)})
 
 
 @app.route("/edit_document", methods=["POST"])
@@ -50,7 +50,7 @@ def edit_document():
         (document['title'], document['url'], document['priority'], document['category'], document['notes'], id))
     conn.commit()
     cur.close()
-    return ""
+    return jsonify({"document": document})
 
 
 @app.route("/add_document", methods=["POST"])
