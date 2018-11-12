@@ -9,13 +9,13 @@
       </div>
       <div class="clearfix"></div>
     </div>
-    <Codenames />
+    <CurrentDocuments/>
   </div>
 </template>
 
 <script>
+import CurrentDocuments from './CurrentDocuments'
 import { mapMutations } from 'vuex'
-import Codenames from './Codenames'
 
 export default {
   name: 'Home',
@@ -24,11 +24,11 @@ export default {
       loginUsername: ''
     }
   },
-  created: function () {
+  created () {
     this.setUsername(this.$cookies.get('username'))
   },
   components: {
-    Codenames
+    CurrentDocuments
   },
   methods: {
     ...mapMutations(['setUsername']),
