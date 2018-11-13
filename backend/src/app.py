@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
 from flask_socketio import SocketIO, join_room, emit
-import psycopg2
-from psycopg2.extras import RealDictCursor
 from flask_cors import CORS
+from .database.database import Database
 
 
 # Must correspond to what is used in Vue.
@@ -14,18 +13,19 @@ DOCUMENT_REQUEST_NAME = "document"
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app)
-conn = None
+database = None
 
+
+# Current documents methods -------------------------------------------------------------------------------------
 
 # TODO: This is totally insecure.
 @app.route("/get_current_documents", methods=["POST"])
 def get_current_documents():
     username = request.json[USERNAME_REQUEST_NAME]
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT * from current_documents where username = %s", (username,))
-    ret = {}
+    current_documents = database.execute_query("SELECT * from current_documents where username = %s", (username,))
 
-    for current_document in cur.fetchall():
+    ret = {}
+    for current_document in current_documents:
         ret[current_document["id"]] = current_document
     return jsonify(ret)
 
@@ -33,26 +33,21 @@ def get_current_documents():
 @app.route("/delete_document", methods=["POST"])
 def delete_document():
     id = request.json[ID_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute("DELETE from current_documents where id = %s", (id,))
-    conn.commit()
-    cur.close()
-    return jsonify({"id": str(id)})
+    deleted_id = database.execute_commit_with_return("DELETE from current_documents where id = %s RETURNING id", (id,))
+    print(deleted_id)
+    return jsonify({"id": str(deleted_id[0])})
 
 
 @app.route("/edit_document", methods=["POST"])
 def edit_document():
     id = request.json[ID_REQUEST_NAME]
     document = request.json[DOCUMENT_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute(
+    document_values = database.execute_commit_with_return(
         "UPDATE current_documents SET title = %s, url = %s, priority = %s, category = %s, notes = %s " +
         "where id = %s RETURNING *",
         (document['title'], document['url'], document['priority'], document['category'], document['notes'], id))
-    document_values = cur.fetchone()
-    conn.commit()
-    cur.close()
-    ret = {}
+    print(document_values)
+    ret = dict()
     ret['id'] = document_values[0]
     ret['username'] = document_values[1]
     ret['title'] = document_values[2]
@@ -66,21 +61,18 @@ def edit_document():
 @app.route("/add_document", methods=["POST"])
 def add_document():
     document = request.json[DOCUMENT_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute(
+    id = database.execute_commit_with_return(
         "INSERT INTO current_documents(title, username, url, priority, category, notes) " +
         "VALUES(%s, %s, %s, %s, %s, %s) RETURNING id",
         (document['title'], document['username'], document['url'], document['priority'], document['category'],
          document['notes']))
-    id = cur.fetchone()[0]
-    conn.commit()
-    cur.close()
-    return jsonify({"id": str(id)})
+    return jsonify({"id": str(id[0])})
 
 
+# Initialize app ----------------------------------------------------------------------------------------------
 def initialize_app():
-    global conn
-    conn = psycopg2.connect(host="localhost", database="james", user="james", password="password")
+    global database
+    database = Database()
 
 
 initialize_app()

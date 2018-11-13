@@ -10,10 +10,12 @@
       <div class="clearfix"></div>
     </div>
     <CurrentDocuments/>
+    <Codenames/>
   </div>
 </template>
 
 <script>
+import Codenames from './Codenames'
 import CurrentDocuments from './CurrentDocuments'
 import { mapMutations } from 'vuex'
 
@@ -28,7 +30,7 @@ export default {
     this.setUsername(this.$cookies.get('username'))
   },
   components: {
-    CurrentDocuments
+    CurrentDocuments, Codenames
   },
   methods: {
     ...mapMutations(['setUsername']),

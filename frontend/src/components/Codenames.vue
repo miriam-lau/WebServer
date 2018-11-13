@@ -32,7 +32,9 @@
     </div>
   </div>
 </template>
-
+<style>
+  @import "../assets/style/codenames.css"
+</style>
 <script>
 import { mapGetters } from 'vuex'
 
