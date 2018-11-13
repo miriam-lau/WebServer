@@ -46,11 +46,21 @@ def edit_document():
     document = request.json[DOCUMENT_REQUEST_NAME]
     cur = conn.cursor()
     cur.execute(
-        "UPDATE current_documents SET title = %s, url = %s, priority = %s, category = %s, notes = %s where id = %s",
+        "UPDATE current_documents SET title = %s, url = %s, priority = %s, category = %s, notes = %s " +
+        "where id = %s RETURNING *",
         (document['title'], document['url'], document['priority'], document['category'], document['notes'], id))
+    document_values = cur.fetchone()
     conn.commit()
     cur.close()
-    return jsonify({"document": document})
+    ret = {}
+    ret['id'] = document_values[0]
+    ret['username'] = document_values[1]
+    ret['title'] = document_values[2]
+    ret['priority'] = document_values[3]
+    ret['category'] = document_values[4]
+    ret['url'] = document_values[5]
+    ret['notes'] = document_values[6]
+    return jsonify({"document": ret})
 
 
 @app.route("/add_document", methods=["POST"])
