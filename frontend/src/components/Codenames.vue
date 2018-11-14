@@ -205,9 +205,9 @@ export default {
           hint_word: this.newHintWord,
           hint_number: this.newHintNumber
         }).then(response => {
-          this.newHintWord = ''
-          this.newHintNumber = 0
-        })
+        this.newHintWord = ''
+        this.newHintNumber = 0
+      })
     },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
