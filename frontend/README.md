@@ -25,8 +25,9 @@ sudo pip3 install -U flask-cors
 sudo npm i --save @fortawesome/fontawesome-svg-core
 sudo  npm i --save @fortawesome/free-solid-svg-icons
 sudo  npm i --save @fortawesome/vue-fontawesome
-sudo npm install socket.io-client vue-socket.io --save
-sudo npm install socket.io --save
+sudo npm install --save @fortawesome/vue-fontawesome
+sudo npm install socket.io-client vue-socket.io --save // Might not need to do this.
+sudo npm install socket.io --save // Might not need to do this.
 
 ``` bash
 # install dependencies
