@@ -27,15 +27,15 @@
   margin: 1px;
 }
 
-.codenames-agent-board {
+.codenames-location-board {
   float: right;
 }
 
-.codenames-agent-row {
+.codenames-location-row {
   clear:both;
 }
 
-.codenames-agent-item {
+.codenames-location-item {
   display: flex;
   align-items: center;
   height: 30px;
@@ -51,9 +51,49 @@
   justify-content: center;
 }
 
-.codenames-action-line {
+.codenames-action-line, .codenames-new-game-line, .codenames-status-line {
   clear: both;
   display: flex;
   background-color: pink;
   justify-content: center;
+}
+
+.codenames-status-line {
+  background-color: yellow;
+}
+
+.codenames-locationtype-assassin {
+  background-color: black;
+}
+
+.codenames-locationtype-agent {
+  background-color: green;
+}
+
+.codenames-locationtype-bystander, .codenames-word-status-unchecked {
+  background-color: white;
+}
+
+.codenames-word-status-unchecked {
+  background-color: white;
+}
+
+.codenames-word-status-agent_found {
+  background-color: green;
+}
+
+.codenames-word-status-player_1_hit_bystander {
+  background: linear-gradient(white, yellow);
+}
+
+.codenames-word-status-player_2_hit_bystander {
+  background: linear-gradient(yellow, white);
+}
+
+.codenames-word-status-both_players_hit_bystanders {
+  background-color: yellow;
+}
+
+.codenames-word-status-assassin_found {
+  background-color: black;
 }

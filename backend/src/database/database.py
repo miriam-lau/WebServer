@@ -1,5 +1,6 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from typing import Tuple, List
 
 
 class Database:
@@ -12,7 +13,7 @@ class Database:
         self.conn = psycopg2.connect(
             host=Database.HOST, database=Database.DATABASE, user=Database.USER, password=Database.PASSWORD)
 
-    def execute_query(self, sql, values):
+    def execute_query(self, sql, values) -> List:
         cur = self.conn.cursor(cursor_factory=RealDictCursor)
         cur.execute(sql, values)
         return cur.fetchall()
@@ -23,7 +24,7 @@ class Database:
         self.conn.commit()
         cur.close()
 
-    def execute_commit_with_return(self, sql, values):
+    def execute_commit_with_return(self, sql, values) -> Tuple:
         cur = self.conn.cursor()
         cur.execute(sql, values)
         ret = cur.fetchone()

@@ -46,10 +46,10 @@ import axios from 'axios'
 import { mapGetters } from 'vuex'
 import Vue from 'vue'
 
-const GET_CURRENT_DOCUMENTS_URL = 'http://localhost:5000/get_current_documents'
-const DELETE_DOCUMENT_URL = 'http://localhost:5000/delete_document'
-const EDIT_DOCUMENT_URL = 'http://localhost:5000/edit_document'
-const ADD_DOCUMENT_URL = 'http://localhost:5000/add_document'
+const GET_CURRENT_DOCUMENTS_URL = 'http://' + window.location.hostname + ':5000/get_current_documents'
+const DELETE_DOCUMENT_URL = 'http://' + window.location.hostname + ':5000/delete_document'
+const EDIT_DOCUMENT_URL = 'http://' + window.location.hostname + ':5000/edit_document'
+const ADD_DOCUMENT_URL = 'http://' + window.location.hostname + ':5000/add_document'
 
 export default {
   name: 'CurrentDocuments',
