@@ -13,8 +13,10 @@
           <td><input :id="'current-document-category-' + currentDocument.id" :value="currentDocument.category"/></td>
           <td><input :id="'current-document-notes-' + currentDocument.id" :value="currentDocument.notes"/></td>
           <td><font-awesome-icon icon="save" class="current-documents-edit" @click="saveRow(currentDocument.id)" /></td>
-          <td><font-awesome-icon icon="times" class="current-documents-cancel" @click="cancelEditRow(currentDocument.id)" /></td>
-          <td><font-awesome-icon icon="trash" class="current-documents-trash" @click="deleteRow(currentDocument.id)" /></td>
+          <td><font-awesome-icon icon="times" class="current-documents-cancel"
+              @click="cancelEditRow(currentDocument.id)" /></td>
+          <td><font-awesome-icon icon="trash" class="current-documents-trash"
+              @click="deleteRow(currentDocument.id)" /></td>
         </template>
         <template v-else>
           <td>{{ currentDocument.title }}</td>
@@ -22,9 +24,11 @@
           <td>{{ currentDocument.priority }}</td>
           <td>{{ currentDocument.category }}</td>
           <td>{{ currentDocument.notes }}</td>
-          <td><font-awesome-icon icon="pencil-alt" class="current-documents-edit" @click="makeRowEditable(currentDocument.id)" /></td>
+          <td><font-awesome-icon icon="pencil-alt" class="current-documents-edit"
+              @click="makeRowEditable(currentDocument.id)" /></td>
           <td></td>
-          <td><font-awesome-icon icon="trash" class="current-documents-trash" @click="deleteRow(currentDocument.id)" /></td>
+          <td><font-awesome-icon icon="trash" class="current-documents-trash"
+              @click="deleteRow(currentDocument.id)" /></td>
         </template>
       </tr>
       <tr class="current-documents-item">
@@ -43,13 +47,14 @@
 </style>
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { getFullBackendUrlForPath, getValueOfElementWithDefault } from '../common/utils'
+import { store } from '../store/store'
 import Vue from 'vue'
 
-const GET_CURRENT_DOCUMENTS_URL = 'http://localhost:5000/get_current_documents'
-const DELETE_DOCUMENT_URL = 'http://localhost:5000/delete_document'
-const EDIT_DOCUMENT_URL = 'http://localhost:5000/edit_document'
-const ADD_DOCUMENT_URL = 'http://localhost:5000/add_document'
+const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
+const DELETE_DOCUMENT_URL = getFullBackendUrlForPath('/delete_document')
+const EDIT_DOCUMENT_URL = getFullBackendUrlForPath('/edit_document')
+const ADD_DOCUMENT_URL = getFullBackendUrlForPath('/add_document')
 
 export default {
   name: 'CurrentDocuments',
@@ -59,16 +64,27 @@ export default {
     }
   },
   created () {
-    this.getCurrentDocumentsData()
+    this.updateCurrentDocumentsDisplay()
+  },
+  computed: {
+    username () {
+      return store.state.username
+    }
+  },
+  watch: {
+    username () {
+      this.updateCurrentDocumentsDisplay()
+    }
   },
   methods: {
-    ...mapGetters(['getUsername']),
-    getCurrentDocumentsData () {
-      axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.getUsername()}).then(
+    updateCurrentDocumentsDisplay () {
+      axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
+          var newCurrentDocuments = {}
           for (var id in response.data) {
-            Vue.set(this.currentDocuments, id, response.data[id])
+            newCurrentDocuments[id] = response.data[id]
           }
+          this.currentDocuments = newCurrentDocuments
         })
     },
     makeRowEditable (id) {
@@ -85,11 +101,11 @@ export default {
     },
     saveRow (id) {
       var document = this.currentDocuments[id]
-      document.title = this._gev('current-document-title-' + id)
-      document.url = this._gev('current-document-url-' + id)
-      document.priority = this._gev('current-document-priority-' + id, 0)
-      document.category = this._gev('current-document-category-' + id)
-      document.notes = this._gev('current-document-notes-' + id)
+      document.title = getValueOfElementWithDefault('current-document-title-' + id)
+      document.url = getValueOfElementWithDefault('current-document-url-' + id)
+      document.priority = getValueOfElementWithDefault('current-document-priority-' + id, 0)
+      document.category = getValueOfElementWithDefault('current-document-category-' + id)
+      document.notes = getValueOfElementWithDefault('current-document-notes-' + id)
       document.editable = false
       axios.post(EDIT_DOCUMENT_URL, {id: id, document: document}).then(
         response => {
@@ -98,31 +114,18 @@ export default {
     },
     addRow () {
       var document = {}
-      document.username = this.getUsername()
-      document.title = this._gev('current-document-title-add')
-      document.url = this._gev('current-document-url-add')
-      document.priority = this._gev('current-document-priority-add', 0)
-      document.category = this._gev('current-document-category-add')
-      document.notes = this._gev('current-document-notes-add')
+      document.username = this.username
+      document.title = getValueOfElementWithDefault('current-document-title-add')
+      document.url = getValueOfElementWithDefault('current-document-url-add')
+      document.priority = getValueOfElementWithDefault('current-document-priority-add', 0)
+      document.category = getValueOfElementWithDefault('current-document-category-add')
+      document.notes = getValueOfElementWithDefault('current-document-notes-add')
       axios.post(ADD_DOCUMENT_URL, {document: document}).then(
         response => {
           var id = response.data.id
           document.id = id
           Vue.set(this.currentDocuments, id, document)
         })
-    },
-    _gel (id) {
-      return document.getElementById(id)
-    },
-    _gev (id, defaultValue) {
-      if (defaultValue === undefined) {
-        defaultValue = ''
-      }
-      var value = this._gel(id).value
-      if (value === '') {
-        return defaultValue
-      }
-      return value
     }
   }
 }

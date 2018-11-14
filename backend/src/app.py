@@ -1,76 +1,109 @@
 from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
 from flask_socketio import SocketIO, join_room, emit
-import psycopg2
-from psycopg2.extras import RealDictCursor
 from flask_cors import CORS
-
-
-# Must correspond to what is used in Vue.
-USERNAME_REQUEST_NAME = "username"
-ID_REQUEST_NAME = "id"
-DOCUMENT_REQUEST_NAME = "document"
+from src.database.database import Database
+from src.current_documents.current_documents import CurrentDocuments
+from src.codenames.codenames import Codenames
 
 
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app)
-conn = None
+database = None
+current_documents = None
+codenames = None
+
+
+# Initialize app ----------------------------------------------------------------------------------------------
+def initialize_app():
+    global database
+    global current_documents
+    global codenames
+    database = Database()
+    current_documents = CurrentDocuments(database)
+    codenames = Codenames(database)
+
+# Current documents methods -------------------------------------------------------------------------------------
 
 
 # TODO: This is totally insecure.
 @app.route("/get_current_documents", methods=["POST"])
 def get_current_documents():
-    username = request.json[USERNAME_REQUEST_NAME]
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT * from current_documents where username = %s", (username,))
-    ret = {}
-
-    for current_document in cur.fetchall():
-        ret[current_document["id"]] = current_document
-    return jsonify(ret)
+    username = request.json["username"]
+    return jsonify(current_documents.get_current_documents(username))
 
 
 @app.route("/delete_document", methods=["POST"])
 def delete_document():
-    id = request.json[ID_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute("DELETE from current_documents where id = %s", (id,))
-    conn.commit()
-    cur.close()
-    return jsonify({"id": str(id)})
+    document_id = request.json["id"]
+    return jsonify(current_documents.delete_document(document_id))
 
 
 @app.route("/edit_document", methods=["POST"])
 def edit_document():
-    id = request.json[ID_REQUEST_NAME]
-    document = request.json[DOCUMENT_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute(
-        "UPDATE current_documents SET title = %s, url = %s, priority = %s, category = %s, notes = %s where id = %s",
-        (document['title'], document['url'], document['priority'], document['category'], document['notes'], id))
-    conn.commit()
-    cur.close()
-    return jsonify({"document": document})
+    document_id = request.json["id"]
+    document = request.json["document"]
+    return jsonify(current_documents.edit_document(document_id, document))
 
 
 @app.route("/add_document", methods=["POST"])
 def add_document():
-    document = request.json[DOCUMENT_REQUEST_NAME]
-    cur = conn.cursor()
-    cur.execute(
-        "INSERT INTO current_documents(title, username, url, priority, category, notes) " +
-        "VALUES(%s, %s, %s, %s, %s, %s) RETURNING id",
-        (document['title'], document['username'], document['url'], document['priority'], document['category'],
-         document['notes']))
-    id = cur.fetchone()[0]
-    conn.commit()
-    cur.close()
-    return jsonify({"id": str(id)})
+    document = request.json["document"]
+    return jsonify(current_documents.add_document(document))
 
 
-def initialize_app():
-    global conn
-    conn = psycopg2.connect(host="localhost", database="james", user="james", password="password")
+# Codenames methods ----------------------------------------------------------------------------------------------
+
+# TODO: Make the socketio less hacky. It shouldn't update for everyone whenever a game state is changed.
+@app.route("/codenames_create_game", methods=["POST"])
+def codenames_create_game():
+    player1 = request.json["player1"]
+    player2 = request.json["player2"]
+    game_id = codenames.create_game(player1, player2)
+    _codenames_send_socketio_refresh(game_id)
+    return ""
+
+
+@app.route("/codenames_get_latest_game", methods=["POST"])
+def codenames_get_latest_game():
+    username = request.json["username"]
+    return jsonify(codenames.get_latest_game(username))
+
+
+@app.route("/codenames_give_hint", methods=["POST"])
+def codenames_give_hint():
+    game_id = request.json["game_id"]
+    player = request.json["username"]
+    hint_word = request.json["hint_word"]
+    hint_number = request.json["hint_number"]
+    codenames.give_hint(game_id, player, hint_word, hint_number)
+    _codenames_send_socketio_refresh(game_id)
+    return ""
+
+
+@app.route("/codenames_end_guesses", methods=["POST"])
+def codenames_end_guesses():
+    game_id = request.json["game_id"]
+    player = request.json["username"]
+    codenames.end_guesses(game_id, player)
+    _codenames_send_socketio_refresh(game_id)
+    return ""
+
+
+@app.route("/codenames_guess", methods=["POST"])
+def codenames_guess():
+    game_id = request.json["game_id"]
+    player = request.json["username"]
+    word = request.json["word"]
+    codenames.guess(game_id, player, word)
+    _codenames_send_socketio_refresh(game_id)
+    return ""
+
+
+# This is sent to all players in the current game to tell Vue to refresh the client.
+def _codenames_send_socketio_refresh(game_id):
+    players = codenames.get_players_in_game(game_id)
+    socketio.emit("refresh_codenames", {"players": players}, broadcast=True)
 
 
 initialize_app()
