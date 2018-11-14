@@ -110,9 +110,10 @@ export default {
   mounted () {
     var socket = io.connect('http://' + window.location.hostname + ':5000')
     var that = this
-    // message handler for the 'join_room' channel
-    socket.on('update_game_message', function (msg) {
-      that.getCodenamesLatestGame()
+    socket.on('refresh_codenames', function (data) {
+      if (data['players'].includes(that.getUsername())) {
+        that.getCodenamesLatestGame()
+      }
     })
   },
   methods: {

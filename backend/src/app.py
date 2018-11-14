@@ -59,8 +59,8 @@ def add_document():
 def codenames_create_game():
     player1 = request.json["player1"]
     player2 = request.json["player2"]
-    codenames.create_game(player1, player2)
-    socketio.emit("update_game_message", {}, broadcast=True)
+    game_id = codenames.create_game(player1, player2)
+    _codenames_send_socketio_refresh(game_id)
     return ""
 
 
@@ -77,7 +77,7 @@ def codenames_give_hint():
     hint_word = request.json["hint_word"]
     hint_number = request.json["hint_number"]
     codenames.give_hint(game_id, player, hint_word, hint_number)
-    socketio.emit("update_game_message", {}, broadcast=True)
+    _codenames_send_socketio_refresh(game_id)
     return ""
 
 
@@ -86,7 +86,7 @@ def codenames_end_guesses():
     game_id = request.json["game_id"]
     player = request.json["username"]
     codenames.end_guesses(game_id, player)
-    socketio.emit("update_game_message", {}, broadcast=True)
+    _codenames_send_socketio_refresh(game_id)
     return ""
 
 
@@ -96,8 +96,13 @@ def codenames_guess():
     player = request.json["username"]
     word = request.json["word"]
     codenames.guess(game_id, player, word)
-    socketio.emit("update_game_message", {}, broadcast=True)
+    _codenames_send_socketio_refresh(game_id)
     return ""
+
+
+def _codenames_send_socketio_refresh(game_id):
+    players = codenames.get_players_in_game(game_id)
+    socketio.emit("refresh_codenames", {"players": players}, broadcast=True)
 
 
 initialize_app()

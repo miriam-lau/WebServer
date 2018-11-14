@@ -10,7 +10,13 @@ class Codenames:
     def __init__(self, database):
         self._codenames_database = CodenamesDatabase(database)
 
-    def create_game(self, player1, player2):
+    def get_players_in_game(self, game_id) -> List[str]:
+        game = self._codenames_database.get_game(game_id)
+        if game is None:
+            return None
+        return [game[CodenamesDatabase.CODENAMES_GAMES_PLAYER1], game[CodenamesDatabase.CODENAMES_GAMES_PLAYER2]]
+
+    def create_game(self, player1, player2) -> int:
         game_id = self._codenames_database.add_game(player1, player2)
 
         words = self._get_words_for_new_game()
@@ -18,6 +24,7 @@ class Codenames:
 
         locations = Codenames._generate_locations()
         self._codenames_database.initialize_locations_for_game(game_id, player1, player2, locations)
+        return game_id
 
     # Returns a dict with keys "game", "turns_to_hints", "turns_to_guesses", "words_for_game",
     # and "locations_owned_by_player". These correspond to the keys of the corresponding tables.
