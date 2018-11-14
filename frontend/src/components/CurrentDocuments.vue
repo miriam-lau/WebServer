@@ -43,7 +43,7 @@
 </style>
 <script>
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { store } from '../store/store'
 import Vue from 'vue'
 
 const GET_CURRENT_DOCUMENTS_URL = 'http://' + window.location.hostname + ':5000/get_current_documents'
@@ -61,14 +61,25 @@ export default {
   created () {
     this.getCurrentDocumentsData()
   },
+  computed: {
+    username () {
+      return store.state.username
+    }
+  },
+  watch: {
+    username () {
+      this.getCurrentDocumentsData()
+    }
+  },
   methods: {
-    ...mapGetters(['getUsername']),
     getCurrentDocumentsData () {
-      axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.getUsername()}).then(
+      axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
+          var newCurrentDocuments = {}
           for (var id in response.data) {
-            Vue.set(this.currentDocuments, id, response.data[id])
+            newCurrentDocuments[id] = response.data[id]
           }
+          this.currentDocuments = newCurrentDocuments
         })
     },
     makeRowEditable (id) {
@@ -98,7 +109,7 @@ export default {
     },
     addRow () {
       var document = {}
-      document.username = this.getUsername()
+      document.username = this.username
       document.title = this._gev('current-document-title-add')
       document.url = this._gev('current-document-url-add')
       document.priority = this._gev('current-document-priority-add', 0)
