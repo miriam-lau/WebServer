@@ -54,12 +54,13 @@ def add_document():
 
 # Codenames methods ----------------------------------------------------------------------------------------------
 
+# TODO: Make the socketio less hacky. It shouldn't update for everyone whenever a game state is changed.
 @app.route("/codenames_create_game", methods=["POST"])
 def codenames_create_game():
-    username = request.json["username"]
     player1 = request.json["player1"]
     player2 = request.json["player2"]
     codenames.create_game(player1, player2)
+    socketio.emit("update_game_message", {}, broadcast=True)
     return ""
 
 
@@ -76,6 +77,7 @@ def codenames_give_hint():
     hint_word = request.json["hint_word"]
     hint_number = request.json["hint_number"]
     codenames.give_hint(game_id, player, hint_word, hint_number)
+    socketio.emit("update_game_message", {}, broadcast=True)
     return ""
 
 
@@ -84,6 +86,7 @@ def codenames_end_guesses():
     game_id = request.json["game_id"]
     player = request.json["username"]
     codenames.end_guesses(game_id, player)
+    socketio.emit("update_game_message", {}, broadcast=True)
     return ""
 
 
@@ -93,6 +96,7 @@ def codenames_guess():
     player = request.json["username"]
     word = request.json["word"]
     codenames.guess(game_id, player, word)
+    socketio.emit("update_game_message", {}, broadcast=True)
     return ""
 
 

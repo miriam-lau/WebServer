@@ -22,11 +22,11 @@
     </div>
     <div class="codenames-status-line">
       <span>Time tokens used: {{timeTokensUsed}}.</span>&nbsp;
-      <span v-if="assassinFound && gameOver">You lose.</span>
-      <span v-else-if="!assassinFound && gameOver">You win!</span>
+      <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
+      <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
     </div>
     <div v-if="turnType == 'guess'" class="codenames-given-hint">Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}</div>
-    <div class="codenames-action-line">
+    <div v-if="!gameOver" class="codenames-action-line">
       <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
         <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
       </div>
@@ -50,6 +50,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import * as io from 'socket.io-client'
+window.io = io
 
 const CODENAMES_CREATE_GAME_URL = 'http://' + window.location.hostname + ':5000/codenames_create_game'
 const CODENAMES_GET_LATEST_GAME_URL = 'http://' + window.location.hostname + ':5000/codenames_get_latest_game'
@@ -105,6 +107,14 @@ export default {
   created () {
     this.getCodenamesLatestGame()
   },
+  mounted () {
+    var socket = io.connect('http://' + window.location.hostname + ':5000')
+    var that = this
+    // message handler for the 'join_room' channel
+    socket.on('update_game_message', function (msg) {
+      that.getCodenamesLatestGame()
+    })
+  },
   methods: {
     ...mapGetters(['getUsername']),
     newGame () {
@@ -115,7 +125,7 @@ export default {
         username: this.getUsername(),
         player1: randomizedPlayers[0],
         player2: randomizedPlayers[1]
-      }).then(response => { this.getCodenamesLatestGame() })
+      })
     },
     endGuesses () {
       axios.post(
@@ -184,9 +194,11 @@ export default {
         this.codewords = newWords
 
         var turnsToHints = response.data['turns_to_hints']
-        var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
-        this.currentHintWord = currentTurnToHint['hint_word']
-        this.currentHintNumber = currentTurnToHint['hint_number']
+        if (turnsToHints.length !== 0) {
+          var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
+          this.currentHintWord = currentTurnToHint['hint_word']
+          this.currentHintNumber = currentTurnToHint['hint_number']
+        }
       })
     }
   }

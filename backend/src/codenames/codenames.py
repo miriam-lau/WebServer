@@ -87,10 +87,13 @@ class Codenames:
         word_in_game = self._codenames_database.get_word_in_game(game_id, guessed_word)
         if word_in_game is None:
             raise Exception("Guessed word not found in game.")
-        if word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] != "unchecked":
-            if is_player1_turn and word_in_game["word_status"] != "player_2_hit_bystander":
+        if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] !=
+                CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_UNCHECKED):
+            if (is_player1_turn and word_in_game["word_status"] !=
+                    CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER):
                 raise Exception("Invalid word status for player 1.")
-            elif (not is_player1_turn) and word_in_game["word_status"] != "player_1_hit_bystander":
+            elif ((not is_player1_turn) and word_in_game["word_status"] !=
+                  CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_1_HIT_BYSTANDER):
                 raise Exception("Invalid word status for player 2.")
 
         word_index = word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_INDEX]
