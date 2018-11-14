@@ -62,6 +62,7 @@ def codenames_create_game():
     codenames.create_game(player1, player2)
     return ""
 
+
 @app.route("/codenames_get_latest_game", methods=["POST"])
 def codenames_get_latest_game():
     username = request.json["username"]

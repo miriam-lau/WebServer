@@ -1,4 +1,6 @@
+# Each location in codenames has two possible types: one for player 1 and one for player 2.
 class Location:
+    # These constants correspond to the location type specified in the table codenames_games_to_locations.
     LOCATION_TYPE_AGENT = "agent"
     LOCATION_TYPE_ASSASSIN = "assassin"
     LOCATION_TYPE_BYSTANDER = "bystander"

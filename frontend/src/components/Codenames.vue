@@ -144,6 +144,10 @@ export default {
     },
     getCodenamesLatestGame () {
       axios.post(CODENAMES_GET_LATEST_GAME_URL, {username: this.getUsername()}).then(response => {
+        if (response.data === null) {
+          // TODO: Handle this better.
+          return
+        }
         var game = response.data['game']
         this.assassinFound = game['assassin_found']
         this.gameId = game['id']

@@ -26,6 +26,9 @@
   justify-content: center;
   margin: 1px;
 }
+.codenames-codeword-item:hover {
+  cursor: pointer;
+}
 
 .codenames-location-board {
   float: right;

@@ -6,8 +6,9 @@ class CurrentDocuments:
     def __init__(self, database):
         self._database = database
 
+    # Returns a dictionary from document id to document.
     def get_current_documents(self, username) -> Dict:
-        current_documents = self._database.execute_query(
+        current_documents = self._database.query_multiple(
             "SELECT * from current_documents where username = %s", (username,))
 
         ret = {}
@@ -15,36 +16,26 @@ class CurrentDocuments:
             ret[current_document["id"]] = current_document
         return ret
 
+    # Returns a dictionary with key id corresponding to the id of the deleted document.
     def delete_document(self, document_id) -> Dict:
-        deleted_id = self._database.execute_commit_with_return(
-            "DELETE from current_documents where id = %s RETURNING id", (document_id,))[0]
+        deleted_id = self._database.commit_single_row_with_return(
+            "DELETE from current_documents where id = %s RETURNING id", (document_id,))["id"]
         return {"id": deleted_id}
 
+    # Returns a dictionary with key document corresponding to the edited document.
     def edit_document(self, document_id, document) -> Dict:
-        document_values = self._database.execute_commit_with_return(
+        document = self._database.commit_single_row_with_return(
             "UPDATE current_documents SET title = %s, url = %s, priority = %s, category = %s, notes = %s " +
             "where id = %s RETURNING *",
             (document["title"], document["url"], document["priority"], document["category"], document["notes"],
              document_id))
-        ret = CurrentDocuments._tuple_to_document(document_values)
-        return {"document": ret}
+        return {"document": document}
 
-    @staticmethod
-    def _tuple_to_document(values):
-        ret = dict()
-        ret["id"] = values[0]
-        ret["username"] = values[1]
-        ret["title"] = values[2]
-        ret["priority"] = values[3]
-        ret["category"] = values[4]
-        ret["url"] = values[5]
-        ret["notes"] = values[6]
-        return ret
-
+    # Returns a dictionary with key id corresponding the key of the added document.
     def add_document(self, document) -> Dict:
-        document_id = self._database.execute_commit_with_return(
+        document_id = self._database.commit_single_row_with_return(
             "INSERT INTO current_documents(title, username, url, priority, category, notes) " +
             "VALUES(%s, %s, %s, %s, %s, %s) RETURNING id",
             (document["title"], document["username"], document["url"], document["priority"], document["category"],
-             document["notes"]))[0]
+             document["notes"]))["id"]
         return {"id": document_id}
