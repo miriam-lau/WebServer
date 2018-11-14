@@ -128,17 +128,21 @@ class Codenames:
               Location.LOCATION_TYPE_BYSTANDER):
             guess_outcome = CodenamesDatabase.CODENAMES_TURNS_TO_GUESSES_GUESS_OUTCOME_HIT_BYSTANDER
             if is_player1_turn:
-                if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_INDEX] ==
+                if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] ==
                         CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER):
+                    print("HERE1")
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS
                 else:
+                    print("HERE12")
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_1_HIT_BYSTANDER
             else:
-                if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_INDEX] ==
+                if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] ==
                         CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_1_HIT_BYSTANDER):
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS
+                    print("HERE13")
                 else:
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER
+                    print("HERE4")
             self._codenames_database.update_game_turn(
                 game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER],
                 CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)

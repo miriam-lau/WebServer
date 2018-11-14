@@ -100,6 +100,7 @@ def codenames_guess():
     return ""
 
 
+# This is sent to all players in the current game to tell Vue to refresh the client.
 def _codenames_send_socketio_refresh(game_id):
     players = codenames.get_players_in_game(game_id)
     socketio.emit("refresh_codenames", {"players": players}, broadcast=True)

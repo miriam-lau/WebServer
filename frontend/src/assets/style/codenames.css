@@ -85,11 +85,11 @@
   background-color: green;
 }
 
-.codenames-word-status-player_1_hit_bystander {
+.codenames-word-status-current_player_hit_bystander {
   background: linear-gradient(white, yellow);
 }
 
-.codenames-word-status-player_2_hit_bystander {
+.codenames-word-status-other_player_hit_bystander {
   background: linear-gradient(yellow, white);
 }
 
@@ -99,4 +99,5 @@
 
 .codenames-word-status-assassin_found {
   background-color: black;
+  color: white;
 }
