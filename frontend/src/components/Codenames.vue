@@ -1,12 +1,12 @@
 <template>
   <div class="codenames">
     <div class="codenames-title">Codenames</div>
+    <div class="codenames-new-game-line">
+      Player to invite:
+          <input v-model="playerToInvite" placeholder='Player to Invite'/>
+          <button v-on:click="newGame">New Game</button>
+    </div>
     <div v-if="shouldDisplayGame">
-      <div class="codenames-new-game-line">
-        Player to invite:
-            <input v-model="playerToInvite" placeholder='Player to Invite'/>
-            <button v-on:click="newGame">New Game</button>
-      </div>
       <div class="codenames-gameboard">
         <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
           <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
