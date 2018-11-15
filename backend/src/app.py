@@ -60,7 +60,7 @@ def codenames_create_game():
     player1 = request.json["player1"]
     player2 = request.json["player2"]
     game_id = codenames.create_game(player1, player2)
-    _codenames_send_socketio_refresh(game_id)
+    _codenames_send_socketio_refresh(game_id, null)
     return ""
 
 
