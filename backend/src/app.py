@@ -77,7 +77,7 @@ def codenames_give_hint():
     hint_word = request.json["hint_word"]
     hint_number = request.json["hint_number"]
     codenames.give_hint(game_id, player, hint_word, hint_number)
-    _codenames_send_socketio_refresh(game_id)
+    _codenames_send_socketio_refresh(game_id, player)
     return ""
 
 
@@ -86,7 +86,7 @@ def codenames_end_guesses():
     game_id = request.json["game_id"]
     player = request.json["username"]
     codenames.end_guesses(game_id, player)
-    _codenames_send_socketio_refresh(game_id)
+    _codenames_send_socketio_refresh(game_id, player)
     return ""
 
 
@@ -96,14 +96,16 @@ def codenames_guess():
     player = request.json["username"]
     word = request.json["word"]
     codenames.guess(game_id, player, word)
-    _codenames_send_socketio_refresh(game_id)
+    _codenames_send_socketio_refresh(game_id, player)
     return ""
 
 
 # This is sent to all players in the current game to tell Vue to refresh the client.
-def _codenames_send_socketio_refresh(game_id):
+def _codenames_send_socketio_refresh(game_id, player_triggering_update):
     players = codenames.get_players_in_game(game_id)
-    socketio.emit("refresh_codenames", {"players": players}, broadcast=True)
+    socketio.emit("refresh_codenames",
+                  {"players": players, "player_triggering_update": player_triggering_update},
+                  broadcast=True)
 
 
 initialize_app()

@@ -27,4 +27,9 @@ function getFullBackendUrlForPath (path) {
   return 'http://' + window.location.hostname + ':5000' + path
 }
 
-export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath }
+function playSound (url) {
+  var audio = new Audio(url)
+  audio.play()
+}
+
+export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound }
