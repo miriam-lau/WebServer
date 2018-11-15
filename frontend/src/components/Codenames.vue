@@ -1,54 +1,61 @@
 <template>
   <div class="codenames">
-    <div class="codenames-title">Codenames</div>
-    <div class="codenames-new-game-line">
-      Player to invite:
-          <input v-model="playerToInvite" placeholder='Player to Invite'/>
-          <button v-on:click="newGame">New Game</button>
-    </div>
-    <div v-if="shouldDisplayGame">
-      <div class="codenames-gameboard">
-        <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
-          <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
-              v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
-            {{ codeword['word'] }}
+    <div style="width:70%; float: left">
+      <div class="codenames-title">Codenames</div>
+      <div class="codenames-new-game-line">
+        Player to invite:
+            <input v-model="playerToInvite" placeholder='Player to Invite'/>
+            <button v-on:click="newGame">New Game</button>
+      </div>
+      <div v-if="shouldDisplayGame">
+        <div class="codenames-gameboard">
+          <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
+            <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
+                v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
+              {{ codeword['word'] }}
+            </div>
+          </div>
+        </div>
+        <div class="codenames-location-board">
+          <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
+            <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
+                v-for="(location, colIndex) in locationRow">
+            </div>
+          </div>
+        </div>
+        <div class="codenames-status-line">
+          <span>Time tokens used: {{timeTokensUsed}}.</span>&nbsp;
+          <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
+          <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
+        </div>
+        <div v-if="turnType == 'guess'" class="codenames-given-hint">
+          Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
+        </div>
+        <div v-if="!gameOver" class="codenames-action-line">
+          <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
+            <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
+          </div>
+          <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
+            Give a hint: <input v-model="newHintWord" placeholder="Hint word"/>
+            Number of words: <input v-model="newHintNumber" />
+            <button @click="giveHint">Give Hint</button>
+          </div>
+          <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
+            Waiting for {{otherPlayer}} to guess words.
+          </div>
+          <div v-else-if="!isCurrentPlayerTurn && turnType == 'give_hint'">
+            Waiting for {{otherPlayer}} to give a hint.
           </div>
         </div>
       </div>
-      <div class="codenames-location-board">
-        <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
-          <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
-              v-for="(location, colIndex) in locationRow">
-          </div>
-        </div>
-      </div>
-      <div class="codenames-status-line">
-        <span>Time tokens used: {{timeTokensUsed}}.</span>&nbsp;
-        <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
-        <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
-      </div>
-      <div v-if="turnType == 'guess'" class="codenames-given-hint">
-        Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
-      </div>
-      <div v-if="!gameOver" class="codenames-action-line">
-        <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
-          <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
-        </div>
-        <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
-          Give a hint: <input v-model="newHintWord" placeholder="Hint word"/>
-          Number of words: <input v-model="newHintNumber" />
-          <button @click="giveHint">Give Hint</button>
-        </div>
-        <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
-          Waiting for {{otherPlayer}} to guess words.
-        </div>
-        <div v-else-if="!isCurrentPlayerTurn && turnType == 'give_hint'">
-          Waiting for {{otherPlayer}} to give a hint.
-        </div>
+      <div v-else>
+        No game to display
       </div>
     </div>
-    <div v-else>
-      No game to display
+    <div id="codenames-log" style="width:30%; float:left;">
+      <div :key="index" v-for="(logMessage, index) in logs">
+        {{ logMessage }}
+      </div>
     </div>
   </div>
 </template>
@@ -85,7 +92,8 @@ export default {
       currentHintWord: '',
       currentHintNumber: 0,
       newHintWord: '',
-      newHintNumber: 0
+      newHintNumber: 0,
+      logs: []
     }
   },
   computed: {
@@ -259,6 +267,61 @@ export default {
           var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
           this.currentHintWord = currentTurnToHint['hint_word']
           this.currentHintNumber = currentTurnToHint['hint_number']
+        }
+
+        // Assumes data for turns comes in order and starts with turn 1.
+        var turnsToGuesses = response.data['turns_to_guesses']
+        var turnsToGuessesArray = []
+        turnsToGuessesArray.push([]) // There are no guesses in turn 0.
+        var currentTurn = 1
+        var guessStringsForCurrentTurn = []
+        var i = 0
+        while (i < turnsToGuesses.length) {
+          var guess = turnsToGuesses[i]
+          if (guess.turn_number === currentTurn) {
+            var guessString = guess.player + ' went to ' + guess.guessed_word + ' '
+            switch (guess.guess_outcome) {
+              case 'agent_found':
+                guessString += 'and rescued an agent.'
+                break
+              case 'hit_bystander':
+                guessString += 'and clobbered an innocent bystander.'
+                break
+              case 'assassin_found':
+                guessString += 'and was killed by an assassin. :('
+                break
+            }
+            guessStringsForCurrentTurn.push(guessString)
+            i++
+          } else {
+            turnsToGuessesArray.push(guessStringsForCurrentTurn)
+            guessStringsForCurrentTurn = []
+            currentTurn++
+          }
+        }
+        if (guessStringsForCurrentTurn.length !== 0) {
+          turnsToGuessesArray.push(guessStringsForCurrentTurn)
+        }
+
+        this.logs = []
+        for (i = 0; i <= this.turnNumber; ++i) {
+          for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
+            this.logs.push(turnsToGuessesArray[i][j])
+          }
+          if (i < turnsToHints.length) {
+            var turnToHint = turnsToHints[i]
+            this.logs.push(
+              turnToHint.player + ' says \'' + turnToHint.hint_word + '\'. ' +
+              turnToHint.hint_number + ' words.')
+          }
+        }
+
+        if (this.gameOver) {
+          if (this.assassinFound) {
+            this.logs.push('Unfortunately, the terrorists succeed.')
+          } else {
+            this.logs.push('Congratulations, you rescued everyone!')
+          }
         }
       })
     }
