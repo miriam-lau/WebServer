@@ -56,7 +56,7 @@
 .codenames-action-line, .codenames-new-game-line, .codenames-status-line {
   clear: both;
   display: flex;
-  background-color: pink;
+  background-color: #0fe20f;
   justify-content: center;
 }
 
@@ -99,4 +99,14 @@
 .codenames-word-status-assassin_found {
   background-color: black;
   color: white;
+}
+
+.codenames-log {
+  width: 30%;
+  float: left;
+  white-space: pre;
+}
+
+.codenames-log-inner {
+  margin-left: 10px;
 }

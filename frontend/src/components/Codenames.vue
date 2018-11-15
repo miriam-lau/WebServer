@@ -52,11 +52,9 @@
         No game to display
       </div>
     </div>
-    <div id="codenames-log" style="width:30%; float:left;">
-      <div id="codenames-log-inner" style="margin-left: 10px">
-        <div :key="index" v-for="(logMessage, index) in logs">
-          {{ logMessage }}
-        </div>
+    <div class="codenames-log">
+      <div class="codenames-log-inner">
+        <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
       </div>
     </div>
   </div>
@@ -310,7 +308,7 @@ export default {
         for (i = 0; i <= this.turnNumber; ++i) {
           if (i < turnsToGuessesArray.length) {
             for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
-              this.logs.push(turnsToGuessesArray[i][j])
+              this.logs.push('   ' + turnsToGuessesArray[i][j])
             }
           }
           if (i < turnsToHints.length) {
