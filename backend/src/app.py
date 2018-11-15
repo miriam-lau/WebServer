@@ -57,10 +57,11 @@ def add_document():
 # TODO: Make the socketio less hacky. It shouldn't update for everyone whenever a game state is changed.
 @app.route("/codenames_create_game", methods=["POST"])
 def codenames_create_game():
+    username = request.json["username"]
     player1 = request.json["player1"]
     player2 = request.json["player2"]
     game_id = codenames.create_game(player1, player2)
-    _codenames_send_socketio_refresh(game_id, null)
+    _codenames_send_socketio_refresh(game_id, username)
     return ""
 
 
