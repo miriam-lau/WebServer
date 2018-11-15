@@ -53,8 +53,10 @@
       </div>
     </div>
     <div id="codenames-log" style="width:30%; float:left;">
-      <div :key="index" v-for="(logMessage, index) in logs">
-        {{ logMessage }}
+      <div id="codenames-log-inner" style="margin-left: 10px">
+        <div :key="index" v-for="(logMessage, index) in logs">
+          {{ logMessage }}
+        </div>
       </div>
     </div>
   </div>
@@ -65,7 +67,7 @@
 <script>
 import axios from 'axios'
 import { store } from '../store/store'
-import { getFullBackendUrlForPath } from '../common/utils'
+import { playSound, getFullBackendUrlForPath } from '../common/utils'
 import * as io from 'socket.io-client'
 window.io = io
 
@@ -136,18 +138,18 @@ export default {
   },
   watch: {
     username () {
-      this.updateCodenamesDisplayWithLatestGame()
+      this.updateCodenamesDisplayWithLatestGame(null)
     }
   },
   created () {
-    this.updateCodenamesDisplayWithLatestGame()
+    this.updateCodenamesDisplayWithLatestGame(null)
   },
   mounted () {
     var socket = io.connect('http://' + window.location.hostname + ':5000')
     var that = this
     socket.on('refresh_codenames', function (data) {
       if (data['players'].includes(that.username)) {
-        that.updateCodenamesDisplayWithLatestGame()
+        that.updateCodenamesDisplayWithLatestGame(data['player_triggering_update'])
       }
     })
   },
@@ -219,8 +221,9 @@ export default {
     },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
+     * playerTriggeringUpdate may be null.
      */
-    updateCodenamesDisplayWithLatestGame () {
+    updateCodenamesDisplayWithLatestGame (playerTriggeringUpdate) {
       axios.post(CODENAMES_GET_LATEST_GAME_URL, {username: this.username}).then(response => {
         if (response.data === null) {
           this.shouldDisplayGame = false
@@ -305,8 +308,10 @@ export default {
 
         this.logs = []
         for (i = 0; i <= this.turnNumber; ++i) {
-          for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
-            this.logs.push(turnsToGuessesArray[i][j])
+          if (i < turnsToGuessesArray.length) {
+            for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
+              this.logs.push(turnsToGuessesArray[i][j])
+            }
           }
           if (i < turnsToHints.length) {
             var turnToHint = turnsToHints[i]
@@ -322,6 +327,10 @@ export default {
           } else {
             this.logs.push('Congratulations, you rescued everyone!')
           }
+        }
+
+        if (playerTriggeringUpdate !== null && playerTriggeringUpdate !== this.username && this.isCurrentPlayerTurn) {
+          playSound('/static/signal-turn.mp3')
         }
       })
     }
