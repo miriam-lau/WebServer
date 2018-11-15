@@ -308,7 +308,7 @@ export default {
         for (i = 0; i <= this.turnNumber; ++i) {
           if (i < turnsToGuessesArray.length) {
             for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
-              this.logs.push('   ' + turnsToGuessesArray[i][j])
+              this.logs.push('     ' + turnsToGuessesArray[i][j])
             }
           }
           if (i < turnsToHints.length) {
