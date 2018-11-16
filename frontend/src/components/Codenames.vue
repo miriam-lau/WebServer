@@ -1,7 +1,7 @@
 <template>
   <div class="codenames">
-    <div>
-      <div class="codenames-title">Codenames</div>
+    <div class="title"><span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Codenames</div>
+    <div v-if="isExpanded">
       <div v-if="shouldDisplayGame">
         <div class="codenames-parent">
           <div class="codenames-gameboard">
@@ -21,9 +21,9 @@
           </div>
         </div>
         <div class="codenames-status-line">
-          <span>Time tokens used: {{timeTokensUsed}}.</span>&nbsp;
           <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
           <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
+          <span>Time tokens used: {{timeTokensUsed}}</span>&nbsp;
         </div>
         <div v-if="turnType == 'guess'" class="codenames-given-hint">
           Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
@@ -33,8 +33,8 @@
             <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
           </div>
           <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
-            Hint: <input v-model="newHintWord" placeholder="Hint word"/><br/>
-            Num words: <input v-model="newHintNumber" />
+            Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
+            Num Words: <input type="number" class="codenames-hint-num-words" v-model="newHintNumber" />
             <button @click="giveHint">Give Hint</button>
           </div>
           <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
@@ -49,15 +49,15 @@
         No game to display
       </div>
       <div class="codenames-new-game-line">
-        Player to invite:
-            <input v-model="playerToInvite" placeholder='Player to Invite'/>
+        Invite:
+            <input v-model="playerToInvite" class="codenames-player-to-invite"/>
             <button v-on:click="newGame">New Game</button>
       </div>
-    </div>
-    <div class="codenames-log">
-      <div class="codenames-log-header">Log</div>
-      <div class="codenames-log-inner">
-        <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
+      <div class="codenames-log">
+        <div class="codenames-log-header">Log:</div>
+        <div class="codenames-log-inner">
+          <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@
 <script>
 import axios from 'axios'
 import { store } from '../store/store'
-import { playSound, getFullBackendUrlForPath } from '../common/utils'
+import { playSound, getFullBackendUrlForPath, generateExpandIcon } from '../common/utils'
 import * as io from 'socket.io-client'
 window.io = io
 
@@ -97,7 +97,8 @@ export default {
       currentHintNumber: 0,
       newHintWord: '',
       newHintNumber: 0,
-      logs: []
+      logs: [],
+      isExpanded: true
     }
   },
   computed: {
@@ -136,6 +137,9 @@ export default {
     },
     username () {
       return store.state.username
+    },
+    expandIcon () {
+      return generateExpandIcon(this.isExpanded)
     }
   },
   watch: {
@@ -156,6 +160,9 @@ export default {
     })
   },
   methods: {
+    toggleExpand () {
+      this.isExpanded = !this.isExpanded
+    },
     isCurrentUserPlayer1 () {
       return this.username === this.player1
     },

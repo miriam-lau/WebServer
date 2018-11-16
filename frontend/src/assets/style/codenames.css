@@ -1,12 +1,6 @@
 .codenames {
 }
 
-.codenames-title {
-  display: flex;
-  background-color:yellow;
-  justify-content: center;
-}
-
 .codenames-gameboard {
   float: left;
 }
@@ -33,7 +27,13 @@
 }
 
 .codenames-location-board {
-  float: right;
+  float: left;
+}
+
+@media(min-width:650px) {
+  .codenames-location-board {
+    margin-left: 50px;
+  }
 }
 
 .codenames-location-row {
@@ -56,20 +56,6 @@
 
 .codenames-action-line, .codenames-new-game-line, .codenames-status-line, .codenames-log-header {
   clear: both;
-  display: flex;
-  justify-content: center;
-}
-
-.codenames-action-line, .codenames-status-line {
-  background-color: #0fe20f;
-}
-
-.codenames-new-game-line {
-  background-color: orange;
-}
-
-.codenames-status-line {
-  background-color: yellow;
 }
 
 .codenames-locationtype-assassin {
@@ -114,9 +100,20 @@
 }
 
 .codenames-log-header {
-  background-color: brown;
 }
 
 .codenames-log-inner {
   margin-left: 10px;
+}
+
+.codenames-hint-input {
+  width: 130px;
+}
+
+.codenames-hint-num-words {
+  width: 30px;
+}
+
+.codenames-player-to-invite {
+  width: 100px;
 }

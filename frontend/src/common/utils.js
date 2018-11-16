@@ -32,4 +32,15 @@ function playSound (url) {
   audio.play()
 }
 
-export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound }
+/*
+ * Creates the expand icon based on whether the icon is expanded or not.
+ */
+function generateExpandIcon (isExpanded) {
+  if (isExpanded) {
+    return '[-]'
+  } else {
+    return '[+]'
+  }
+}
+
+export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon }
