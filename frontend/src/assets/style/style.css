@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .clearfix {
   clear: both;
 }
@@ -18,4 +22,8 @@
   margin: 0px;
   padding: 0px;
   display: inline;
+}
+
+.login-input {
+  width: 100px;
 }

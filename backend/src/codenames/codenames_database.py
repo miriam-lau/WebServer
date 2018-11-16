@@ -35,12 +35,12 @@ class CodenamesDatabase:
         return game_id
 
     def update_game_turn(self, game_id, turn_number, turn_type):
-        self._database.commit(
+        self._database.commit_single_row(
           "UPDATE codenames_games SET turn_number = %s, turn_type = %s where id = %s",
           (turn_number, turn_type, game_id))
 
     def update_game_over(self, game_id, assassin_found):
-        return self._database.commit(
+        return self._database.commit_single_row(
             "UPDATE codenames_games SET game_over = %s, assassin_found = %s where id = %s",
             (True, assassin_found, game_id))
 
@@ -71,18 +71,18 @@ class CodenamesDatabase:
 
     def initialize_locations_for_game(self, game_id, player1, player2, locations: List[Location]):
         for index, location in enumerate(locations):
-            self._database.commit(
+            self._database.commit_single_row(
                 "INSERT INTO codenames_games_to_locations(game_id, player_owning_location, location_index, " +
                 "location_type) VALUES(%s, %s, %s, %s)",
                 (game_id, player1, index, location.player1_location_type))
-            self._database.commit(
+            self._database.commit_single_row(
                 "INSERT INTO codenames_games_to_locations(game_id, player_owning_location, location_index, " +
                 "location_type) VALUES(%s, %s, %s, %s)",
                 (game_id, player2, index, location.player2_location_type))
 
     def initialize_words_for_game(self, game_id, words):
         for index, word in enumerate(words):
-            self._database.commit(
+            self._database.commit_single_row(
                 "INSERT INTO codenames_games_to_words(game_id, word_index, word, word_status) VALUES(%s, %s, %s, %s)",
                 (game_id, index, word, "unchecked"))
 
@@ -99,7 +99,7 @@ class CodenamesDatabase:
             (game_id, word))
 
     def update_word_status(self, game_id, word_index, word_status):
-        self._database.commit(
+        self._database.commit_single_row(
           "UPDATE codenames_games_to_words SET word_status = %s where game_id = %s and word_index = %s",
           (word_status, game_id, word_index))
 
@@ -116,7 +116,7 @@ class CodenamesDatabase:
             (game_id,))
 
     def add_guess(self, game_id, turn_number, player, guessed_word, guess_outcome):
-        self._database.commit(
+        self._database.commit_single_row(
           "INSERT INTO codenames_turns_to_guesses(game_id, turn_number, player, guessed_word, guess_outcome) " +
           "VALUES(%s, %s, %s, %s, %s)",
           (game_id, turn_number, player, guessed_word, guess_outcome))
@@ -129,7 +129,7 @@ class CodenamesDatabase:
 
     # Returned Dict has all fields of codenames_turns_to_hints
     def add_hint(self, game_id, turn_number, player, hint_word, hint_number):
-        self._database.commit(
+        self._database.commit_single_row(
           "INSERT INTO codenames_turns_to_hints(game_id, turn_number, player, hint_word, hint_number) " +
           "VALUES(%s, %s, %s, %s, %s)",
           (game_id, turn_number, player, hint_word, hint_number))

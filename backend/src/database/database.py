@@ -3,6 +3,13 @@ from psycopg2.extras import RealDictCursor
 from typing import Tuple, List, Dict, Optional
 
 
+# Used to pass to the commit_multiple_rows function of Database.
+class CommitStatement:
+    def __init__(self, sql, values):
+        self.sql =  sql
+        self.values = values
+
+
 # Note that the 'values' tuple must be a list so for single items, it must still contain a trailing comma
 # e.g. (username,)
 class Database:
@@ -31,7 +38,21 @@ class Database:
 
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
     # e.g. (username,)
-    def commit(self, sql: str, values: Tuple):
+    def commit_multiple_rows(self, statements: List[CommitStatement]):
+        try:
+            cur = self.conn.cursor(cursor_factory=RealDictCursor)
+            for statement in statements:
+                cur.execute(statement.sql, statement.values)
+            self.conn.commit()
+            cur.close()
+        except Exception as e:
+            self.conn.rollback()
+            cur.close()
+            raise Exception("Commit exception") from e
+
+    # Note that tuple must be a list so for single items, it must still contain a trailing comma
+    # e.g. (username,)
+    def commit_single_row(self, sql: str, values: Tuple):
         try:
             cur = self.conn.cursor(cursor_factory=RealDictCursor)
             cur.execute(sql, values)

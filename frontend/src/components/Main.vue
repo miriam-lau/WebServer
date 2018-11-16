@@ -5,7 +5,8 @@
         Welcome, {{ $store.state.username }}
       </div>
       <div class="login-bar">
-        <input v-model="loginUsername" placeholder='Username'/> <button v-on:click="saveUsername">Login</button>
+        <input class="login-input" v-model="loginUsername" placeholder='Username'/>
+        <button v-on:click="saveUsername">Login</button>
       </div>
       <div class="clearfix"></div>
     </div>

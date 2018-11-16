@@ -3,40 +3,42 @@
     <div class="current-documents-title">Current Documents</div>
     <table class="current-documents-list table">
       <tr>
-        <th>Title</th><th>Url</th><th>Notes</th><th>Category</th><th>Edit</th><th>Cancel</th><th>Trash</th>
+        <th>Title</th><th>Notes</th><th>Modify</th>
       </tr>
       <tr class="current-documents-item" :key="currentDocument.id" v-for="currentDocument in currentDocuments">
-        <template v-if="currentDocument.editable">
-          <td><input :id="'current-document-title-' + currentDocument.id" :value="currentDocument.title"/></td>
-          <td><input :id="'current-document-url-' + currentDocument.id" :value="currentDocument.url"/></td>
-          <td><input :id="'current-document-notes-' + currentDocument.id" :value="currentDocument.notes"/></td>
-          <td><input :id="'current-document-category-' + currentDocument.id" :value="currentDocument.category"/></td>
-          <td><font-awesome-icon icon="save" class="current-documents-edit" @click="saveRow(currentDocument.id)" /></td>
-          <td><font-awesome-icon icon="times" class="current-documents-cancel"
-              @click="cancelEditRow(currentDocument.id)" /></td>
-          <td><font-awesome-icon icon="trash" class="current-documents-trash"
-              @click="deleteRow(currentDocument.id)" /></td>
-        </template>
-        <template v-else>
-          <td>{{ currentDocument.title }}</td>
-          <td><a :href="currentDocument.url" target="_blank">Link</a></td>
-          <td>{{ currentDocument.notes }}</td>
-          <td>{{ currentDocument.category }}</td>
-          <td><font-awesome-icon icon="pencil-alt" class="current-documents-edit"
-              @click="makeRowEditable(currentDocument.id)" /></td>
-          <td></td>
-          <td><font-awesome-icon icon="trash" class="current-documents-trash"
-              @click="deleteRow(currentDocument.id)" /></td>
-        </template>
-      </tr>
-      <tr class="current-documents-item">
-        <td><input id="current-document-title-add" placeholder="Title"/></td>
-        <td><input id="current-document-url-add" placeholder="Url"/></td>
-        <td><input id="current-document-notes-add" placeholder="Notes"/></td>
-        <td><input id="current-document-category-add" placeholder="Category"/></td>
-        <td><font-awesome-icon icon="save" class="current-documents-edit" @click="addRow()" /></td>
+        <td><a :href="currentDocument.url" target="_blank">{{ currentDocument.title }}</a></td>
+        <td>{{ currentDocument.notes }}</td>
+        <td><font-awesome-icon icon="pencil-alt" class="current-documents-edit"
+            @click="showEditModal(currentDocument.id)" />&nbsp;&nbsp;&nbsp;&nbsp;
+            <font-awesome-icon icon="trash" class="current-documents-trash"
+            @click="deleteItem(currentDocument.id)" /></td>
       </tr>
     </table>
+    <button @click="showAddModal()">Add Item</button>
+    <div id="current-documents-modal" class="current-documents-modal">
+      <div class="current-documents-modal-content">
+        <div class="current-documents-modal-container">
+          <b>{{ modalDialogTitleHeader }}</b>
+          <hr>
+          <table>
+            <tr>
+              <td><label for="current-documents-title"><b>Title:</b></label></td>
+              <td><input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title"></td>
+            </tr>
+            <tr>
+              <td><label for="current-documents-url"><b>Url:</b></label></td>
+              <td><input class="current-documents-input" v-model="modalDialogUrl" name="current-documents-url"></td>
+            </tr>
+            <tr>
+              <td><label for="current-documents-notes"><b>Notes:</b></label></td>
+              <td><input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes"></td>
+            </tr>
+          </table>
+          <button type="button" @click="hideModal()">Cancel</button>
+          <button type="button" @click="addOrEditItem()">Save</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <style>
@@ -44,24 +46,32 @@
 </style>
 <script>
 import axios from 'axios'
-import { getFullBackendUrlForPath, getValueOfElementWithDefault } from '../common/utils'
+import { getElementById, getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import Vue from 'vue'
 
 const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
 const DELETE_DOCUMENT_URL = getFullBackendUrlForPath('/delete_document')
 const EDIT_DOCUMENT_URL = getFullBackendUrlForPath('/edit_document')
 const ADD_DOCUMENT_URL = getFullBackendUrlForPath('/add_document')
 
+// TODO: Don't have nbsp;'s between the edit icons.
 export default {
   name: 'CurrentDocuments',
   data () {
     return {
-      currentDocuments: {}
+      currentDocuments: {},
+      modalDialogTitleHeader: '',
+      modalDialogTitle: '',
+      modalDialogUrl: '',
+      modalDialogNotes: '',
+      modalDialogDocumentId: null
     }
   },
   created () {
     this.updateCurrentDocumentsDisplay()
+  },
+  updated () {
+    modal = getElementById('current-documents-modal')
   },
   computed: {
     username () {
@@ -84,45 +94,61 @@ export default {
           this.currentDocuments = newCurrentDocuments
         })
     },
-    makeRowEditable (id) {
-      Vue.set(this.currentDocuments[id], 'editable', true)
+    showEditModal (id) {
+      this.modalDialogTitleHeader = 'Editing ' + this.currentDocuments[id].title
+      this.modalDialogTitle = this.currentDocuments[id].title
+      this.modalDialogUrl = this.currentDocuments[id].url
+      this.modalDialogNotes = this.currentDocuments[id].notes
+      this.modalDialogDocumentId = id
+      getElementById('current-documents-modal').style.display = 'block'
     },
-    deleteRow (id) {
+    showAddModal () {
+      this.modalDialogTitleHeader = 'Adding a new item'
+      this.modalDialogTitle = ''
+      this.modalDialogUrl = ''
+      this.modalDialogNotes = ''
+      this.modalDialogDocumentId = null
+      getElementById('current-documents-modal').style.display = 'block'
+    },
+    hideModal () {
+      getElementById('current-documents-modal').style.display = 'none'
+    },
+    deleteItem (id) {
       axios.post(DELETE_DOCUMENT_URL, {id: id}).then(
         response => {
-          Vue.delete(this.currentDocuments, response.data.id)
+          this.updateCurrentDocumentsDisplay()
         })
     },
-    cancelEditRow (id) {
-      Vue.set(this.currentDocuments[id], 'editable', false)
-    },
-    saveRow (id) {
-      var document = this.currentDocuments[id]
-      document.title = getValueOfElementWithDefault('current-document-title-' + id)
-      document.url = getValueOfElementWithDefault('current-document-url-' + id)
-      document.notes = getValueOfElementWithDefault('current-document-notes-' + id)
-      document.category = getValueOfElementWithDefault('current-document-category-' + id)
-      document.editable = false
-      axios.post(EDIT_DOCUMENT_URL, {id: id, document: document}).then(
-        response => {
-          Vue.set(this.currentDocuments, id, response.data.document)
-        })
-    },
-    addRow () {
+    addOrEditItem () {
       var document = {}
       document.username = this.username
-      document.title = getValueOfElementWithDefault('current-document-title-add')
-      document.url = getValueOfElementWithDefault('current-document-url-add')
-      document.priority = 0
-      document.notes = getValueOfElementWithDefault('current-document-notes-add')
-      document.category = getValueOfElementWithDefault('current-document-category-add')
-      axios.post(ADD_DOCUMENT_URL, {document: document}).then(
-        response => {
-          var id = response.data.id
-          document.id = id
-          Vue.set(this.currentDocuments, id, document)
-        })
+      document.title = this.modalDialogTitle
+      document.url = this.modalDialogUrl
+      document.notes = this.modalDialogNotes
+      if (this.modalDialogDocumentId != null) {
+        document.id = this.modalDialogDocumentId
+        axios.post(EDIT_DOCUMENT_URL, {id: this.modalDialogDocumentId, document: document}).then(
+          response => {
+            this.updateCurrentDocumentsDisplay()
+            this.hideModal()
+          })
+      } else {
+        axios.post(ADD_DOCUMENT_URL, {document: document}).then(
+          response => {
+            this.updateCurrentDocumentsDisplay()
+            this.hideModal()
+          })
+      }
     }
+  }
+}
+
+var modal
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+  if (event.target === modal) {
+    modal.style.display = 'none'
   }
 }
 </script>
