@@ -14,8 +14,8 @@ class CommitStatement:
 # e.g. (username,)
 class Database:
     HOST = "localhost"
-    DATABASE = "james"
-    USER = "james"
+    DATABASE = "webserver"
+    USER = "webserver"
     PASSWORD = "password"
 
     def __init__(self):
