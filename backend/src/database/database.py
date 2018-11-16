@@ -48,6 +48,7 @@ class Database:
         except Exception as e:
             self.conn.rollback()
             cur.close()
+            print(e)
             raise Exception("Commit exception") from e
 
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
@@ -61,6 +62,7 @@ class Database:
         except Exception as e:
             self.conn.rollback()
             cur.close()
+            print(e)
             raise Exception("Commit exception") from e
 
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
@@ -76,4 +78,5 @@ class Database:
         except Excpetion as e:
             self.conn.rollback()
             cur.close()
+            print(e)
             raise Exception("Commit exception") from e
