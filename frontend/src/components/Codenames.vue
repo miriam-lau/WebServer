@@ -1,25 +1,22 @@
 <template>
   <div class="codenames">
-    <div style="width:70%; float: left">
+    <div>
       <div class="codenames-title">Codenames</div>
-      <div class="codenames-new-game-line">
-        Player to invite:
-            <input v-model="playerToInvite" placeholder='Player to Invite'/>
-            <button v-on:click="newGame">New Game</button>
-      </div>
       <div v-if="shouldDisplayGame">
-        <div class="codenames-gameboard">
-          <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
-            <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
-                v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
-              {{ codeword['word'] }}
+        <div class="codenames-parent">
+          <div class="codenames-gameboard">
+            <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
+              <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
+                  v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
+                {{ codeword['word'] }}
+              </div>
             </div>
           </div>
-        </div>
-        <div class="codenames-location-board">
-          <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
-            <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
-                v-for="(location, colIndex) in locationRow">
+          <div class="codenames-location-board">
+            <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
+              <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
+                  v-for="(location, colIndex) in locationRow">
+              </div>
             </div>
           </div>
         </div>
@@ -36,8 +33,8 @@
             <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
           </div>
           <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
-            Give a hint: <input v-model="newHintWord" placeholder="Hint word"/>
-            Number of words: <input v-model="newHintNumber" />
+            Hint: <input v-model="newHintWord" placeholder="Hint word"/><br/>
+            Num words: <input v-model="newHintNumber" />
             <button @click="giveHint">Give Hint</button>
           </div>
           <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
@@ -51,8 +48,14 @@
       <div v-else>
         No game to display
       </div>
+      <div class="codenames-new-game-line">
+        Player to invite:
+            <input v-model="playerToInvite" placeholder='Player to Invite'/>
+            <button v-on:click="newGame">New Game</button>
+      </div>
     </div>
     <div class="codenames-log">
+      <div class="codenames-log-header">Log</div>
       <div class="codenames-log-inner">
         <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
       </div>
@@ -69,6 +72,7 @@ import { playSound, getFullBackendUrlForPath } from '../common/utils'
 import * as io from 'socket.io-client'
 window.io = io
 
+// Todo: Make the CSS in this file less hacky. There's hardcoded widths everywhere.
 const CODENAMES_CREATE_GAME_URL = getFullBackendUrlForPath('/codenames_create_game')
 const CODENAMES_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/codenames_get_latest_game')
 const CODENAMES_GIVE_HINT_URL = getFullBackendUrlForPath('/codenames_give_hint')
@@ -308,7 +312,7 @@ export default {
         for (i = 0; i <= this.turnNumber; ++i) {
           if (i < turnsToGuessesArray.length) {
             for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
-              this.logs.push('   ' + turnsToGuessesArray[i][j])
+              this.logs.push('     ' + turnsToGuessesArray[i][j])
             }
           }
           if (i < turnsToHints.length) {

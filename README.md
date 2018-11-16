@@ -35,6 +35,13 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 create table users (
   username varchar (50) primary key);
 
+create table current_documents ( 
+  id serial primary key,                                                          username varchar (50) references users,title varchar (500) not null,
+  sort_order integer not null,
+  url text,
+  notes text
+);
+
 create table codenames_words ( 
   word varchar (50) primary key);
 
