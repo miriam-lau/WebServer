@@ -2,10 +2,6 @@
   float: left;
 }
 
-.codenames-codeword-row {
-  clear:both;
-}
-
 .codenames-codeword-item {
   display: flex;
   align-items: center;
@@ -42,9 +38,10 @@
   margin: 1px;
 }
 
-.codenames-action-line, .codenames-new-game-line, .codenames-status-line, .codenames-log-header {
+.codenames-codeword-row, .codenames-location-row {
   clear: both;
 }
+
 
 .codenames-locationtype-assassin {
   background-color: black;

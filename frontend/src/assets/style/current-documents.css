@@ -28,6 +28,10 @@
   color: white;
 }
 
+.current-documents-icon {
+  margin-right: 2px;
+}
+
 .current-documents-icon:hover {
   cursor: pointer;
 }
