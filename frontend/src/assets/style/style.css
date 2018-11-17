@@ -8,6 +8,7 @@
 
 .welcome-bar {
   background-color: #e6e6ff;
+  margin-bottom: 10px;
 }
 
 .welcome-message {
@@ -26,4 +27,13 @@
 
 .login-input {
   width: 100px;
+}
+
+.expand-icon:hover {
+  cursor: pointer;
+}
+
+.title {
+  background-color: #CBFF8C;
+  font-size: 16px;
 }
