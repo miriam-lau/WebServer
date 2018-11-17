@@ -9,11 +9,13 @@ class CodenamesDatabase:
     CODENAMES_GAMES_GAME_OVER = "game_over"
     CODENAMES_GAMES_PLAYER1 = "player1"
     CODENAMES_GAMES_PLAYER2 = "player2"
+    CODENAMES_GAMES_TIME_TOKENS_USED = "time_tokens_used"
     CODENAMES_GAMES_TURN_TYPE_GIVE_HINT = "give_hint"
     CODENAMES_GAMES_TURN_TYPE_GUESS = "guess"
     CODENAMES_GAMES_TO_WORDS_WORD_INDEX = "word_index"
     CODENAMES_GAMES_TO_WORDS_WORD_STATUS = "word_status"
     CODENAMES_GAMES_TO_LOCATIONS_LOCATION_TYPE = "location_type"
+    CODENAMES_GAMES_TO_LOCATIONS_LOCATION_TYPE_AGENT = "agent"
     CODENAMES_TURNS_TO_GUESSES_GUESS_OUTCOME_AGENT_FOUND = "agent_found"
     CODENAMES_TURNS_TO_GUESSES_GUESS_OUTCOME_ASSASSIN_FOUND = "assassin_found"
     CODENAMES_TURNS_TO_GUESSES_GUESS_OUTCOME_HIT_BYSTANDER = "hit_bystander"
@@ -29,15 +31,20 @@ class CodenamesDatabase:
 
     def add_game(self, player1, player2) -> int:
         game_id = self._database.commit_single_row_with_return(
-            "INSERT INTO codenames_games(player1, player2, turn_number, turn_type, game_over, assassin_found) " +
-            "VALUES(%s, %s, %s, %s, %s, %s) RETURNING id",
-            (player1, player2, 0, CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT, False, False))["id"]
+            "INSERT INTO codenames_games(player1, player2, turn_number, time_tokens_used, turn_type, game_over, " +
+            "assassin_found) VALUES(%s, %s, %s, %s, %s, %s, %s) RETURNING id",
+            (player1, player2, 0, 0, CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT, False, False))["id"]
         return game_id
 
     def update_game_turn(self, game_id, turn_number, turn_type):
         self._database.commit_single_row(
           "UPDATE codenames_games SET turn_number = %s, turn_type = %s where id = %s",
           (turn_number, turn_type, game_id))
+
+    def update_game_time_tokens_used(self, game_id, time_tokens_used):
+        self._database.commit_single_row(
+          "UPDATE codenames_games SET time_tokens_used = %s where id = %s",
+          (time_tokens_used, game_id))
 
     def update_game_over(self, game_id, assassin_found):
         return self._database.commit_single_row(
