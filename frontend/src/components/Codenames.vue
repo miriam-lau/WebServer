@@ -1,9 +1,9 @@
 <template>
-  <div class="codenames">
+  <div>
     <div class="title"><span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Codenames</div>
     <div v-if="isExpanded">
       <div v-if="shouldDisplayGame">
-        <div class="codenames-parent">
+        <div>
           <div class="codenames-gameboard">
             <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
               <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
@@ -54,7 +54,7 @@
             <button v-on:click="newGame">New Game</button>
       </div>
       <div class="codenames-log">
-        <div class="codenames-log-header">Log:</div>
+        <div>Log:</div>
         <div class="codenames-log-inner">
           <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
         </div>

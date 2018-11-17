@@ -1,6 +1,3 @@
-.codenames {
-}
-
 .codenames-gameboard {
   float: left;
 }
@@ -21,9 +18,6 @@
 }
 .codenames-codeword-item:hover {
   cursor: pointer;
-}
-
-.codenames-parent {
 }
 
 .codenames-location-board {
@@ -48,12 +42,6 @@
   margin: 1px;
 }
 
-.codenames-given-hint {
-  display: flex;
-  justify-content: center;
-  background-color: pink;
-}
-
 .codenames-action-line, .codenames-new-game-line, .codenames-status-line, .codenames-log-header {
   clear: both;
 }
@@ -62,20 +50,12 @@
   background-color: black;
 }
 
-.codenames-locationtype-agent {
+.codenames-locationtype-agent, .codenames-word-status-agent_found {
   background-color: green;
 }
 
 .codenames-locationtype-bystander, .codenames-word-status-unchecked {
   background-color: white;
-}
-
-.codenames-word-status-unchecked {
-  background-color: white;
-}
-
-.codenames-word-status-agent_found {
-  background-color: green;
 }
 
 .codenames-word-status-current_player_hit_bystander {
@@ -97,9 +77,6 @@
 
 .codenames-log {
   white-space: pre;
-}
-
-.codenames-log-header {
 }
 
 .codenames-log-inner {
