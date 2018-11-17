@@ -52,6 +52,13 @@ def add_document():
     return jsonify(current_documents.add_document(document))
 
 
+@app.route("/reorder_documents", methods=["POST"])
+def reorder_documents():
+    username = request.json["username"]
+    document_ids = request.json["document_ids"]
+    return jsonify(current_documents.reorder_documents(username, document_ids))
+
+
 # Codenames methods ----------------------------------------------------------------------------------------------
 
 # TODO: Make the socketio less hacky. It shouldn't update for everyone whenever a game state is changed.

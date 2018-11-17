@@ -22,6 +22,15 @@ class Database:
         self.conn = psycopg2.connect(
             host=Database.HOST, database=Database.DATABASE, user=Database.USER, password=Database.PASSWORD)
 
+    def get_cursor(self):
+        return self.conn.cursor(cursor_factory=RealDictCursor)
+
+    def commit(self):
+        self.conn.commit()
+
+    def rollback(self):
+        self.conn.rollback()
+
     # Used for select statements.
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
     # e.g. (username,)

@@ -29,7 +29,13 @@ class CodenamesDatabase:
     def __init__(self, database):
         self._database = database
 
-    def add_game(self, player1, player2) -> int:
+    def get_cursor(self):
+        return self._database.get_cursor()
+
+    def commit(self, cursor):
+        self._database.commit(cursor)
+
+    def add_game(self, cursor, player1, player2) -> int:
         game_id = self._database.commit_single_row_with_return(
             "INSERT INTO codenames_games(player1, player2, turn_number, time_tokens_used, turn_type, game_over, " +
             "assassin_found) VALUES(%s, %s, %s, %s, %s, %s, %s) RETURNING id",

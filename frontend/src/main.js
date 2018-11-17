@@ -6,13 +6,16 @@ import router from './router'
 import VueCookies from 'vue-cookies'
 import { store } from './store/store'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faPencilAlt, faSave, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faPencilAlt, faSave, faTimes, faTrash, faLongArrowAltUp, faLongArrowAltDown } from
+  '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faPencilAlt)
 library.add(faSave)
 library.add(faTimes)
 library.add(faTrash)
+library.add(faLongArrowAltUp)
+library.add(faLongArrowAltDown)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -28,7 +28,7 @@
   color: white;
 }
 
-.current-documents-edit:hover, .current-documents-cancel:hover, .current-documents-trash:hover {
+.current-documents-icon:hover {
   cursor: pointer;
 }
 
