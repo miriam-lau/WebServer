@@ -23,7 +23,7 @@
         <div class="codenames-status-line">
           <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
           <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
-          <span>Time tokens used: {{timeTokensUsed}}</span>&nbsp;
+          <span>Time tokens used: {{ timeTokensUsed }}</span>&nbsp;
         </div>
         <div v-if="turnType == 'guess'" class="codenames-given-hint">
           Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
@@ -90,6 +90,7 @@ export default {
       player1: '',
       player2: '',
       turnNumber: 0,
+      timeTokensUsed: 0,
       turnType: '',
       locations: [],
       codewords: [],
@@ -108,13 +109,6 @@ export default {
     isCurrentPlayerTurn () {
       var isPlayer1Turn = this.turnNumber % 2 === 0
       return this.isCurrentUserPlayer1() === isPlayer1Turn
-    },
-    timeTokensUsed () {
-      var timeTokens = this.turnNumber - 1
-      if (this.turnType === 'give_hint') {
-        timeTokens += 1
-      }
-      return timeTokens
     },
     /*
      * The default player name to invite to a game. Defaults to Miriam or James.
@@ -247,6 +241,7 @@ export default {
         this.player2 = game['player2']
         this.turnNumber = game['turn_number']
         this.turnType = game['turn_type']
+        this.timeTokensUsed = game['time_tokens_used']
 
         var locations = response.data['locations_owned_by_player']
         var newLocations = []

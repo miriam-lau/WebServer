@@ -64,9 +64,30 @@ class Codenames:
         Codenames._validate_player_turn(game, player)
         if game[CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE] != CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GUESS:
             raise Exception("It is not the time to guess.")
-        self._codenames_database.update_game_turn(
-            game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER],
-            CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
+        self._codenames_database.update_game_time_tokens_used(
+            game_id, game[CodenamesDatabase.CODENAMES_GAMES_TIME_TOKENS_USED] + 1)
+        if self._player_has_hints_to_give(game_id, player):
+            self._codenames_database.update_game_turn(
+                game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER],
+                CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
+        else:
+            self._codenames_database.update_game_turn(
+                game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER] + 1,
+                CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
+
+    # Returns true if the player in the game has hints remaining to give or if they have already completed their
+    # location card.
+    def _player_has_hints_to_give(self, game_id, player):
+        locations_owned_by_player = self._codenames_database.get_locations_owned_by_player(game_id, player)
+        words_in_game = self._codenames_database.get_words_for_game(game_id)
+
+        for (index, location) in enumerate(locations_owned_by_player):
+            if (location[CodenamesDatabase.CODENAMES_GAMES_TO_LOCATIONS_LOCATION_TYPE] ==
+                    CodenamesDatabase.CODENAMES_GAMES_TO_LOCATIONS_LOCATION_TYPE_AGENT):
+                if (words_in_game[index][CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] !=
+                        CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_AGENT_FOUND):
+                    return True
+        return False
 
     # Given a game object and a player who is trying to play a turn, raise an exception if it is not their turn.
     @staticmethod
@@ -140,9 +161,16 @@ class Codenames:
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS
                 else:
                     new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER
-            self._codenames_database.update_game_turn(
-                game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER],
-                CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
+            self._codenames_database.update_game_time_tokens_used(
+                game_id, game[CodenamesDatabase.CODENAMES_GAMES_TIME_TOKENS_USED] + 1)
+            if self._player_has_hints_to_give(game_id, player):
+                self._codenames_database.update_game_turn(
+                    game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER],
+                    CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
+            else:
+                self._codenames_database.update_game_turn(
+                    game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER] + 1,
+                    CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT)
         elif (location_for_word[CodenamesDatabase.CODENAMES_GAMES_TO_LOCATIONS_LOCATION_TYPE] ==
               Location.LOCATION_TYPE_ASSASSIN):
             guess_outcome = CodenamesDatabase.CODENAMES_TURNS_TO_GUESSES_GUESS_OUTCOME_ASSASSIN_FOUND

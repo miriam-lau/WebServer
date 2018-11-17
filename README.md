@@ -53,6 +53,7 @@ create table codenames_games (
   player2 varchar(50) references users,
   turn_number integer,
   turn_type turn_type,
+  time_tokens_used integer,
   game_over boolean,
   assassin_found boolean
 );
