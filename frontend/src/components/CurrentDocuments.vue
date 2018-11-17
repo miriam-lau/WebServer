@@ -1,21 +1,29 @@
 <template>
   <div class="current-documents">
-    <div class="title"><span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Current Documents</div>
+    <div class="title">
+      <span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Current Documents
+    </div>
     <div v-if="isExpanded">
       <table class="current-documents-list table">
         <tr>
           <th>Title</th><th>Notes</th><th>Modify</th>
         </tr>
-        <tr class="current-documents-item" :key="currentDocument.id" v-for="currentDocument in currentDocuments">
+        <tr class="current-documents-item" :key="index"
+            v-for="(currentDocument, index) in currentDocuments">
           <td><a :href="currentDocument.url" target="_blank">{{ currentDocument.title }}</a></td>
           <td>{{ currentDocument.notes }}</td>
-          <td><font-awesome-icon icon="pencil-alt" class="current-documents-edit"
-              @click="showEditModal(currentDocument.id)" />&nbsp;&nbsp;&nbsp;&nbsp;
-              <font-awesome-icon icon="trash" class="current-documents-trash"
-              @click="deleteItem(currentDocument.id)" /></td>
+          <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
+              @click="showEditModal(index)" />&nbsp;&nbsp;
+              <font-awesome-icon icon="trash" class="current-documents-icon"
+              @click="deleteDocument(index)" />&nbsp;&nbsp;
+              <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
+              @click="moveDocumentUp(index)" />&nbsp;&nbsp;
+              <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
+              @click="moveDocumentDown(index)" />
+          </td>
         </tr>
       </table>
-      <button @click="showAddModal()">Add Item</button>
+      <button @click="showAddModal()">Add Document</button>
       <div id="current-documents-modal" class="current-documents-modal">
         <div class="current-documents-modal-content">
           <div class="current-documents-modal-container">
@@ -36,7 +44,7 @@
               </tr>
             </table>
             <button type="button" @click="hideModal()">Cancel</button>
-            <button type="button" @click="addOrEditItem()">Save</button>
+            <button type="button" @click="addOrEditDocument()">Save</button>
           </div>
         </div>
       </div>
@@ -55,13 +63,15 @@ const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documen
 const DELETE_DOCUMENT_URL = getFullBackendUrlForPath('/delete_document')
 const EDIT_DOCUMENT_URL = getFullBackendUrlForPath('/edit_document')
 const ADD_DOCUMENT_URL = getFullBackendUrlForPath('/add_document')
+const REORDER_DOCUMENTS_URL = getFullBackendUrlForPath('/reorder_documents')
 
 // TODO: Don't have nbsp;'s between the edit icons.
 export default {
   name: 'CurrentDocuments',
   data () {
     return {
-      currentDocuments: {},
+      currentDocuments: [],
+      currentDocumentsLength: 0,
       modalDialogTitleHeader: '',
       modalDialogTitle: '',
       modalDialogUrl: '',
@@ -96,23 +106,21 @@ export default {
     updateCurrentDocumentsDisplay () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
-          var newCurrentDocuments = {}
-          for (var id in response.data) {
-            newCurrentDocuments[id] = response.data[id]
-          }
-          this.currentDocuments = newCurrentDocuments
+          this.currentDocuments = response.data
+          this.currentDocumentsLength = response.data.length
         })
     },
-    showEditModal (id) {
-      this.modalDialogTitleHeader = 'Editing ' + this.currentDocuments[id].title
-      this.modalDialogTitle = this.currentDocuments[id].title
-      this.modalDialogUrl = this.currentDocuments[id].url
-      this.modalDialogNotes = this.currentDocuments[id].notes
-      this.modalDialogDocumentId = id
+    showEditModal (index) {
+      let document = this.currentDocuments[index]
+      this.modalDialogTitleHeader = 'Editing ' + document.title
+      this.modalDialogTitle = document.title
+      this.modalDialogUrl = document.url
+      this.modalDialogNotes = document.notes
+      this.modalDialogDocumentId = document.id
       getElementById('current-documents-modal').style.display = 'block'
     },
     showAddModal () {
-      this.modalDialogTitleHeader = 'Adding a new item'
+      this.modalDialogTitleHeader = 'Adding a new document'
       this.modalDialogTitle = ''
       this.modalDialogUrl = ''
       this.modalDialogNotes = ''
@@ -122,13 +130,51 @@ export default {
     hideModal () {
       getElementById('current-documents-modal').style.display = 'none'
     },
-    deleteItem (id) {
-      axios.post(DELETE_DOCUMENT_URL, {id: id}).then(
+    deleteDocument (index) {
+      axios.post(DELETE_DOCUMENT_URL, {id: this.currentDocuments[index].id}).then(
         response => {
           this.updateCurrentDocumentsDisplay()
         })
     },
-    addOrEditItem () {
+    moveDocumentUp (index) {
+      if (index === 0) {
+        return
+      }
+      let documentIds = []
+      for (let i = 0; i < this.currentDocumentsLength; ++i) {
+        let indexToAdd = i
+        if (i === index) {
+          indexToAdd = i - 1
+        } else if (i === (index - 1)) {
+          indexToAdd = i + 1
+        }
+        documentIds.push(this.currentDocuments[indexToAdd].id)
+      }
+      axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
+        response => {
+          this.updateCurrentDocumentsDisplay()
+        })
+    },
+    moveDocumentDown (index) {
+      if (index === (this.currentDocuments.length - 1)) {
+        return
+      }
+      let documentIds = []
+      for (let i = 0; i < this.currentDocumentsLength; ++i) {
+        let indexToAdd = i
+        if (i === index) {
+          indexToAdd = i + 1
+        } else if (i === (index + 1)) {
+          indexToAdd = i - 1
+        }
+        documentIds.push(this.currentDocuments[indexToAdd].id)
+      }
+      axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
+        response => {
+          this.updateCurrentDocumentsDisplay()
+        })
+    },
+    addOrEditDocument () {
       var document = {}
       document.username = this.username
       document.title = this.modalDialogTitle
