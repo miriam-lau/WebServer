@@ -7,6 +7,7 @@ from typing import List, Dict, Optional
 class Codenames:
     NUM_AGENTS_FOR_VICTORY = 15
 
+    # TODO: If one player is out of hints to give, it should skip his hint giving turn.
     def __init__(self, database):
         self._codenames_database = CodenamesDatabase(database)
 
