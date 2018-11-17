@@ -7,10 +7,10 @@ from typing import List, Dict, Optional
 class Codenames:
     NUM_AGENTS_FOR_VICTORY = 15
 
-    # TODO: If one player is out of hints to give, it should skip his hint giving turn.
     def __init__(self, database):
         self._codenames_database = CodenamesDatabase(database)
 
+    # Returns both players in the game as a list with the order: [player1, player2].
     def get_players_in_game(self, game_id) -> List[str]:
         game = self._codenames_database.get_game(game_id)
         if game is None:

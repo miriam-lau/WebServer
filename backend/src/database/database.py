@@ -6,7 +6,7 @@ from typing import Tuple, List, Dict, Optional
 # Used to pass to the commit_multiple_rows function of Database.
 class CommitStatement:
     def __init__(self, sql, values):
-        self.sql =  sql
+        self.sql = sql
         self.values = values
 
 
@@ -49,7 +49,7 @@ class Database:
             self.conn.rollback()
             cur.close()
             print(e)
-            raise Exception("Commit exception") from e
+            raise Exception("Commit exception")
 
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
     # e.g. (username,)
@@ -63,7 +63,7 @@ class Database:
             self.conn.rollback()
             cur.close()
             print(e)
-            raise Exception("Commit exception") from e
+            raise Exception("Commit exception")
 
     # Note that tuple must be a list so for single items, it must still contain a trailing comma
     # e.g. (username,)
@@ -79,4 +79,4 @@ class Database:
             self.conn.rollback()
             cur.close()
             print(e)
-            raise Exception("Commit exception") from e
+            raise Exception("Commit exception")
