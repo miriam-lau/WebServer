@@ -32,124 +32,157 @@ class CodenamesDatabase:
     def get_cursor(self):
         return self._database.get_cursor()
 
-    def commit(self, cursor):
-        self._database.commit(cursor)
+    def commit(self):
+        self._database.commit()
 
-    def add_game(self, cursor, player1, player2) -> int:
-        game_id = self._database.commit_single_row_with_return(
+    def rollback(self):
+        self._database.rollback()
+
+    @staticmethod
+    def add_game(cur, player1, player2) -> int:
+        cur.execute(
             "INSERT INTO codenames_games(player1, player2, turn_number, time_tokens_used, turn_type, game_over, " +
             "assassin_found) VALUES(%s, %s, %s, %s, %s, %s, %s) RETURNING id",
-            (player1, player2, 0, 0, CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT, False, False))["id"]
+            (player1, player2, 0, 0, CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT, False, False))
+        game_id = cur.fetchone()["id"]
         return game_id
 
-    def update_game_turn(self, game_id, turn_number, turn_type):
-        self._database.commit_single_row(
+    @staticmethod
+    def update_game_turn(cur, game_id, turn_number, turn_type):
+        cur.execute(
           "UPDATE codenames_games SET turn_number = %s, turn_type = %s where id = %s",
           (turn_number, turn_type, game_id))
 
-    def update_game_time_tokens_used(self, game_id, time_tokens_used):
-        self._database.commit_single_row(
+    @staticmethod
+    def update_game_time_tokens_used(cur, game_id, time_tokens_used):
+        cur.execute(
           "UPDATE codenames_games SET time_tokens_used = %s where id = %s",
           (time_tokens_used, game_id))
 
-    def update_game_over(self, game_id, assassin_found):
-        return self._database.commit_single_row(
+    @staticmethod
+    def update_game_over(cur, game_id, assassin_found):
+        cur.execute(
             "UPDATE codenames_games SET game_over = %s, assassin_found = %s where id = %s",
             (True, assassin_found, game_id))
 
     # Returned Dict has all fields of codenames_games
-    def get_latest_game(self, player) -> Optional[Dict]:
-        return self._database.query_single(
+    @staticmethod
+    def get_latest_game(cur, player) -> Optional[Dict]:
+        cur.execute(
             "SELECT * from codenames_games where player1 = %s or player2 = %s ORDER BY id DESC LIMIT 1",
             (player, player))
+        return cur.fetchone()
 
     # Returned Dict has all fields of codenames_games
-    def get_game(self, game_id) -> Optional[Dict]:
-        return self._database.query_single(
+    @staticmethod
+    def get_game(cur, game_id) -> Optional[Dict]:
+        cur.execute(
             "SELECT * from codenames_games where id = %s", (game_id,))
+        return cur.fetchone()
 
     # Returned Dict has all fields of codenames_games_to_locations
-    def get_locations_owned_by_player(self, game_id, player) -> List[Dict]:
-        return self._database.query_multiple(
+    @staticmethod
+    def get_locations_owned_by_player(cur, game_id, player) -> List[Dict]:
+        cur.execute(
             "SELECT * from codenames_games_to_locations where game_id = %s and player_owning_location = %s " +
             "ORDER BY location_index",
             (game_id, player))
+        return cur.fetchall()
 
     # Returned Dict has all fields of codenames_games_to_locations
-    def get_location_at_index(self, game_id, player, location_index) -> Optional[Dict]:
-        return self._database.query_single(
+    @staticmethod
+    def get_location_at_index(cur, game_id, player, location_index) -> Optional[Dict]:
+        cur.execute(
             "SELECT * from codenames_games_to_locations where game_id = %s and player_owning_location = %s " +
             "and location_index = %s",
             (game_id, player, location_index))
+        return cur.fetchone()
 
-    def initialize_locations_for_game(self, game_id, player1, player2, locations: List[Location]):
+    @staticmethod
+    def initialize_locations_for_game(cur, game_id, player1, player2, locations: List[Location]):
         for index, location in enumerate(locations):
-            self._database.commit_single_row(
+            cur.execute(
                 "INSERT INTO codenames_games_to_locations(game_id, player_owning_location, location_index, " +
                 "location_type) VALUES(%s, %s, %s, %s)",
                 (game_id, player1, index, location.player1_location_type))
-            self._database.commit_single_row(
+            cur.execute(
                 "INSERT INTO codenames_games_to_locations(game_id, player_owning_location, location_index, " +
                 "location_type) VALUES(%s, %s, %s, %s)",
                 (game_id, player2, index, location.player2_location_type))
 
-    def initialize_words_for_game(self, game_id, words):
+    @staticmethod
+    def initialize_words_for_game(cur, game_id, words):
         for index, word in enumerate(words):
-            self._database.commit_single_row(
+            cur.execute(
                 "INSERT INTO codenames_games_to_words(game_id, word_index, word, word_status) VALUES(%s, %s, %s, %s)",
                 (game_id, index, word, "unchecked"))
 
     # Returned Dict has all fields of codenames_games_to_words
-    def get_words_for_game(self, game_id) -> List[Dict]:
-        return self._database.query_multiple(
+    @staticmethod
+    def get_words_for_game(cur, game_id) -> List[Dict]:
+        cur.execute(
             "SELECT * from codenames_games_to_words where game_id = %s ORDER BY word_index",
             (game_id,))
+        return cur.fetchall()
 
     # Returned Dict has all fields of codenames_games_to_words
-    def get_word_in_game(self, game_id, word) -> Optional[Dict]:
-        return self._database.query_single(
+    @staticmethod
+    def get_word_in_game(cur, game_id, word) -> Optional[Dict]:
+        cur.execute(
             "SELECT * from codenames_games_to_words where game_id = %s and word = %s",
             (game_id, word))
+        return cur.fetchone()
 
-    def update_word_status(self, game_id, word_index, word_status):
-        self._database.commit_single_row(
+    @staticmethod
+    def update_word_status(cur, game_id, word_index, word_status):
+        cur.execute(
           "UPDATE codenames_games_to_words SET word_status = %s where game_id = %s and word_index = %s",
           (word_status, game_id, word_index))
 
     # Returned Dict has key "count"
-    def get_num_found_agents_for_game(self, game_id) -> Optional[Dict]:
-        return self._database.query_single(
+    @staticmethod
+    def get_num_found_agents_for_game(cur, game_id) -> Optional[Dict]:
+        cur.execute(
             "SELECT COUNT(*) from codenames_games_to_words where word_status = %s and game_id = %s",
             ("agent_found", game_id))
+        return cur.fetchone()
 
     # Returned Dict has all fields of codenames_turns_to_guesses
-    def get_turns_to_guesses(self, game_id) -> List[Dict]:
-        return self._database.query_multiple(
+    @staticmethod
+    def get_turns_to_guesses(cur, game_id) -> List[Dict]:
+        cur.execute(
             "SELECT * from codenames_turns_to_guesses where game_id = %s ORDER BY turn_number, id",
             (game_id,))
+        return cur.fetchall()
 
-    def add_guess(self, game_id, turn_number, player, guessed_word, guess_outcome):
-        self._database.commit_single_row(
+    @staticmethod
+    def add_guess(cur, game_id, turn_number, player, guessed_word, guess_outcome):
+        cur.execute(
           "INSERT INTO codenames_turns_to_guesses(game_id, turn_number, player, guessed_word, guess_outcome) " +
           "VALUES(%s, %s, %s, %s, %s)",
           (game_id, turn_number, player, guessed_word, guess_outcome))
 
     # Returned Dict has all fields of codenames_turns_to_hints
-    def get_turns_to_hints(self, game_id) -> List[Dict]:
-        return self._database.query_multiple(
+    @staticmethod
+    def get_turns_to_hints(cur, game_id) -> List[Dict]:
+        cur.execute(
             "SELECT * from codenames_turns_to_hints where game_id = %s ORDER BY turn_number",
             (game_id,))
+        return cur.fetchall()
 
     # Returned Dict has all fields of codenames_turns_to_hints
-    def add_hint(self, game_id, turn_number, player, hint_word, hint_number):
-        self._database.commit_single_row(
+    @staticmethod
+    def add_hint(cur, game_id, turn_number, player, hint_word, hint_number):
+        cur.execute(
           "INSERT INTO codenames_turns_to_hints(game_id, turn_number, player, hint_word, hint_number) " +
           "VALUES(%s, %s, %s, %s, %s)",
           (game_id, turn_number, player, hint_word, hint_number))
 
     # Returned Dict has all fields of codenames_words
-    def get_all_words(self) -> List[str]:
-        word_maps = self._database.query_multiple("SELECT word from codenames_words", ())
+    @staticmethod
+    def get_all_words(cur) -> List[str]:
+        cur.execute("SELECT word from codenames_words", ())
+        word_maps = cur.fetchall()
         ret = []
         for word_map in word_maps:
             ret.append(word_map["word"])

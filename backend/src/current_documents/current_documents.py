@@ -20,6 +20,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
         return current_documents
@@ -33,6 +34,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def edit_document(self, document_id, document):
@@ -45,6 +47,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def add_document(self, document):
@@ -54,7 +57,6 @@ class CurrentDocuments:
             cur.execute(
                 "SELECT * from current_documents where username = %s ORDER BY sort_order desc", (document["username"],))
             last_document = cur.fetchone()
-            print(last_document)
             new_sort_order = last_document['sort_order'] + 1 if last_document is not None else 0
             cur.execute("INSERT INTO current_documents(title, username, url, sort_order, notes) " +
                         "VALUES(%s, %s, %s, %s, %s)",
@@ -64,6 +66,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def reorder_documents(self, username, ordered_document_ids):
@@ -81,4 +84,5 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
