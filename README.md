@@ -7,6 +7,7 @@ git clone git@github.com:miriam-lau/WebServer.git
 python3 -m pip install --user virtualenv
 python3 -m virtualenv env
 pip3 install flask flask-socketio eventlet
+// navigate to "frontend" directory
 sudo apt install npm
 sudo npm install -g vue-cli
 sudo npm cache clean -f
@@ -35,14 +36,16 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 create table users (
   username varchar (50) primary key);
 
-create table current_documents ( 
-  id serial primary key,                                                          username varchar (50) references users,title varchar (500) not null,
+create table current_documents (
+  id serial primary key,                                                          
+  username varchar (50) references users,
+  title varchar (500) not null,
   sort_order integer not null,
   url text,
   notes text
 );
 
-create table codenames_words ( 
+create table codenames_words (
   word varchar (50) primary key);
 
 CREATE TYPE turn_type AS ENUM ('guess', 'give_hint');
