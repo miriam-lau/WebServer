@@ -83,7 +83,8 @@ class Codenames:
             Codenames._validate_player_turn(game, player)
             if not Codenames._is_current_player_turn(player, game):
                 raise Exception("It is not that player's turn")
-            if game[CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE] != CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT:
+            if (game[CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE] !=
+                    CodenamesDatabase.CODENAMES_GAMES_TURN_TYPE_GIVE_HINT):
                 raise Exception("It is not the time to give hints.")
             CodenamesDatabase.add_hint(
                 cur, game_id, game[CodenamesDatabase.CODENAMES_GAMES_TURN_NUMBER], player, hint_word, hint_number)
@@ -212,13 +213,15 @@ class Codenames:
                 if is_player1_turn:
                     if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] ==
                             CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER):
-                        new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS
+                        new_word_status = (
+                            CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS)
                     else:
                         new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_1_HIT_BYSTANDER
                 else:
                     if (word_in_game[CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS] ==
                             CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_1_HIT_BYSTANDER):
-                        new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS
+                        new_word_status = (
+                            CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_BOTH_PLAYERS_HIT_BYSTANDERS)
                     else:
                         new_word_status = CodenamesDatabase.CODENAMES_GAMES_TO_WORDS_WORD_STATUS_PLAYER_2_HIT_BYSTANDER
                 CodenamesDatabase.update_game_time_tokens_used(
