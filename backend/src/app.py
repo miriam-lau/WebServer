@@ -32,7 +32,6 @@ def get_current_documents():
     username = request.json["username"]
     return jsonify(current_documents.get_current_documents(username))
 
-
 @app.route("/delete_document", methods=["POST"])
 def delete_document():
     document_id = request.json["id"]

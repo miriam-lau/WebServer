@@ -3,24 +3,23 @@
     <div class="title"><span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Codenames</div>
     <div v-if="isExpanded">
       <div v-if="shouldDisplayGame">
-        <div>
-          <div class="codenames-gameboard">
-            <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
-              <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
-                  v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
-                {{ codeword['word'] }}
-              </div>
-            </div>
-          </div>
-          <div class="codenames-location-board">
-            <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
-              <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
-                  v-for="(location, colIndex) in locationRow">
-              </div>
+        <div class="codenames-gameboard">
+          <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
+            <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
+                v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
+              {{ codeword['word'] }}
             </div>
           </div>
         </div>
-        <div class="codenames-status-line">
+        <div class="codenames-location-board">
+          <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
+            <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
+                v-for="(location, colIndex) in locationRow">
+            </div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div>
           <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
           <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
           <span>Time tokens used: {{ timeTokensUsed }}</span>&nbsp;
@@ -28,9 +27,10 @@
         <div v-if="turnType == 'guess'" class="codenames-given-hint">
           Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
         </div>
-        <div v-if="!gameOver" class="codenames-action-line">
+        <div v-if="!gameOver">
           <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
-            <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button></div>
+            <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button>
+            </div>
           </div>
           <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
             Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
@@ -48,7 +48,7 @@
       <div v-else>
         No game to display
       </div>
-      <div class="codenames-new-game-line">
+      <div>
         Invite:
             <input v-model="playerToInvite" class="codenames-player-to-invite"/>
             <button v-on:click="newGame">New Game</button>
@@ -78,6 +78,8 @@ const CODENAMES_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/codenames_get_l
 const CODENAMES_GIVE_HINT_URL = getFullBackendUrlForPath('/codenames_give_hint')
 const CODENAMES_END_GUESSES_URL = getFullBackendUrlForPath('/codenames_end_guesses')
 const CODENAMES_GUESS_URL = getFullBackendUrlForPath('/codenames_guess')
+
+const SIGNAL_TURN_MP3 = '/static/signal-turn.mp3'
 
 export default {
   name: 'Codenames',
@@ -111,14 +113,15 @@ export default {
       return this.isCurrentUserPlayer1() === isPlayer1Turn
     },
     /*
-     * The default player name to invite to a game. Defaults to Miriam or James.
-     * TODO: Make this less hacky.
+     * The default player name to invite to a game.
      */
     playerToInvite () {
       if (this.username === 'James') {
         return 'Miriam'
+      } else if (this.username === 'Miriam') {
+        return 'James'
       }
-      return 'James'
+      return ''
     },
     /*
      * The name of the other player in the current game. That is, the one playing with the current user.
@@ -256,7 +259,7 @@ export default {
         newLocations.push(locationRow)
         this.locations = newLocations
 
-        var words = response.data['words_for_game']
+        var words = response['data']['words_for_game']
         var newWords = []
         var wordRow = []
         for (let i in words) {
@@ -269,7 +272,7 @@ export default {
         newWords.push(wordRow)
         this.codewords = newWords
 
-        var turnsToHints = response.data['turns_to_hints']
+        var turnsToHints = response['data']['turns_to_hints']
         if (turnsToHints.length !== 0) {
           var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
           this.currentHintWord = currentTurnToHint['hint_word']
@@ -285,9 +288,9 @@ export default {
         var i = 0
         while (i < turnsToGuesses.length) {
           var guess = turnsToGuesses[i]
-          if (guess.turn_number === currentTurn) {
-            var guessString = guess.player + ' went to ' + guess.guessed_word + ' '
-            switch (guess.guess_outcome) {
+          if (guess['turn_number'] === currentTurn) {
+            var guessString = guess['player'] + ' went to ' + guess['guessed_word'] + ' '
+            switch (guess['guess_outcome']) {
               case 'agent_found':
                 guessString += 'and rescued an agent.'
                 break
@@ -334,7 +337,7 @@ export default {
         }
 
         if (playerTriggeringUpdate !== null && playerTriggeringUpdate !== this.username && this.isCurrentPlayerTurn) {
-          playSound('/static/signal-turn.mp3')
+          playSound(SIGNAL_TURN_MP3)
         }
       })
     }

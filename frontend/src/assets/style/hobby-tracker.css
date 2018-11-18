@@ -1,0 +1,41 @@
+.hobby-tracker {
+  font-size: 20px;
+  font-weight: bold;
+  background-color: pink;
+  margin: 20px 0px 5px 0px;
+}
+
+.hobby-title {
+  display: flex;
+  padding: 5px;
+}
+
+.hobby-header {
+  margin-right: 25px;
+}
+
+.hobby-buttons {
+  color: black;
+}
+
+.hobby-buttons:hover {
+  cursor: pointer;
+}
+
+.hobby-table {
+  width: 100%;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  margin: auto;
+}
+
+.hobby-table-headers {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: purple;
+  color: white;
+}

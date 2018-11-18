@@ -20,11 +20,8 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
-
-        for (index, current_document) in enumerate(current_documents):
-            if current_document["sort_order"] != index:
-                raise Exception("Current documents should be in sorted order starting with 0. %s" % current_documents)
 
         return current_documents
 
@@ -37,6 +34,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def edit_document(self, document_id, document):
@@ -49,6 +47,7 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def add_document(self, document):
@@ -56,16 +55,18 @@ class CurrentDocuments:
 
         try:
             cur.execute(
-                "SELECT * from current_documents where username = %s ORDER BY sort_order", (document["username"],))
-            num_current_documents = len(cur.fetchall())
+                "SELECT * from current_documents where username = %s ORDER BY sort_order desc", (document["username"],))
+            last_document = cur.fetchone()
+            new_sort_order = last_document['sort_order'] + 1 if last_document is not None else 0
             cur.execute("INSERT INTO current_documents(title, username, url, sort_order, notes) " +
                         "VALUES(%s, %s, %s, %s, %s)",
-                        (document["title"], document["username"], document["url"], num_current_documents,
+                        (document["title"], document["username"], document["url"], new_sort_order,
                          document["notes"]))
             self._database.commit()
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
 
     def reorder_documents(self, username, ordered_document_ids):
@@ -83,4 +84,5 @@ class CurrentDocuments:
             cur.close()
         except psycopg2.Error:
             self._database.rollback()
+            cur.close()
             raise
