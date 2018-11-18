@@ -4,6 +4,7 @@ from flask_cors import CORS
 from src.database.database import Database
 from src.current_documents.current_documents import CurrentDocuments
 from src.codenames.codenames import Codenames
+from src.hobby_tracker.hobby_tracker import HobbyTracker
 
 
 app = Flask(__name__)
@@ -12,6 +13,7 @@ socketio = SocketIO(app)
 database = None
 current_documents = None
 codenames = None
+hobby_tracker = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -19,9 +21,11 @@ def initialize_app():
     global database
     global current_documents
     global codenames
+    global hobby_tracker
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
+    hobby_tracker = HobbyTracker(database)
 
 # Current documents methods -------------------------------------------------------------------------------------
 
@@ -113,6 +117,16 @@ def _codenames_send_socketio_refresh(game_id, player_triggering_update):
     socketio.emit("refresh_codenames",
                   {"players": players, "player_triggering_update": player_triggering_update},
                   broadcast=True)
+
+# Hobby Tracker methods ----------------------------------------------------------------------------------------------
+
+@app.route("/add_hobby", methods=["POST"])
+def add_hobby():
+    hobby = request.json["hobby"]
+    hobby_tracker.add_hobby(hobby)
+    return ""
+
+# ----------------------------------------------------------------------------------------------
 
 
 initialize_app()

@@ -33,9 +33,11 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
+### Users Database
 create table users (
   username varchar (50) primary key);
 
+### Current Documents Database
 create table current_documents (
   id serial primary key,                                                          
   username varchar (50) references users,
@@ -45,6 +47,25 @@ create table current_documents (
   notes text
 );
 
+### Hobby Tracker Database
+create table hobby_tracker (
+  id serial primary key,                                                          
+  username varchar (50) references users,
+  hobby varchar (500) not null,
+  sort_order integer not null,
+  assigned_hours_per_week decimal not null,
+  completed_hours_this_week decimal not null,
+  completed boolean not null
+);
+
+create table hobby_completed_hours_timestamped (
+  id serial primary key,
+  hobby_id integer references hobby_tracker,
+  timestamp timestamp not null,
+  completed_hours_for_week decimal not null
+);
+
+### Codenames Database
 create table codenames_words (
   word varchar (50) primary key);
 

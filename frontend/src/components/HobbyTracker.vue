@@ -2,13 +2,16 @@
   <div class="hobby-tracker">
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
-      <font-awesome-icon icon="plus-circle" class="hobby-buttons"/>
+      <button class="hobby-buttons" @click="addHobby">Add Hobby</button>
+      <button>Edit</button>
+      <button>Save</button>
     </div>
 
     <div class="hobby-table">
       <div class="hobby-table-headers">
         <section>Hobby</section>
         <section>Assigned Hours</section>
+        <section>Hours Completed</section>
         <section>Hours Remaining</section>
         <section>Completed?</section>
       </div>
@@ -22,4 +25,45 @@
 </style>
 
 <script>
+import axios from 'axios'
+import { getFullBackendUrlForPath } from '../common/utils'
+import { store } from '../store/store'
+
+const ADD_HOBBY_URL = getFullBackendUrlForPath('/add_hobby')
+
+export default {
+  name: 'HobbyTracker',
+  data () {
+    return {
+
+    }
+  },
+  computed: {
+    username () {
+      return store.state.username
+    }
+  },
+  methods: {
+    addHobby () {
+      let hobbyItem = {}
+      hobbyItem['username'] = this.username
+      hobbyItem['hobby'] = 'poke james'
+      hobbyItem['assigned_hours_per_week'] = 10
+
+      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(
+        response => {
+          console.log('it worked')
+        })
+    }
+  }
+}
+
+var modal
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+  if (event.target === modal) {
+    modal.style.display = 'none'
+  }
+}
 </script>
