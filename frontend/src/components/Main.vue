@@ -11,6 +11,7 @@
       <div class="clearfix"></div>
     </div>
     <CurrentDocuments/>
+    <HobbyTracker/>
     <Codenames/>
   </div>
 </template>
@@ -18,6 +19,7 @@
 <script>
 import Codenames from './Codenames'
 import CurrentDocuments from './CurrentDocuments'
+import HobbyTracker from './HobbyTracker'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -31,7 +33,7 @@ export default {
     this.setUsername(this.$cookies.get('username'))
   },
   components: {
-    CurrentDocuments, Codenames
+    CurrentDocuments, Codenames, HobbyTracker
   },
   methods: {
     ...mapMutations(['setUsername']),
