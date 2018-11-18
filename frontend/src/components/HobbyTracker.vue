@@ -2,9 +2,9 @@
   <div class="hobby-tracker">
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
-      <button class="hobby-buttons" @click="addHobby">Add Hobby</button>
-      <button>Edit</button>
-      <button>Save</button>
+      <button class="hobby-buttons" @click="showAddHobbyModal">Add Hobby</button>
+      <button class="hobby-buttons">Edit</button>
+      <button class="hobby-buttons">Save</button>
     </div>
 
     <div class="hobby-table">
@@ -14,6 +14,24 @@
         <section>Hours Completed</section>
         <section>Hours Remaining</section>
         <section>Completed?</section>
+      </div>
+    </div>
+
+    <div class="hobby-modal-container" v-if="showModal">
+      <div class="hobby-modal">
+        <section class="add-hobby-title">Add a Hobby</section>
+        <section class="hobby-modal-sections">
+          <article class="add-hobby-section-titles">Hobby Name</article>
+          <input class="add-hobby-inputs" v-model="hobbyName" placeholder="What's your passion?">
+        </section>
+        <section class="hobby-modal-sections">
+          <article class="add-hobby-section-titles">Assigned Hours Per Week</article>
+          <input class="add-hobby-inputs" v-model="assignedHoursPerWeek" placeholder="Enter a number">
+        </section>
+        <section class="hobby-modal-button-container">
+          <button class="hobby-buttons" @click="addHobby">Save</button>
+          <button class="hobby-buttons close-hobby-button" @click="closeHobbyModal()">Cancel</button>
+        </section>
       </div>
     </div>
 
@@ -35,7 +53,9 @@ export default {
   name: 'HobbyTracker',
   data () {
     return {
-
+      showModal: false,
+      hobbyName: '',
+      assignedHoursPerWeek: 0
     }
   },
   computed: {
@@ -47,23 +67,24 @@ export default {
     addHobby () {
       let hobbyItem = {}
       hobbyItem['username'] = this.username
-      hobbyItem['hobby'] = 'poke james'
-      hobbyItem['assigned_hours_per_week'] = 10
+      hobbyItem['hobby'] = this.hobbyName
+      hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
 
       axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(
         response => {
           console.log('it worked')
         })
+
+      this.showModal = false
+    },
+    showAddHobbyModal () {
+      this.showModal = true
+      this.hobbyName = ''
+      this.assignedHoursPerWeek = 0
+    },
+    closeHobbyModal () {
+      this.showModal = false
     }
-  }
-}
-
-var modal
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target === modal) {
-    modal.style.display = 'none'
   }
 }
 </script>
