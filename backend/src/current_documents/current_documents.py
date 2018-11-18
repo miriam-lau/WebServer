@@ -22,10 +22,6 @@ class CurrentDocuments:
             self._database.rollback()
             raise
 
-        for (index, current_document) in enumerate(current_documents):
-            if current_document["sort_order"] != index:
-                raise Exception("Current documents should be in sorted order starting with 0. %s" % current_documents)
-
         return current_documents
 
     def delete_document(self, document_id):
@@ -56,11 +52,13 @@ class CurrentDocuments:
 
         try:
             cur.execute(
-                "SELECT * from current_documents where username = %s ORDER BY sort_order", (document["username"],))
-            num_current_documents = len(cur.fetchall())
+                "SELECT * from current_documents where username = %s ORDER BY sort_order desc", (document["username"],))
+            last_document = cur.fetchone()
+            print(last_document)
+            new_sort_order = last_document['sort_order'] + 1 if last_document is not None else 0
             cur.execute("INSERT INTO current_documents(title, username, url, sort_order, notes) " +
                         "VALUES(%s, %s, %s, %s, %s)",
-                        (document["title"], document["username"], document["url"], num_current_documents,
+                        (document["title"], document["username"], document["url"], new_sort_order,
                          document["notes"]))
             self._database.commit()
             cur.close()

@@ -10,14 +10,14 @@
         </tr>
         <tr class="current-documents-item" :key="index"
             v-for="(currentDocument, index) in currentDocuments">
-          <td><a :href="currentDocument.url" target="_blank">{{ currentDocument.title }}</a></td>
-          <td>{{ currentDocument.notes }}</td>
+          <td><a :href="currentDocument['url']" target="_blank">{{ currentDocument['title'] }}</a></td>
+          <td>{{ currentDocument['notes'] }}</td>
           <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
-              @click="showEditModal(index)" />&nbsp;&nbsp;
+              @click="showEditModal(index)" />
               <font-awesome-icon icon="trash" class="current-documents-icon"
-              @click="deleteDocument(index)" />&nbsp;&nbsp;
+              @click="deleteDocument(index)" />
               <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
-              @click="moveDocumentUp(index)" />&nbsp;&nbsp;
+              @click="moveDocumentUp(index)" />
               <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
               @click="moveDocumentDown(index)" />
           </td>
@@ -32,7 +32,9 @@
             <table>
               <tr>
                 <td><label for="current-documents-title"><b>Title:</b></label></td>
-                <td><input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title"></td>
+                <td>
+                  <input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title">
+                </td>
               </tr>
               <tr>
                 <td><label for="current-documents-url"><b>Url:</b></label></td>
@@ -40,7 +42,9 @@
               </tr>
               <tr>
                 <td><label for="current-documents-notes"><b>Notes:</b></label></td>
-                <td><input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes"></td>
+                <td>
+                  <input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes">
+                </td>
               </tr>
             </table>
             <button type="button" @click="hideModal()">Cancel</button>
@@ -65,13 +69,11 @@ const EDIT_DOCUMENT_URL = getFullBackendUrlForPath('/edit_document')
 const ADD_DOCUMENT_URL = getFullBackendUrlForPath('/add_document')
 const REORDER_DOCUMENTS_URL = getFullBackendUrlForPath('/reorder_documents')
 
-// TODO: Don't have nbsp;'s between the edit icons.
 export default {
   name: 'CurrentDocuments',
   data () {
     return {
       currentDocuments: [],
-      currentDocumentsLength: 0,
       modalDialogTitleHeader: '',
       modalDialogTitle: '',
       modalDialogUrl: '',
@@ -106,17 +108,16 @@ export default {
     updateCurrentDocumentsDisplay () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
-          this.currentDocuments = response.data
-          this.currentDocumentsLength = response.data.length
+          this.currentDocuments = response['data']
         })
     },
     showEditModal (index) {
       let document = this.currentDocuments[index]
-      this.modalDialogTitleHeader = 'Editing ' + document.title
-      this.modalDialogTitle = document.title
-      this.modalDialogUrl = document.url
-      this.modalDialogNotes = document.notes
-      this.modalDialogDocumentId = document.id
+      this.modalDialogTitleHeader = 'Editing ' + document['title']
+      this.modalDialogTitle = document['title']
+      this.modalDialogUrl = document['url']
+      this.modalDialogNotes = document['notes']
+      this.modalDialogDocumentId = document['id']
       getElementById('current-documents-modal').style.display = 'block'
     },
     showAddModal () {
@@ -131,7 +132,7 @@ export default {
       getElementById('current-documents-modal').style.display = 'none'
     },
     deleteDocument (index) {
-      axios.post(DELETE_DOCUMENT_URL, {id: this.currentDocuments[index].id}).then(
+      axios.post(DELETE_DOCUMENT_URL, {id: this.currentDocuments[index]['id']}).then(
         response => {
           this.updateCurrentDocumentsDisplay()
         })
@@ -141,14 +142,14 @@ export default {
         return
       }
       let documentIds = []
-      for (let i = 0; i < this.currentDocumentsLength; ++i) {
+      for (let i = 0; i < this.currentDocuments.length; ++i) {
         let indexToAdd = i
         if (i === index) {
           indexToAdd = i - 1
         } else if (i === (index - 1)) {
           indexToAdd = i + 1
         }
-        documentIds.push(this.currentDocuments[indexToAdd].id)
+        documentIds.push(this.currentDocuments[indexToAdd]['id'])
       }
       axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
         response => {
@@ -160,14 +161,14 @@ export default {
         return
       }
       let documentIds = []
-      for (let i = 0; i < this.currentDocumentsLength; ++i) {
+      for (let i = 0; i < this.currentDocuments.length; ++i) {
         let indexToAdd = i
         if (i === index) {
           indexToAdd = i + 1
         } else if (i === (index + 1)) {
           indexToAdd = i - 1
         }
-        documentIds.push(this.currentDocuments[indexToAdd].id)
+        documentIds.push(this.currentDocuments[indexToAdd]['id'])
       }
       axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
         response => {
@@ -176,12 +177,12 @@ export default {
     },
     addOrEditDocument () {
       var document = {}
-      document.username = this.username
-      document.title = this.modalDialogTitle
-      document.url = this.modalDialogUrl
-      document.notes = this.modalDialogNotes
+      document['username'] = this.username
+      document['title'] = this.modalDialogTitle
+      document['url'] = this.modalDialogUrl
+      document['notes'] = this.modalDialogNotes
       if (this.modalDialogDocumentId != null) {
-        document.id = this.modalDialogDocumentId
+        document['id'] = this.modalDialogDocumentId
         axios.post(EDIT_DOCUMENT_URL, {id: this.modalDialogDocumentId, document: document}).then(
           response => {
             this.updateCurrentDocumentsDisplay()
