@@ -1,48 +1,45 @@
 <template>
   <div>
-    <div class="title"><span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Codenames</div>
-    <div v-if="isExpanded">
-      <div v-if="shouldDisplayGame">
-        <div class="codenames-gameboard">
-          <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
-            <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
-                v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
-              {{ codeword['word'] }}
-            </div>
+    <div v-if="shouldDisplayGame">
+      <div class="codenames-gameboard">
+        <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
+          <div :class="generateWordStatusClass(codeword['status']) + ' codenames-codeword-item'" :key="colIndex"
+              v-for="(codeword, colIndex) in codewordRow" @click="guess(codeword['word'])">
+            {{ codeword['word'] }}
           </div>
         </div>
-        <div class="codenames-location-board">
-          <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
-            <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
-                v-for="(location, colIndex) in locationRow">
-            </div>
+      </div>
+      <div class="codenames-location-board">
+        <div class="codenames-location-row" :key="rowIndex" v-for="(locationRow, rowIndex) in locations">
+          <div :class="'codenames-locationtype-' + location + ' codenames-location-item'" :key="colIndex"
+              v-for="(location, colIndex) in locationRow">
           </div>
         </div>
-        <div class="clearfix"></div>
-        <div>
-          <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
-          <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
-          <span>Time tokens used: {{ timeTokensUsed }}</span>&nbsp;
+      </div>
+      <div class="clearfix"></div>
+      <div>
+        <span v-if="assassinFound && gameOver">Assassin found. You lose.</span>
+        <span v-else-if="!assassinFound && gameOver">All agents found. You win!</span>
+        <span>Time tokens used: {{ timeTokensUsed }}</span>&nbsp;
+      </div>
+      <div v-if="turnType == 'guess'" class="codenames-given-hint">
+        Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
+      </div>
+      <div v-if="!gameOver">
+        <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
+          <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button>
+          </div>
         </div>
-        <div v-if="turnType == 'guess'" class="codenames-given-hint">
-          Given hint: {{ currentHintWord }}. Number of words: {{ currentHintNumber }}
+        <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
+          Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
+          Num Words: <input type="number" class="codenames-hint-num-words" v-model="newHintNumber" />
+          <button @click="giveHint">Give Hint</button>
         </div>
-        <div v-if="!gameOver">
-          <div v-if="isCurrentPlayerTurn && turnType == 'guess'">
-            <div>Click on the words to make guesses or here when finished. <button @click="endGuesses">Done</button>
-            </div>
-          </div>
-          <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
-            Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
-            Num Words: <input type="number" class="codenames-hint-num-words" v-model="newHintNumber" />
-            <button @click="giveHint">Give Hint</button>
-          </div>
-          <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
-            Waiting for {{otherPlayer}} to guess words.
-          </div>
-          <div v-else-if="!isCurrentPlayerTurn && turnType == 'give_hint'">
-            Waiting for {{otherPlayer}} to give a hint.
-          </div>
+        <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
+          Waiting for {{otherPlayer}} to guess words.
+        </div>
+        <div v-else-if="!isCurrentPlayerTurn && turnType == 'give_hint'">
+          Waiting for {{otherPlayer}} to give a hint.
         </div>
       </div>
       <div v-else>
