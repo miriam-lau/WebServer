@@ -10,9 +10,23 @@
       </div>
       <div class="clearfix"></div>
     </div>
-    <CurrentDocuments/>
-    <HobbyTracker/>
-    <Codenames/>
+    <div class="nav-container">
+      <nav :class="activeTab" v-on:click.prevent>
+        <a href="#" class="nav-current-documents"
+          v-on:click="setActiveTab('nav-current-documents')">Current Documents</a>
+        <a href="#" class="nav-hobby-tracker" v-on:click="setActiveTab('nav-hobby-tracker')">Hobby Tracker</a>
+        <a href="#" class="nav-codenames-game" v-on:click="setActiveTab('nav-codenames-game')">Codenames</a>
+      </nav>
+    </div>
+    <div v-if="isCurrentDocumentsActive">
+      <CurrentDocuments/>
+    </div>
+    <div v-if="isHobbyTrackerActive">
+      <HobbyTracker/>
+    </div>
+    <div v-if="isCodenamesGameActive">
+      <Codenames/>
+    </div>
   </div>
 </template>
 
@@ -26,7 +40,19 @@ export default {
   name: 'Home',
   data () {
     return {
-      loginUsername: ''
+      loginUsername: '',
+      activeTab: 'nav-current-documents'
+    }
+  },
+  computed: {
+    isCurrentDocumentsActive () {
+      return this.activeTab === 'nav-current-documents'
+    },
+    isHobbyTrackerActive () {
+      return this.activeTab === 'nav-hobby-tracker'
+    },
+    isCodenamesGameActive () {
+      return this.activeTab === 'nav-codenames-game'
     }
   },
   created () {
@@ -40,6 +66,9 @@ export default {
     saveUsername () {
       this.setUsername(this.loginUsername)
       this.$cookies.set('username', this.loginUsername)
+    },
+    setActiveTab (tab) {
+      this.activeTab = tab
     }
   }
 }
