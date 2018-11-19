@@ -71,7 +71,6 @@ export default {
       hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
 
       axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(
-        response => {
           console.log('it worked')
         })
 
