@@ -30,7 +30,7 @@
         </section>
         <section class="hobby-modal-button-container">
           <button class="hobby-buttons" @click="addHobby">Save</button>
-          <button class="hobby-buttons close-hobby-button" @click="closeHobbyModal()">Cancel</button>
+          <button class="hobby-buttons close-hobby-button" @click="closeHobbyModal">Cancel</button>
         </section>
       </div>
     </div>
