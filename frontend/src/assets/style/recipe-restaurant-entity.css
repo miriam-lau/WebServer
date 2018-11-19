@@ -1,0 +1,46 @@
+.recipe-restaurant-entity-icon:hover {
+  cursor: pointer;
+}
+
+.recipe-restaurant-entity-info-image {
+  display: block;
+  margin: auto;
+  height: 500px;
+}
+
+.recipe-restaurant-entity-info {
+    text-align: center;
+    margin-bottom: 30px;
+    font-family: 'Benton Sans';
+    font-size: 1.4em;
+}
+
+.recipe-restaurant-entity-table, .recipe-restaurant-entity-infotable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+.recipe-restaurant-entity-infotable td, .recipe-restaurant-entity-infotable th,
+.recipe-restaurant-entity-table td, .recipe-restaurant-entity-table th {
+    padding: 8px;
+}
+
+.recipe-restaurant-entity-table td, .recipe-restaurant-entity-table th {
+    border: 1px solid #ddd;
+}
+
+.recipe-restaurant-entity-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.recipe-restaurant-entity-table tr:hover {background-color: #ddd;}
+
+.recipe-restaurant-entity-infotable th, .recipe-restaurant-entity-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: blue;
+    color: white;
+}
+
+.recipe-restaurant-entity-children-list {
+    margin-bottom: 30px;
+}

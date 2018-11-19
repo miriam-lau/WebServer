@@ -47,7 +47,7 @@ import RestaurantsPage from './RestaurantsPage'
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'Home',
+  name: 'Main',
   data () {
     return {
       loginUsername: '',

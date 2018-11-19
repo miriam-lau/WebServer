@@ -121,3 +121,80 @@ create table codenames_games_to_locations (
   location_type location_type,
   primary key (game_id, player_owning_location, location_index)
 );
+
+### Recipe Database
+
+create table cookbooks (
+  id serial primary key,
+  name varchar(150) not null,
+  notes text
+);
+
+create table recipes (
+  id serial primary key,
+  cookbook_id integer references cookbooks,
+  name varchar(500) not null,
+  priority integer,
+  category varchar(150),
+  notes text
+);
+
+create table recipe_meals (
+  id serial primary key,
+  recipe_id integer references recipes,
+  date date,
+  user_1_rating decimal,
+  user_2_rating decimal,
+  user_1_comments text,
+  user_2_comments text
+);
+
+create table cities (
+  id serial primary key,
+  name varchar(150) not null,
+  state varchar(150),
+  country varchar(150),
+  notes text
+);
+
+create table restaurants (
+  id serial primary key,
+  city_id integer references cities,
+  name varchar(150) not null,
+  category varchar(150),
+  address text,
+  notes text
+);
+
+create table dishes (
+  id serial primary key,
+  restaurant_id integer references restaurants,
+  name varchar(150) not null,
+  category varchar(150),
+  notes text
+);
+
+create table dish_meals (
+  id serial primary key,
+  dish_id integer references dishes,
+  date date,
+  user_1_rating decimal,
+  user_2_rating decimal,
+  user_1_comments text,
+  user_2_comments text
+);
+
+create table recipe_images (
+  id serial primary key,
+  recipe_id integer references recipes,
+  url text,
+  caption text
+);
+
+create table dish_images (
+  id serial primary key,
+  dish_id integer references dishes,
+  url text,
+  caption text
+);
+
