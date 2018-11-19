@@ -16,6 +16,8 @@
           v-on:click="setActiveTab('nav-current-documents')">Current Documents</a>
         <a href="#" class="nav-hobby-tracker" v-on:click="setActiveTab('nav-hobby-tracker')">Hobby Tracker</a>
         <a href="#" class="nav-codenames-game" v-on:click="setActiveTab('nav-codenames-game')">Codenames</a>
+        <a href="#" class="nav-recipes-page" v-on:click="setActiveTab('nav-recipes-page')">Recipes</a>
+        <a href="#" class="nav-restaurants-page" v-on:click="setActiveTab('nav-restaurants-page')">Restaurants</a>
       </nav>
     </div>
     <div v-if="isCurrentDocumentsActive">
@@ -27,6 +29,12 @@
     <div v-if="isCodenamesGameActive">
       <Codenames/>
     </div>
+    <div v-if="isRecipesPageActive">
+      <RecipesPage/>
+    </div>
+    <div v-if="isRestaurantsPageActive">
+      <RestaurantsPage/>
+    </div>
   </div>
 </template>
 
@@ -34,6 +42,8 @@
 import Codenames from './Codenames'
 import CurrentDocuments from './CurrentDocuments'
 import HobbyTracker from './HobbyTracker'
+import RecipesPage from './RecipesPage'
+import RestaurantsPage from './RestaurantsPage'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -53,13 +63,19 @@ export default {
     },
     isCodenamesGameActive () {
       return this.activeTab === 'nav-codenames-game'
+    },
+    isRecipesPageActive () {
+      return this.activeTab === 'nav-recipes-page'
+    },
+    isRestaurantsPageActive () {
+      return this.activeTab === 'nav-restaurants-page'
     }
   },
   created () {
     this.setUsername(this.$cookies.get('username'))
   },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker
+    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage
   },
   methods: {
     ...mapMutations(['setUsername']),
