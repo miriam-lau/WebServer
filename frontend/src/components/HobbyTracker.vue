@@ -70,9 +70,7 @@ export default {
       hobbyItem['hobby'] = this.hobbyName
       hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
 
-      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(
-        })
-
+      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem })
       this.showModal = false
     },
     showAddHobbyModal () {
