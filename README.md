@@ -53,8 +53,8 @@ create table hobby_tracker (
   username varchar (50) references users,
   hobby varchar (500) not null,
   sort_order integer not null,
-  assigned_hours_per_week decimal not null,
-  completed_hours_this_week decimal not null,
+  assigned_hours_per_week real not null,
+  completed_hours_this_week real not null,
   completed boolean not null
 );
 
@@ -62,7 +62,7 @@ create table hobby_completed_hours_timestamped (
   id serial primary key,
   hobby_id integer references hobby_tracker,
   timestamp timestamp not null,
-  completed_hours_for_week decimal not null
+  completed_hours_for_week real not null
 );
 
 ### Codenames Database
@@ -197,4 +197,3 @@ create table dish_images (
   url text,
   caption text
 );
-

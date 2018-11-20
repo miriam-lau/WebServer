@@ -7,14 +7,23 @@
       <button class="hobby-buttons">Save</button>
     </div>
 
-    <div class="hobby-table">
-      <div class="hobby-table-headers">
-        <section>Hobby</section>
-        <section>Assigned Hours</section>
-        <section>Hours Completed</section>
-        <section>Hours Remaining</section>
-        <section>Completed?</section>
-      </div>
+    <div class="hobby-table-container">
+      <table class="hobby-table">
+        <tr class="hobby-table-headers">
+          <th>Hobby</th>
+          <th>Assigned Hours</th>
+          <th>Hours Completed</th>
+          <th>Hours Remaining</th>
+          <th>Completed?</th>
+        </tr>
+        <tr class="hobby-items" :key="hobby['id']" v-for="hobby in hobbies">
+          <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
+          <td>{{ hobby['assigned_hours_per_week'] }}</td>
+          <td>{{ hobby['completed_hours_this_week'] }}</td>
+          <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
+          <td>{{ hobby['completed'] }}</td>
+        </tr>
+      </table>
     </div>
 
     <div class="hobby-modal-container" v-if="showModal">
@@ -48,6 +57,7 @@ import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
 const ADD_HOBBY_URL = getFullBackendUrlForPath('/add_hobby')
+const GET_HOBBIES_URL = getFullBackendUrlForPath('/get_hobbies')
 
 export default {
   name: 'HobbyTracker',
@@ -55,13 +65,17 @@ export default {
     return {
       showModal: false,
       hobbyName: '',
-      assignedHoursPerWeek: 0
+      assignedHoursPerWeek: 0,
+      hobbies: []
     }
   },
   computed: {
     username () {
       return store.state.username
     }
+  },
+  created () {
+    this.updateHobbyDisplay()
   },
   methods: {
     addHobby () {
@@ -70,8 +84,13 @@ export default {
       hobbyItem['hobby'] = this.hobbyName
       hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
 
-      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem })
-      this.showModal = false
+      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(response => {
+        this.updateHobbyDisplay()
+        this.showModal = false
+      })
+    },
+    updateHobbyDisplay () {
+      axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
     },
     showAddHobbyModal () {
       this.showModal = true
