@@ -53,8 +53,8 @@ create table hobby_tracker (
   username varchar (50) references users,
   hobby varchar (500) not null,
   sort_order integer not null,
-  assigned_hours_per_week decimal not null,
-  completed_hours_this_week decimal not null,
+  assigned_hours_per_week real not null,
+  completed_hours_this_week real not null,
   completed boolean not null
 );
 
@@ -62,7 +62,7 @@ create table hobby_completed_hours_timestamped (
   id serial primary key,
   hobby_id integer references hobby_tracker,
   timestamp timestamp not null,
-  completed_hours_for_week decimal not null
+  completed_hours_for_week real not null
 );
 
 ### Codenames Database
@@ -120,4 +120,80 @@ create table codenames_games_to_locations (
   location_index integer,
   location_type location_type,
   primary key (game_id, player_owning_location, location_index)
+);
+
+### Recipe Database
+
+create table cookbooks (
+  id serial primary key,
+  name varchar(150) not null,
+  notes text
+);
+
+create table recipes (
+  id serial primary key,
+  cookbook_id integer references cookbooks,
+  name varchar(500) not null,
+  priority integer,
+  category varchar(150),
+  notes text
+);
+
+create table recipe_meals (
+  id serial primary key,
+  recipe_id integer references recipes,
+  date date,
+  user_1_rating decimal,
+  user_2_rating decimal,
+  user_1_comments text,
+  user_2_comments text
+);
+
+create table cities (
+  id serial primary key,
+  name varchar(150) not null,
+  state varchar(150),
+  country varchar(150),
+  notes text
+);
+
+create table restaurants (
+  id serial primary key,
+  city_id integer references cities,
+  name varchar(150) not null,
+  category varchar(150),
+  address text,
+  notes text
+);
+
+create table dishes (
+  id serial primary key,
+  restaurant_id integer references restaurants,
+  name varchar(150) not null,
+  category varchar(150),
+  notes text
+);
+
+create table dish_meals (
+  id serial primary key,
+  dish_id integer references dishes,
+  date date,
+  user_1_rating decimal,
+  user_2_rating decimal,
+  user_1_comments text,
+  user_2_comments text
+);
+
+create table recipe_images (
+  id serial primary key,
+  recipe_id integer references recipes,
+  url text,
+  caption text
+);
+
+create table dish_images (
+  id serial primary key,
+  dish_id integer references dishes,
+  url text,
+  caption text
 );

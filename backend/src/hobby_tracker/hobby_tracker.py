@@ -24,3 +24,17 @@ class HobbyTracker:
             self._database.rollback()
             cur.close()
             raise
+
+    def get_hobbies(self, username):
+        cur = self._database.get_cursor()
+
+        try:
+            cur.execute(
+                "SELECT * from hobby_tracker where username = %s", (username,))
+            hobbies = cur.fetchall()
+            cur.close()
+            return hobbies
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise

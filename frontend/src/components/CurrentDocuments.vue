@@ -1,55 +1,50 @@
 <template>
   <div class="current-documents">
-    <div class="title">
-      <span class="expand-icon" @click="toggleExpand">{{ expandIcon }}</span>&nbsp;Current Documents
-    </div>
-    <div v-if="isExpanded">
-      <table class="current-documents-list table">
-        <tr>
-          <th>Title</th><th>Notes</th><th>Modify</th>
-        </tr>
-        <tr class="current-documents-item" :key="index"
-            v-for="(currentDocument, index) in currentDocuments">
-          <td><a :href="currentDocument['url']" target="_blank">{{ currentDocument['title'] }}</a></td>
-          <td>{{ currentDocument['notes'] }}</td>
-          <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
-              @click="showEditModal(index)" />
-              <font-awesome-icon icon="trash" class="current-documents-icon"
-              @click="deleteDocument(index)" />
-              <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
-              @click="moveDocumentUp(index)" />
-              <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
-              @click="moveDocumentDown(index)" />
-          </td>
-        </tr>
-      </table>
-      <button @click="showAddModal()">Add Document</button>
-      <div id="current-documents-modal" class="current-documents-modal">
-        <div class="current-documents-modal-content">
-          <div class="current-documents-modal-container">
-            <b>{{ modalDialogTitleHeader }}</b>
-            <hr>
-            <table>
-              <tr>
-                <td><label for="current-documents-title"><b>Title:</b></label></td>
-                <td>
-                  <input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title">
-                </td>
-              </tr>
-              <tr>
-                <td><label for="current-documents-url"><b>Url:</b></label></td>
-                <td><input class="current-documents-input" v-model="modalDialogUrl" name="current-documents-url"></td>
-              </tr>
-              <tr>
-                <td><label for="current-documents-notes"><b>Notes:</b></label></td>
-                <td>
-                  <input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes">
-                </td>
-              </tr>
-            </table>
-            <button type="button" @click="hideModal()">Cancel</button>
-            <button type="button" @click="addOrEditDocument()">Save</button>
-          </div>
+    <table class="current-documents-list table">
+      <tr>
+        <th>Title</th><th>Notes</th><th>Modify</th>
+      </tr>
+      <tr class="current-documents-item" :key="index"
+          v-for="(currentDocument, index) in currentDocuments">
+        <td><a :href="currentDocument['url']" target="_blank">{{ currentDocument['title'] }}</a></td>
+        <td>{{ currentDocument['notes'] }}</td>
+        <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
+            @click="showEditModal(index)" />
+            <font-awesome-icon icon="trash" class="current-documents-icon"
+            @click="deleteDocument(index)" />
+            <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
+            @click="moveDocumentUp(index)" />
+            <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
+            @click="moveDocumentDown(index)" />
+        </td>
+      </tr>
+    </table>
+    <button @click="showAddModal()">Add Document</button>
+    <div id="current-documents-modal" class="current-documents-modal">
+      <div class="current-documents-modal-content">
+        <div class="current-documents-modal-container">
+          <b>{{ modalDialogTitleHeader }}</b>
+          <hr>
+          <table>
+            <tr>
+              <td><label for="current-documents-title"><b>Title:</b></label></td>
+              <td>
+                <input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title">
+              </td>
+            </tr>
+            <tr>
+              <td><label for="current-documents-url"><b>Url:</b></label></td>
+              <td><input class="current-documents-input" v-model="modalDialogUrl" name="current-documents-url"></td>
+            </tr>
+            <tr>
+              <td><label for="current-documents-notes"><b>Notes:</b></label></td>
+              <td>
+                <input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes">
+              </td>
+            </tr>
+          </table>
+          <button type="button" @click="hideModal()">Cancel</button>
+          <button type="button" @click="addOrEditDocument()">Save</button>
         </div>
       </div>
     </div>
@@ -60,7 +55,7 @@
 </style>
 <script>
 import axios from 'axios'
-import { getElementById, getFullBackendUrlForPath, generateExpandIcon } from '../common/utils'
+import { getElementById, getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
 const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
@@ -78,8 +73,7 @@ export default {
       modalDialogTitle: '',
       modalDialogUrl: '',
       modalDialogNotes: '',
-      modalDialogDocumentId: null,
-      isExpanded: true
+      modalDialogDocumentId: null
     }
   },
   created () {
@@ -91,9 +85,6 @@ export default {
   computed: {
     username () {
       return store.state.username
-    },
-    expandIcon () {
-      return generateExpandIcon(this.isExpanded)
     }
   },
   watch: {
@@ -102,9 +93,6 @@ export default {
     }
   },
   methods: {
-    toggleExpand () {
-      this.isExpanded = !this.isExpanded
-    },
     updateCurrentDocumentsDisplay () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
