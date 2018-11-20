@@ -45,16 +45,16 @@
       <div v-else>
         No game to display
       </div>
-      <div>
-        Invite:
-            <input v-model="playerToInvite" class="codenames-player-to-invite"/>
-            <button v-on:click="newGame">New Game</button>
-      </div>
-      <div class="codenames-log">
-        <div>Log:</div>
-        <div class="codenames-log-inner">
-          <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
-        </div>
+    </div>
+    <div>
+      Invite:
+          <input v-model="playerToInvite" class="codenames-player-to-invite"/>
+          <button v-on:click="newGame">New Game</button>
+    </div>
+    <div class="codenames-log">
+      <div>Log:</div>
+      <div class="codenames-log-inner">
+        <div :key="index" v-for="(logMessage, index) in logs">{{ logMessage }}</div>
       </div>
     </div>
   </div>

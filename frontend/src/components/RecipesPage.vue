@@ -17,6 +17,12 @@
 </style>
 <script>
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
+import { getFullBackendUrlForPath } from '../common/utils'
+import axios from 'axios'
+
+const ADD_COOKBOOK_URL = getFullBackendUrlForPath('/add/cookbook')
+const ADD_RECIPE_URL = getFullBackendUrlForPath('/add/recipe')
+const ADD_RECIPE_MEAL_URL = getFullBackendUrlForPath('/add/recipe_meal')
 
 export default {
   name: 'RecipesPage',
@@ -39,6 +45,28 @@ export default {
   },
   components: {
     RecipeRestaurantEntity
+  },
+  methods: {
+    addCookbook (name, notes) {
+      axios.post(ADD_COOKBOOK_URL, {name: name, notes: notes})
+    },
+    addRecipe (cookbookId, name, priority, category, notes) {
+      axios.post(
+        ADD_RECIPE_URL,
+        {cookbook_id: cookbookId, name: 'name', priority: priority, category: category, notes: notes})
+    },
+    addRecipeMeal (recipeId, date, user1Rating, user2Rating, user1Comments, user2Comments) {
+      axios.post(
+        ADD_RECIPE_MEAL_URL,
+        {
+          recipe_id: recipeId,
+          date: date,
+          user_1_rating: user1Rating,
+          user_2_rating: user2Rating,
+          user_1_comments: user1Comments,
+          user_2_comments: user2Comments
+        })
+    }
   }
 }
 </script>

@@ -143,8 +143,8 @@ create table recipe_meals (
   id serial primary key,
   recipe_id integer references recipes,
   date date,
-  user_1_rating decimal,
-  user_2_rating decimal,
+  user_1_rating real,
+  user_2_rating real,
   user_1_comments text,
   user_2_comments text
 );
@@ -178,8 +178,8 @@ create table dish_meals (
   id serial primary key,
   dish_id integer references dishes,
   date date,
-  user_1_rating decimal,
-  user_2_rating decimal,
+  user_1_rating real,
+  user_2_rating real,
   user_1_comments text,
   user_2_comments text
 );

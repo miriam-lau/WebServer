@@ -5,6 +5,8 @@ from src.database.database import Database
 from src.current_documents.current_documents import CurrentDocuments
 from src.codenames.codenames import Codenames
 from src.hobby_tracker.hobby_tracker import HobbyTracker
+from src.recipes_page.recipes_page import RecipesPage
+from src.restaurants_page.restaurants_page import RestaurantsPage
 
 
 app = Flask(__name__)
@@ -14,6 +16,8 @@ database = None
 current_documents = None
 codenames = None
 hobby_tracker = None
+recipes_page = None
+restaurants_page = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -22,10 +26,14 @@ def initialize_app():
     global current_documents
     global codenames
     global hobby_tracker
+    global recipes_page
+    global restaurants_page
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
     hobby_tracker = HobbyTracker(database)
+    recipes_page = RecipesPage(database)
+    restaurants_page = RestaurantsPage(database)
 
 # Current documents methods -------------------------------------------------------------------------------------
 
@@ -133,34 +141,28 @@ def get_hobbies():
 
 # Recipe / Restaurant methods ----------------------------------------------------------------------------------------
 
-# TODO: Make this actually work.
-# @app.route("/add/<entity_type>/<int:entity_id>", methods=["POST"])
-# def add_recipe_restaurant_entity(entity_type: str, entity_id: int):
-#     entity_manager = None
-#     redirect_url = None
-#     if entity_type == "cookbook":
-#         entity_manager = cookbook_manager
-#         redirect_url = "render_cookbooks"
-#     elif entity_type == "recipe":
-#         entity_manager = recipe_manager
-#         redirect_url = "render_cookbook"
-#     elif entity_type == "recipe_meal":
-#         entity_manager = entry_manager
-#         redirect_url = "render_recipe"
-#     elif entity_type == "city":
-#         entity_manager = city_manager
-#         redirect_url = "render_cities"
-#     elif entity_type == "restaurant":
-#         entity_manager = restaurant_manager
-#         redirect_url = "render_city"
-#     elif entity_type == "dish":
-#         entity_manager = dish_manager
-#         redirect_url = "render_restaurant"
-#     elif entity_type == "dish_meal":
-#         entity_manager = dish_entry_manager
-#         redirect_url = "render_dish"
-#     entity_manager.add_new_entity(entity_id, request.form.to_dict())
-#     return redirect(url_for(redirect_url, entity_id=entity_id))
+@app.route("/add/<entity_type>", methods=["POST"])
+def add_recipe_restaurant_entity(entity_type: str):
+    data = request.json
+    if entity_type == "cookbook":
+        recipes_page.add_cookbook(data["name"], data["notes"])
+    elif entity_type == "recipe":
+        recipes_page.add_recipe(data["cookbook_id"], data["name"], data["priority"], data["category"], data["notes"])
+    elif entity_type == "recipe_meal":
+        recipes_page.add_recipe_meal(
+            data["recipe_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
+            data["user_2_comments"])
+    elif entity_type == "city":
+        restaurants_page.add_city(data["name"], data["state"], data["country"], data["notes"])
+    elif entity_type == "restaurant":
+        restaurants_page.add_restaurant(data["city_id"], data["name"], data["category"], data["address"], data["notes"])
+    elif entity_type == "dish":
+        restaurants_page.add_dish(data["restaurant_id"], data["name"], data["category"], data["notes"])
+    elif entity_type == "dish_meal":
+        restaurants_page.add_dish_meal(
+            data["dish_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
+            data["user_2_comments"])
+    return ""
 
 # ----------------------------------------------------------------------------------------------
 
