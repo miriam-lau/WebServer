@@ -20,42 +20,19 @@
       </tr>
     </table>
     <button @click="showAddModal()">Add Document</button>
-    <div id="current-documents-modal" class="current-documents-modal">
-      <div class="current-documents-modal-content">
-        <div class="current-documents-modal-container">
-          <b>{{ modalDialogTitleHeader }}</b>
-          <hr>
-          <table>
-            <tr>
-              <td><label for="current-documents-title"><b>Title:</b></label></td>
-              <td>
-                <input class="current-documents-input" v-model="modalDialogTitle" name="current-documents-title">
-              </td>
-            </tr>
-            <tr>
-              <td><label for="current-documents-url"><b>Url:</b></label></td>
-              <td><input class="current-documents-input" v-model="modalDialogUrl" name="current-documents-url"></td>
-            </tr>
-            <tr>
-              <td><label for="current-documents-notes"><b>Notes:</b></label></td>
-              <td>
-                <input class="current-documents-input" v-model="modalDialogNotes" name="current-documents-notes">
-              </td>
-            </tr>
-          </table>
-          <button type="button" @click="hideModal()">Cancel</button>
-          <button type="button" @click="addOrEditDocument()">Save</button>
-        </div>
-      </div>
-    </div>
+    <CurrentDocumentsModal :show="showModal" @close="showModal = false"
+        :title="modalTitle" :initialDocumentTitle="modalDocumentTitle" :initialDocumentUrl="modalDocumentUrl"
+        :initialDocumentNotes="modalDocumentNotes" :documentId="modalDocumentId"
+        :addOrEditDocument="addOrEditDocument" />
   </div>
 </template>
 <style>
   @import "../assets/style/current-documents.css"
 </style>
 <script>
+import CurrentDocumentsModal from './current_documents/CurrentDocumentsModal'
 import axios from 'axios'
-import { getElementById, getFullBackendUrlForPath } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
 const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
@@ -69,18 +46,16 @@ export default {
   data () {
     return {
       currentDocuments: [],
-      modalDialogTitleHeader: '',
-      modalDialogTitle: '',
-      modalDialogUrl: '',
-      modalDialogNotes: '',
-      modalDialogDocumentId: null
+      modalTitle: '',
+      modalDocumentTitle: '',
+      modalDocumentUrl: '',
+      modalDocumentNotes: '',
+      modalDocumentId: null,
+      showModal: false
     }
   },
   created () {
     this.updateCurrentDocumentsDisplay()
-  },
-  updated () {
-    modal = getElementById('current-documents-modal')
   },
   computed: {
     username () {
@@ -92,6 +67,9 @@ export default {
       this.updateCurrentDocumentsDisplay()
     }
   },
+  components: {
+    CurrentDocumentsModal
+  },
   methods: {
     updateCurrentDocumentsDisplay () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
@@ -101,23 +79,20 @@ export default {
     },
     showEditModal (index) {
       let document = this.currentDocuments[index]
-      this.modalDialogTitleHeader = 'Editing ' + document['title']
-      this.modalDialogTitle = document['title']
-      this.modalDialogUrl = document['url']
-      this.modalDialogNotes = document['notes']
-      this.modalDialogDocumentId = document['id']
-      getElementById('current-documents-modal').style.display = 'block'
+      this.modalTitle = 'Editing ' + document['title']
+      this.modalDocumentTitle = document['title']
+      this.modalDocumentUrl = document['url']
+      this.modalDocumentNotes = document['notes']
+      this.modalDocumentId = document['id']
+      this.showModal = true
     },
     showAddModal () {
-      this.modalDialogTitleHeader = 'Adding a new document'
-      this.modalDialogTitle = ''
-      this.modalDialogUrl = ''
-      this.modalDialogNotes = ''
-      this.modalDialogDocumentId = null
-      getElementById('current-documents-modal').style.display = 'block'
-    },
-    hideModal () {
-      getElementById('current-documents-modal').style.display = 'none'
+      this.modalTitle = 'Adding a new document'
+      this.modalDocumentTitle = ''
+      this.modalDocumentUrl = ''
+      this.modalDocumentNotes = ''
+      this.modalDocumentId = null
+      this.showModal = true
     },
     deleteDocument (index) {
       axios.post(DELETE_DOCUMENT_URL, {id: this.currentDocuments[index]['id']}).then(
@@ -163,36 +138,27 @@ export default {
           this.updateCurrentDocumentsDisplay()
         })
     },
-    addOrEditDocument () {
+    addOrEditDocument (title, url, notes, id) {
       var document = {}
       document['username'] = this.username
-      document['title'] = this.modalDialogTitle
-      document['url'] = this.modalDialogUrl
-      document['notes'] = this.modalDialogNotes
-      if (this.modalDialogDocumentId != null) {
-        document['id'] = this.modalDialogDocumentId
-        axios.post(EDIT_DOCUMENT_URL, {id: this.modalDialogDocumentId, document: document}).then(
+      document['title'] = title
+      document['url'] = url
+      document['notes'] = notes
+      if (id != null) {
+        document['id'] = id
+        axios.post(EDIT_DOCUMENT_URL, {id: id, document: document}).then(
           response => {
             this.updateCurrentDocumentsDisplay()
-            this.hideModal()
+            this.showModal = false
           })
       } else {
         axios.post(ADD_DOCUMENT_URL, {document: document}).then(
           response => {
             this.updateCurrentDocumentsDisplay()
-            this.hideModal()
+            this.showModal = false
           })
       }
     }
-  }
-}
-
-var modal
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target === modal) {
-    modal.style.display = 'none'
   }
 }
 </script>
