@@ -38,12 +38,18 @@
 }
 
 .hobby-table-headers {
-  display: flex;
-  justify-content: space-around;
   padding-top: 12px;
   padding-bottom: 12px;
   background-color: purple;
   color: white;
+}
+
+.hobby-items {
+  text-align: center;
+}
+
+.hobby-item-name {
+  text-align: left;
 }
 
 /* Hobby Modal ------------------------------------------------------------------------------------------------ */
@@ -54,7 +60,6 @@
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
   background-color: #474e5d;
   padding-top: 50px;
 }

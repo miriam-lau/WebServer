@@ -197,4 +197,3 @@ create table dish_images (
   url text,
   caption text
 );
-

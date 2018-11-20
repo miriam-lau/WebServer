@@ -134,7 +134,12 @@ def add_hobby():
     hobby_tracker.add_hobby(hobby)
     return ""
 
-# Recipe / Restaurant methods
+@app.route("/get_hobbies", methods=["POST"])
+def get_hobbies():
+    username = request.json["username"]
+    return jsonify(hobby_tracker.get_hobbies(username))
+
+# Recipe / Restaurant methods ----------------------------------------------------------------------------------------
 
 @app.route("/add/<entity_type>", methods=["POST"])
 def add_recipe_restaurant_entity(entity_type: str):
@@ -145,7 +150,7 @@ def add_recipe_restaurant_entity(entity_type: str):
         recipes_page.add_recipe(data["cookbook_id"], data["name"], data["priority"], data["category"], data["notes"])
     elif entity_type == "recipe_meal":
         recipes_page.add_recipe_meal(
-            data["recipe_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"], 
+            data["recipe_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
             data["user_2_comments"])
     elif entity_type == "city":
         restaurants_page.add_city(data["name"], data["state"], data["country"], data["notes"])
@@ -155,7 +160,7 @@ def add_recipe_restaurant_entity(entity_type: str):
         restaurants_page.add_dish(data["restaurant_id"], data["name"], data["category"], data["notes"])
     elif entity_type == "dish_meal":
         restaurants_page.add_dish_meal(
-            data["dish_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"], 
+            data["dish_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
             data["user_2_comments"])
     return ""
 
