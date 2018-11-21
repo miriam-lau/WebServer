@@ -29,11 +29,22 @@ class HobbyTracker:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute(
-                "SELECT * from hobby_tracker where username = %s", (username,))
+            cur.execute("SELECT * from hobby_tracker where username = %s", (username,))
             hobbies = cur.fetchall()
             cur.close()
             return hobbies
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise
+
+    def delete_hobby(self, hobby_id):
+        cur = self._database.get_cursor()
+
+        try:
+            cur.execute("DELETE from hobby_tracker where id = %s", (hobby_id,))
+            self._database.commit()
+            cur.close()
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
