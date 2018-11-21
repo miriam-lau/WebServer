@@ -43,4 +43,15 @@ function generateExpandIcon (isExpanded) {
   }
 }
 
-export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon }
+function isEqual (x, y) {
+  return Math.abs(x - y) < Number.EPSILON
+}
+
+function getDisplayDate (dateString) {
+  let date = new Date(Date.parse(dateString))
+  let options = {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}
+  return date.toLocaleDateString('en-US', options)
+}
+
+export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
+  isEqual, getDisplayDate }

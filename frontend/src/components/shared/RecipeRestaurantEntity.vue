@@ -1,18 +1,18 @@
 <template>
   <div>
     <span :key="backLink.name" v-for="(backLink, index) in backLinks">
-      <a :href="backLink.url">{{ backLink.name }}</a>
+      <a href="#" @click.prevent="backLink.handleClick">{{ backLink.name }}</a>
       <span v-if="index !== backLinks.length - 1">
         >
       </span>
     </span>
-    <h1>
+    <h1 class="recipe-restaurant-entity-title">
       {{ title }}
-      <font-awesome-icon icon="pencil-alt" class="current-documents-icon" />
+      <span v-if="hasInfo"><font-awesome-icon icon="pencil-alt" class="current-documents-icon" /></span>
     </h1>
     <div v-if="hasInfo">
-      <div v-if="hasInfoImage">
-        <img class="recipe-restaurant-entity-info-image" :src="infoImageName" />
+      <div :key="infoImage" v-for="infoImage in infoImages">
+        <img class="recipe-restaurant-entity-info-image" :src="infoImage" />
       </div>
       <div class="recipe-restaurant-entity-info">
         <table class="recipe-restaurant-entity-infotable">
@@ -30,7 +30,7 @@
         <tr v-for="childTableValue in childTableValues" :key="childTableValue.id">
           <td v-for="(colValue, index) in childTableValue.values" :key="index">
             <span v-if="index === 0">
-              <a :href="childTableValue.url">{{ colValue }}</a>
+              <a href="#" @click.prevent="childTableValue.handleClick">{{ colValue }}</a>
             </span>
             <span v-else>
               {{ colValue }}
@@ -55,8 +55,7 @@ export default {
     backLinks: Array,
     title: String,
     hasInfo: Boolean,
-    hasInfoImage: Boolean,
-    infoImageName: String,
+    infoImages: Array,
     infoDicts: Array,
     hasChildren: Boolean,
     childTableHeaders: Array,

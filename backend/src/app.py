@@ -164,6 +164,14 @@ def add_recipe_restaurant_entity(entity_type: str):
             data["user_2_comments"])
     return ""
 
+@app.route("/get_recipes_page_data", methods=["POST"])
+def get_recipes_page_data():
+    return jsonify(recipes_page.get_recipes_page_data())
+
+@app.route("/get_restaurants_page_data", methods=["POST"])
+def get_restaurants_page_data():
+    return jsonify(restaurants_page.get_restaurants_page_data())
+
 # ----------------------------------------------------------------------------------------------
 
 

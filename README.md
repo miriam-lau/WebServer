@@ -39,7 +39,7 @@ create table users (
 
 ### Current Documents Database
 create table current_documents (
-  id serial primary key,                                                          
+  id serial primary key,
   username varchar (50) references users,
   title varchar (500) not null,
   sort_order integer not null,
@@ -49,7 +49,7 @@ create table current_documents (
 
 ### Hobby Tracker Database
 create table hobby_tracker (
-  id serial primary key,                                                          
+  id serial primary key,
   username varchar (50) references users,
   hobby varchar (500) not null,
   sort_order integer not null,
