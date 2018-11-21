@@ -139,6 +139,11 @@ def get_hobbies():
     username = request.json["username"]
     return jsonify(hobby_tracker.get_hobbies(username))
 
+@app.route("/delete_hobby", methods=["POST"])
+def delete_hobby():
+    hobby_id = request.json["id"]
+    return jsonify(hobby_tracker.delete_hobby(hobby_id))
+
 # Recipe / Restaurant methods ----------------------------------------------------------------------------------------
 
 @app.route("/add/<entity_type>", methods=["POST"])

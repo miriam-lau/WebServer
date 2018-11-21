@@ -15,6 +15,7 @@
           <th>Hours Completed</th>
           <th>Hours Remaining</th>
           <th>Completed?</th>
+          <th>Delete</th>
         </tr>
         <tr class="hobby-items" :key="hobby['id']" v-for="hobby in hobbies">
           <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
@@ -22,6 +23,7 @@
           <td>{{ hobby['completed_hours_this_week'] }}</td>
           <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
           <td>{{ hobby['completed'] }}</td>
+          <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
         </tr>
       </table>
     </div>
@@ -57,6 +59,7 @@ import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
 const ADD_HOBBY_URL = getFullBackendUrlForPath('/add_hobby')
+const DELETE_HOBBY_URL = getFullBackendUrlForPath('/delete_hobby')
 const GET_HOBBIES_URL = getFullBackendUrlForPath('/get_hobbies')
 
 export default {
@@ -91,6 +94,9 @@ export default {
     },
     updateHobbyDisplay () {
       axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
+    },
+    deleteHobby (id) {
+      axios.post(DELETE_HOBBY_URL, { id }).then(response => { this.updateHobbyDisplay() })
     },
     showAddHobbyModal () {
       this.showModal = true
