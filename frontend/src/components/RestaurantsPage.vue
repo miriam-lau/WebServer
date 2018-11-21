@@ -8,7 +8,12 @@
       :infoImages="infoImages"
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
-      :childTableValues="childTableValues" />
+      :childTableValues="childTableValues"
+      :handleModalSave="handleModalSave"
+      :modalFormLines="modalFormLines"
+      :modalTitle="modalTitle"
+      :entityType="entityType"
+      :entityId="entityId" />
   </div>
 </template>
 <script>
@@ -21,12 +26,17 @@ const ADD_RESTAURANT_URL = getFullBackendUrlForPath('/add/restaurant')
 const ADD_DISH_URL = getFullBackendUrlForPath('/add/dish')
 const ADD_DISH_MEAL_URL = getFullBackendUrlForPath('/add/dish_meal')
 const GET_RESTAURANTS_PAGE_DATA_URL = getFullBackendUrlForPath('/get_restaurants_page_data')
+const EDIT_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/edit/')
 
 export default {
   name: 'RestaurantsPage',
   data () {
     return {
       restaurantsPageData: {},
+      /** The type of entity currently being displayed. */
+      entityType: '',
+      /** The id of the entity currently being displayed. */
+      entityId: 0,
       backLinks: [],
       title: '',
       hasInfo: false,
@@ -34,7 +44,10 @@ export default {
       infoImages: [],
       hasChildren: false,
       childTableHeaders: [],
-      childTableValues: []
+      childTableValues: [],
+      /** See FormModal for a description. */
+      modalFormLines: [],
+      modalTitle: ''
     }
   },
   components: {
@@ -44,6 +57,49 @@ export default {
     this.getRestaurantsPageDataAndRender()
   },
   methods: {
+    handleModalSave (formSaveResponse) {
+      formSaveResponse['id'] = this.entityId
+      let editUrl = EDIT_ENTITY_URL_PREFIX + this.entityType
+      axios.post(editUrl, formSaveResponse).then(response => {
+        let newEntity = response.data
+        let id = newEntity['id']
+        let currentEntity = this.restaurantsPageData[this.convertEntityTypeToMapName(this.entityType)][id]
+        for (let prop in newEntity) {
+          if (prop === 'id') {
+            continue
+          }
+          currentEntity[prop] = newEntity[prop]
+        }
+        this.showEntity(this.entityType, id)
+      })
+    },
+    convertEntityTypeToMapName (entityType) {
+      switch (entityType) {
+        case 'city':
+          return 'cities'
+        case 'restaurant':
+          return 'restaurants'
+        case 'dish':
+          return 'dishes'
+        case 'dish_meal':
+          return 'dish_meals'
+      }
+    },
+    showEntity (entityType, id) {
+      switch (entityType) {
+        case 'city':
+          this.showCity(id)
+          return
+        case 'restaurant':
+          this.showRestaurant(id)
+          return
+        case 'dish':
+          this.showDish(id)
+          return
+        case 'dish_meal':
+          this.showDishMeal(id)
+      }
+    },
     getNumDishesTriedAtRestaurant (restaurant) {
       return restaurant['dishes'].length
     },
@@ -111,16 +167,18 @@ export default {
     },
     showCity (id) {
       let city = this.restaurantsPageData['cities'][id]
+      this.entityType = 'city'
+      this.entityId = id
       this.backLinks =
-          [{name: 'Cities', handleClick: this.showCities.bind(this)}]
+          [{id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)}]
       this.title = city['name']
       this.hasInfo = true
       this.infoImages = []
       // TODO: Populate this with more info.
       this.infoDicts = [
-        {name: 'State', value: city['state']},
-        {name: 'Country', value: city['country']},
-        {name: 'Notes', value: city['notes']}
+        {id: 'city-state-' + id, name: 'State', value: city['state']},
+        {id: 'city-country-' + id, name: 'Country', value: city['country']},
+        {id: 'city-notes-' + id, name: 'Notes', value: city['notes']}
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Dishes Tried', 'Best Rating', 'Category']
@@ -137,24 +195,53 @@ export default {
             restaurant['category']]
         }
       })
+      this.modalTitle = 'Editing ' + this.title
+      this.modalFormLines = [
+        {
+          id: 'city-modal-name-' + city['id'],
+          name: 'name',
+          displayName: 'Name:',
+          value: city['name']
+        },
+        {
+          id: 'city-modal-state-' + city['state'],
+          name: 'state',
+          displayName: 'State:',
+          value: city['state']
+        },
+        {
+          id: 'city-modal-country-' + city['country'],
+          name: 'country',
+          displayName: 'Country:',
+          value: city['country']
+        },
+        {
+          id: 'city-modal-notes-' + city['id'],
+          name: 'notes',
+          displayName: 'Notes:',
+          value: city['notes']
+        }
+      ]
     },
     showRestaurant (id) {
       let restaurant = this.restaurantsPageData['restaurants'][id]
       let city = this.restaurantsPageData['cities'][restaurant['city_id']]
+      this.entityType = 'restaurant'
+      this.entityId = id
       this.backLinks =
           [
-            {name: 'Cities', handleClick: this.showCities.bind(this)},
-            {name: city['name'], handleClick: this.showCity.bind(this, city['id'])}
+            {id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)},
+            {id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city['id'])}
           ]
       this.title = restaurant['name']
       this.hasInfo = true
       this.infoImages = []
       // TODO: Populate this with more info.
       this.infoDicts = [
-        {name: 'Best Rating', value: this.getBestRatingForRestaurant(restaurant).toFixed(1)},
-        {name: 'Address', value: restaurant['address']},
-        {name: 'Category', value: restaurant['category']},
-        {name: 'Notes', value: restaurant['notes']}
+        {id: 'restaurant-best-rating-' + id, name: 'Best Rating', value: this.getBestRatingForRestaurant(restaurant).toFixed(1)},
+        {id: 'restaurant-address-' + id, name: 'Address', value: restaurant['address']},
+        {id: 'restaurant-category-' + id, name: 'Category', value: restaurant['category']},
+        {id: 'restaurant-notes-' + id, name: 'Notes', value: restaurant['notes']}
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Times Tried', 'Best Rating', 'Category']
@@ -171,27 +258,60 @@ export default {
             dish['category']]
         }
       })
+      this.modalTitle = 'Editing ' + this.title
+      this.modalFormLines = [
+        {
+          id: 'restaurant-modal-name-' + restaurant['id'],
+          name: 'name',
+          displayName: 'Name:',
+          value: restaurant['name']
+        },
+        {
+          id: 'restaurant-modal-address-' + restaurant['address'],
+          name: 'address',
+          displayName: 'Address:',
+          value: restaurant['address']
+        },
+        {
+          id: 'restaurant-modal-category-' + restaurant['category'],
+          name: 'category',
+          displayName: 'Category:',
+          value: restaurant['category']
+        },
+        {
+          id: 'restaurant-modal-notes-' + restaurant['id'],
+          name: 'notes',
+          displayName: 'Notes:',
+          value: restaurant['notes']
+        }
+      ]
     },
     showDish (id) {
       let dish = this.restaurantsPageData['dishes'][id]
       let restaurant = this.restaurantsPageData['restaurants'][dish['restaurant_id']]
       let city = this.restaurantsPageData['cities'][restaurant['city_id']]
+      this.entityType = 'dish'
+      this.entityId = id
       this.backLinks =
           [
-            {name: 'Cities', handleClick: this.showCities.bind(this)},
-            {name: city['name'], handleClick: this.showCity.bind(this, city['id'])},
-            {name: restaurant['name'], handleClick: this.showRestaurant.bind(this, restaurant['id'])}
+            {id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)},
+            {id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city['id'])},
+            {
+              id: 'restaurant-' + restaurant['id'],
+              name: restaurant['name'],
+              handleClick: this.showRestaurant.bind(this, restaurant['id'])
+            }
           ]
       this.title = restaurant['name'] + ': ' + dish['name']
       this.hasInfo = true
       this.infoImages = []
       // TODO: Populate this with more info.
       this.infoDicts = [
-        {name: 'Best Rating', value: this.getBestRatingForDish(dish).toFixed(1)},
-        {name: 'Latest Rating', value: this.getLatestRatingForDish(dish).toFixed(1)},
-        {name: 'Num Times Tried', value: this.getNumTimesDishTried(dish)},
-        {name: 'Category', value: dish['category']},
-        {name: 'Notes', value: dish['notes']}
+        {id: 'dish-best-rating-' + id, name: 'Best Rating', value: this.getBestRatingForDish(dish).toFixed(1)},
+        {id: 'dish-latest-rating-' + id, name: 'Latest Rating', value: this.getLatestRatingForDish(dish).toFixed(1)},
+        {id: 'dish-num-times-tried-' + id, name: 'Num Times Tried', value: this.getNumTimesDishTried(dish)},
+        {id: 'dish-category-' + id, name: 'Category', value: dish['category']},
+        {id: 'dish-notes-' + id, name: 'Notes', value: dish['notes']}
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Date', 'Overall Rating', 'Miriam\'s Rating', 'Miriam\'s Comments',
@@ -207,32 +327,88 @@ export default {
             dishMeal['user_2_comments']]
         }
       })
+      this.modalTitle = 'Editing ' + this.title
+      this.modalFormLines = [
+        {
+          id: 'dish-modal-name-' + dish['id'],
+          name: 'name',
+          displayName: 'Name:',
+          value: dish['name']
+        },
+        {
+          id: 'dish-modal-category-' + dish['id'],
+          name: 'category',
+          displayName: 'Category:',
+          value: dish['category']
+        },
+        {
+          id: 'dish-modal-notes-' + dish['id'],
+          name: 'notes',
+          displayName: 'Notes:',
+          value: dish['notes']
+        }
+      ]
     },
     showDishMeal (id) {
       let dishMeal = this.restaurantsPageData['dish_meals'][id]
       let dish = this.restaurantsPageData['dishes'][dishMeal['dish_id']]
       let restaurant = this.restaurantsPageData['restaurants'][dish['restaurant_id']]
       let city = this.restaurantsPageData['cities'][restaurant['city_id']]
+      this.entityType = 'dish_meal'
+      this.entityId = id
       this.backLinks =
           [
-            {name: 'Cities', handleClick: this.showCities.bind(this)},
-            {name: city['name'], handleClick: this.showCity.bind(this, city['id'])},
-            {name: restaurant['name'], handleClick: this.showRestaurant.bind(this, restaurant['id'])},
-            {name: dish['name'], handleClick: this.showDish.bind(this, dish['id'])}
+            {id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)},
+            {id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city['id'])},
+            {id: 'restaurant-' + restaurant['id'], name: restaurant['name'], handleClick: this.showRestaurant.bind(this, restaurant['id'])},
+            {id: 'dish-' + dish['id'], name: dish['name'], handleClick: this.showDish.bind(this, dish['id'])}
           ]
       this.title = 'Meal for ' + restaurant['name'] + ': ' + dish['name']
       this.hasInfo = true
       this.infoImages = []
       this.infoDicts = [
-        {name: 'Date', value: getDisplayDate(dishMeal['date'])},
-        {name: 'Miriam\'s Rating', value: dishMeal['user_1_rating'].toFixed(1)},
-        {name: 'James\'s Rating', value: dishMeal['user_2_rating'].toFixed(1)},
-        {name: 'Miriam\'s Comments', value: dishMeal['user_1_comments']},
-        {name: 'James\' Comments', value: dishMeal['user_2_comments']}
+        {id: 'dishmeal-date-' + id, name: 'Date', value: getDisplayDate(dishMeal['date'])},
+        {id: 'dishmeal-miriam-rating-' + id, name: 'Miriam\'s Rating', value: dishMeal['user_1_rating'].toFixed(1)},
+        {id: 'dishmeal-james-rating-' + id, name: 'James\'s Rating', value: dishMeal['user_2_rating'].toFixed(1)},
+        {id: 'dishmeal-miriam-comments-' + id, name: 'Miriam\'s Comments', value: dishMeal['user_1_comments']},
+        {id: 'dishmeal-james-comments-' + id, name: 'James\' Comments', value: dishMeal['user_2_comments']}
       ]
       this.hasChildren = false
       this.childTableHeaders = []
       this.childTableValues = []
+      this.modalTitle = 'Editing ' + this.title
+      this.modalFormLines = [
+        {
+          id: 'dishmeal-modal-date-' + dishMeal['id'],
+          name: 'date',
+          displayName: 'Date:',
+          value: dishMeal['date']
+        },
+        {
+          id: 'dishmeal-modal-miriam-rating-' + dishMeal['id'],
+          name: 'user_1_rating',
+          displayName: 'Miriam\'s Rating:',
+          value: dishMeal['user_1_rating']
+        },
+        {
+          id: 'dishmeal-modal-james-rating-' + dishMeal['id'],
+          name: 'user_2_rating',
+          displayName: 'James\' Rating:',
+          value: dishMeal['user_2_rating']
+        },
+        {
+          id: 'dishmeal-modal-miriam-comments-' + dishMeal['id'],
+          name: 'user_1_comments',
+          displayName: 'Miriam\'s Comments:',
+          value: dishMeal['user_1_comments']
+        },
+        {
+          id: 'dishmeal-modal-james-comments-' + dishMeal['id'],
+          name: 'user_2_comments',
+          displayName: 'James\' Comments:',
+          value: dishMeal['user_2_comments']
+        }
+      ]
     },
     getRestaurantsPageDataAndRender () {
       axios.post(GET_RESTAURANTS_PAGE_DATA_URL).then(

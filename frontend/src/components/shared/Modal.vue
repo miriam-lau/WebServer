@@ -28,6 +28,7 @@ export default {
     }
   },
   mounted () {
+    // Closes the modal if 'escape' is pressed.
     document.addEventListener('keydown', (e) => {
       if (this.show && e.keyCode === 27) {
         this.close()
