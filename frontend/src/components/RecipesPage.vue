@@ -9,9 +9,11 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :handleModalSave="handleModalSave"
-      :modalFormLines="modalFormLines"
-      :modalTitle="modalTitle"
+      :handleEditModalSave="handleEditModalSave"
+      :handleDeleteModalSave="handleDeleteModalSave"
+      :editModalFormLines="editModalFormLines"
+      :editModalTitle="editModalTitle"
+      :deleteModalTitle="deleteModalTitle"
       :entityType="entityType"
       :entityId="entityId" />
   </div>
@@ -26,6 +28,7 @@ const ADD_RECIPE_URL = getFullBackendUrlForPath('/add/recipe')
 const ADD_RECIPE_MEAL_URL = getFullBackendUrlForPath('/add/recipe_meal')
 const GET_RECIPES_PAGE_DATA_URL = getFullBackendUrlForPath('/get_recipes_page_data')
 const EDIT_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/edit/')
+const DELETE_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/delete/')
 
 export default {
   name: 'RecipesPage',
@@ -49,8 +52,9 @@ export default {
       /** See RecipeRestaurantEntity for a description. */
       childTableValues: [],
       /** See FormModal for a description. */
-      modalFormLines: [],
-      modalTitle: ''
+      editModalFormLines: [],
+      editModalTitle: '',
+      deleteModalTitle: ''
     }
   },
   components: {
@@ -60,7 +64,26 @@ export default {
     this.getRecipesPageDataAndRender()
   },
   methods: {
-    handleModalSave (formSaveResponse) {
+    handleDeleteModalSave (unused) {
+      let deleteUrl = DELETE_ENTITY_URL_PREFIX + this.entityType
+      axios.post(deleteUrl, {id: this.entityId}).then(response => {
+        let parentArray = this.getParentArrayFromEntity(this.entityType, this.entityId)
+        let parentId = this.getParentIdForEntity(this.entityType, this.entityId)
+        parentArray.splice(parentArray.indexOf(this.entityId), 1)
+        delete this.recipesPageData[this.convertEntityTypeToMapName(this.entityType)][this.entityId]
+        switch (this.entityType) {
+          case 'cookbook':
+            this.showCookbooks()
+            return
+          case 'recipe':
+            this.showCookbook(parentId)
+            return
+          case 'recipe_meal':
+            this.showRecipe(parentId)
+        }
+      })
+    },
+    handleEditModalSave (formSaveResponse) {
       formSaveResponse['id'] = this.entityId
       let editUrl = EDIT_ENTITY_URL_PREFIX + this.entityType
       axios.post(editUrl, formSaveResponse).then(response => {
@@ -84,6 +107,24 @@ export default {
           return 'recipes'
         case 'recipe_meal':
           return 'recipe_meals'
+      }
+    },
+    getParentArrayFromEntity (entityType, id) {
+      switch (entityType) {
+        case 'cookbook':
+          return this.recipesPageData['cookbooks_list']
+        case 'recipe':
+          return this.recipesPageData['cookbooks'][this.recipesPageData['recipes'][id]['cookbook_id']]['recipes']
+        case 'recipe_meal':
+          return this.recipesPageData['recipes'][this.recipesPageData['recipe_meals'][id]['recipe_id']]['recipe_meals']
+      }
+    },
+    getParentIdForEntity (entityType, id) {
+      switch (entityType) {
+        case 'recipe':
+          return this.recipesPageData['recipes'][id]['cookbook_id']
+        case 'recipe_meal':
+          return this.recipesPageData['recipe_meals'][id]['recipe_id']
       }
     },
     showEntity (entityType, id) {
@@ -215,8 +256,9 @@ export default {
             recipe['category']]
         }
       })
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'cookbook-modal-name-' + cookbook['id'],
           name: 'name',
@@ -271,8 +313,9 @@ export default {
             recipeMeal['user_2_rating'].toFixed(1), recipeMeal['user_2_comments']]
         }
       })
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'recipe-modal-name-' + recipe['id'],
           name: 'name',
@@ -332,8 +375,9 @@ export default {
       this.hasChildren = false
       this.childTableHeaders = []
       this.childTableValues = []
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'recipemeal-modal-date-' + recipeMeal['id'],
           name: 'date',

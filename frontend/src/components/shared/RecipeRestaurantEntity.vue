@@ -9,7 +9,8 @@
     <h1 class="recipe-restaurant-entity-title">
       {{ title }}
       <span v-if="hasInfo">
-        <font-awesome-icon icon="pencil-alt" class="current-documents-icon" @click="showModal" />
+        <font-awesome-icon icon="pencil-alt" class="current-documents-icon" @click="showEditModal" />
+        <font-awesome-icon icon="trash" class="current-documents-icon" @click="showDeleteModal" />
       </span>
     </h1>
     <div v-if="hasInfo">
@@ -41,8 +42,12 @@
         </tr>
       </table>
     </div>
-    <FormModal :show="shouldShowModal" @close="shouldShowModal = false"
-        :title="modalTitle" :initialFormLines="modalFormLines" :handleSave="closeModalAndHandleModalSave" />
+    <FormModal :show="shouldShowEditModal" @close="shouldShowEditModal = false"
+        :title="editModalTitle" :initialFormLines="editModalFormLines"
+        :handleSave="closeModalAndHandleEditModalSave" buttonText="Save" />
+    <FormModal :show="shouldShowDeleteModal" @close="shouldShowDeleteModal = false"
+        :title="deleteModalTitle" :initialFormLines="[]" :handleSave="closeModalAndHandleDeleteModalSave"
+        buttonText="Delete" />
   </div>
 </template>
 <style>
@@ -82,28 +87,40 @@ export default {
      *   values: An array of primitive values to display in the table.
      */
     childTableValues: Array,
-    /** The title to be displayed when the modal is brougt up. */
-    modalTitle: String,
+    /** The title to be displayed when the edit modal is brougt up. */
+    deleteModalTitle: String,
+    /** The title to be displayed when the edit modal is brougt up. */
+    editModalTitle: String,
     /** See FormModal for a description. */
-    modalFormLines: Array,
+    editModalFormLines: Array,
     /** See FormModal for a description. */
-    handleModalSave: Function
+    handleEditModalSave: Function,
+    /** See FormModal for a description. */
+    handleDeleteModalSave: Function
   },
   data () {
     return {
-      shouldShowModal: false
+      shouldShowEditModal: false,
+      shouldShowDeleteModal: false
     }
   },
   components: {
     FormModal
   },
   methods: {
-    showModal () {
-      this.shouldShowModal = true
+    showDeleteModal () {
+      this.shouldShowDeleteModal = true
     },
-    closeModalAndHandleModalSave (formLines) {
-      this.shouldShowModal = false
-      this.handleModalSave(formLines)
+    showEditModal () {
+      this.shouldShowEditModal = true
+    },
+    closeModalAndHandleEditModalSave (formLines) {
+      this.shouldShowEditModal = false
+      this.handleEditModalSave(formLines)
+    },
+    closeModalAndHandleDeleteModalSave (formLines) {
+      this.shouldShowDeleteModal = false
+      this.handleDeleteModalSave(formLines)
     }
   }
 }

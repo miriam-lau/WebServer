@@ -9,9 +9,11 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :handleModalSave="handleModalSave"
-      :modalFormLines="modalFormLines"
-      :modalTitle="modalTitle"
+      :handleEditModalSave="handleEditModalSave"
+      :handleDeleteModalSave="handleDeleteModalSave"
+      :editModalFormLines="editModalFormLines"
+      :editModalTitle="editModalTitle"
+      :deleteModalTitle="deleteModalTitle"
       :entityType="entityType"
       :entityId="entityId" />
   </div>
@@ -27,6 +29,7 @@ const ADD_DISH_URL = getFullBackendUrlForPath('/add/dish')
 const ADD_DISH_MEAL_URL = getFullBackendUrlForPath('/add/dish_meal')
 const GET_RESTAURANTS_PAGE_DATA_URL = getFullBackendUrlForPath('/get_restaurants_page_data')
 const EDIT_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/edit/')
+const DELETE_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/delete/')
 
 export default {
   name: 'RestaurantsPage',
@@ -46,8 +49,9 @@ export default {
       childTableHeaders: [],
       childTableValues: [],
       /** See FormModal for a description. */
-      modalFormLines: [],
-      modalTitle: ''
+      editModalFormLines: [],
+      editModalTitle: '',
+      deleteModalTitle: ''
     }
   },
   components: {
@@ -57,7 +61,29 @@ export default {
     this.getRestaurantsPageDataAndRender()
   },
   methods: {
-    handleModalSave (formSaveResponse) {
+    handleDeleteModalSave (unused) {
+      let deleteUrl = DELETE_ENTITY_URL_PREFIX + this.entityType
+      axios.post(deleteUrl, {id: this.entityId}).then(response => {
+        let parentArray = this.getParentArrayFromEntity(this.entityType, this.entityId)
+        let parentId = this.getParentIdForEntity(this.entityType, this.entityId)
+        parentArray.splice(parentArray.indexOf(this.entityId), 1)
+        delete this.restaurantsPageData[this.convertEntityTypeToMapName(this.entityType)][this.entityId]
+        switch (this.entityType) {
+          case 'city':
+            this.showCities()
+            return
+          case 'restaurant':
+            this.showCity(parentId)
+            return
+          case 'dish':
+            this.showRestaurant(parentId)
+            return
+          case 'dish_meal':
+            this.showDish(parentId)
+        }
+      })
+    },
+    handleEditModalSave (formSaveResponse) {
       formSaveResponse['id'] = this.entityId
       let editUrl = EDIT_ENTITY_URL_PREFIX + this.entityType
       axios.post(editUrl, formSaveResponse).then(response => {
@@ -83,6 +109,28 @@ export default {
           return 'dishes'
         case 'dish_meal':
           return 'dish_meals'
+      }
+    },
+    getParentArrayFromEntity (entityType, id) {
+      switch (entityType) {
+        case 'city':
+          return this.restaurantsPageData['cities_list']
+        case 'restaurant':
+          return this.restaurantsPageData['cities'][this.restaurantsPageData['restaurants'][id]['city_id']]['restaurants']
+        case 'dish':
+          return this.restaurantsPageData['restaurants'][this.restaurantsPageData['dishes'][id]['restaurant_id']]['dishes']
+        case 'dish_meal':
+          return this.restaurantsPageData['dishes'][this.restaurantsPageData['dish_meals'][id]['dish_id']]['dish_meals']
+      }
+    },
+    getParentIdForEntity (entityType, id) {
+      switch (entityType) {
+        case 'restaurant':
+          return this.restaurantsPageData['restaurants'][id]['city_id']
+        case 'dish':
+          return this.restaurantsPageData['dishes'][id]['restaurant_id']
+        case 'dish_meal':
+          return this.restaurantsPageData['dish_meals'][id]['dish_id']
       }
     },
     showEntity (entityType, id) {
@@ -195,8 +243,9 @@ export default {
             restaurant['category']]
         }
       })
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'city-modal-name-' + city['id'],
           name: 'name',
@@ -258,8 +307,9 @@ export default {
             dish['category']]
         }
       })
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'restaurant-modal-name-' + restaurant['id'],
           name: 'name',
@@ -327,8 +377,9 @@ export default {
             dishMeal['user_2_comments']]
         }
       })
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'dish-modal-name-' + dish['id'],
           name: 'name',
@@ -376,8 +427,9 @@ export default {
       this.hasChildren = false
       this.childTableHeaders = []
       this.childTableValues = []
-      this.modalTitle = 'Editing ' + this.title
-      this.modalFormLines = [
+      this.editModalTitle = 'Editing ' + this.title
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalFormLines = [
         {
           id: 'dishmeal-modal-date-' + dishMeal['id'],
           name: 'date',

@@ -14,7 +14,7 @@
     <div class="modal-footer text-right">
       <button class="modal-default-button"
           @click="handleSave(convertFormLines(formLines))">
-        Save
+        {{ buttonText }}
       </button>
     </div>
   </Modal>
@@ -42,7 +42,10 @@ export default {
      * with key 'name' and value 'value'.
      */
     initialFormLines: Array,
-    handleSave: Function
+    /** The function to run when the save button is clicked on this modal. */
+    handleSave: Function,
+    /** The text to display on the action button. */
+    buttonText: String
   },
   watch: {
     initialFormLines () {
