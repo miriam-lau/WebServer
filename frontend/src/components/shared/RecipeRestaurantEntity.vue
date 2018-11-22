@@ -41,6 +41,7 @@
           </td>
         </tr>
       </table>
+      <button @click="showAddModal">Add</button>
     </div>
     <FormModal :show="shouldShowEditModal" @close="shouldShowEditModal = false"
         :title="editModalTitle" :initialFormLines="editModalFormLines"
@@ -48,6 +49,10 @@
     <FormModal :show="shouldShowDeleteModal" @close="shouldShowDeleteModal = false"
         :title="deleteModalTitle" :initialFormLines="[]" :handleSave="closeModalAndHandleDeleteModalSave"
         buttonText="Delete" />
+    <FormModal :show="shouldShowAddModal" @close="shouldShowAddModal = false"
+        :title="addModalTitle" :initialFormLines="addModalFormLines"
+        :handleSave="closeModalAndHandleAddModalSave"
+        buttonText="Save" />
   </div>
 </template>
 <style>
@@ -87,21 +92,28 @@ export default {
      *   values: An array of primitive values to display in the table.
      */
     childTableValues: Array,
-    /** The title to be displayed when the edit modal is brougt up. */
+    /** The title to be displayed when the delete modal is brougt up. */
     deleteModalTitle: String,
     /** The title to be displayed when the edit modal is brougt up. */
     editModalTitle: String,
     /** See FormModal for a description. */
     editModalFormLines: Array,
+    /** The title to be displayed when the add modal is brougt up. */
+    addModalTitle: String,
+    /** See FormModal for a description. */
+    addModalFormLines: Array,
     /** See FormModal for a description. */
     handleEditModalSave: Function,
+    /** See FormModal for a description. */
+    handleAddModalSave: Function,
     /** See FormModal for a description. */
     handleDeleteModalSave: Function
   },
   data () {
     return {
       shouldShowEditModal: false,
-      shouldShowDeleteModal: false
+      shouldShowDeleteModal: false,
+      shouldShowAddModal: false
     }
   },
   components: {
@@ -114,9 +126,16 @@ export default {
     showEditModal () {
       this.shouldShowEditModal = true
     },
+    showAddModal () {
+      this.shouldShowAddModal = true
+    },
     closeModalAndHandleEditModalSave (formLines) {
       this.shouldShowEditModal = false
       this.handleEditModalSave(formLines)
+    },
+    closeModalAndHandleAddModalSave (formLines) {
+      this.shouldShowAddModal = false
+      this.handleAddModalSave(formLines)
     },
     closeModalAndHandleDeleteModalSave (formLines) {
       this.shouldShowDeleteModal = false
