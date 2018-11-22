@@ -18,21 +18,21 @@
           <th>Delete</th>
         </tr>
         <tr class="hobby-items" :key="hobby['id']" v-for="hobby in hobbies">
-          <template v-if="editable === false">
-            <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
-            <td>{{ hobby['assigned_hours_per_week'] }}</td>
-            <td>{{ hobby['completed_hours_this_week'] }}</td>
-            <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
-            <td>{{ isHobbyCompletedForWeek(hobby, 2) }}</td>
-            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
-          </template>
-          <template v-else>
+          <template v-if="editable">
             <td><input v-model="hobby['hobby']"/></td>
             <td><input v-model="hobby['assigned_hours_per_week']"/></td>
-            <td><input v-model="hobby['completed_hours_this_week']"/></td>
-            <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }}</td>
-            <td>{{ isHobbyCompletedForWeek(hobby, 2) }}</td>
+            <td><input v-model="hobby['completed_hours_for_week']"/></td>
+            <td>{{ getHoursRemaining(hobby) }}</td>
+            <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
             <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])"/></td>
+          </template>
+          <template v-else>
+            <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
+            <td>{{ hobby['assigned_hours_per_week'] }}</td>
+            <td>{{ hobby['completed_hours_for_week'] }}</td>
+            <td>{{ getHoursRemaining(hobby) }} </td>
+            <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
+            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
           </template>
         </tr>
       </table>
@@ -127,8 +127,14 @@ export default {
     editMode () {
       this.editable = true
     },
-    isHobbyCompletedForWeek (hobby, completedHoursForWeek) {
-      return (completedHoursForWeek >= hobby['assigned_hours_per_week'])
+    isHobbyCompletedForWeek (hobby) {
+      return (hobby['completed_hours_for_week'] >= hobby['assigned_hours_per_week'])
+    },
+    getHoursRemaining (hobby) {
+      if (this.isHobbyCompletedForWeek(hobby)) {
+        return 0
+      }
+      return hobby['assigned_hours_per_week'] - hobby['completed_hours_for_week']
     }
   }
 }

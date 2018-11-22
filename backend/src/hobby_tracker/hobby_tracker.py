@@ -29,7 +29,14 @@ class HobbyTracker:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("SELECT * from hobby_tracker where username = %s", (username,))
+            cur.execute(
+                "SELECT hobby_tracker.*, coalesce(completed_hours.completed_hours_for_week, 0) " +
+                "  as completed_hours_for_week from hobby_tracker left join " +
+                "  hobby_completed_hours_timestamped completed_hours " +
+                "  on hobby_tracker.id = completed_hours.hobby_id " +
+                "  and completed_hours.timestamp >= " +
+                "    (select date_trunc('week', (current_date + interval '1 day')) - interval '1 day') " +
+                "  where username = %s order by timestamp desc limit 1", (username,))
             hobbies = cur.fetchall()
             cur.close()
             return hobbies
