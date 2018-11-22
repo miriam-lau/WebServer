@@ -39,7 +39,7 @@ create table users (
 
 ### Current Documents Database
 create table current_documents (
-  id serial primary key,                                                          
+  id serial primary key,
   username varchar (50) references users,
   title varchar (500) not null,
   sort_order integer not null,
@@ -49,19 +49,17 @@ create table current_documents (
 
 ### Hobby Tracker Database
 create table hobby_tracker (
-  id serial primary key,                                                          
+  id serial primary key,
   username varchar (50) references users,
   hobby varchar (500) not null,
   sort_order integer not null,
-  assigned_hours_per_week real not null,
-  completed_hours_this_week real not null,
-  completed boolean not null
+  assigned_hours_per_week real not null
 );
 
 create table hobby_completed_hours_timestamped (
   id serial primary key,
   hobby_id integer references hobby_tracker,
-  timestamp timestamp not null,
+  timestamp timestamp default localtimestamp not null,
   completed_hours_for_week real not null
 );
 
@@ -124,15 +122,31 @@ create table codenames_games_to_locations (
 
 ### Recipe Database
 
+CREATE TYPE recipe_restaurant_entity_type AS ENUM (
+  'cookbook', 'recipe', 'recipe_meal', 'city', 'restaurant', 'dish', 'dish_meal');
+
+drop table cookbooks cascade;
+drop table recipes cascade;
+drop table recipe_meals cascade;
+drop table cities cascade;
+drop table restaurants cascade;
+drop table dishes cascade;
+drop table dish_meals cascade;
+drop table recipe_images cascade;
+drop table dish_images cascade;
+
 create table cookbooks (
   id serial primary key,
+  parent_id integer default 0,
+  entity_type recipe_restaurant_entity_type DEFAULT 'cookbook',
   name varchar(150) not null,
   notes text
 );
 
 create table recipes (
   id serial primary key,
-  cookbook_id integer references cookbooks,
+  parent_id integer references cookbooks,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe',
   name varchar(500) not null,
   priority integer,
   category varchar(150),
@@ -141,7 +155,8 @@ create table recipes (
 
 create table recipe_meals (
   id serial primary key,
-  recipe_id integer references recipes,
+  parent_id integer references recipes,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe_meal',
   date date,
   user_1_rating real,
   user_2_rating real,
@@ -151,6 +166,8 @@ create table recipe_meals (
 
 create table cities (
   id serial primary key,
+  parent_id integer default 0,
+  entity_type recipe_restaurant_entity_type DEFAULT 'city',
   name varchar(150) not null,
   state varchar(150),
   country varchar(150),
@@ -159,7 +176,8 @@ create table cities (
 
 create table restaurants (
   id serial primary key,
-  city_id integer references cities,
+  parent_id integer references cities,
+  entity_type recipe_restaurant_entity_type DEFAULT 'restaurant',
   name varchar(150) not null,
   category varchar(150),
   address text,
@@ -168,7 +186,8 @@ create table restaurants (
 
 create table dishes (
   id serial primary key,
-  restaurant_id integer references restaurants,
+  parent_id integer references restaurants,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish',
   name varchar(150) not null,
   category varchar(150),
   notes text
@@ -176,7 +195,8 @@ create table dishes (
 
 create table dish_meals (
   id serial primary key,
-  dish_id integer references dishes,
+  parent_id integer references dishes,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish_meal',
   date date,
   user_1_rating real,
   user_2_rating real,

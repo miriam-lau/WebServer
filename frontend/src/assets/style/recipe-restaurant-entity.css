@@ -8,6 +8,10 @@
   height: 500px;
 }
 
+.recipe-restaurant-entity-title {
+    text-align: center;
+}
+
 .recipe-restaurant-entity-info {
     text-align: center;
     margin-bottom: 30px;
