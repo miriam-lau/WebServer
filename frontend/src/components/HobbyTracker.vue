@@ -3,8 +3,8 @@
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
       <button class="hobby-buttons" @click="showAddHobbyModal">Add Hobby</button>
-      <button class="hobby-buttons">Edit</button>
-      <button class="hobby-buttons">Save</button>
+      <button class="hobby-buttons" @click="editMode">Edit</button>
+      <button class="hobby-buttons" @click="editHobbies">Save</button>
     </div>
 
     <div class="hobby-table-container">
@@ -18,12 +18,22 @@
           <th>Delete</th>
         </tr>
         <tr class="hobby-items" :key="hobby['id']" v-for="hobby in hobbies">
-          <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
-          <td>{{ hobby['assigned_hours_per_week'] }}</td>
-          <td>{{ hobby['completed_hours_this_week'] }}</td>
-          <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
-          <td>{{ hobby['completed'] }}</td>
-          <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
+          <template v-if="editable === false">
+            <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
+            <td>{{ hobby['assigned_hours_per_week'] }}</td>
+            <td>{{ hobby['completed_hours_this_week'] }}</td>
+            <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
+            <td>{{ hobby['completed'] }}</td>
+            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
+          </template>
+          <template v-else>
+            <td><input v-model="hobby['hobby']"/></td>
+            <td><input v-model="hobby['assigned_hours_per_week']"/></td>
+            <td><input v-model="hobby['completed_hours_this_week']"/></td>
+            <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }}</td>
+            <td>{{ hobby['completed'] }}</td>
+            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])"/></td>
+          </template>
         </tr>
       </table>
     </div>
@@ -60,6 +70,7 @@ import { store } from '../store/store'
 
 const ADD_HOBBY_URL = getFullBackendUrlForPath('/add_hobby')
 const DELETE_HOBBY_URL = getFullBackendUrlForPath('/delete_hobby')
+const EDIT_HOBBIES_URL = getFullBackendUrlForPath('/edit_hobbies')
 const GET_HOBBIES_URL = getFullBackendUrlForPath('/get_hobbies')
 
 export default {
@@ -69,7 +80,8 @@ export default {
       showModal: false,
       hobbyName: '',
       assignedHoursPerWeek: 0,
-      hobbies: []
+      hobbies: [],
+      editable: false
     }
   },
   computed: {
@@ -96,7 +108,13 @@ export default {
       axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
     },
     deleteHobby (id) {
-      axios.post(DELETE_HOBBY_URL, { id }).then(response => { this.updateHobbyDisplay() })
+      axios.post(DELETE_HOBBY_URL, { id: id }).then(response => { this.updateHobbyDisplay() })
+    },
+    editHobbies () {
+      axios.post(EDIT_HOBBIES_URL, { hobbies: this.hobbies }).then(response => {
+        this.updateHobbyDisplay()
+        this.editable = false
+      })
     },
     showAddHobbyModal () {
       this.showModal = true
@@ -105,6 +123,9 @@ export default {
     },
     closeHobbyModal () {
       this.showModal = false
+    },
+    editMode () {
+      this.editable = true
     }
   }
 }

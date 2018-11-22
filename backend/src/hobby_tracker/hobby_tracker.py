@@ -49,3 +49,17 @@ class HobbyTracker:
             self._database.rollback()
             cur.close()
             raise
+
+    def edit_hobbies(self, hobbies):
+        cur = self._database.get_cursor()
+
+        try:
+            for hobby in hobbies:
+                cur.execute("UPDATE hobby_tracker SET hobby = %s, assigned_hours_per_week = %s where id = %s",
+                            (hobby["hobby"], hobby["assigned_hours_per_week"], hobby["id"]))
+                self._database.commit()
+            cur.close()
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise
