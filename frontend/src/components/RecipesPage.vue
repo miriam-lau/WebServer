@@ -9,10 +9,13 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :handleEditModalSave="handleEditModalSave"
       :handleDeleteModalSave="handleDeleteModalSave"
+      :handleEditModalSave="handleEditModalSave"
       :editModalFormLines="editModalFormLines"
       :editModalTitle="editModalTitle"
+      :handleAddModalSave="handleAddModalSave"
+      :addModalFormLines="addModalFormLines"
+      :addModalTitle="addModalTitle"
       :deleteModalTitle="deleteModalTitle"
       :entityType="entityType"
       :entityId="entityId" />
@@ -23,12 +26,10 @@ import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
 import { getFullBackendUrlForPath, isEqual, getDisplayDate } from '../common/utils'
 import axios from 'axios'
 
-const ADD_COOKBOOK_URL = getFullBackendUrlForPath('/add/cookbook')
-const ADD_RECIPE_URL = getFullBackendUrlForPath('/add/recipe')
-const ADD_RECIPE_MEAL_URL = getFullBackendUrlForPath('/add/recipe_meal')
 const GET_RECIPES_PAGE_DATA_URL = getFullBackendUrlForPath('/get_recipes_page_data')
 const EDIT_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/edit/')
 const DELETE_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/delete/')
+const ADD_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/add/')
 
 export default {
   name: 'RecipesPage',
@@ -36,7 +37,10 @@ export default {
     return {
       recipesPageData: {},
       backLinks: [],
-      /** The type of entity currently being displayed. */
+      /**
+       * The type of entity currently being displayed. Possible values are 'cookbooks', 'cookbook', 'recipe',
+       * 'recipe_meal'.
+       */
       entityType: '',
       /** The id of the entity currently being displayed. */
       entityId: 0,
@@ -54,6 +58,9 @@ export default {
       /** See FormModal for a description. */
       editModalFormLines: [],
       editModalTitle: '',
+      /** See FormModal for a description. */
+      addModalFormLines: [],
+      addModalTitle: '',
       deleteModalTitle: ''
     }
   },
@@ -64,6 +71,65 @@ export default {
     this.getRecipesPageDataAndRender()
   },
   methods: {
+    getParentTypeOfCurrentEntity () {
+      switch (this.entityType) {
+        case 'cookbooks':
+          return null
+        case 'cookbook':
+          return 'cookbooks'
+        case 'recipe':
+          return 'cookbook'
+        case 'recipe_meal':
+          return 'recipe'
+      }
+    },
+    getChildTypeOfCurrentEntity () {
+      switch (this.entityType) {
+        case 'cookbooks':
+          return 'cookbook'
+        case 'cookbook':
+          return 'recipe'
+        case 'recipe':
+          return 'recipe_meal'
+        case 'recipe_meal':
+          return null
+      }
+    },
+    getCurrentEntity () {
+      switch (this.entityType) {
+        case 'cookbooks':
+          return null
+        case 'cookbook':
+          return this.recipesPageData['cookbooks'][this.entityId]
+        case 'recipe':
+          return this.recipesPageData['recipes'][this.entityId]
+        case 'recipe_meal':
+          return this.recipesPageData['recipe_meals'][this.entityId]
+      }
+    },
+    addChildArrayToEntity (entity, entityType) {
+      switch (entityType) {
+        case 'cookbook':
+          entity['recipes'] = []
+          break
+        case 'recipe':
+          entity['recipe_meals'] = []
+      }
+      return entity
+    },
+    getChildArrayForCurrentEntity () {
+      let currentEntity = this.getCurrentEntity()
+      switch (this.entityType) {
+        case 'cookbooks':
+          return this.recipesPageData['cookbooks_list']
+        case 'cookbook':
+          return currentEntity['recipes']
+        case 'recipe':
+          return currentEntity['recipe_meals']
+        case 'recipe_meal':
+          return null
+      }
+    },
     handleDeleteModalSave (unused) {
       let deleteUrl = DELETE_ENTITY_URL_PREFIX + this.entityType
       axios.post(deleteUrl, {id: this.entityId}).then(response => {
@@ -99,6 +165,27 @@ export default {
         this.showEntity(this.entityType, id)
       })
     },
+    handleAddModalSave (formSaveResponse) {
+      switch (this.entityType) {
+        case 'cookbook':
+          formSaveResponse['cookbook_id'] = this.entityId
+          break
+        case 'recipe':
+          formSaveResponse['recipe_id'] = this.entityId
+      }
+      let addUrl = ADD_ENTITY_URL_PREFIX + this.getChildTypeOfCurrentEntity()
+      axios.post(addUrl, formSaveResponse).then(response => {
+        let newEntity = response.data
+        this.addChildArrayToEntity(newEntity, this.getChildTypeOfCurrentEntity())
+        let id = newEntity['id']
+        this.recipesPageData[this.convertEntityTypeToMapName(this.getChildTypeOfCurrentEntity())][id] = newEntity
+        let childArrayForCurrentEntity = this.getChildArrayForCurrentEntity()
+        if (childArrayForCurrentEntity) {
+          childArrayForCurrentEntity.push(id)
+        }
+        this.showEntity(this.entityType, this.entityId)
+      })
+    },
     convertEntityTypeToMapName (entityType) {
       switch (entityType) {
         case 'cookbook':
@@ -129,6 +216,9 @@ export default {
     },
     showEntity (entityType, id) {
       switch (entityType) {
+        case 'cookbooks':
+          this.showCookbooks()
+          return
         case 'cookbook':
           this.showCookbook(id)
           return
@@ -208,6 +298,7 @@ export default {
       this.hasInfo = false
       this.infoImages = []
       this.infoDicts = []
+      this.entityType = 'cookbooks'
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate', 'Num Recipes We Want To Make']
       this.childTableValues = this.recipesPageData['cookbooks_list'].map(cookbookId => {
@@ -222,6 +313,21 @@ export default {
           values: [cookbook['name'], numRecipesMade, successRate, numRecipesWeWantToMake]
         }
       })
+      this.addModalTitle = 'Adding cookbook'
+      this.addModalFormLines = [
+        {
+          id: 'add-cookbook-modal-name',
+          name: 'name',
+          displayName: 'Name:',
+          value: ''
+        },
+        {
+          id: 'add-cookbook-modal-notes',
+          name: 'notes',
+          displayName: 'Notes:',
+          value: ''
+        }
+      ]
     },
     showCookbook (id) {
       let cookbook = this.recipesPageData['cookbooks'][id]
@@ -258,6 +364,7 @@ export default {
       })
       this.editModalTitle = 'Editing ' + this.title
       this.deleteModalTitle = 'Deleting ' + this.title
+      this.addModalTitle = 'Adding recipe'
       this.editModalFormLines = [
         {
           id: 'cookbook-modal-name-' + cookbook['id'],
@@ -270,6 +377,32 @@ export default {
           name: 'notes',
           displayName: 'Notes:',
           value: cookbook['notes']
+        }
+      ]
+      this.addModalFormLines = [
+        {
+          id: 'add-recipe-modal-name',
+          name: 'name',
+          displayName: 'Name:',
+          value: ''
+        },
+        {
+          id: 'add-recipe-modal-category',
+          name: 'category',
+          displayName: 'Category:',
+          value: ''
+        },
+        {
+          id: 'add-recipe-modal-priority',
+          name: 'priority',
+          displayName: 'Priority:',
+          value: ''
+        },
+        {
+          id: 'add-recipe-modal-notes',
+          name: 'notes',
+          displayName: 'Notes:',
+          value: ''
         }
       ]
     },
@@ -341,6 +474,38 @@ export default {
           value: recipe['notes']
         }
       ]
+      this.addModalFormLines = [
+        {
+          id: 'add-recipemeal-modal-date',
+          name: 'date',
+          displayName: 'Date:',
+          value: ''
+        },
+        {
+          id: 'add-recipemeal-modal-miriam-rating',
+          name: 'user_1_rating',
+          displayName: 'Miriam\'s Rating:',
+          value: ''
+        },
+        {
+          id: 'add-recipemeal-modal-james-rating',
+          name: 'user_2_rating',
+          displayName: 'James\' Rating:',
+          value: ''
+        },
+        {
+          id: 'add-recipemeal-modal-miriam-comments',
+          name: 'user_1_comments',
+          displayName: 'Miriam\'s Comments:',
+          value: ''
+        },
+        {
+          id: 'add-recipemeal-modal-james-comments',
+          name: 'user_2_comments',
+          displayName: 'James\' Comments:',
+          value: ''
+        }
+      ]
     },
     showRecipeMeal (id) {
       let recipeMeal = this.recipesPageData['recipe_meals'][id]
@@ -377,6 +542,7 @@ export default {
       this.childTableValues = []
       this.editModalTitle = 'Editing ' + this.title
       this.deleteModalTitle = 'Deleting ' + this.title
+      this.editModalTitle = 'Adding Recipe Meal'
       this.editModalFormLines = [
         {
           id: 'recipemeal-modal-date-' + recipeMeal['id'],
@@ -417,26 +583,6 @@ export default {
           this.showCookbooks()
         }
       )
-    },
-    addCookbook (name, notes) {
-      axios.post(ADD_COOKBOOK_URL, {name: name, notes: notes})
-    },
-    addRecipe (cookbookId, name, priority, category, notes) {
-      axios.post(
-        ADD_RECIPE_URL,
-        {cookbook_id: cookbookId, name: 'name', priority: priority, category: category, notes: notes})
-    },
-    addRecipeMeal (recipeId, date, user1Rating, user2Rating, user1Comments, user2Comments) {
-      axios.post(
-        ADD_RECIPE_MEAL_URL,
-        {
-          recipe_id: recipeId,
-          date: date,
-          user_1_rating: user1Rating,
-          user_2_rating: user2Rating,
-          user_1_comments: user1Comments,
-          user_2_comments: user2Comments
-        })
     }
   }
 }
