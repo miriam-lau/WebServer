@@ -25,6 +25,10 @@
     margin: auto;
 }
 
+.recipe-restaurant-entity-table {
+    width: 100%;
+}
+
 .recipe-restaurant-entity-infotable td, .recipe-restaurant-entity-infotable th,
 .recipe-restaurant-entity-table td, .recipe-restaurant-entity-table th {
     padding: 8px;

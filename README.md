@@ -33,11 +33,29 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
-### Users Database
+drop table users cascade;
+drop table cookbooks cascade;
+drop table recipes cascade;
+drop table recipe_meals cascade;
+drop table cities cascade;
+drop table restaurants cascade;
+drop table dishes cascade;
+drop table dish_meals cascade;
+drop table recipe_images cascade;
+drop table dish_images cascade;
+drop table current_documents cascade;
+drop table hobby_tracker cascade;
+drop table hobby_completed_hours_timestamped cascade;
+drop table codenames_words cascade;
+drop table codenames_games cascade;
+drop table codenames_turns_to_hints cascade;
+drop table codenames_turns_to_guesses cascade;
+drop table codenames_games_to_words cascade;
+drop table codenames_games_to_locations cascade;
+
 create table users (
   username varchar (50) primary key);
 
-### Current Documents Database
 create table current_documents (
   id serial primary key,
   username varchar (50) references users,
@@ -47,7 +65,6 @@ create table current_documents (
   notes text
 );
 
-### Hobby Tracker Database
 create table hobby_tracker (
   id serial primary key,
   username varchar (50) references users,
@@ -63,7 +80,6 @@ create table hobby_completed_hours_timestamped (
   completed_hours_for_week real not null
 );
 
-### Codenames Database
 create table codenames_words (
   word varchar (50) primary key);
 
@@ -120,20 +136,8 @@ create table codenames_games_to_locations (
   primary key (game_id, player_owning_location, location_index)
 );
 
-### Recipe Database
-
 CREATE TYPE recipe_restaurant_entity_type AS ENUM (
   'cookbook', 'recipe', 'recipe_meal', 'city', 'restaurant', 'dish', 'dish_meal');
-
-drop table cookbooks cascade;
-drop table recipes cascade;
-drop table recipe_meals cascade;
-drop table cities cascade;
-drop table restaurants cascade;
-drop table dishes cascade;
-drop table dish_meals cascade;
-drop table recipe_images cascade;
-drop table dish_images cascade;
 
 create table cookbooks (
   id serial primary key,
