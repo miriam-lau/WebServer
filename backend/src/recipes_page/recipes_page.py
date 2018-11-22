@@ -20,14 +20,14 @@ class RecipesPage:
             cur.close()
             raise
 
-    def add_recipe(self, cookbook_id, name, priority, category, notes):
+    def add_recipe(self, parent_id, name, priority, category, notes):
         cur = self._database.get_cursor()
 
         try:
             cur.execute(
-                "INSERT INTO recipes(cookbook_id, name, priority, category, notes) VALUES(%s, %s, %s, %s, %s) " +
+                "INSERT INTO recipes(parent_id, name, priority, category, notes) VALUES(%s, %s, %s, %s, %s) " +
                 "RETURNING *",
-                (cookbook_id, name, priority, category, notes))
+                (parent_id, name, priority, category, notes))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -37,14 +37,14 @@ class RecipesPage:
             cur.close()
             raise
 
-    def add_recipe_meal(self, recipe_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments):
+    def add_recipe_meal(self, parent_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments):
         cur = self._database.get_cursor()
 
         try:
             cur.execute(
-                "INSERT INTO recipe_meals(recipe_id, date, user_1_rating, user_2_rating, user_1_comments, " +
+                "INSERT INTO recipe_meals(parent_id, date, user_1_rating, user_2_rating, user_1_comments, " +
                 "user_2_comments) VALUES(%s, %s, %s, %s, %s, %s) RETURNING *",
-                (recipe_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments))
+                (parent_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -143,37 +143,48 @@ class RecipesPage:
             cur.close()
             raise
 
+    # Returns an object with the following properties:
+    #   cookbooks: A map of cookbooks ids to cookbooks objects. This is a single root node which has a hardcoded
+    #       id of 0.
+    #   cookbook: A map of cookbook ids to cookbook objects.
+    #   recipe: A map of recipe ids to recipe objects.
+    #   recipe_meal: A map of recipe meal ids to recipe meal objects.
     def get_recipes_page_data(self):
         cur = self._database.get_cursor()
 
         try:
             ret = {}
 
-            cookbooks_list = []
+            cookbooks_dict = {}
+            cookbooks_dict[0] = {
+                "entity_type": "cookbooks",
+                "children": []
+            }
+
             cookbook_dict = {}
             cur.execute("SELECT * from cookbooks")
             for cookbook in cur.fetchall():
-                cookbook["recipes"] = []
+                cookbook["children"] = []
                 cookbook_dict[cookbook["id"]] = cookbook
-                cookbooks_list.append(cookbook["id"])
+                cookbooks_dict[cookbook["parent_id"]]["children"].append(cookbook["id"])
 
             recipe_dict = {}
             cur.execute("SELECT * from recipes")
             for recipe in cur.fetchall():
-                recipe["recipe_meals"] = []
+                recipe["children"] = []
                 recipe_dict[recipe["id"]] = recipe
-                cookbook_dict[recipe["cookbook_id"]]["recipes"].append(recipe["id"])
+                cookbook_dict[recipe["parent_id"]]["children"].append(recipe["id"])
 
             recipe_meal_dict = {}
             cur.execute("SELECT * from recipe_meals")
             for recipe_meal in cur.fetchall():
                 recipe_meal_dict[recipe_meal["id"]] = recipe_meal
-                recipe_dict[recipe_meal["recipe_id"]]["recipe_meals"].append(recipe_meal["id"])
+                recipe_dict[recipe_meal["parent_id"]]["children"].append(recipe_meal["id"])
 
-            ret["cookbooks_list"] = cookbooks_list
-            ret["cookbooks"] = cookbook_dict
-            ret["recipes"] = recipe_dict
-            ret["recipe_meals"] = recipe_meal_dict
+            ret["cookbooks"] = cookbooks_dict
+            ret["cookbook"] = cookbook_dict
+            ret["recipe"] = recipe_dict
+            ret["recipe_meal"] = recipe_meal_dict
 
             cur.close()
             return ret

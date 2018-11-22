@@ -22,14 +22,14 @@ class RestaurantsPage:
             cur.close()
             raise
 
-    def add_restaurant(self, city_id, name, category, address, notes):
+    def add_restaurant(self, parent_id, name, category, address, notes):
         cur = self._database.get_cursor()
 
         try:
             cur.execute(
-                "INSERT INTO restaurants(city_id, name, category, address, notes) VALUES(%s, %s, %s, %s, %s) " +
+                "INSERT INTO restaurants(parent_id, name, category, address, notes) VALUES(%s, %s, %s, %s, %s) " +
                 "RETURNING *",
-                (city_id, name, category, address, notes))
+                (parent_id, name, category, address, notes))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -39,13 +39,13 @@ class RestaurantsPage:
             cur.close()
             raise
 
-    def add_dish(self, restaurant_id, name, category, notes):
+    def add_dish(self, parent_id, name, category, notes):
         cur = self._database.get_cursor()
 
         try:
             cur.execute(
-                "INSERT INTO dishes(restaurant_id, name, category, notes) VALUES(%s, %s, %s, %s) RETURNING *",
-                (restaurant_id, name, category, notes))
+                "INSERT INTO dishes(parent_id, name, category, notes) VALUES(%s, %s, %s, %s) RETURNING *",
+                (parent_id, name, category, notes))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -55,14 +55,14 @@ class RestaurantsPage:
             cur.close()
             raise
 
-    def add_dish_meal(self, dish_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments):
+    def add_dish_meal(self, parent_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments):
         cur = self._database.get_cursor()
 
         try:
             cur.execute(
-                "INSERT INTO dish_meals(dish_id, date, user_1_rating, user_2_rating, user_1_comments, " +
+                "INSERT INTO dish_meals(parent_id, date, user_1_rating, user_2_rating, user_1_comments, " +
                 "user_2_comments) VALUES(%s, %s, %s, %s, %s, %s) RETURNING *",
-                (dish_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments))
+                (parent_id, date, user_1_rating, user_2_rating, user_1_comments, user_2_comments))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -193,45 +193,57 @@ class RestaurantsPage:
             cur.close()
             raise
 
+    # Returns an object with the following properties:
+    #   cities: A map of cities ids to cities objects. This is a single root node which has a hardcoded
+    #       id of 0.
+    #   city: A map of city ids to city objects.
+    #   restaurant: A map of restaurant ids to restaurant objects.
+    #   dish: A map of dish ids to dish objects.
+    #   dish_meal: A map of dish meal ids to dish meal objects.
     def get_restaurants_page_data(self):
         cur = self._database.get_cursor()
 
         try:
             ret = {}
 
-            cities_list = []
+            cities_dict = {}
+            cities_dict[0] = {
+                "entity_type": "cities",
+                "children": []
+            }
+
             city_dict = {}
             cur.execute("SELECT * from cities")
             for city in cur.fetchall():
-                city["restaurants"] = []
+                city["children"] = []
                 city_dict[city["id"]] = city
-                cities_list.append(city["id"])
+                cities_dict[city["parent_id"]]["children"].append(city["id"])
 
             restaurant_dict = {}
             cur.execute("SELECT * from restaurants")
             for restaurant in cur.fetchall():
-                restaurant["dishes"] = []
+                restaurant["children"] = []
                 restaurant_dict[restaurant["id"]] = restaurant
-                city_dict[restaurant["city_id"]]["restaurants"].append(restaurant["id"])
+                city_dict[restaurant["parent_id"]]["children"].append(restaurant["id"])
 
             dish_dict = {}
             cur.execute("SELECT * from dishes")
             for dish in cur.fetchall():
-                dish["dish_meals"] = []
+                dish["children"] = []
                 dish_dict[dish["id"]] = dish
-                restaurant_dict[dish["restaurant_id"]]["dishes"].append(dish["id"])
+                restaurant_dict[dish["parent_id"]]["children"].append(dish["id"])
 
             dish_meal_dict = {}
             cur.execute("SELECT * from dish_meals")
             for dish_meal in cur.fetchall():
                 dish_meal_dict[dish_meal["id"]] = dish_meal
-                dish_dict[dish_meal["dish_id"]]["dish_meals"].append(dish_meal["id"])
+                dish_dict[dish_meal["parent_id"]]["children"].append(dish_meal["id"])
 
-            ret["cities_list"] = cities_list
-            ret["cities"] = city_dict
-            ret["restaurants"] = restaurant_dict
-            ret["dishes"] = dish_dict
-            ret["dish_meals"] = dish_meal_dict
+            ret["cities"] = cities_dict
+            ret["city"] = city_dict
+            ret["restaurant"] = restaurant_dict
+            ret["dish"] = dish_dict
+            ret["dish_meal"] = dish_meal_dict
 
             cur.close()
             return ret

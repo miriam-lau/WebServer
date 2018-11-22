@@ -153,6 +153,8 @@ def edit_hobbies():
 
 # Recipe / Restaurant methods ----------------------------------------------------------------------------------------
 
+# NOTE: Adding an element artificially adds a children array to the javascript. This is to mirror the getRecipeData
+# function and the getRestaurantData function.
 @app.route("/add/<entity_type>", methods=["POST"])
 def add_recipe_restaurant_entity(entity_type: str):
     data = request.json
@@ -160,21 +162,25 @@ def add_recipe_restaurant_entity(entity_type: str):
     if entity_type == "cookbook":
         ret = recipes_page.add_cookbook(data["name"], data["notes"])
     elif entity_type == "recipe":
-        ret = recipes_page.add_recipe(data["cookbook_id"], data["name"], data["priority"], data["category"], data["notes"])
+        ret = recipes_page.add_recipe(
+            data["parent_id"], data["name"], data["priority"], data["category"], data["notes"])
     elif entity_type == "recipe_meal":
         ret = recipes_page.add_recipe_meal(
-            data["recipe_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
+            data["parent_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
             data["user_2_comments"])
     elif entity_type == "city":
         ret = restaurants_page.add_city(data["name"], data["state"], data["country"], data["notes"])
     elif entity_type == "restaurant":
-        ret = restaurants_page.add_restaurant(data["city_id"], data["name"], data["category"], data["address"], data["notes"])
+        ret = restaurants_page.add_restaurant(
+            data["parent_id"], data["name"], data["category"], data["address"], data["notes"])
     elif entity_type == "dish":
-        ret = restaurants_page.add_dish(data["restaurant_id"], data["name"], data["category"], data["notes"])
+        ret = restaurants_page.add_dish(data["parent_id"], data["name"], data["category"], data["notes"])
     elif entity_type == "dish_meal":
         ret = restaurants_page.add_dish_meal(
-            data["dish_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
+            data["parent_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
             data["user_2_comments"])
+    if ret is not None:
+        ret['children'] = []
     return jsonify(ret)
 
 @app.route("/edit/<entity_type>", methods=["POST"])
@@ -192,7 +198,8 @@ def edit_recipe_restaurant_entity(entity_type: str):
     elif entity_type == "city":
         ret = restaurants_page.edit_city(data["id"], data["name"], data["state"], data["country"], data["notes"])
     elif entity_type == "restaurant":
-        ret = restaurants_page.edit_restaurant(data["id"], data["name"], data["category"], data["address"], data["notes"])
+        ret = restaurants_page.edit_restaurant(
+            data["id"], data["name"], data["category"], data["address"], data["notes"])
     elif entity_type == "dish":
         ret = restaurants_page.edit_dish(data["id"], data["name"], data["category"], data["notes"])
     elif entity_type == "dish_meal":

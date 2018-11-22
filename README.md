@@ -124,15 +124,31 @@ create table codenames_games_to_locations (
 
 ### Recipe Database
 
+CREATE TYPE recipe_restaurant_entity_type AS ENUM (
+  'cookbook', 'recipe', 'recipe_meal', 'city', 'restaurant', 'dish', 'dish_meal');
+
+drop table cookbooks cascade;
+drop table recipes cascade;
+drop table recipe_meals cascade;
+drop table cities cascade;
+drop table restaurants cascade;
+drop table dishes cascade;
+drop table dish_meals cascade;
+drop table recipe_images cascade;
+drop table dish_images cascade;
+
 create table cookbooks (
   id serial primary key,
+  parent_id integer default 0,
+  entity_type recipe_restaurant_entity_type DEFAULT 'cookbook',
   name varchar(150) not null,
   notes text
 );
 
 create table recipes (
   id serial primary key,
-  cookbook_id integer references cookbooks,
+  parent_id integer references cookbooks,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe',
   name varchar(500) not null,
   priority integer,
   category varchar(150),
@@ -141,7 +157,8 @@ create table recipes (
 
 create table recipe_meals (
   id serial primary key,
-  recipe_id integer references recipes,
+  parent_id integer references recipes,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe_meal',
   date date,
   user_1_rating real,
   user_2_rating real,
@@ -151,6 +168,8 @@ create table recipe_meals (
 
 create table cities (
   id serial primary key,
+  parent_id integer default 0,
+  entity_type recipe_restaurant_entity_type DEFAULT 'city',
   name varchar(150) not null,
   state varchar(150),
   country varchar(150),
@@ -159,7 +178,8 @@ create table cities (
 
 create table restaurants (
   id serial primary key,
-  city_id integer references cities,
+  parent_id integer references cities,
+  entity_type recipe_restaurant_entity_type DEFAULT 'restaurant',
   name varchar(150) not null,
   category varchar(150),
   address text,
@@ -168,7 +188,8 @@ create table restaurants (
 
 create table dishes (
   id serial primary key,
-  restaurant_id integer references restaurants,
+  parent_id integer references restaurants,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish',
   name varchar(150) not null,
   category varchar(150),
   notes text
@@ -176,7 +197,8 @@ create table dishes (
 
 create table dish_meals (
   id serial primary key,
-  dish_id integer references dishes,
+  parent_id integer references dishes,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish_meal',
   date date,
   user_1_rating real,
   user_2_rating real,

@@ -9,16 +9,14 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :handleDeleteModalSave="handleDeleteModalSave"
-      :handleEditModalSave="handleEditModalSave"
-      :editModalFormLines="editModalFormLines"
-      :editModalTitle="editModalTitle"
-      :handleAddModalSave="handleAddModalSave"
       :addModalFormLines="addModalFormLines"
       :addModalTitle="addModalTitle"
+      :handleAddModalSave="handleAddModalSave"
+      :editModalFormLines="editModalFormLines"
+      :editModalTitle="editModalTitle"
+      :handleEditModalSave="handleEditModalSave"
       :deleteModalTitle="deleteModalTitle"
-      :entityType="entityType"
-      :entityId="entityId" />
+      :handleDeleteModalSave="handleDeleteModalSave" />
   </div>
 </template>
 <script>
@@ -35,30 +33,25 @@ export default {
   name: 'RecipesPage',
   data () {
     return {
-      recipesPageData: {},
-      backLinks: [],
       /**
-       * The type of entity currently being displayed. Possible values are 'cookbooks', 'cookbook', 'recipe',
-       * 'recipe_meal'.
+       * This is the recipes page data that comes from the python backend. See recipes_page.py for a description.
        */
-      entityType: '',
-      /** The id of the entity currently being displayed. */
-      entityId: 0,
+      recipesPageData: {},
+      /**
+       * The entity currently being displayed.
+       */
+      entity: {},
+      /** See FormModal for a description of the following data. */
+      backLinks: [],
       title: '',
       hasInfo: false,
-      /** An array of objects with properties 'name', and 'value' to be displayed in the info section. */
       infoDicts: [],
-      /** An array of image urls to be displayed in the info section. */
       infoImages: [],
       hasChildren: false,
-      /** See RecipeRestaurantEntity for a description. */
       childTableHeaders: [],
-      /** See RecipeRestaurantEntity for a description. */
       childTableValues: [],
-      /** See FormModal for a description. */
       editModalFormLines: [],
       editModalTitle: '',
-      /** See FormModal for a description. */
       addModalFormLines: [],
       addModalTitle: '',
       deleteModalTitle: ''
@@ -71,10 +64,12 @@ export default {
     this.getRecipesPageDataAndRender()
   },
   methods: {
-    getParentTypeOfCurrentEntity () {
-      switch (this.entityType) {
-        case 'cookbooks':
-          return null
+    getParentEntityFor (entity) {
+      let parentEntityType = this.getParentEntityTypeFor(entity)
+      return this.recipesPageData[parentEntityType][entity['parent_id']]
+    },
+    getParentEntityTypeFor (entity) {
+      switch (entity['entity_type']) {
         case 'cookbook':
           return 'cookbooks'
         case 'recipe':
@@ -82,159 +77,74 @@ export default {
         case 'recipe_meal':
           return 'recipe'
       }
+      return null
     },
-    getChildTypeOfCurrentEntity () {
-      switch (this.entityType) {
+    getChildEntityTypeFor (entity) {
+      switch (entity['entity_type']) {
         case 'cookbooks':
           return 'cookbook'
         case 'cookbook':
           return 'recipe'
         case 'recipe':
           return 'recipe_meal'
-        case 'recipe_meal':
-          return null
       }
+      return null
     },
-    getCurrentEntity () {
-      switch (this.entityType) {
-        case 'cookbooks':
-          return null
-        case 'cookbook':
-          return this.recipesPageData['cookbooks'][this.entityId]
-        case 'recipe':
-          return this.recipesPageData['recipes'][this.entityId]
-        case 'recipe_meal':
-          return this.recipesPageData['recipe_meals'][this.entityId]
-      }
-    },
-    addChildArrayToEntity (entity, entityType) {
-      switch (entityType) {
-        case 'cookbook':
-          entity['recipes'] = []
-          break
-        case 'recipe':
-          entity['recipe_meals'] = []
-      }
-      return entity
-    },
-    getChildArrayForCurrentEntity () {
-      let currentEntity = this.getCurrentEntity()
-      switch (this.entityType) {
-        case 'cookbooks':
-          return this.recipesPageData['cookbooks_list']
-        case 'cookbook':
-          return currentEntity['recipes']
-        case 'recipe':
-          return currentEntity['recipe_meals']
-        case 'recipe_meal':
-          return null
-      }
-    },
-    handleDeleteModalSave (unused) {
-      let deleteUrl = DELETE_ENTITY_URL_PREFIX + this.entityType
-      axios.post(deleteUrl, {id: this.entityId}).then(response => {
-        let parentArray = this.getParentArrayFromEntity(this.entityType, this.entityId)
-        let parentId = this.getParentIdForEntity(this.entityType, this.entityId)
-        parentArray.splice(parentArray.indexOf(this.entityId), 1)
-        delete this.recipesPageData[this.convertEntityTypeToMapName(this.entityType)][this.entityId]
-        switch (this.entityType) {
-          case 'cookbook':
-            this.showCookbooks()
-            return
-          case 'recipe':
-            this.showCookbook(parentId)
-            return
-          case 'recipe_meal':
-            this.showRecipe(parentId)
-        }
-      })
-    },
-    handleEditModalSave (formSaveResponse) {
-      formSaveResponse['id'] = this.entityId
-      let editUrl = EDIT_ENTITY_URL_PREFIX + this.entityType
-      axios.post(editUrl, formSaveResponse).then(response => {
-        let newEntity = response.data
-        let id = newEntity['id']
-        let currentEntity = this.recipesPageData[this.convertEntityTypeToMapName(this.entityType)][id]
-        for (let prop in newEntity) {
-          if (prop === 'id') {
-            continue
-          }
-          currentEntity[prop] = newEntity[prop]
-        }
-        this.showEntity(this.entityType, id)
-      })
-    },
-    handleAddModalSave (formSaveResponse) {
-      switch (this.entityType) {
-        case 'cookbook':
-          formSaveResponse['cookbook_id'] = this.entityId
-          break
-        case 'recipe':
-          formSaveResponse['recipe_id'] = this.entityId
-      }
-      let addUrl = ADD_ENTITY_URL_PREFIX + this.getChildTypeOfCurrentEntity()
-      axios.post(addUrl, formSaveResponse).then(response => {
-        let newEntity = response.data
-        this.addChildArrayToEntity(newEntity, this.getChildTypeOfCurrentEntity())
-        let id = newEntity['id']
-        this.recipesPageData[this.convertEntityTypeToMapName(this.getChildTypeOfCurrentEntity())][id] = newEntity
-        let childArrayForCurrentEntity = this.getChildArrayForCurrentEntity()
-        if (childArrayForCurrentEntity) {
-          childArrayForCurrentEntity.push(id)
-        }
-        this.showEntity(this.entityType, this.entityId)
-      })
-    },
-    convertEntityTypeToMapName (entityType) {
-      switch (entityType) {
-        case 'cookbook':
-          return 'cookbooks'
-        case 'recipe':
-          return 'recipes'
-        case 'recipe_meal':
-          return 'recipe_meals'
-      }
-    },
-    getParentArrayFromEntity (entityType, id) {
-      switch (entityType) {
-        case 'cookbook':
-          return this.recipesPageData['cookbooks_list']
-        case 'recipe':
-          return this.recipesPageData['cookbooks'][this.recipesPageData['recipes'][id]['cookbook_id']]['recipes']
-        case 'recipe_meal':
-          return this.recipesPageData['recipes'][this.recipesPageData['recipe_meals'][id]['recipe_id']]['recipe_meals']
-      }
-    },
-    getParentIdForEntity (entityType, id) {
-      switch (entityType) {
-        case 'recipe':
-          return this.recipesPageData['recipes'][id]['cookbook_id']
-        case 'recipe_meal':
-          return this.recipesPageData['recipe_meals'][id]['recipe_id']
-      }
-    },
-    showEntity (entityType, id) {
-      switch (entityType) {
+    showEntity (entity) {
+      switch (entity['entity_type']) {
         case 'cookbooks':
           this.showCookbooks()
           return
         case 'cookbook':
-          this.showCookbook(id)
+          this.showCookbook(entity)
           return
         case 'recipe':
-          this.showRecipe(id)
+          this.showRecipe(entity)
           return
         case 'recipe_meal':
-          this.showRecipeMeal(id)
+          this.showRecipeMeal(entity)
       }
     },
+    handleDeleteModalSave (unused) {
+      let entityType = this.entity['entity_type']
+      let entityId = this.entity['id']
+      let deleteUrl = DELETE_ENTITY_URL_PREFIX + entityType
+      axios.post(deleteUrl, {id: entityId}).then(response => {
+        let parent = this.getParentEntityFor(this.entity)
+        parent['children'].splice(parent['children'].indexOf(entityId), 1)
+        delete this.recipesPageData[entityType][entityId]
+        this.showEntity(parent)
+      })
+    },
+    handleEditModalSave (formSaveResponse) {
+      let entityId = this.entity['id']
+      formSaveResponse['id'] = entityId
+
+      let editUrl = EDIT_ENTITY_URL_PREFIX + this.entity['entity_type']
+      axios.post(editUrl, formSaveResponse).then(response => {
+        let newEntity = response.data
+        for (let prop in newEntity) {
+          this.entity[prop] = newEntity[prop]
+        }
+        this.showEntity(this.entity)
+      })
+    },
+    handleAddModalSave (formSaveResponse) {
+      formSaveResponse['parent_id'] = this.entity['id']
+      let addUrl = ADD_ENTITY_URL_PREFIX + this.getChildEntityTypeFor(this.entity)
+      axios.post(addUrl, formSaveResponse).then(response => {
+        let newEntity = response.data
+        this.entity['children'].push(newEntity['id'])
+        this.recipesPageData[newEntity['entity_type']][newEntity['id']] = newEntity
+        this.showEntity(this.entity)
+      })
+    },
     getNumRecipesMadeFromCookbook (cookbook) {
-      return cookbook['recipes'].length
+      return cookbook['children'].length
     },
     getNumRecipesWeWantToMakeForCookbook (cookbook) {
-      return cookbook['recipes'].reduce((acc, recipeId) => {
-        let recipe = this.recipesPageData['recipes'][recipeId]
+      return cookbook['children'].reduce((acc, recipeId) => {
+        let recipe = this.recipesPageData['recipe'][recipeId]
         if (recipe['priority'] > 0) {
           return acc + 1
         }
@@ -246,8 +156,8 @@ export default {
       if (numRecipesMade === 0) {
         return 0
       }
-      let numSuccesses = cookbook['recipes'].map(recipeId => {
-        let recipe = this.recipesPageData['recipes'][recipeId]
+      let numSuccesses = cookbook['children'].map(recipeId => {
+        let recipe = this.recipesPageData['recipe'][recipeId]
         return this.getBestRatingForRecipe(recipe)
       }).reduce((acc, rating) => {
         if (isEqual(rating, 7) || (rating > 7)) {
@@ -258,19 +168,19 @@ export default {
       return (100.0 * numSuccesses / numRecipesMade)
     },
     getBestRatingForRecipe (recipe) {
-      if (recipe['recipe_meals'].length === 0) {
+      if (recipe['children'].length === 0) {
         return 0
       }
-      return recipe['recipe_meals'].map(recipeMealId => {
-        let recipeMeal = this.recipesPageData['recipe_meals'][recipeMealId]
+      return recipe['children'].map(recipeMealId => {
+        let recipeMeal = this.recipesPageData['recipe_meal'][recipeMealId]
         return this.getOverallRatingForRecipeMeal(recipeMeal)
       }).reduce((max, x) => x > max ? x : max, 0)
     },
     getLatestRatingForRecipe (recipe) {
-      if (recipe['recipe_meals'].length === 0) {
+      if (recipe['children'].length === 0) {
         return 0
       }
-      let recipeMeals = recipe['recipe_meals'].map(recipeMealId => this.recipesPageData['recipe_meals'][recipeMealId])
+      let recipeMeals = recipe['children'].map(recipeMealId => this.recipesPageData['recipe_meal'][recipeMealId])
       return this.getOverallRatingForRecipeMeal(
         recipeMeals.reduce((currentRecipeMeal, nextRecipeMeal) => {
           return Date.parse(currentRecipeMeal['date']) > Date.parse(nextRecipeMeal['date'])
@@ -278,7 +188,7 @@ export default {
         }, []))
     },
     getNumTimesRecipeMade (recipe) {
-      return recipe['recipe_meals'].length
+      return recipe['children'].length
     },
     getOverallRatingForRecipeMeal (recipeMeal) {
       let rating1 = recipeMeal['user_1_rating']
@@ -295,15 +205,15 @@ export default {
     showCookbooks () {
       this.backLinks = []
       this.title = 'Cookbooks'
+      this.entity = this.recipesPageData['cookbooks'][0]
       this.hasInfo = false
       this.infoImages = []
       this.infoDicts = []
-      this.entityType = 'cookbooks'
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate', 'Num Recipes We Want To Make']
-      this.childTableValues = this.recipesPageData['cookbooks_list'].map(cookbookId => {
-        let cookbook = this.recipesPageData['cookbooks'][cookbookId]
-        let handleClick = this.showCookbook.bind(this, cookbookId)
+      this.childTableValues = this.entity['children'].map(cookbookId => {
+        let cookbook = this.recipesPageData['cookbook'][cookbookId]
+        let handleClick = this.showCookbook.bind(this, cookbook)
         let numRecipesMade = this.getNumRecipesMadeFromCookbook(cookbook)
         let numRecipesWeWantToMake = this.getNumRecipesWeWantToMakeForCookbook(cookbook)
         let successRate = this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
@@ -329,27 +239,36 @@ export default {
         }
       ]
     },
-    showCookbook (id) {
-      let cookbook = this.recipesPageData['cookbooks'][id]
-      this.entityType = 'cookbook'
-      this.entityId = id
+    showCookbook (cookbook) {
+      let id = cookbook['id']
+      this.entity = cookbook
       this.backLinks =
           [{id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this)}]
       this.title = cookbook['name']
       this.hasInfo = true
       this.infoImages = []
-      // TODO: Populate this with more info.
       this.infoDicts = [
-        {id: 'cookbook-num-recipes-made-' + id, name: 'Num Recipes Made', value: this.getNumRecipesMadeFromCookbook(cookbook)},
-        {id: 'cookbook-success-rate-' + id, name: 'Success Rate', value: this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'},
-        {id: 'cookbook-num-recipes-we-want-to-make-' + id, name: 'Num Recipes We Want To Make', value: this.getNumRecipesWeWantToMakeForCookbook(cookbook)},
-        {id: 'cookbook-notes-' + id, name: 'Notes', value: cookbook['notes']}
+        {
+          id: 'cookbook-num-recipes-made-' + id,
+          name: 'Num Recipes Made',
+          value: this.getNumRecipesMadeFromCookbook(cookbook)},
+        {
+          id: 'cookbook-success-rate-' + id,
+          name: 'Success Rate',
+          value: this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
+        },
+        {
+          id: 'cookbook-num-recipes-we-want-to-make-' + id,
+          name: 'Num Recipes We Want To Make',
+          value: this.getNumRecipesWeWantToMakeForCookbook(cookbook)
+        },
+        { id: 'cookbook-notes-' + id, name: 'Notes', value: cookbook['notes'] }
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Times Made', 'Best Rating', 'Latest Rating', 'Priority', 'Category']
-      this.childTableValues = cookbook['recipes'].map(recipeId => {
-        let recipe = this.recipesPageData['recipes'][recipeId]
-        let handleClick = this.showRecipe.bind(this, recipeId)
+      this.childTableValues = cookbook['children'].map(recipeId => {
+        let recipe = this.recipesPageData['recipe'][recipeId]
+        let handleClick = this.showRecipe.bind(this, recipe)
         return {
           id: recipeId,
           handleClick: handleClick,
@@ -406,38 +325,44 @@ export default {
         }
       ]
     },
-    showRecipe (id) {
-      let recipe = this.recipesPageData['recipes'][id]
-      let cookbook = this.recipesPageData['cookbooks'][recipe['cookbook_id']]
-      this.entityType = 'recipe'
-      this.entityId = id
+    showRecipe (recipe) {
+      let id = recipe['id']
+      let cookbook = this.recipesPageData['cookbook'][recipe['parent_id']]
+      this.entity = recipe
       this.backLinks =
           [
-            {id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this)},
+            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this) },
             {
               id: 'cookbook-' + cookbook['id'],
               name: cookbook['name'],
-              handleClick: this.showCookbook.bind(this, cookbook['id'])
+              handleClick: this.showCookbook.bind(this, cookbook)
             }
           ]
       this.title = cookbook['name'] + ': ' + recipe['name']
       this.hasInfo = true
       this.infoImages = []
-      // TODO: Populate this with more info.
       this.infoDicts = [
-        {id: 'recipe-best-rating-' + id, name: 'Best Rating', value: this.getBestRatingForRecipe(recipe).toFixed(1)},
-        {id: 'recipe-latest-rating-' + id, name: 'Latest Rating', value: this.getLatestRatingForRecipe(recipe).toFixed(1)},
-        {id: 'recipe-num-times-made-' + id, name: 'Num Times Made', value: this.getNumTimesRecipeMade(recipe)},
-        {id: 'recipe-category-' + id, name: 'Category', value: recipe['category']},
-        {id: 'recipe-priority-' + id, name: 'Priority', value: recipe['priority']},
-        {id: 'recipe-notes-' + id, name: 'Notes', value: recipe['notes']}
+        {
+          id: 'recipe-best-rating-' + id,
+          name: 'Best Rating',
+          value: this.getBestRatingForRecipe(recipe).toFixed(1)
+        },
+        {
+          id: 'recipe-latest-rating-' + id,
+          name: 'Latest Rating',
+          value: this.getLatestRatingForRecipe(recipe).toFixed(1)
+        },
+        { id: 'recipe-num-times-made-' + id, name: 'Num Times Made', value: this.getNumTimesRecipeMade(recipe) },
+        { id: 'recipe-category-' + id, name: 'Category', value: recipe['category'] },
+        { id: 'recipe-priority-' + id, name: 'Priority', value: recipe['priority'] },
+        { id: 'recipe-notes-' + id, name: 'Notes', value: recipe['notes'] }
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Date', 'Overall Rating', 'Miriam\'s Rating', 'Miriam\'s Comments',
         'James\' Rating', 'James\' Comments']
-      this.childTableValues = recipe['recipe_meals'].map(recipeMealId => {
-        let recipeMeal = this.recipesPageData['recipe_meals'][recipeMealId]
-        let handleClick = this.showRecipeMeal.bind(this, recipeMealId)
+      this.childTableValues = recipe['children'].map(recipeMealId => {
+        let recipeMeal = this.recipesPageData['recipe_meal'][recipeMealId]
+        let handleClick = this.showRecipeMeal.bind(this, recipeMeal)
         return {
           id: recipeMealId,
           handleClick: handleClick,
@@ -447,6 +372,7 @@ export default {
         }
       })
       this.editModalTitle = 'Editing ' + this.title
+      this.addModalTitle = 'Adding recipe meal'
       this.deleteModalTitle = 'Deleting ' + this.title
       this.editModalFormLines = [
         {
@@ -507,35 +433,38 @@ export default {
         }
       ]
     },
-    showRecipeMeal (id) {
-      let recipeMeal = this.recipesPageData['recipe_meals'][id]
-      let recipe = this.recipesPageData['recipes'][recipeMeal['recipe_id']]
-      let cookbook = this.recipesPageData['cookbooks'][recipe['cookbook_id']]
-      this.entityType = 'recipe_meal'
-      this.entityId = id
+    showRecipeMeal (recipeMeal) {
+      let id = recipeMeal['id']
+      let recipe = this.recipesPageData['recipe'][recipeMeal['parent_id']]
+      let cookbook = this.recipesPageData['cookbook'][recipe['parent_id']]
+      this.entity = recipeMeal
       this.backLinks =
           [
-            {id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this)},
+            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this) },
             {
               id: 'cookbook-' + cookbook['id'],
               name: cookbook['name'],
-              handleClick: this.showCookbook.bind(this, cookbook['id'])
+              handleClick: this.showCookbook.bind(this, cookbook)
             },
             {
               id: 'recipe-' + recipe['id'],
               name: recipe['name'],
-              handleClick: this.showRecipe.bind(this, recipe['id'])
+              handleClick: this.showRecipe.bind(this, recipe)
             }
           ]
       this.title = 'Meal for ' + cookbook['name'] + ': ' + recipe['name']
       this.hasInfo = true
       this.infoImages = []
       this.infoDicts = [
-        {id: 'recipemeal-date-' + id, name: 'Date', value: getDisplayDate(recipeMeal['date'])},
-        {id: 'recipemeal-miriam-rating-' + id, name: 'Miriam\'s Rating', value: recipeMeal['user_1_rating'].toFixed(1)},
-        {id: 'recipemeal-james-rating-' + id, name: 'James\'s Rating', value: recipeMeal['user_2_rating'].toFixed(1)},
-        {id: 'recipemeal-miriam-comments' + id, name: 'Miriam\'s Comments', value: recipeMeal['user_1_comments']},
-        {id: 'recipemeal-james-comments' + id, name: 'James\' Comments', value: recipeMeal['user_2_comments']}
+        { id: 'recipemeal-date-' + id, name: 'Date', value: getDisplayDate(recipeMeal['date']) },
+        {
+          id: 'recipemeal-miriam-rating-' + id,
+          name: 'Miriam\'s Rating',
+          value: recipeMeal['user_1_rating'].toFixed(1)
+        },
+        { id: 'recipemeal-james-rating-' + id, name: 'James\'s Rating', value: recipeMeal['user_2_rating'].toFixed(1) },
+        { id: 'recipemeal-miriam-comments' + id, name: 'Miriam\'s Comments', value: recipeMeal['user_1_comments'] },
+        { id: 'recipemeal-james-comments' + id, name: 'James\' Comments', value: recipeMeal['user_2_comments'] }
       ]
       this.hasChildren = false
       this.childTableHeaders = []
