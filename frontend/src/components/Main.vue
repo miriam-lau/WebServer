@@ -81,7 +81,7 @@ export default {
     ...mapMutations(['setUsername']),
     saveUsername () {
       this.setUsername(this.loginUsername)
-      this.$cookies.set('username', this.loginUsername)
+      this.$cookies.set('username', this.loginUsername, '1y')
     },
     setActiveTab (tab) {
       this.activeTab = tab

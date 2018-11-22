@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 import psycopg2
 
 
@@ -8,7 +8,7 @@ class CurrentDocuments:
         self._database = database
 
     # Returns a dictionary from document id to document.
-    def get_current_documents(self, username) -> Dict:
+    def get_current_documents(self, username) -> List[Dict]:
         cur = self._database.get_cursor()
         current_documents = None
 
