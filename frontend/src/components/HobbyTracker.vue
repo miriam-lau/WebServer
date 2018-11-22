@@ -23,7 +23,7 @@
             <td>{{ hobby['assigned_hours_per_week'] }}</td>
             <td>{{ hobby['completed_hours_this_week'] }}</td>
             <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }} </td>
-            <td>{{ hobby['completed'] }}</td>
+            <td>{{ isHobbyCompletedForWeek(hobby, 2) }}</td>
             <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
           </template>
           <template v-else>
@@ -31,7 +31,7 @@
             <td><input v-model="hobby['assigned_hours_per_week']"/></td>
             <td><input v-model="hobby['completed_hours_this_week']"/></td>
             <td>{{ hobby['assigned_hours_per_week'] - hobby['completed_hours_this_week'] }}</td>
-            <td>{{ hobby['completed'] }}</td>
+            <td>{{ isHobbyCompletedForWeek(hobby, 2) }}</td>
             <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])"/></td>
           </template>
         </tr>
@@ -126,6 +126,9 @@ export default {
     },
     editMode () {
       this.editable = true
+    },
+    isHobbyCompletedForWeek (hobby, completedHoursForWeek) {
+      return (completedHoursForWeek >= hobby['assigned_hours_per_week'])
     }
   }
 }
