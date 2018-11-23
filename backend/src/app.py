@@ -40,9 +40,9 @@ def initialize_app():
     pantry_page = PantryPage(database)
 
 
+# TODO: This is totally insecure.
 # Current documents methods -------------------------------------------------------------------------------------
 
-# TODO: This is totally insecure.
 @app.route("/get_current_documents", methods=["POST"])
 def get_current_documents():
     username = request.json["username"]
@@ -56,9 +56,8 @@ def delete_document():
 
 @app.route("/edit_document", methods=["POST"])
 def edit_document():
-    document_id = request.json["id"]
     document = request.json["document"]
-    return jsonify(current_documents.edit_document(document_id, document))
+    return jsonify(current_documents.edit_document(document))
 
 
 @app.route("/add_document", methods=["POST"])
@@ -71,7 +70,8 @@ def add_document():
 def reorder_documents():
     username = request.json["username"]
     document_ids = request.json["document_ids"]
-    return jsonify(current_documents.reorder_documents(username, document_ids))
+    current_documents.reorder_documents(username, document_ids)
+    return ""
 
 
 # Codenames methods ----------------------------------------------------------------------------------------------

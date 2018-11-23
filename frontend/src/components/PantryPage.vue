@@ -24,11 +24,11 @@
         <FormModal :show="shouldShowEditGroceryMetadataModal" @close="shouldShowEditGroceryMetadataModal = false"
             :title="editGroceryMetadataModalTitle" :initialFormLines="editGroceryMetadataModalFormLines"
             :passThroughProps="editGroceryMetadataModalPassThroughProps"
-            :handleSave="closeModalAndHandleEditGroceryMetadataModalSave" buttonText="Save" />
+            :handleButtonClick="closeModalAndHandleEditGroceryMetadataModalSave" buttonText="Save" />
         <FormModal :show="shouldShowDeleteGroceryListModal" @close="shouldShowDeleteGroceryListModal = false"
             :title="deleteGroceryListModalTitle" :initialFormLines="[]"
             :passThroughProps="deleteGroceryListModalPassThroughProps"
-            :handleSave="closeModalAndHandleDeleteGroceryListModalSave"
+            :handleButtonClick="closeModalAndHandleDeleteGroceryListModalSave"
             buttonText="Delete" />
     </div>
     <div class="pantry-pantry">

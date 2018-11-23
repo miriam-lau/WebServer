@@ -24,31 +24,38 @@ class CurrentDocuments:
 
         return current_documents
 
+    # Returns the deleted document.
     def delete_document(self, document_id):
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from current_documents where id = %s", (document_id,))
+            cur.execute("DELETE from current_documents where id = %s RETURNING *", (document_id,))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
             raise
 
-    def edit_document(self, document_id, document):
+    # Returns the edited document object.
+    def edit_document(self, document):
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE current_documents SET title = %s, url = %s, notes = %s where id = %s",
-                        (document["title"], document["url"], document["notes"], document_id))
+            cur.execute("UPDATE current_documents SET title = %s, url = %s, notes = %s where id = %s RETURNING *",
+                        (document["title"], document["url"], document["notes"], document['id']))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
             raise
 
+    # Returns the added document object.
     def add_document(self, document):
         cur = self._database.get_cursor()
 
@@ -58,16 +65,19 @@ class CurrentDocuments:
             last_document = cur.fetchone()
             new_sort_order = last_document['sort_order'] + 1 if last_document is not None else 0
             cur.execute("INSERT INTO current_documents(title, username, url, sort_order, notes) " +
-                        "VALUES(%s, %s, %s, %s, %s)",
+                        "VALUES(%s, %s, %s, %s, %s) RETURNING *",
                         (document["title"], document["username"], document["url"], new_sort_order,
                          document["notes"]))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
             raise
 
+    # No return.
     def reorder_documents(self, username, ordered_document_ids):
         cur = self._database.get_cursor()
 

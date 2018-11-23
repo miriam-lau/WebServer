@@ -43,15 +43,15 @@
       </table>
       <button @click="showAddModal">Add</button>
     </div>
-    <FormModal :show="shouldShowEditModal" @close="shouldShowEditModal = false"
+    <FormModal :show="shouldShowEditModal" :close="closeEditModal"
         :title="editModalTitle" :initialFormLines="editModalFormLines"
-        :handleSave="closeModalAndHandleEditModalSave" buttonText="Save" />
-    <FormModal :show="shouldShowDeleteModal" @close="shouldShowDeleteModal = false"
-        :title="deleteModalTitle" :initialFormLines="[]" :handleSave="closeModalAndHandleDeleteModalSave"
+        :handleButtonClick="closeModalAndHandleEditModalSave" buttonText="Save" />
+    <FormModal :show="shouldShowDeleteModal" :close="closeDeleteModal"
+        :title="deleteModalTitle" :initialFormLines="[]" :handleButtonClick="closeModalAndHandleDeleteModalSave"
         buttonText="Delete" />
-    <FormModal :show="shouldShowAddModal" @close="shouldShowAddModal = false"
+    <FormModal :show="shouldShowAddModal" :close="closeAddModal"
         :title="addModalTitle" :initialFormLines="addModalFormLines"
-        :handleSave="closeModalAndHandleAddModalSave"
+        :handleButtonClick="closeModalAndHandleAddModalSave"
         buttonText="Save" />
   </div>
 </template>
@@ -128,6 +128,15 @@ export default {
     },
     showAddModal () {
       this.shouldShowAddModal = true
+    },
+    closeDeleteModal () {
+      this.shouldShowDeleteModal = false
+    },
+    closeEditModal () {
+      this.shouldShowEditModal = false
+    },
+    closeAddModal () {
+      this.shouldShowAddModal = false
     },
     closeModalAndHandleEditModalSave (formLines) {
       this.shouldShowEditModal = false
