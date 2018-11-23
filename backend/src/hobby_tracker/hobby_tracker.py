@@ -8,6 +8,9 @@ class HobbyTracker:
         self._database = database
 
     def add_hobby(self, hobby):
+        if not hobby['hobby']:
+            raise Exception('Hobby must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:

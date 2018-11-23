@@ -107,7 +107,7 @@ export default {
         createFormModalEntry('edit-document-modal-notes-' + document['id'], 'notes', 'Notes:', document['notes'])
       ]
       this.showModal(
-        'Editing' + document['title'],
+        'Editing ' + document['title'],
         modalFormLines,
         document,
         this.editDocument,
@@ -115,7 +115,7 @@ export default {
     },
     showDeleteModal (document) {
       this.showModal(
-        'Deleting' + document['title'],
+        'Deleting ' + document['title'],
         [],
         { id: document['id'] },
         this.deleteDocument,

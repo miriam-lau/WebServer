@@ -41,6 +41,9 @@ class CurrentDocuments:
 
     # Returns the edited document object.
     def edit_document(self, document):
+        if not document['title']:
+            raise Exception('Title must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -57,6 +60,9 @@ class CurrentDocuments:
 
     # Returns the added document object.
     def add_document(self, document):
+        if not document['title']:
+            raise Exception('Title must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:

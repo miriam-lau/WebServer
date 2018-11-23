@@ -7,6 +7,9 @@ class RecipesPage:
         self._database = database
 
     def add_cookbook(self, name, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -21,6 +24,9 @@ class RecipesPage:
             raise
 
     def add_recipe(self, parent_id, name, priority, category, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -55,6 +61,9 @@ class RecipesPage:
             raise
 
     def edit_cookbook(self, id, name, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -69,6 +78,9 @@ class RecipesPage:
             raise
 
     def edit_recipe(self, id, name, priority, category, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -105,7 +117,7 @@ class RecipesPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from cookbooks where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from cookbooks where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -119,7 +131,7 @@ class RecipesPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from recipes where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from recipes where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -133,7 +145,7 @@ class RecipesPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from recipe_meals where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from recipe_meals where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()

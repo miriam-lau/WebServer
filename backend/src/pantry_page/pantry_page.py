@@ -40,6 +40,9 @@ class PantryPage:
             raise
 
     def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title):
+        if not grocery_list_title:
+            raise Exception('Title must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -66,6 +69,9 @@ class PantryPage:
             raise
 
     def add_grocery_list(self, title):
+        if not title:
+            raise Exception('Title must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:

@@ -7,6 +7,9 @@ class RestaurantsPage:
         self._database = database
 
     def add_city(self, name, state, country, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -23,6 +26,9 @@ class RestaurantsPage:
             raise
 
     def add_restaurant(self, parent_id, name, category, address, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -40,6 +46,9 @@ class RestaurantsPage:
             raise
 
     def add_dish(self, parent_id, name, category, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -73,6 +82,9 @@ class RestaurantsPage:
             raise
 
     def edit_city(self, id, name, state, country, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -89,6 +101,9 @@ class RestaurantsPage:
             raise
 
     def edit_restaurant(self, id, name, category, address, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -105,6 +120,9 @@ class RestaurantsPage:
             raise
 
     def edit_dish(self, id, name, category, notes):
+        if not name:
+            raise Exception('Name must not be empty.')
+
         cur = self._database.get_cursor()
 
         try:
@@ -141,7 +159,7 @@ class RestaurantsPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from cities where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from cities where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -155,7 +173,7 @@ class RestaurantsPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from restaurants where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from restaurants where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -169,7 +187,7 @@ class RestaurantsPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from dishes where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from dishes where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -183,7 +201,7 @@ class RestaurantsPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from dish_meals where id = %s RETURNING id", (id,))
+            cur.execute("DELETE from dish_meals where id = %s RETURNING *", (id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
