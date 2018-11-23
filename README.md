@@ -33,6 +33,15 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
+# The table orders by app are:
+# users
+# current_documents
+# hobby_tracker
+# codenames
+# recipes
+# restaurants
+# pantry
+
 drop table users cascade;
 drop table cookbooks cascade;
 drop table recipes cascade;
@@ -52,6 +61,9 @@ drop table codenames_turns_to_hints cascade;
 drop table codenames_turns_to_guesses cascade;
 drop table codenames_games_to_words cascade;
 drop table codenames_games_to_locations cascade;
+drop table grocery_list cascade;
+drop table grocery_known_words cascade;
+drop table pantry cascade;
 
 create table users (
   username varchar (50) primary key);
@@ -220,4 +232,19 @@ create table dish_images (
   dish_id integer references dishes,
   url text,
   caption text
+);
+
+create table grocery_lists (
+  id serial primary key,
+  title varchar(150),
+  list text
+);
+
+create table grocery_known_words (
+  word varchar(150) primary key,
+  should_save boolean
+);
+
+create table pantry (
+  item varchar(150) primary key
 );

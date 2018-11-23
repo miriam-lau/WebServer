@@ -13,7 +13,7 @@
     </div>
     <div class="modal-footer text-right">
       <button class="modal-default-button"
-          @click="handleSave(convertFormLines(formLines))">
+          @click="handleSave(generateResponse())">
         {{ buttonText }}
       </button>
     </div>
@@ -26,7 +26,7 @@
 import Modal from './Modal'
 
 export default {
-  name: 'CurrentDocumentsModal',
+  name: 'FormModal',
   props: {
     show: Boolean,
     title: String,
@@ -42,7 +42,16 @@ export default {
      * with key 'name' and value 'value'.
      */
     initialFormLines: Array,
-    /** The function to run when the save button is clicked on this modal. */
+    /**
+     * The properties to pass directly into the response returned on handleSave.
+     */
+    passThroughProps: Object,
+    /**
+     * The function to run when the save button is clicked on this modal.
+     * The response is composed of two types of key/values:
+     * 1. The form lines are returned with 'name' as the key and 'value' as the value.
+     * 2. The passThroughProps are populated into the response with exactly the same key/value pairs.
+     */
     handleSave: Function,
     /** The text to display on the action button. */
     buttonText: String
@@ -58,10 +67,10 @@ export default {
     }
   },
   methods: {
-    convertFormLines (formLines) {
-      let ret = {}
-      for (let index in formLines) {
-        let formLine = formLines[index]
+    generateResponse () {
+      let ret = Object.assign({}, this.passThroughProps)
+      for (let index in this.formLines) {
+        let formLine = this.formLines[index]
         ret[formLine['name']] = formLine['value']
       }
       return ret

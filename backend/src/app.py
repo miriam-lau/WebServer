@@ -7,6 +7,7 @@ from src.codenames.codenames import Codenames
 from src.hobby_tracker.hobby_tracker import HobbyTracker
 from src.recipes_page.recipes_page import RecipesPage
 from src.restaurants_page.restaurants_page import RestaurantsPage
+from src.pantry_page.pantry_page import PantryPage
 
 
 app = Flask(__name__)
@@ -18,6 +19,7 @@ codenames = None
 hobby_tracker = None
 recipes_page = None
 restaurants_page = None
+pantry_page = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -28,15 +30,17 @@ def initialize_app():
     global hobby_tracker
     global recipes_page
     global restaurants_page
+    global pantry_page
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
     hobby_tracker = HobbyTracker(database)
     recipes_page = RecipesPage(database)
     restaurants_page = RestaurantsPage(database)
+    pantry_page = PantryPage(database)
+
 
 # Current documents methods -------------------------------------------------------------------------------------
-
 
 # TODO: This is totally insecure.
 @app.route("/get_current_documents", methods=["POST"])
@@ -125,6 +129,7 @@ def _codenames_send_socketio_refresh(game_id, player_triggering_update):
     socketio.emit("refresh_codenames",
                   {"players": players, "player_triggering_update": player_triggering_update},
                   broadcast=True)
+
 
 # Hobby Tracker methods ----------------------------------------------------------------------------------------------
 
@@ -235,6 +240,39 @@ def get_recipes_page_data():
 @app.route("/get_restaurants_page_data", methods=["POST"])
 def get_restaurants_page_data():
     return jsonify(restaurants_page.get_restaurants_page_data())
+
+
+# Pantry ------------------------------------------------------------------------------------------------------
+
+@app.route("/get_pantry_page", methods=["POST"])
+def get_pantry_page():
+    return jsonify(pantry_page.get_pantry_page_data())
+
+
+@app.route("/edit_grocery_list", methods=["POST"])
+def edit_grocery_list():
+    grocery_list_id = request.json["id"]
+    grocery_list = request.json["list"]
+    return jsonify(pantry_page.edit_grocery_list(grocery_list_id, grocery_list))
+
+
+@app.route("/edit_grocery_list_metadata", methods=["POST"])
+def edit_grocery_list_metadata():
+    grocery_list_id = request.json["id"]
+    title = request.json["title"]
+    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title))
+
+
+@app.route("/delete_grocery_list", methods=["POST"])
+def delete_grocery_list():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.delete_grocery_list(grocery_list_id))
+
+
+@app.route("/add_grocery_list", methods=["POST"])
+def add_grocery_list():
+    title = request.json["title"]
+    return jsonify(pantry_page.add_grocery_list(title))
 
 # ----------------------------------------------------------------------------------------------
 

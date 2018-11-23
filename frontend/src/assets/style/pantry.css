@@ -1,0 +1,20 @@
+.pantry-icon {
+    margin-right: 2px;
+}
+
+.pantry-icon:hover {
+    cursor: pointer;
+}
+
+.pantry-single-grocery-list {
+    margin-bottom: 30px;
+}
+
+.pantry-grocery-list-text {
+    border: 1px solid #b8ecff;
+    margin: 5px 0;
+}
+
+.pantry-grocery-lists {
+    margin-bottom: 30px;
+}

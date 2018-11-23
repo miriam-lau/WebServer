@@ -18,6 +18,7 @@
         <a href="#" class="nav-codenames-game" v-on:click="setActiveTab('nav-codenames-game')">Codenames</a>
         <a href="#" class="nav-recipes-page" v-on:click="setActiveTab('nav-recipes-page')">Recipes</a>
         <a href="#" class="nav-restaurants-page" v-on:click="setActiveTab('nav-restaurants-page')">Restaurants</a>
+        <a href="#" class="nav-pantry-page" v-on:click="setActiveTab('nav-pantry-page')">Pantry</a>
       </nav>
     </div>
     <div v-if="isCurrentDocumentsActive">
@@ -35,6 +36,9 @@
     <div v-if="isRestaurantsPageActive">
       <RestaurantsPage/>
     </div>
+    <div v-if="isPantryPageActive">
+      <PantryPage/>
+    </div>
   </div>
 </template>
 
@@ -44,6 +48,7 @@ import CurrentDocuments from './CurrentDocuments'
 import HobbyTracker from './HobbyTracker'
 import RecipesPage from './RecipesPage'
 import RestaurantsPage from './RestaurantsPage'
+import PantryPage from './PantryPage'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -69,13 +74,16 @@ export default {
     },
     isRestaurantsPageActive () {
       return this.activeTab === 'nav-restaurants-page'
+    },
+    isPantryPageActive () {
+      return this.activeTab === 'nav-pantry-page'
     }
   },
   created () {
     this.setUsername(this.$cookies.get('username'))
   },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage
+    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage, PantryPage
   },
   methods: {
     ...mapMutations(['setUsername']),
