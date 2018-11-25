@@ -61,7 +61,7 @@ nav {
 
 nav a {
 	display:inline-block;
-	padding: 18px 30px;
+	padding: 10px 30px;
 	color: #fff !important;
 	font-weight: bold;
 	font-size: 16px;
@@ -92,4 +92,38 @@ nav.nav-notes-page .nav-notes-page {
 	width: 50%;
 	margin: 0 auto;
 	margin-bottom: 10px;
+}
+
+.icon {
+  margin-right: 2px;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  margin: auto;
+}
+
+.table td, .table th {
+  padding: 8px;
+}
+
+.table td, .table th {
+  border: 1px solid #ddd;
+}
+
+.table tr:nth-child(even){background-color: #f2f2f2;}
+
+.table tr:hover {background-color: #ddd;}
+
+.table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: blue;
+  color: white;
 }

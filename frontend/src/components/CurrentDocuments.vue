@@ -11,13 +11,13 @@
           v-for="currentDocument in currentDocuments">
         <td><a :href="currentDocument['url']" target="_blank">{{ currentDocument['title'] }}</a></td>
         <td>{{ currentDocument['notes'] }}</td>
-        <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
+        <td><font-awesome-icon icon="pencil-alt" class="icon"
             @click="showEditModal(currentDocument)" />
-            <font-awesome-icon icon="trash" class="current-documents-icon"
+            <font-awesome-icon icon="trash" class="icon"
             @click="showDeleteModal(currentDocument)" />
-            <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
+            <font-awesome-icon icon="long-arrow-alt-up" class="icon"
             @click="moveDocumentUp(currentDocument)" />
-            <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
+            <font-awesome-icon icon="long-arrow-alt-down" class="icon"
             @click="moveDocumentDown(currentDocument)" />
         </td>
       </tr>

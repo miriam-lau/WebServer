@@ -279,6 +279,43 @@ def add_grocery_list():
     return jsonify(pantry_page.add_grocery_list(title))
 
 
+@app.route("/delete_pantry_item", methods=["POST"])
+def delete_pantry_item():
+    pantry_item = request.json["item"]
+    return jsonify(pantry_page.delete_pantry_item(pantry_item))
+
+
+@app.route("/add_pantry_item", methods=["POST"])
+def add_pantry_item():
+    pantry_item = request.json["item"]
+    return jsonify(pantry_page.add_pantry_item(pantry_item))
+
+
+@app.route("/delete_known_word", methods=["POST"])
+def delete_known_word():
+    known_word = request.json["word"]
+    return jsonify(pantry_page.delete_known_word(known_word))
+
+
+@app.route("/add_known_word", methods=["POST"])
+def add_known_word():
+    known_word = request.json["word"]
+    should_save = request.json["should_save"]
+    return jsonify(pantry_page.add_known_word(known_word, should_save))
+
+
+@app.route("/attempt_add_to_pantry", methods=["POST"])
+def attempt_add_to_pantry():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.add_to_pantry(grocery_list_id, False))
+
+
+@app.route("/add_to_pantry", methods=["POST"])
+def add_to_pantry():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.add_to_pantry(grocery_list_id, True))
+
+
 # Notes ------------------------------------------------------------------------------------------------------
 
 @app.route("/get_notes_page", methods=["POST"])

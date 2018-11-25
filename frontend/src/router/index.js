@@ -52,7 +52,8 @@ export default new Router({
     {
       path: '/pantry',
       name: 'pantryPage',
-      component: PantryPage
+      component: PantryPage,
+      alias: '/pantry/*'
     },
     {
       path: '/notes',

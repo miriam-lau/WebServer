@@ -15,6 +15,17 @@
     margin: 5px 0;
 }
 
-.pantry-grocery-lists {
-    margin-bottom: 30px;
+.status {
+    color: black;
+    text-align: center;
+    background-color: rgb(163, 238, 163);
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+
+nav.nav-pantry-grocery-lists .nav-pantry-grocery-lists,
+nav.nav-pantry-pantry-store .nav-pantry-pantry-store,
+nav.nav-pantry-known-words .nav-pantry-known-words {
+	background-color:#e35885;
 }
