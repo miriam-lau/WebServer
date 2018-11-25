@@ -76,3 +76,12 @@ hr {
 .current-documents-input {
   width: 240px;
 }
+
+.current-documents-status {
+  color: black;
+  text-align: center;
+  background-color: rgb(163, 238, 163);
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+}

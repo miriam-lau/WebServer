@@ -33,6 +33,15 @@ from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
+# The table orders by app are:
+# users
+# current_documents
+# hobby_tracker
+# codenames
+# recipes
+# restaurants
+# pantry
+
 drop table users cascade;
 drop table cookbooks cascade;
 drop table recipes cascade;
@@ -52,13 +61,17 @@ drop table codenames_turns_to_hints cascade;
 drop table codenames_turns_to_guesses cascade;
 drop table codenames_games_to_words cascade;
 drop table codenames_games_to_locations cascade;
+drop table grocery_list cascade;
+drop table grocery_known_words cascade;
+drop table pantry cascade;
+drop table notes cascade;
 
 create table users (
   username varchar (50) primary key);
 
 create table current_documents (
   id serial primary key,
-  username varchar (50) references users,
+  username varchar (50) references users not null,
   title varchar (500) not null,
   sort_order integer not null,
   url text,
@@ -67,7 +80,7 @@ create table current_documents (
 
 create table hobby_tracker (
   id serial primary key,
-  username varchar (50) references users,
+  username varchar (50) references users not null,
   hobby varchar (500) not null,
   sort_order integer not null,
   assigned_hours_per_week real not null
@@ -75,7 +88,7 @@ create table hobby_tracker (
 
 create table hobby_completed_hours_timestamped (
   id serial primary key,
-  hobby_id integer references hobby_tracker,
+  hobby_id integer references hobby_tracker not null,
   timestamp timestamp default localtimestamp not null,
   completed_hours_for_week real not null
 );
@@ -87,21 +100,21 @@ CREATE TYPE turn_type AS ENUM ('guess', 'give_hint');
 
 create table codenames_games (
   id serial primary key,
-  player1 varchar(50) references users,
-  player2 varchar(50) references users,
-  turn_number integer,
-  turn_type turn_type,
-  time_tokens_used integer,
-  game_over boolean,
-  assassin_found boolean
+  player1 varchar(50) references users not null,
+  player2 varchar(50) references users not null,
+  turn_number integer not null,
+  turn_type turn_type not null,
+  time_tokens_used integer not null,
+  game_over boolean not null,
+  assassin_found boolean not null
 );
 
 create table codenames_turns_to_hints (
   game_id integer references codenames_games,
   turn_number integer,
-  player varchar(50) references users,
-  hint_word varchar(150),
-  hint_number integer,
+  player varchar(50) references users not null,
+  hint_word varchar(150) not null,
+  hint_number integer not null,
   primary key (game_id, turn_number)
 );
 
@@ -109,11 +122,11 @@ CREATE TYPE guess_outcome AS ENUM ('agent_found', 'assassin_found', 'hit_bystand
 
 create table codenames_turns_to_guesses (
   id serial primary key,
-  game_id integer references codenames_games,
-  turn_number integer,
-  player varchar(50) references users,
-  guessed_word varchar(50) references codenames_words,
-  guess_outcome guess_outcome
+  game_id integer references codenames_games not null,
+  turn_number integer not null,
+  player varchar(50) references users not null,
+  guessed_word varchar(50) references codenames_words not null,
+  guess_outcome guess_outcome not null
 );
 
 CREATE TYPE word_status AS ENUM ('agent_found', 'player_1_hit_bystander', 'player_2_hit_bystander', 'both_players_hit_bystanders' , 'assassin_found', 'unchecked');
@@ -121,8 +134,8 @@ CREATE TYPE word_status AS ENUM ('agent_found', 'player_1_hit_bystander', 'playe
 create table codenames_games_to_words (
   game_id integer references codenames_games,
   word_index integer,
-  word varchar(50) references codenames_words,
-  word_status word_status,
+  word varchar(50) references codenames_words not null,
+  word_status word_status not null,
   primary key (game_id, word_index)
 );
 
@@ -141,16 +154,16 @@ CREATE TYPE recipe_restaurant_entity_type AS ENUM (
 
 create table cookbooks (
   id serial primary key,
-  parent_id integer default 0,
-  entity_type recipe_restaurant_entity_type DEFAULT 'cookbook',
+  parent_id integer default 0 not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'cookbook' not null,
   name varchar(150) not null,
   notes text
 );
 
 create table recipes (
   id serial primary key,
-  parent_id integer references cookbooks,
-  entity_type recipe_restaurant_entity_type DEFAULT 'recipe',
+  parent_id integer references cookbooks not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe' not null,
   name varchar(500) not null,
   priority integer,
   category varchar(150),
@@ -159,8 +172,8 @@ create table recipes (
 
 create table recipe_meals (
   id serial primary key,
-  parent_id integer references recipes,
-  entity_type recipe_restaurant_entity_type DEFAULT 'recipe_meal',
+  parent_id integer references recipes not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'recipe_meal' not null,
   date date,
   user_1_rating real,
   user_2_rating real,
@@ -170,8 +183,8 @@ create table recipe_meals (
 
 create table cities (
   id serial primary key,
-  parent_id integer default 0,
-  entity_type recipe_restaurant_entity_type DEFAULT 'city',
+  parent_id integer default 0 not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'city' not null,
   name varchar(150) not null,
   state varchar(150),
   country varchar(150),
@@ -180,8 +193,8 @@ create table cities (
 
 create table restaurants (
   id serial primary key,
-  parent_id integer references cities,
-  entity_type recipe_restaurant_entity_type DEFAULT 'restaurant',
+  parent_id integer references cities not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'restaurant' not null,
   name varchar(150) not null,
   category varchar(150),
   address text,
@@ -190,8 +203,8 @@ create table restaurants (
 
 create table dishes (
   id serial primary key,
-  parent_id integer references restaurants,
-  entity_type recipe_restaurant_entity_type DEFAULT 'dish',
+  parent_id integer references restaurants not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish' not null,
   name varchar(150) not null,
   category varchar(150),
   notes text
@@ -199,8 +212,8 @@ create table dishes (
 
 create table dish_meals (
   id serial primary key,
-  parent_id integer references dishes,
-  entity_type recipe_restaurant_entity_type DEFAULT 'dish_meal',
+  parent_id integer references dishes not null,
+  entity_type recipe_restaurant_entity_type DEFAULT 'dish_meal' not null,
   date date,
   user_1_rating real,
   user_2_rating real,
@@ -210,14 +223,36 @@ create table dish_meals (
 
 create table recipe_images (
   id serial primary key,
-  recipe_id integer references recipes,
-  url text,
+  recipe_id integer references recipes not nul,
+  url text not null,
   caption text
 );
 
 create table dish_images (
   id serial primary key,
-  dish_id integer references dishes,
-  url text,
+  dish_id integer references dishes not null,
+  url text not null,
   caption text
+);
+
+create table grocery_lists (
+  id serial primary key,
+  title varchar(150) not null,
+  imported boolean not null,
+  list text not null
+);
+
+create table grocery_known_words (
+  word varchar(150) primary key,
+  should_save boolean not null
+);
+
+create table pantry (
+  item varchar(150) primary key
+);
+
+create table notes (
+  id serial primary key,
+  title varchar(150) not null,
+  text text not null
 );

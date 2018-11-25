@@ -11,30 +11,18 @@
       <div class="clearfix"></div>
     </div>
     <div class="nav-container">
-      <nav :class="activeTab" v-on:click.prevent>
+      <nav :class="navigationClass" v-on:click.prevent>
+        <a href="#" class="nav-notes-page" v-on:click="navigateTo('notesPage')">Notes</a>
         <a href="#" class="nav-current-documents"
-          v-on:click="setActiveTab('nav-current-documents')">Current Documents</a>
-        <a href="#" class="nav-hobby-tracker" v-on:click="setActiveTab('nav-hobby-tracker')">Hobby Tracker</a>
-        <a href="#" class="nav-codenames-game" v-on:click="setActiveTab('nav-codenames-game')">Codenames</a>
-        <a href="#" class="nav-recipes-page" v-on:click="setActiveTab('nav-recipes-page')">Recipes</a>
-        <a href="#" class="nav-restaurants-page" v-on:click="setActiveTab('nav-restaurants-page')">Restaurants</a>
+          v-on:click="navigateTo('currentDocuments')">Current Documents</a>
+        <a href="#" class="nav-hobby-tracker" v-on:click="navigateTo('hobbyTracker')">Hobby Tracker</a>
+        <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
+        <a href="#" class="nav-recipes-page" v-on:click="navigateTo('recipesPage')">Recipes</a>
+        <a href="#" class="nav-restaurants-page" v-on:click="navigateTo('restaurantsPage')">Restaurants</a>
+        <a href="#" class="nav-pantry-page" v-on:click="navigateTo('pantryPage')">Pantry</a>
       </nav>
     </div>
-    <div v-if="isCurrentDocumentsActive">
-      <CurrentDocuments/>
-    </div>
-    <div v-if="isHobbyTrackerActive">
-      <HobbyTracker/>
-    </div>
-    <div v-if="isCodenamesGameActive">
-      <Codenames/>
-    </div>
-    <div v-if="isRecipesPageActive">
-      <RecipesPage/>
-    </div>
-    <div v-if="isRestaurantsPageActive">
-      <RestaurantsPage/>
-    </div>
+    <router-view/>
   </div>
 </template>
 
@@ -44,6 +32,8 @@ import CurrentDocuments from './CurrentDocuments'
 import HobbyTracker from './HobbyTracker'
 import RecipesPage from './RecipesPage'
 import RestaurantsPage from './RestaurantsPage'
+import PantryPage from './PantryPage'
+import NotesPage from './NotesPage'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -51,31 +41,19 @@ export default {
   data () {
     return {
       loginUsername: '',
-      activeTab: 'nav-current-documents'
-    }
-  },
-  computed: {
-    isCurrentDocumentsActive () {
-      return this.activeTab === 'nav-current-documents'
-    },
-    isHobbyTrackerActive () {
-      return this.activeTab === 'nav-hobby-tracker'
-    },
-    isCodenamesGameActive () {
-      return this.activeTab === 'nav-codenames-game'
-    },
-    isRecipesPageActive () {
-      return this.activeTab === 'nav-recipes-page'
-    },
-    isRestaurantsPageActive () {
-      return this.activeTab === 'nav-restaurants-page'
+      navigationClass: this.setNavigationClass()
     }
   },
   created () {
     this.setUsername(this.$cookies.get('username'))
   },
+  watch: {
+    '$route': function () {
+      this.navigationClass = this.setNavigationClass()
+    }
+  },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage
+    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -83,8 +61,26 @@ export default {
       this.setUsername(this.loginUsername)
       this.$cookies.set('username', this.loginUsername, '1y')
     },
-    setActiveTab (tab) {
-      this.activeTab = tab
+    navigateTo (path) {
+      this.$router.push({ name: path })
+    },
+    setNavigationClass () {
+      switch (this.$route.name) {
+        case 'currentDocuments':
+          return 'nav-current-documents'
+        case 'hobbyTracker':
+          return 'nav-hobby-tracker'
+        case 'codenames':
+          return 'nav-codenames'
+        case 'recipesPage':
+          return 'nav-recipes-page'
+        case 'restaurantsPage':
+          return 'nav-restaurants-page'
+        case 'pantryPage':
+          return 'nav-pantry-page'
+        case 'notesPage':
+          return 'nav-notes-page'
+      }
     }
   }
 }

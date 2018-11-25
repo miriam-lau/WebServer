@@ -9,19 +9,24 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :addModalFormLines="addModalFormLines"
-      :addModalTitle="addModalTitle"
-      :handleAddModalSave="handleAddModalSave"
-      :editModalFormLines="editModalFormLines"
-      :editModalTitle="editModalTitle"
-      :handleEditModalSave="handleEditModalSave"
-      :deleteModalTitle="deleteModalTitle"
-      :handleDeleteModalSave="handleDeleteModalSave" />
+      :closeModal="closeModal"
+      :currentStatus="currentStatus"
+      :showEditModal="showEditModal"
+      :showDeleteModal="showDeleteModal"
+      :showAddModal="showAddModal"
+      :modalTitle="modalTitle"
+      :modalFormLines="modalFormLines"
+      :modalPassThroughProps="modalPassThroughProps"
+      :modalButtonText="modalButtonText"
+      :modalErrorText="modalErrorText"
+      :modalCallback="modalCallback"
+      :shouldShowModal="shouldShowModal"
+    />
   </div>
 </template>
 <script>
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
-import { getFullBackendUrlForPath, isEqual, getDisplayDate } from '../common/utils'
+import { getFullBackendUrlForPath, isEqual, getDisplayDate, createFormModalEntry } from '../common/utils'
 import axios from 'axios'
 
 const GET_RESTAURANTS_PAGE_DATA_URL = getFullBackendUrlForPath('/get_restaurants_page_data')
@@ -45,25 +50,174 @@ export default {
       backLinks: [],
       title: '',
       hasInfo: false,
-      infoDicts: [],
       infoImages: [],
+      infoDicts: [],
       hasChildren: false,
       childTableHeaders: [],
       childTableValues: [],
-      editModalFormLines: [],
-      editModalTitle: '',
-      addModalFormLines: [],
-      addModalTitle: '',
-      deleteModalTitle: ''
+      currentStatus: '',
+      modalTitle: '',
+      modalFormLines: [],
+      modalPassThroughProps: {},
+      modalCallback: Function,
+      modalButtonText: '',
+      modalErrorText: '',
+      shouldShowModal: false
     }
   },
   components: {
     RecipeRestaurantEntity
   },
+  props: {
+    cityIdParam: String,
+    restaurantIdParam: String,
+    dishIdParam: String,
+    dishMealIdParam: String
+  },
+  watch: {
+    cityIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    restaurantIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    dishIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    dishMealIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    }
+  },
   created () {
     this.getRestaurantsPageDataAndRender()
   },
   methods: {
+    closeModal () {
+      this.shouldShowModal = false
+    },
+    showModal (title, formLines, passThroughProps, callback, buttonText) {
+      this.modalTitle = title
+      this.modalFormLines = formLines
+      this.modalPassThroughProps = passThroughProps
+      this.modalCallback = callback
+      this.modalButtonText = buttonText
+      this.modalErrorText = ''
+      this.shouldShowModal = true
+    },
+    showEditModal () {
+      let modalFormLines = null
+      switch (this.entity['entity_type']) {
+        case 'city':
+          let city = this.entity
+          modalFormLines = [
+            createFormModalEntry('city-modal-name-' + city['id'], 'name', 'Name:', city['name']),
+            createFormModalEntry('city-modal-state-' + city['id'], 'state', 'State:', city['state']),
+            createFormModalEntry('city-modal-country-' + city['id'], 'country', 'Country:', city['country']),
+            createFormModalEntry('city-modal-notes-' + city['id'], 'notes', 'Notes:', city['notes'])
+          ]
+          break
+        case 'restaurant':
+          let restaurant = this.entity
+          modalFormLines = [
+            createFormModalEntry('restaurant-modal-name-' + restaurant['id'], 'name', 'Name:', restaurant['name']),
+            createFormModalEntry(
+              'restaurant-modal-address-' + restaurant['id'], 'address', 'Address:', restaurant['address']),
+            createFormModalEntry(
+              'restaurant-modal-category-' + restaurant['id'], 'category', 'Category:', restaurant['category']),
+            createFormModalEntry('restaurant-modal-notes-' + restaurant['id'], 'notes', 'Notes:', restaurant['notes'])
+          ]
+          break
+        case 'dish':
+          let dish = this.entity
+          modalFormLines = [
+            createFormModalEntry('dish-modal-name-' + dish['id'], 'name', 'Name:', dish['name']),
+            createFormModalEntry('dish-modal-category-' + dish['id'], 'category', 'Category:', dish['category']),
+            createFormModalEntry('dish-modal-notes-' + dish['id'], 'notes', 'Notes:', dish['notes'])
+          ]
+          break
+        case 'dish_meal':
+          let dishMeal = this.entity
+          modalFormLines = [
+            createFormModalEntry('dishmeal-modal-date-' + dishMeal['id'], 'date', 'Date:', dishMeal['date']),
+            createFormModalEntry(
+              'dishmeal-modal-miriam-rating-' + dishMeal['id'], 'user_1_rating', 'Miriam\'s Rating:',
+              dishMeal['user_1_rating']),
+            createFormModalEntry(
+              'dishmeal-modal-james-rating-' + dishMeal['id'], 'user_2_rating', 'James\' Rating:',
+              dishMeal['user_2_rating']),
+            createFormModalEntry(
+              'dishmeal-modal-miriam-comments-' + dishMeal['id'], 'user_1_comments', 'Miriam\'s Comments:',
+              dishMeal['user_1_comments']),
+            createFormModalEntry(
+              'dishmeal-modal-james-comments-' + dishMeal['id'], 'user_2_comments', 'James\' Comments:',
+              dishMeal['user_2_comments'])
+          ]
+      }
+      this.showModal(
+        'Editing ' + this.title,
+        modalFormLines,
+        this.entity,
+        this.editEntity,
+        'Save')
+    },
+    showAddModal () {
+      let modalTitle = ''
+      let modalFormLines = null
+      switch (this.entity['entity_type']) {
+        case 'cities':
+          modalTitle = 'Adding city'
+          modalFormLines = [
+            createFormModalEntry('add-city-modal-name', 'name', 'Name:', ''),
+            createFormModalEntry('add-city-modal-state', 'state', 'State:', ''),
+            createFormModalEntry('add-city-modal-country', 'country', 'Country:', ''),
+            createFormModalEntry('add-city-modal-notes', 'notes', 'Notes:', '')
+          ]
+          break
+        case 'city':
+          modalTitle = 'Adding restaurant'
+          modalFormLines = [
+            createFormModalEntry('add-restaurant-modal-name', 'name', 'Name:', ''),
+            createFormModalEntry('add-restaurant-modal-address', 'address', 'Address:', ''),
+            createFormModalEntry('add-restaurant-modal-category', 'category', 'Category:', ''),
+            createFormModalEntry('add-restaurant-modal-notes', 'notes', 'Notes:', '')
+          ]
+          break
+        case 'restaurant':
+          modalTitle = 'Adding dish'
+          modalFormLines = [
+            createFormModalEntry('add-dish-modal-name', 'name', 'Name:', ''),
+            createFormModalEntry('add-dish-modal-category', 'category', 'Category:', ''),
+            createFormModalEntry('add-dish-modal-notes', 'notes', 'Notes:', '')
+          ]
+          break
+        case 'dish':
+          modalTitle = 'Adding dish meal'
+          modalFormLines = [
+            createFormModalEntry('add-dishmeal-modal-date', 'date', 'Date:', ''),
+            createFormModalEntry('add-dishmeal-modal-miriam-rating', 'user_1_rating', 'Miriam\'s Rating:', ''),
+            createFormModalEntry('add-dishmeal-modal-james-rating', 'user_2_rating', 'James\' Rating:', ''),
+            createFormModalEntry('add-dishmeal-modal-miriam-comments', 'user_1_comments', 'Miriam\'s Comments:', ''),
+            createFormModalEntry('add-dishmeal-modal-james-comments', 'user_2_comments', 'James\' Comments:', '')
+          ]
+          break
+      }
+      this.showModal(
+        modalTitle,
+        modalFormLines,
+        { parent_id: this.entity['id'], entity_type: this.getChildEntityTypeFor(this.entity) },
+        this.addEntity,
+        'Add')
+    },
+    showDeleteModal () {
+      this.deleteModalTitle = 'Deleting ' + this.title
+      this.showModal(
+        'Deleting ' + this.title,
+        [],
+        this.entity,
+        this.deleteEntity,
+        'Delete'
+      )
+    },
     getParentEntityFor (entity) {
       let parentEntityType = this.getParentEntityTypeFor(entity)
       return this.restaurantsPageData[parentEntityType][entity['parent_id']]
@@ -112,39 +266,67 @@ export default {
           this.showDishMeal(entity)
       }
     },
-    handleDeleteModalSave (unused) {
-      let entityType = this.entity['entity_type']
-      let entityId = this.entity['id']
+    deleteEntity (entity) {
+      let entityType = entity['entity_type']
+      let entityId = entity['id']
       let deleteUrl = DELETE_ENTITY_URL_PREFIX + entityType
-      axios.post(deleteUrl, {id: entityId}).then(response => {
-        let parent = this.getParentEntityFor(this.entity)
-        parent['children'].splice(parent['children'].indexOf(entityId), 1)
-        delete this.restaurantsPageData[entityType][entityId]
-        this.showEntity(parent)
-      })
+      axios.post(deleteUrl, {id: entityId})
+        .then(
+          response => {
+            let entity = response['data']
+            let title = entity['entity_type'] === 'dish_meal' ? 'Meal' : entity['name']
+            let parent = this.getParentEntityFor(entity)
+            parent['children'].splice(parent['children'].indexOf(entityId), 1)
+            delete this.restaurantsPageData[entityType][entityId]
+            this.showEntity(parent)
+            this.setCurrentStatus('Deleted ' + title)
+            this.closeModal()
+          })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during delete.'
+          console.log(error)
+        })
     },
-    handleEditModalSave (formSaveResponse) {
-      let entityId = this.entity['id']
-      formSaveResponse['id'] = entityId
+    editEntity (entity) {
+      let entityId = entity['id']
+      let entityType = entity['entity_type']
 
-      let editUrl = EDIT_ENTITY_URL_PREFIX + this.entity['entity_type']
-      axios.post(editUrl, formSaveResponse).then(response => {
-        let newEntity = response.data
-        for (let prop in newEntity) {
-          this.entity[prop] = newEntity[prop]
-        }
-        this.showEntity(this.entity)
-      })
+      let editUrl = EDIT_ENTITY_URL_PREFIX + entity['entity_type']
+      axios.post(editUrl, entity)
+        .then(
+          response => {
+            let newEntity = response['data']
+            let title = newEntity['entity_type'] === 'dish_meal' ? 'Meal' : newEntity['name']
+            for (let prop in newEntity) {
+              this.restaurantsPageData[entityType][entityId][prop] = newEntity[prop]
+            }
+            this.showEntity(this.entity)
+            this.setCurrentStatus('Edited ' + title)
+            this.closeModal()
+          })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during edit.'
+          console.log(error)
+        })
     },
-    handleAddModalSave (formSaveResponse) {
-      formSaveResponse['parent_id'] = this.entity['id']
-      let addUrl = ADD_ENTITY_URL_PREFIX + this.getChildEntityTypeFor(this.entity)
-      axios.post(addUrl, formSaveResponse).then(response => {
-        let newEntity = response.data
-        this.entity['children'].push(newEntity['id'])
-        this.restaurantsPageData[newEntity['entity_type']][newEntity['id']] = newEntity
-        this.showEntity(this.entity)
-      })
+    addEntity (entity) {
+      let addUrl = ADD_ENTITY_URL_PREFIX + entity['entity_type']
+      axios.post(addUrl, entity)
+        .then(
+          response => {
+            let newEntity = response.data
+            let title = newEntity['entity_type'] === 'dish_meal' ? 'Meal' : newEntity['name']
+            this.entity['children'].push(newEntity['id'])
+            this.restaurantsPageData[newEntity['entity_type']][newEntity['id']] = newEntity
+            this.showEntity(this.entity)
+            this.setCurrentStatus('Added ' + title)
+            this.closeModal()
+          })
+        .catch(
+          error => {
+            this.modalErrorText = 'An error occurred during add.'
+            console.log(error)
+          })
     },
     getNumDishesTriedAtRestaurant (restaurant) {
       return restaurant['children'].length
@@ -204,46 +386,25 @@ export default {
       this.childTableHeaders = ['Name', 'State', 'Country', 'Notes']
       this.childTableValues = this.entity['children'].map(cityId => {
         let city = this.restaurantsPageData['city'][cityId]
-        let handleClick = this.showCity.bind(this, city)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { city: '' + cityId })
         return {
           id: cityId,
           handleClick: handleClick,
           values: [city['name'], city['state'], city['country'], city['notes']]
         }
       })
-      this.addModalTitle = 'Adding city'
-      this.addModalFormLines = [
-        {
-          id: 'add-city-modal-name',
-          name: 'name',
-          displayName: 'Name:',
-          value: ''
-        },
-        {
-          id: 'add-city-modal-state',
-          name: 'state',
-          displayName: 'State:',
-          value: ''
-        },
-        {
-          id: 'add-city-modal-country',
-          name: 'country',
-          displayName: 'Country:',
-          value: ''
-        },
-        {
-          id: 'add-city-modal-notes',
-          name: 'notes',
-          displayName: 'Notes:',
-          value: ''
-        }
-      ]
+    },
+    navigateTo (name, queryParams) {
+      this.$router.push({ name: name, query: queryParams })
     },
     showCity (city) {
       let id = city['id']
       this.entity = city
       this.backLinks =
-          [{id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)}]
+          [{
+            id: 'cities',
+            name: 'Cities',
+            handleClick: this.navigateTo.bind(this, 'restaurantsPage', {})}]
       this.title = city['name']
       this.hasInfo = true
       this.infoImages = []
@@ -256,7 +417,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Dishes Tried', 'Best Rating', 'Category']
       this.childTableValues = city['children'].map(restaurantId => {
         let restaurant = this.restaurantsPageData['restaurant'][restaurantId]
-        let handleClick = this.showRestaurant.bind(this, restaurant)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
         return {
           id: restaurantId,
           handleClick: handleClick,
@@ -267,61 +428,6 @@ export default {
             restaurant['category']]
         }
       })
-      this.addModalTitle = 'Adding restaurant'
-      this.editModalTitle = 'Editing ' + this.title
-      this.deleteModalTitle = 'Deleting ' + this.title
-      this.editModalFormLines = [
-        {
-          id: 'city-modal-name-' + city['id'],
-          name: 'name',
-          displayName: 'Name:',
-          value: city['name']
-        },
-        {
-          id: 'city-modal-state-' + city['state'],
-          name: 'state',
-          displayName: 'State:',
-          value: city['state']
-        },
-        {
-          id: 'city-modal-country-' + city['country'],
-          name: 'country',
-          displayName: 'Country:',
-          value: city['country']
-        },
-        {
-          id: 'city-modal-notes-' + city['id'],
-          name: 'notes',
-          displayName: 'Notes:',
-          value: city['notes']
-        }
-      ]
-      this.addModalFormLines = [
-        {
-          id: 'add-restaurant-modal-name',
-          name: 'name',
-          displayName: 'Name:',
-          value: ''
-        },
-        {
-          id: 'add-restaurant-modal-address',
-          name: 'address',
-          displayName: 'Address:',
-          value: ''
-        },
-        {
-          id: 'add-restaurant-modal-category',
-          name: 'category',
-          displayName: 'Category:',
-          value: ''
-        },
-        {
-          id: 'add-restaurant-modal-notes',
-          name: 'notes',
-          displayName: 'Notes:',
-          value: ''
-        }
-      ]
     },
     showRestaurant (restaurant) {
       let id = restaurant['id']
@@ -329,8 +435,10 @@ export default {
       this.entity = restaurant
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) }
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            { id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) }
           ]
       this.title = restaurant['name']
       this.hasInfo = true
@@ -349,7 +457,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Times Tried', 'Best Rating', 'Category']
       this.childTableValues = restaurant['children'].map(dishId => {
         let dish = this.restaurantsPageData['dish'][dishId]
-        let handleClick = this.showDish.bind(this, dish)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { dish: '' + dish['id'] })
         return {
           id: dishId,
           handleClick: handleClick,
@@ -360,55 +468,6 @@ export default {
             dish['category']]
         }
       })
-      this.addModalTitle = 'Adding dish'
-      this.editModalTitle = 'Editing ' + this.title
-      this.deleteModalTitle = 'Deleting ' + this.title
-      this.editModalFormLines = [
-        {
-          id: 'restaurant-modal-name-' + restaurant['id'],
-          name: 'name',
-          displayName: 'Name:',
-          value: restaurant['name']
-        },
-        {
-          id: 'restaurant-modal-address-' + restaurant['address'],
-          name: 'address',
-          displayName: 'Address:',
-          value: restaurant['address']
-        },
-        {
-          id: 'restaurant-modal-category-' + restaurant['category'],
-          name: 'category',
-          displayName: 'Category:',
-          value: restaurant['category']
-        },
-        {
-          id: 'restaurant-modal-notes-' + restaurant['id'],
-          name: 'notes',
-          displayName: 'Notes:',
-          value: restaurant['notes']
-        }
-      ]
-      this.addModalFormLines = [
-        {
-          id: 'add-dish-modal-name',
-          name: 'name',
-          displayName: 'Name:',
-          value: ''
-        },
-        {
-          id: 'add-dish-modal-category',
-          name: 'category',
-          displayName: 'Category:',
-          value: ''
-        },
-        {
-          id: 'add-dish-modal-notes',
-          name: 'notes',
-          displayName: 'Notes:',
-          value: ''
-        }
-      ]
     },
     showDish (dish) {
       let id = dish['id']
@@ -417,12 +476,15 @@ export default {
       this.entity = dish
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) },
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            {
+              id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) },
             {
               id: 'restaurant-' + restaurant['id'],
               name: restaurant['name'],
-              handleClick: this.showRestaurant.bind(this, restaurant)
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
             }
           ]
       this.title = restaurant['name'] + ': ' + dish['name']
@@ -440,7 +502,7 @@ export default {
         'James\' Rating', 'James\' Comments']
       this.childTableValues = dish['children'].map(dishMealId => {
         let dishMeal = this.restaurantsPageData['dish_meal'][dishMealId]
-        let handleClick = this.showDishMeal.bind(this, dishMeal)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { 'dish-meal': '' + dishMeal['id'] })
         return {
           id: dishMealId,
           handleClick: handleClick,
@@ -449,61 +511,6 @@ export default {
             dishMeal['user_2_comments']]
         }
       })
-      this.addModalTitle = 'Adding dish meal'
-      this.editModalTitle = 'Editing ' + this.title
-      this.deleteModalTitle = 'Deleting ' + this.title
-      this.editModalFormLines = [
-        {
-          id: 'dish-modal-name-' + dish['id'],
-          name: 'name',
-          displayName: 'Name:',
-          value: dish['name']
-        },
-        {
-          id: 'dish-modal-category-' + dish['id'],
-          name: 'category',
-          displayName: 'Category:',
-          value: dish['category']
-        },
-        {
-          id: 'dish-modal-notes-' + dish['id'],
-          name: 'notes',
-          displayName: 'Notes:',
-          value: dish['notes']
-        }
-      ]
-      this.addModalFormLines = [
-        {
-          id: 'add-dishmeal-modal-date',
-          name: 'date',
-          displayName: 'Date:',
-          value: ''
-        },
-        {
-          id: 'add-dishmeal-modal-miriam-rating',
-          name: 'user_1_rating',
-          displayName: 'Miriam\'s Rating:',
-          value: ''
-        },
-        {
-          id: 'add-dishmeal-modal-james-rating',
-          name: 'user_2_rating',
-          displayName: 'James\' Rating:',
-          value: ''
-        },
-        {
-          id: 'add-dishmeal-modal-miriam-comments',
-          name: 'user_1_comments',
-          displayName: 'Miriam\'s Comments:',
-          value: ''
-        },
-        {
-          id: 'add-dishmeal-modal-james-comments',
-          name: 'user_2_comments',
-          displayName: 'James\' Comments:',
-          value: ''
-        }
-      ]
     },
     showDishMeal (dishMeal) {
       let id = dishMeal['id']
@@ -513,14 +520,21 @@ export default {
       this.entity = dishMeal
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) },
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            {
+              id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) },
             {
               id: 'restaurant-' + restaurant['id'],
               name: restaurant['name'],
-              handleClick: this.showRestaurant.bind(this, restaurant)
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
             },
-            { id: 'dish-' + dish['id'], name: dish['name'], handleClick: this.showDish.bind(this, dish) }
+            {
+              id: 'dish-' + dish['id'],
+              name: dish['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { dish: '' + dish['id'] })
+            }
           ]
       this.title = 'Meal for ' + restaurant['name'] + ': ' + dish['name']
       this.hasInfo = true
@@ -535,48 +549,41 @@ export default {
       this.hasChildren = false
       this.childTableHeaders = []
       this.childTableValues = []
-      this.editModalTitle = 'Editing ' + this.title
-      this.deleteModalTitle = 'Deleting ' + this.title
-      this.editModalFormLines = [
-        {
-          id: 'dishmeal-modal-date-' + dishMeal['id'],
-          name: 'date',
-          displayName: 'Date:',
-          value: dishMeal['date']
-        },
-        {
-          id: 'dishmeal-modal-miriam-rating-' + dishMeal['id'],
-          name: 'user_1_rating',
-          displayName: 'Miriam\'s Rating:',
-          value: dishMeal['user_1_rating']
-        },
-        {
-          id: 'dishmeal-modal-james-rating-' + dishMeal['id'],
-          name: 'user_2_rating',
-          displayName: 'James\' Rating:',
-          value: dishMeal['user_2_rating']
-        },
-        {
-          id: 'dishmeal-modal-miriam-comments-' + dishMeal['id'],
-          name: 'user_1_comments',
-          displayName: 'Miriam\'s Comments:',
-          value: dishMeal['user_1_comments']
-        },
-        {
-          id: 'dishmeal-modal-james-comments-' + dishMeal['id'],
-          name: 'user_2_comments',
-          displayName: 'James\' Comments:',
-          value: dishMeal['user_2_comments']
-        }
-      ]
     },
     getRestaurantsPageDataAndRender () {
       axios.post(GET_RESTAURANTS_PAGE_DATA_URL).then(
         response => {
           this.restaurantsPageData = response.data
-          this.showCities()
+          this.renderPageFromProps()
         }
       )
+    },
+    renderPageFromProps () {
+      if (!this.cityIdParam && !this.restaurantIdParam && !this.dishIdParam && !this.dishMealIdParam) {
+        this.showCities()
+        return
+      }
+
+      let entity = null
+      if (this.cityIdParam) {
+        entity = this.restaurantsPageData['city'][parseInt(this.cityIdParam)]
+      } else if (this.restaurantIdParam) {
+        entity = this.restaurantsPageData['restaurant'][parseInt(this.restaurantIdParam)]
+      } else if (this.dishIdParam) {
+        entity = this.restaurantsPageData['dish'][parseInt(this.dishIdParam)]
+      } else if (this.dishMealIdParam) {
+        entity = this.restaurantsPageData['dish_meal'][parseInt(this.dishMealIdParam)]
+      }
+      if (entity) {
+        this.showEntity(entity)
+        return
+      }
+      this.setCurrentStatus('Unable to perform navigation.')
+    },
+    setCurrentStatus (text) {
+      this.currentStatus = text
+      window.clearTimeout(this.timeoutHandle)
+      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

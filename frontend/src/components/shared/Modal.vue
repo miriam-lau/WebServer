@@ -1,11 +1,11 @@
 <template>
-    <transition name="modal">
-        <div class="modal-mask" @click="close" v-show="show">
-            <div class="modal-container" @click.stop>
-              <slot></slot>
-            </div>
-        </div>
-    </transition>
+  <transition name="modal">
+    <div class="modal-mask" @click="close" v-show="show">
+      <div class="modal-container" @click.stop>
+        <slot></slot>
+      </div>
+    </div>
+  </transition>
 </template>
 <style>
   @import "../../assets/style/modal.css"
@@ -20,12 +20,10 @@ export default {
     }
   },
   props: {
-    show: Boolean
-  },
-  methods: {
-    close () {
-      this.$emit('close')
-    }
+    /** Whether this modal is shown or not. */
+    show: Boolean,
+    /** Called when the modal is closed. Done by clicking outside of the modal or pressing escape. */
+    close: Function
   },
   mounted () {
     // Closes the modal if 'escape' is pressed.

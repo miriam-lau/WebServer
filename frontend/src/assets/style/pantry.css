@@ -1,0 +1,31 @@
+.pantry-icon {
+    margin-right: 2px;
+}
+
+.pantry-icon:hover {
+    cursor: pointer;
+}
+
+.pantry-single-grocery-list {
+    margin-bottom: 30px;
+}
+
+.pantry-grocery-list-text {
+    border: 1px solid #b8ecff;
+    margin: 5px 0;
+}
+
+.status {
+    color: black;
+    text-align: center;
+    background-color: rgb(163, 238, 163);
+    width: 50%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+
+nav.nav-pantry-grocery-lists .nav-pantry-grocery-lists,
+nav.nav-pantry-pantry-store .nav-pantry-pantry-store,
+nav.nav-pantry-known-words .nav-pantry-known-words {
+	background-color:#e35885;
+}

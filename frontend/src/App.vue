@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <Main/>
   </div>
 </template>
 
@@ -9,7 +9,12 @@
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
 <script>
+import Main from './components/Main'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Main
+  }
 }
 </script>

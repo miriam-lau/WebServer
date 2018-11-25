@@ -1,38 +1,46 @@
 <template>
   <div class="current-documents">
+    <div class="current-documents-status" v-if="currentStatus != ''">
+      {{ currentStatus }}
+    </div>
     <table class="current-documents-list table">
       <tr>
         <th>Title</th><th>Notes</th><th>Modify</th>
       </tr>
-      <tr class="current-documents-item" :key="index"
-          v-for="(currentDocument, index) in currentDocuments">
+      <tr class="current-documents-item" :key="currentDocument['id']"
+          v-for="currentDocument in currentDocuments">
         <td><a :href="currentDocument['url']" target="_blank">{{ currentDocument['title'] }}</a></td>
         <td>{{ currentDocument['notes'] }}</td>
-        <td><font-awesome-icon icon="pencil-alt" class="current-documents-icon"
-            @click="showEditModal(index)" />
-            <font-awesome-icon icon="trash" class="current-documents-icon"
-            @click="deleteDocument(index)" />
-            <font-awesome-icon icon="long-arrow-alt-up" class="current-documents-icon"
-            @click="moveDocumentUp(index)" />
-            <font-awesome-icon icon="long-arrow-alt-down" class="current-documents-icon"
-            @click="moveDocumentDown(index)" />
+        <td><font-awesome-icon icon="pencil-alt" class="icon"
+            @click="showEditModal(currentDocument)" />
+            <font-awesome-icon icon="trash" class="icon"
+            @click="showDeleteModal(currentDocument)" />
+            <font-awesome-icon icon="long-arrow-alt-up" class="icon"
+            @click="moveDocumentUp(currentDocument)" />
+            <font-awesome-icon icon="long-arrow-alt-down" class="icon"
+            @click="moveDocumentDown(currentDocument)" />
         </td>
       </tr>
     </table>
-    <button @click="showAddModal()">Add Document</button>
-    <CurrentDocumentsModal :show="showModal" @close="showModal = false"
-        :title="modalTitle" :initialDocumentTitle="modalDocumentTitle" :initialDocumentUrl="modalDocumentUrl"
-        :initialDocumentNotes="modalDocumentNotes" :documentId="modalDocumentId"
-        :addOrEditDocument="addOrEditDocument" />
+    <button @click="showAddModal">Add Document</button>
+    <FormModal
+      :show="shouldShowModal"
+      :close="closeModal"
+      :title="modalTitle"
+      :initialFormLines="modalFormLines"
+      :errorText="modalErrorText"
+      :handleButtonClick="modalCallback"
+      :passThroughProps="modalPassThroughProps"
+      :buttonText="modalButtonText" />
   </div>
 </template>
 <style>
   @import "../assets/style/current-documents.css"
 </style>
 <script>
-import CurrentDocumentsModal from './current_documents/CurrentDocumentsModal'
+import FormModal from './shared/FormModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath } from '../common/utils'
+import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
 import { store } from '../store/store'
 
 const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
@@ -46,16 +54,19 @@ export default {
   data () {
     return {
       currentDocuments: [],
+      currentStatus: '',
       modalTitle: '',
-      modalDocumentTitle: '',
-      modalDocumentUrl: '',
-      modalDocumentNotes: '',
-      modalDocumentId: null,
-      showModal: false
+      modalFormLines: [],
+      modalPassThroughProps: {},
+      modalCallback: Function,
+      modalButtonText: '',
+      modalErrorText: '',
+      shouldShowModal: false,
+      timeoutHandle: null
     }
   },
   created () {
-    this.updateCurrentDocumentsDisplay()
+    this.reloadCurrentDocumentsData()
   },
   computed: {
     username () {
@@ -64,43 +75,67 @@ export default {
   },
   watch: {
     username () {
-      this.updateCurrentDocumentsDisplay()
+      this.reloadCurrentDocumentsData()
     }
   },
   components: {
-    CurrentDocumentsModal
+    FormModal
   },
   methods: {
-    updateCurrentDocumentsDisplay () {
+    closeModal () {
+      this.shouldShowModal = false
+    },
+    reloadCurrentDocumentsData () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
         response => {
           this.currentDocuments = response['data']
         })
     },
-    showEditModal (index) {
-      let document = this.currentDocuments[index]
-      this.modalTitle = 'Editing ' + document['title']
-      this.modalDocumentTitle = document['title']
-      this.modalDocumentUrl = document['url']
-      this.modalDocumentNotes = document['notes']
-      this.modalDocumentId = document['id']
-      this.showModal = true
+    showModal (title, formLines, passThroughProps, callback, buttonText) {
+      this.modalTitle = title
+      this.modalFormLines = formLines
+      this.modalPassThroughProps = passThroughProps
+      this.modalCallback = callback
+      this.modalButtonText = buttonText
+      this.modalErrorText = ''
+      this.shouldShowModal = true
+    },
+    showEditModal (document) {
+      let modalFormLines = [
+        createFormModalEntry('edit-document-modal-title-' + document['id'], 'title', 'Title:', document['title']),
+        createFormModalEntry('edit-document-modal-url-' + document['id'], 'url', 'URL:', document['url']),
+        createFormModalEntry('edit-document-modal-notes-' + document['id'], 'notes', 'Notes:', document['notes'])
+      ]
+      this.showModal(
+        'Editing ' + document['title'],
+        modalFormLines,
+        document,
+        this.editDocument,
+        'Save')
+    },
+    showDeleteModal (document) {
+      this.showModal(
+        'Deleting ' + document['title'],
+        [],
+        { id: document['id'] },
+        this.deleteDocument,
+        'Delete')
     },
     showAddModal () {
-      this.modalTitle = 'Adding a new document'
-      this.modalDocumentTitle = ''
-      this.modalDocumentUrl = ''
-      this.modalDocumentNotes = ''
-      this.modalDocumentId = null
-      this.showModal = true
+      let modalFormLines = [
+        createFormModalEntry('add-document-modal-title', 'title', 'Title:'),
+        createFormModalEntry('add-document-modal-url', 'url', 'URL:'),
+        createFormModalEntry('add-document-modal-notes', 'notes', 'Notes:')
+      ]
+      this.showModal(
+        'Adding a new document',
+        modalFormLines,
+        { username: this.username },
+        this.addDocument,
+        'Save')
     },
-    deleteDocument (index) {
-      axios.post(DELETE_DOCUMENT_URL, {id: this.currentDocuments[index]['id']}).then(
-        response => {
-          this.updateCurrentDocumentsDisplay()
-        })
-    },
-    moveDocumentUp (index) {
+    moveDocumentUp (document) {
+      let index = this.currentDocuments.indexOf(document)
       if (index === 0) {
         return
       }
@@ -116,10 +151,11 @@ export default {
       }
       axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
         response => {
-          this.updateCurrentDocumentsDisplay()
+          this.reloadCurrentDocumentsData()
         })
     },
-    moveDocumentDown (index) {
+    moveDocumentDown (document) {
+      let index = this.currentDocuments.indexOf(document)
       if (index === (this.currentDocuments.length - 1)) {
         return
       }
@@ -135,29 +171,57 @@ export default {
       }
       axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
         response => {
-          this.updateCurrentDocumentsDisplay()
+          this.reloadCurrentDocumentsData()
         })
     },
-    addOrEditDocument (title, url, notes, id) {
-      var document = {}
-      document['username'] = this.username
-      document['title'] = title
-      document['url'] = url
-      document['notes'] = notes
-      if (id != null) {
-        document['id'] = id
-        axios.post(EDIT_DOCUMENT_URL, {id: id, document: document}).then(
+    deleteDocument (modalOutput) {
+      axios.post(DELETE_DOCUMENT_URL, {id: modalOutput['id']})
+        .then(
           response => {
-            this.updateCurrentDocumentsDisplay()
-            this.showModal = false
+            let deletedDocument = response['data']
+            this.currentDocuments.splice(
+              this.currentDocuments.findIndex(document => document['id'] === deletedDocument['id']), 1)
+            this.closeModal()
+            this.setCurrentStatus('Deleted ' + deletedDocument['title'])
           })
-      } else {
-        axios.post(ADD_DOCUMENT_URL, {document: document}).then(
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during delete.'
+          console.log(error)
+        })
+    },
+    editDocument (document) {
+      axios.post(EDIT_DOCUMENT_URL, {document: document})
+        .then(
           response => {
-            this.updateCurrentDocumentsDisplay()
-            this.showModal = false
+            let currentDocumentIndex =
+              this.currentDocuments.findIndex(document => document.id === response['data']['id'])
+            this.currentDocuments[currentDocumentIndex] = response['data']
+            this.closeModal()
+            this.setCurrentStatus('Saved ' + document['title'])
           })
-      }
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during edit.'
+          console.log(error)
+        })
+    },
+    addDocument (document) {
+      axios.post(ADD_DOCUMENT_URL, {document: document})
+        .then(
+          response => {
+            let document = response['data']
+            this.currentDocuments.push(document)
+            this.closeModal()
+            this.setCurrentStatus('Added ' + document['title'])
+          })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during add.'
+          console.log(error)
+        })
+    },
+    setCurrentStatus (text) {
+      this.currentStatus = text
+      window.clearTimeout(this.timeoutHandle)
+      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

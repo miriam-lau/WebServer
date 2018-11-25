@@ -7,6 +7,8 @@ from src.codenames.codenames import Codenames
 from src.hobby_tracker.hobby_tracker import HobbyTracker
 from src.recipes_page.recipes_page import RecipesPage
 from src.restaurants_page.restaurants_page import RestaurantsPage
+from src.pantry_page.pantry_page import PantryPage
+from src.notes_page.notes_page import NotesPage
 
 
 app = Flask(__name__)
@@ -18,6 +20,8 @@ codenames = None
 hobby_tracker = None
 recipes_page = None
 restaurants_page = None
+pantry_page = None
+notes_page = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -28,17 +32,21 @@ def initialize_app():
     global hobby_tracker
     global recipes_page
     global restaurants_page
+    global pantry_page
+    global notes_page
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
     hobby_tracker = HobbyTracker(database)
     recipes_page = RecipesPage(database)
     restaurants_page = RestaurantsPage(database)
-
-# Current documents methods -------------------------------------------------------------------------------------
+    pantry_page = PantryPage(database)
+    notes_page = NotesPage(database)
 
 
 # TODO: This is totally insecure.
+# Current documents methods -------------------------------------------------------------------------------------
+
 @app.route("/get_current_documents", methods=["POST"])
 def get_current_documents():
     username = request.json["username"]
@@ -52,9 +60,8 @@ def delete_document():
 
 @app.route("/edit_document", methods=["POST"])
 def edit_document():
-    document_id = request.json["id"]
     document = request.json["document"]
-    return jsonify(current_documents.edit_document(document_id, document))
+    return jsonify(current_documents.edit_document(document))
 
 
 @app.route("/add_document", methods=["POST"])
@@ -67,7 +74,8 @@ def add_document():
 def reorder_documents():
     username = request.json["username"]
     document_ids = request.json["document_ids"]
-    return jsonify(current_documents.reorder_documents(username, document_ids))
+    current_documents.reorder_documents(username, document_ids)
+    return ""
 
 
 # Codenames methods ----------------------------------------------------------------------------------------------
@@ -125,6 +133,7 @@ def _codenames_send_socketio_refresh(game_id, player_triggering_update):
     socketio.emit("refresh_codenames",
                   {"players": players, "player_triggering_update": player_triggering_update},
                   broadcast=True)
+
 
 # Hobby Tracker methods ----------------------------------------------------------------------------------------------
 
@@ -235,6 +244,109 @@ def get_recipes_page_data():
 @app.route("/get_restaurants_page_data", methods=["POST"])
 def get_restaurants_page_data():
     return jsonify(restaurants_page.get_restaurants_page_data())
+
+
+# Pantry ------------------------------------------------------------------------------------------------------
+
+@app.route("/get_pantry_page", methods=["POST"])
+def get_pantry_page():
+    return jsonify(pantry_page.get_pantry_page_data())
+
+
+@app.route("/edit_grocery_list", methods=["POST"])
+def edit_grocery_list():
+    grocery_list_id = request.json["id"]
+    grocery_list = request.json["list"]
+    return jsonify(pantry_page.edit_grocery_list(grocery_list_id, grocery_list))
+
+
+@app.route("/edit_grocery_list_metadata", methods=["POST"])
+def edit_grocery_list_metadata():
+    grocery_list_id = request.json["id"]
+    title = request.json["title"]
+    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title))
+
+
+@app.route("/delete_grocery_list", methods=["POST"])
+def delete_grocery_list():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.delete_grocery_list(grocery_list_id))
+
+
+@app.route("/add_grocery_list", methods=["POST"])
+def add_grocery_list():
+    title = request.json["title"]
+    return jsonify(pantry_page.add_grocery_list(title))
+
+
+@app.route("/delete_pantry_item", methods=["POST"])
+def delete_pantry_item():
+    pantry_item = request.json["item"]
+    return jsonify(pantry_page.delete_pantry_item(pantry_item))
+
+
+@app.route("/add_pantry_item", methods=["POST"])
+def add_pantry_item():
+    pantry_item = request.json["item"]
+    return jsonify(pantry_page.add_pantry_item(pantry_item))
+
+
+@app.route("/delete_known_word", methods=["POST"])
+def delete_known_word():
+    known_word = request.json["word"]
+    return jsonify(pantry_page.delete_known_word(known_word))
+
+
+@app.route("/add_known_word", methods=["POST"])
+def add_known_word():
+    known_word = request.json["word"]
+    should_save = request.json["should_save"]
+    return jsonify(pantry_page.add_known_word(known_word, should_save))
+
+
+@app.route("/attempt_add_to_pantry", methods=["POST"])
+def attempt_add_to_pantry():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.add_to_pantry(grocery_list_id, False))
+
+
+@app.route("/add_to_pantry", methods=["POST"])
+def add_to_pantry():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.add_to_pantry(grocery_list_id, True))
+
+
+# Notes ------------------------------------------------------------------------------------------------------
+
+@app.route("/get_notes_page", methods=["POST"])
+def get_notes_page():
+    return jsonify(notes_page.get_notes_page_data())
+
+
+@app.route("/edit_note", methods=["POST"])
+def edit_note():
+    note_id = request.json["id"]
+    note = request.json["text"]
+    return jsonify(notes_page.edit_note(note_id, note))
+
+
+@app.route("/edit_note_metadata", methods=["POST"])
+def edit_note_metadata():
+    note_id = request.json["id"]
+    title = request.json["title"]
+    return jsonify(notes_page.edit_note_metadata(note_id, title))
+
+
+@app.route("/delete_note", methods=["POST"])
+def delete_note():
+    note_id = request.json["id"]
+    return jsonify(notes_page.delete_note(note_id))
+
+
+@app.route("/add_note", methods=["POST"])
+def add_note():
+    title = request.json["title"]
+    return jsonify(notes_page.add_note(title))
 
 # ----------------------------------------------------------------------------------------------
 
