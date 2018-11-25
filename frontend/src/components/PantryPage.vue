@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="status" v-if="currentStatus != ''">
+      {{ currentStatus }}
+    </div>
     <div class="pantry-grocery-lists">
         <h2>Grocery Lists</h2>
         <div class="pantry-single-grocery-list" v-for="groceryList in groceryLists" :key="groceryList['id']">
@@ -12,6 +15,7 @@
             </div>
             <div class="pantry-grocery-list-text">
                 <EditableDiv
+                  :key="pantryGroceryListKey"
                   :content="groceryList['list']"
                   :handleUpdate="updateGroceryListText.bind(this, groceryList)"
                 />
@@ -20,7 +24,9 @@
                 Saved.
             </div>
             <div v-else>
-                Unsaved. <button @click="editGroceryList(groceryList)">Save List</button>
+                Unsaved.
+                <button @click="editGroceryList(groceryList)">Save</button>
+                <button @click="cancelEditGroceryListText(groceryList)">Cancel</button>
             </div>
         </div>
         <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
@@ -69,7 +75,7 @@ export default {
   name: 'PantryPage',
   data () {
     return {
-      groceryLists: {},
+      groceryLists: [],
       pantry: [],
       groceryListTitleToAdd: '',
       currentStatus: '',
@@ -79,6 +85,7 @@ export default {
       modalCallback: Function,
       modalButtonText: '',
       modalErrorText: '',
+      pantryGroceryListKey: 0,
       shouldShowModal: false,
       timeoutHandle: null
     }
@@ -91,8 +98,20 @@ export default {
   },
   methods: {
     updateGroceryListText (groceryList, newText) {
-      groceryList['saved'] = false
+      console.log(groceryList)
+      if (groceryList['saved']) {
+        groceryList['saved'] = false
+        groceryList['backedUpListText'] = groceryList['list']
+      }
       groceryList['list'] = newText.target.innerText
+    },
+    cancelEditGroceryListText (groceryList) {
+      if (!groceryList['saved']) {
+        groceryList['saved'] = true
+        groceryList['list'] = groceryList['backedUpListText']
+        delete groceryList['backedUpListText']
+        this.pantryGroceryListKey += 1 // Force a re-render of the EditableDiv of this grocery list.
+      }
     },
     closeModal () {
       this.shouldShowModal = false
@@ -132,29 +151,62 @@ export default {
         {
           id: groceryList['id'],
           title: groceryList['title']
-        }).then(response => {
-        this.updatePantryPageDisplay()
-        this.closeModal()
-      })
+        })
+        .then(response => {
+          let currentGroceryListIndex =
+            this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
+          let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
+          newGroceryListItem['title'] = response['data']['title']
+          this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
+          this.closeModal()
+          this.setCurrentStatus('Saved ' + groceryList['title'])
+        })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during edit.'
+          console.log(error)
+        })
     },
     editGroceryList (groceryList) {
-      axios.post(EDIT_GROCERY_LIST_URL, {id: groceryList['id'], list: groceryList['list']}).then(response => {
-        this.updatePantryPageDisplay()
-      })
+      axios.post(EDIT_GROCERY_LIST_URL, {id: groceryList['id'], list: groceryList['list']})
+        .then(response => {
+          let currentGroceryListIndex =
+            this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
+          response['data']['saved'] = true
+          this.groceryLists.splice(currentGroceryListIndex, 1, response['data'])
+          this.setCurrentStatus('Saved ' + groceryList['title'])
+        })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during edit.'
+          console.log(error)
+        })
     },
     deleteGroceryList (groceryList) {
       axios.post(DELETE_GROCERY_LIST_URL, {id: groceryList['id']}).then(response => {
-        this.updatePantryPageDisplay()
+        let deletedGroceryList = response['data']
+        this.groceryLists.splice(
+          this.groceryLists.findIndex(groceryList => groceryList['id'] === deletedGroceryList['id']), 1)
         this.closeModal()
+        this.setCurrentStatus('Deleted ' + deletedGroceryList['title'])
       })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during delete.'
+          console.log(error)
+        })
     },
     addGroceryList () {
-      axios.post(ADD_GROCERY_LIST_URL, {title: this.groceryListTitleToAdd}).then(
-        response => {
-          this.groceryListTitleToAdd = ''
-          this.updatePantryPageDisplay()
-        }
-      )
+      axios.post(ADD_GROCERY_LIST_URL, {title: this.groceryListTitleToAdd})
+        .then(
+          response => {
+            this.groceryListTitleToAdd = ''
+            let groceryList = response['data']
+            this.groceryLists.push(groceryList)
+            this.closeModal()
+            this.setCurrentStatus('Added ' + groceryList['title'])
+          })
+        .catch(error => {
+          this.modalErrorText = 'An error occurred during add.'
+          console.log(error)
+        })
     },
     updatePantryPageDisplay () {
       axios.post(GET_PANTRY_PAGE_URL).then(
@@ -165,6 +217,11 @@ export default {
           }
           this.pantry = response['data']['pantry']
         })
+    },
+    setCurrentStatus (text) {
+      this.currentStatus = text
+      window.clearTimeout(this.timeoutHandle)
+      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

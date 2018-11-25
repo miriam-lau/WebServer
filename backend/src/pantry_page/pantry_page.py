@@ -31,9 +31,11 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from grocery_lists where id = %s", (grocery_list_id,))
+            cur.execute("DELETE from grocery_lists where id = %s RETURNING *", (grocery_list_id,))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
@@ -46,10 +48,12 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET title = %s where id = %s",
+            cur.execute("UPDATE grocery_lists SET title = %s where id = %s RETURNING *",
                         (grocery_list_title, grocery_list_id))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
@@ -59,10 +63,12 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET list = %s where id = %s",
+            cur.execute("UPDATE grocery_lists SET list = %s where id = %s RETURNING *",
                         (grocery_list, grocery_list_id))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
@@ -75,9 +81,11 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_lists(title, list) VALUES(%s, '')", (title,))
+            cur.execute("INSERT INTO grocery_lists(title, list) VALUES(%s, '') RETURNING *", (title,))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
