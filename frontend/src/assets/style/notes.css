@@ -1,0 +1,20 @@
+.notes-icon {
+    margin-right: 2px;
+}
+
+.notes-icon:hover {
+    cursor: pointer;
+}
+
+.notes-single-note {
+    margin-bottom: 30px;
+}
+
+.notes-text {
+    border: 1px solid #b8ecff;
+    margin: 5px 0;
+}
+
+.notes-notes {
+    margin-bottom: 30px;
+}

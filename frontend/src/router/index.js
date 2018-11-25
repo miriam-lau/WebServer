@@ -6,6 +6,7 @@ import Codenames from '@/components/Codenames'
 import RecipesPage from '@/components/RecipesPage'
 import RestaurantsPage from '@/components/RestaurantsPage'
 import PantryPage from '@/components/PantryPage'
+import NotesPage from '@/components/NotesPage'
 import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
@@ -52,6 +53,11 @@ export default new Router({
       path: '/pantry',
       name: 'pantryPage',
       component: PantryPage
+    },
+    {
+      path: '/notes',
+      name: 'notesPage',
+      component: NotesPage
     },
     {
       path: '*',

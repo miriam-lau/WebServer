@@ -8,6 +8,7 @@ from src.hobby_tracker.hobby_tracker import HobbyTracker
 from src.recipes_page.recipes_page import RecipesPage
 from src.restaurants_page.restaurants_page import RestaurantsPage
 from src.pantry_page.pantry_page import PantryPage
+from src.notes_page.notes_page import NotesPage
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ hobby_tracker = None
 recipes_page = None
 restaurants_page = None
 pantry_page = None
+notes_page = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -31,6 +33,7 @@ def initialize_app():
     global recipes_page
     global restaurants_page
     global pantry_page
+    global notes_page
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
@@ -38,6 +41,7 @@ def initialize_app():
     recipes_page = RecipesPage(database)
     restaurants_page = RestaurantsPage(database)
     pantry_page = PantryPage(database)
+    notes_page = NotesPage(database)
 
 
 # TODO: This is totally insecure.
@@ -273,6 +277,39 @@ def delete_grocery_list():
 def add_grocery_list():
     title = request.json["title"]
     return jsonify(pantry_page.add_grocery_list(title))
+
+
+# Notes ------------------------------------------------------------------------------------------------------
+
+@app.route("/get_notes_page", methods=["POST"])
+def get_notes_page():
+    return jsonify(notes_page.get_notes_page_data())
+
+
+@app.route("/edit_note", methods=["POST"])
+def edit_note():
+    note_id = request.json["id"]
+    note = request.json["text"]
+    return jsonify(notes_page.edit_note(note_id, note))
+
+
+@app.route("/edit_note_metadata", methods=["POST"])
+def edit_note_metadata():
+    note_id = request.json["id"]
+    title = request.json["title"]
+    return jsonify(notes_page.edit_note_metadata(note_id, title))
+
+
+@app.route("/delete_note", methods=["POST"])
+def delete_note():
+    note_id = request.json["id"]
+    return jsonify(notes_page.delete_note(note_id))
+
+
+@app.route("/add_note", methods=["POST"])
+def add_note():
+    title = request.json["title"]
+    return jsonify(notes_page.add_note(title))
 
 # ----------------------------------------------------------------------------------------------
 

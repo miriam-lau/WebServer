@@ -2,36 +2,29 @@ from typing import Dict, List
 import psycopg2
 
 
-class PantryPage:
+class NotesPage:
     def __init__(self, database):
         self._database = database
 
-    # Returns an object containing the data for the pantry page. Consists of the keys:
-    #   grocery_lists: An array of grocery list objects.
-    #   pantry: An array of pantry items.
-    def get_pantry_page_data(self) -> Dict:
+    # Returns an array containing the data for the notes page.
+    def get_notes_page_data(self) -> Dict:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("SELECT * from grocery_lists order by id")
-            grocery_lists = cur.fetchall()
-            cur.execute("SELECT * from pantry")
-            pantry_items = cur.fetchall()
+            cur.execute("SELECT * from notes order by id")
+            notes = cur.fetchall()
             cur.close()
-            return {
-                'grocery_lists': grocery_lists,
-                'pantry': pantry_items
-            }
+            return notes
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
             raise
 
-    def delete_grocery_list(self, grocery_list_id):
+    def delete_note(self, note_id):
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from grocery_lists where id = %s RETURNING *", (grocery_list_id,))
+            cur.execute("DELETE from notes where id = %s RETURNING *", (note_id,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -41,15 +34,15 @@ class PantryPage:
             cur.close()
             raise
 
-    def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title):
-        if not grocery_list_title:
+    def edit_note_metadata(self, note_id, note_title):
+        if not note_title:
             raise Exception('Title must not be empty.')
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET title = %s where id = %s RETURNING *",
-                        (grocery_list_title, grocery_list_id))
+            cur.execute("UPDATE notes SET title = %s where id = %s RETURNING *",
+                        (note_title, note_id))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -59,12 +52,12 @@ class PantryPage:
             cur.close()
             raise
 
-    def edit_grocery_list(self, grocery_list_id, grocery_list):
+    def edit_note(self, note_id, text):
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET list = %s where id = %s RETURNING *",
-                        (grocery_list, grocery_list_id))
+            cur.execute("UPDATE notes SET text = %s where id = %s RETURNING *",
+                        (text, note_id))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -74,14 +67,14 @@ class PantryPage:
             cur.close()
             raise
 
-    def add_grocery_list(self, title):
+    def add_note(self, title):
         if not title:
             raise Exception('Title must not be empty.')
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_lists(title, list) VALUES(%s, '') RETURNING *", (title,))
+            cur.execute("INSERT INTO notes(title, text) VALUES(%s, '') RETURNING *", (title,))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()

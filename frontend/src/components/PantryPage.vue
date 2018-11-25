@@ -52,8 +52,6 @@
   @import "../assets/style/pantry.css"
 </style>
 <script>
-// TODO: Only one grocery list can be modified at a time. Saving one will trigger a page refresh, overwriting the
-// others.
 import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
 import axios from 'axios'

@@ -64,6 +64,7 @@ drop table codenames_games_to_locations cascade;
 drop table grocery_list cascade;
 drop table grocery_known_words cascade;
 drop table pantry cascade;
+drop table notes cascade;
 
 create table users (
   username varchar (50) primary key);
@@ -247,4 +248,10 @@ create table grocery_known_words (
 
 create table pantry (
   item varchar(150) primary key
+);
+
+create table notes (
+  id serial primary key,
+  title varchar(150) not null,
+  text text not null
 );

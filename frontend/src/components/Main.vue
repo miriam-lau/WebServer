@@ -12,6 +12,7 @@
     </div>
     <div class="nav-container">
       <nav :class="navigationClass" v-on:click.prevent>
+        <a href="#" class="nav-notes-page" v-on:click="navigateTo('notesPage')">Notes</a>
         <a href="#" class="nav-current-documents"
           v-on:click="navigateTo('currentDocuments')">Current Documents</a>
         <a href="#" class="nav-hobby-tracker" v-on:click="navigateTo('hobbyTracker')">Hobby Tracker</a>
@@ -32,6 +33,7 @@ import HobbyTracker from './HobbyTracker'
 import RecipesPage from './RecipesPage'
 import RestaurantsPage from './RestaurantsPage'
 import PantryPage from './PantryPage'
+import NotesPage from './NotesPage'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -39,14 +41,19 @@ export default {
   data () {
     return {
       loginUsername: '',
-      navigationClass: ''
+      navigationClass: this.setNavigationClass()
     }
   },
   created () {
     this.setUsername(this.$cookies.get('username'))
   },
+  watch: {
+    '$route': function () {
+      this.navigationClass = this.setNavigationClass()
+    }
+  },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage, PantryPage
+    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -55,26 +62,25 @@ export default {
       this.$cookies.set('username', this.loginUsername, '1y')
     },
     navigateTo (path) {
-      switch (path) {
-        case 'currentDocuments':
-          this.navigationClass = 'nav-current-documents'
-          break
-        case 'hobbyTracker':
-          this.navigationClass = 'nav-hobby-tracker'
-          break
-        case 'codenames':
-          this.navigationClass = 'nav-codenames'
-          break
-        case 'recipesPage':
-          this.navigationClass = 'nav-recipes-page'
-          break
-        case 'restaurantsPage':
-          this.navigationClass = 'nav-restaurants-page'
-          break
-        case 'pantryPage':
-          this.navigationClass = 'nav-pantry-page'
-      }
       this.$router.push({ name: path })
+    },
+    setNavigationClass () {
+      switch (this.$route.name) {
+        case 'currentDocuments':
+          return 'nav-current-documents'
+        case 'hobbyTracker':
+          return 'nav-hobby-tracker'
+        case 'codenames':
+          return 'nav-codenames'
+        case 'recipesPage':
+          return 'nav-recipes-page'
+        case 'restaurantsPage':
+          return 'nav-restaurants-page'
+        case 'pantryPage':
+          return 'nav-pantry-page'
+        case 'notesPage':
+          return 'nav-notes-page'
+      }
     }
   }
 }
