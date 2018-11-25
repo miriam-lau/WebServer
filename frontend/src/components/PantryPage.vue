@@ -11,7 +11,10 @@
                     @click="showDeleteGroceryListModal(groceryList)" />
             </div>
             <div class="pantry-grocery-list-text">
-                <EditableDiv :content="groceryList['list']" :handleUpdate="updateGroceryListText.bind(this, groceryList)" />
+                <EditableDiv
+                  :content="groceryList['list']"
+                  :handleUpdate="updateGroceryListText.bind(this, groceryList)"
+                />
             </div>
             <div v-if="groceryList['saved']">
                 Saved.
@@ -21,15 +24,15 @@
             </div>
         </div>
         <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
-        <FormModal :show="shouldShowEditGroceryMetadataModal" @close="shouldShowEditGroceryMetadataModal = false"
-            :title="editGroceryMetadataModalTitle" :initialFormLines="editGroceryMetadataModalFormLines"
-            :passThroughProps="editGroceryMetadataModalPassThroughProps"
-            :handleButtonClick="closeModalAndHandleEditGroceryMetadataModalSave" buttonText="Save" />
-        <FormModal :show="shouldShowDeleteGroceryListModal" @close="shouldShowDeleteGroceryListModal = false"
-            :title="deleteGroceryListModalTitle" :initialFormLines="[]"
-            :passThroughProps="deleteGroceryListModalPassThroughProps"
-            :handleButtonClick="closeModalAndHandleDeleteGroceryListModalSave"
-            buttonText="Delete" />
+        <FormModal
+          :show="shouldShowModal"
+          :close="closeModal"
+          :title="modalTitle"
+          :initialFormLines="modalFormLines"
+          :errorText="modalErrorText"
+          :handleButtonClick="modalCallback"
+          :passThroughProps="modalPassThroughProps"
+          :buttonText="modalButtonText" />
     </div>
     <div class="pantry-pantry">
         <h2>Pantry</h2>
@@ -48,7 +51,7 @@
 import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath } from '../common/utils'
+import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
 const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath('/edit_grocery_list_metadata')
@@ -69,13 +72,15 @@ export default {
       groceryLists: {},
       pantry: [],
       groceryListTitleToAdd: '',
-      shouldShowEditGroceryMetadataModal: false,
-      editGroceryMetadataModalTitle: '',
-      editGroceryMetadataModalFormLines: [],
-      editGroceryMetadataModalPassThroughProps: {},
-      shouldShowDeleteGroceryListModal: false,
-      deleteGroceryListModalTitle: '',
-      deleteGroceryListModalPassThroughProps: {}
+      currentStatus: '',
+      modalTitle: '',
+      modalFormLines: [],
+      modalPassThroughProps: {},
+      modalCallback: Function,
+      modalButtonText: '',
+      modalErrorText: '',
+      shouldShowModal: false,
+      timeoutHandle: null
     }
   },
   created () {
@@ -89,16 +94,47 @@ export default {
       groceryList['saved'] = false
       groceryList['list'] = newText.target.innerText
     },
-    closeModalAndHandleEditGroceryMetadataModalSave (formSaveResponse) {
-      axios.post(EDIT_GROCERY_LIST_METADATA_URL, formSaveResponse).then(response => {
-        this.updatePantryPageDisplay()
-        this.shouldShowEditGroceryMetadataModal = false
-      })
+    closeModal () {
+      this.shouldShowModal = false
     },
-    closeModalAndHandleDeleteGroceryListModalSave (formSaveResponse) {
-      axios.post(DELETE_GROCERY_LIST_URL, formSaveResponse).then(response => {
+    showModal (title, formLines, passThroughProps, callback, buttonText) {
+      this.modalTitle = title
+      this.modalFormLines = formLines
+      this.modalPassThroughProps = passThroughProps
+      this.modalCallback = callback
+      this.modalButtonText = buttonText
+      this.modalErrorText = ''
+      this.shouldShowModal = true
+    },
+    showEditGroceryMetadataModal (groceryList) {
+      let modalFormLines = [
+        createFormModalEntry(
+          'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title'])
+      ]
+      this.showModal(
+        'Editing ' + groceryList['title'],
+        modalFormLines,
+        groceryList,
+        this.editGroceryListMetadata,
+        'Save')
+    },
+    showDeleteGroceryListModal (groceryList) {
+      this.showModal(
+        'Deleting ' + groceryList['title'],
+        [],
+        { id: groceryList['id'] },
+        this.deleteGroceryList,
+        'Delete')
+    },
+    editGroceryListMetadata (groceryList) {
+      axios.post(
+        EDIT_GROCERY_LIST_METADATA_URL,
+        {
+          id: groceryList['id'],
+          title: groceryList['title']
+        }).then(response => {
         this.updatePantryPageDisplay()
-        this.shouldShowDeleteGroceryListModal = false
+        this.closeModal()
       })
     },
     editGroceryList (groceryList) {
@@ -106,23 +142,11 @@ export default {
         this.updatePantryPageDisplay()
       })
     },
-    showDeleteGroceryListModal (groceryList) {
-      this.deleteGroceryListModalPassThroughProps = { id: groceryList['id'] }
-      this.deleteGroceryListModalTitle = 'Deleting ' + groceryList['title']
-      this.shouldShowDeleteGroceryListModal = true
-    },
-    showEditGroceryMetadataModal (groceryList) {
-      this.editGroceryMetadataModalPassThroughProps = { id: groceryList['id'] }
-      this.editGroceryMetadataModalTitle = 'Editing ' + groceryList['title']
-      this.editGroceryMetadataModalFormLines = [
-        {
-          id: 'grocery-modal-title-' + groceryList['id'],
-          name: 'title',
-          displayName: 'Title:',
-          value: groceryList['title']
-        }
-      ]
-      this.shouldShowEditGroceryMetadataModal = true
+    deleteGroceryList (groceryList) {
+      axios.post(DELETE_GROCERY_LIST_URL, {id: groceryList['id']}).then(response => {
+        this.updatePantryPageDisplay()
+        this.closeModal()
+      })
     },
     addGroceryList () {
       axios.post(ADD_GROCERY_LIST_URL, {title: this.groceryListTitleToAdd}).then(

@@ -75,7 +75,7 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_lists(title) VALUES(%s)", (title,))
+            cur.execute("INSERT INTO grocery_lists(title, list) VALUES(%s, '')", (title,))
             self._database.commit()
             cur.close()
         except psycopg2.Error:
