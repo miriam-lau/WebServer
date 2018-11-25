@@ -54,7 +54,7 @@ function getDisplayDate (dateString) {
 }
 
 function createFormModalEntry (id, name, displayName, value) {
-  if (!value) {
+  if (value === null || value === undefined) {
     value = ''
   }
   return {
