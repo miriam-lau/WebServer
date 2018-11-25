@@ -68,6 +68,22 @@ export default {
   components: {
     RecipeRestaurantEntity
   },
+  props: {
+    cookbookIdParam: String,
+    recipeIdParam: String,
+    recipeMealIdParam: String
+  },
+  watch: {
+    cookbookIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    recipeIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    recipeMealIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    }
+  },
   created () {
     this.getRecipesPageDataAndRender()
   },
@@ -354,7 +370,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate', 'Num Recipes We Want To Make']
       this.childTableValues = this.entity['children'].map(cookbookId => {
         let cookbook = this.recipesPageData['cookbook'][cookbookId]
-        let handleClick = this.showCookbook.bind(this, cookbook)
+        let handleClick = this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
         let numRecipesMade = this.getNumRecipesMadeFromCookbook(cookbook)
         let numRecipesWeWantToMake = this.getNumRecipesWeWantToMakeForCookbook(cookbook)
         let successRate = this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
@@ -365,11 +381,14 @@ export default {
         }
       })
     },
+    navigateTo (name, queryParams) {
+      this.$router.push({ name: name, query: queryParams })
+    },
     showCookbook (cookbook) {
       let id = cookbook['id']
       this.entity = cookbook
       this.backLinks =
-          [{id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this)}]
+          [{id: 'cookbooks', name: 'Cookbooks', handleClick: this.navigateTo.bind(this, 'recipesPage', {})}]
       this.title = cookbook['name']
       this.hasInfo = true
       this.infoImages = []
@@ -394,7 +413,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Times Made', 'Best Rating', 'Latest Rating', 'Priority', 'Category']
       this.childTableValues = cookbook['children'].map(recipeId => {
         let recipe = this.recipesPageData['recipe'][recipeId]
-        let handleClick = this.showRecipe.bind(this, recipe)
+        let handleClick = this.navigateTo.bind(this, 'recipesPage', { recipe: '' + recipeId })
         return {
           id: recipeId,
           handleClick: handleClick,
@@ -414,11 +433,11 @@ export default {
       this.entity = recipe
       this.backLinks =
           [
-            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this) },
+            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.navigateTo.bind(this, 'recipesPage', {}) },
             {
               id: 'cookbook-' + cookbook['id'],
               name: cookbook['name'],
-              handleClick: this.showCookbook.bind(this, cookbook)
+              handleClick: this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
             }
           ]
       this.title = cookbook['name'] + ': ' + recipe['name']
@@ -445,7 +464,7 @@ export default {
         'James\' Rating', 'James\' Comments']
       this.childTableValues = recipe['children'].map(recipeMealId => {
         let recipeMeal = this.recipesPageData['recipe_meal'][recipeMealId]
-        let handleClick = this.showRecipeMeal.bind(this, recipeMeal)
+        let handleClick = this.navigateTo.bind(this, 'recipesPage', { 'recipe-meal': '' + recipeMeal['id'] })
         return {
           id: recipeMealId,
           handleClick: handleClick,
@@ -462,16 +481,16 @@ export default {
       this.entity = recipeMeal
       this.backLinks =
           [
-            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.showCookbooks.bind(this) },
+            { id: 'cookbooks', name: 'Cookbooks', handleClick: this.navigateTo.bind(this, 'recipesPage', {}) },
             {
               id: 'cookbook-' + cookbook['id'],
               name: cookbook['name'],
-              handleClick: this.showCookbook.bind(this, cookbook)
+              handleClick: this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
             },
             {
               id: 'recipe-' + recipe['id'],
               name: recipe['name'],
-              handleClick: this.showRecipe.bind(this, recipe)
+              handleClick: this.navigateTo.bind(this, 'recipesPage', { recipe: '' + recipe['id'] })
             }
           ]
       this.title = 'Meal for ' + cookbook['name'] + ': ' + recipe['name']
@@ -496,9 +515,29 @@ export default {
       axios.post(GET_RECIPES_PAGE_DATA_URL).then(
         response => {
           this.recipesPageData = response.data
-          this.showCookbooks()
+          this.renderPageFromProps()
         }
       )
+    },
+    renderPageFromProps () {
+      if (!this.cookbookIdParam && !this.recipeIdParam && !this.recipeMealIdParam) {
+        this.showCookbooks()
+        return
+      }
+
+      let entity = null
+      if (this.cookbookIdParam) {
+        entity = this.recipesPageData['cookbook'][parseInt(this.cookbookIdParam)]
+      } else if (this.recipeIdParam) {
+        entity = this.recipesPageData['recipe'][parseInt(this.recipeIdParam)]
+      } else if (this.recipeMealIdParam) {
+        entity = this.recipesPageData['recipe_meal'][parseInt(this.recipeMealIdParam)]
+      }
+      if (entity) {
+        this.showEntity(entity)
+        return
+      }
+      this.setCurrentStatus('Unable to perform navigation.')
     },
     setCurrentStatus (text) {
       this.currentStatus = text

@@ -68,6 +68,26 @@ export default {
   components: {
     RecipeRestaurantEntity
   },
+  props: {
+    cityIdParam: String,
+    restaurantIdParam: String,
+    dishIdParam: String,
+    dishMealIdParam: String
+  },
+  watch: {
+    cityIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    restaurantIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    dishIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    },
+    dishMealIdParam: function (oldValue, newValue) {
+      this.renderPageFromProps()
+    }
+  },
   created () {
     this.getRestaurantsPageDataAndRender()
   },
@@ -366,7 +386,7 @@ export default {
       this.childTableHeaders = ['Name', 'State', 'Country', 'Notes']
       this.childTableValues = this.entity['children'].map(cityId => {
         let city = this.restaurantsPageData['city'][cityId]
-        let handleClick = this.showCity.bind(this, city)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { city: '' + cityId })
         return {
           id: cityId,
           handleClick: handleClick,
@@ -374,11 +394,17 @@ export default {
         }
       })
     },
+    navigateTo (name, queryParams) {
+      this.$router.push({ name: name, query: queryParams })
+    },
     showCity (city) {
       let id = city['id']
       this.entity = city
       this.backLinks =
-          [{id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this)}]
+          [{
+            id: 'cities',
+            name: 'Cities',
+            handleClick: this.navigateTo.bind(this, 'restaurantsPage', {})}]
       this.title = city['name']
       this.hasInfo = true
       this.infoImages = []
@@ -391,7 +417,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Dishes Tried', 'Best Rating', 'Category']
       this.childTableValues = city['children'].map(restaurantId => {
         let restaurant = this.restaurantsPageData['restaurant'][restaurantId]
-        let handleClick = this.showRestaurant.bind(this, restaurant)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
         return {
           id: restaurantId,
           handleClick: handleClick,
@@ -409,8 +435,10 @@ export default {
       this.entity = restaurant
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) }
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            { id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) }
           ]
       this.title = restaurant['name']
       this.hasInfo = true
@@ -429,7 +457,7 @@ export default {
       this.childTableHeaders = ['Name', 'Num Times Tried', 'Best Rating', 'Category']
       this.childTableValues = restaurant['children'].map(dishId => {
         let dish = this.restaurantsPageData['dish'][dishId]
-        let handleClick = this.showDish.bind(this, dish)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { dish: '' + dish['id'] })
         return {
           id: dishId,
           handleClick: handleClick,
@@ -448,12 +476,15 @@ export default {
       this.entity = dish
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) },
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            {
+              id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) },
             {
               id: 'restaurant-' + restaurant['id'],
               name: restaurant['name'],
-              handleClick: this.showRestaurant.bind(this, restaurant)
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
             }
           ]
       this.title = restaurant['name'] + ': ' + dish['name']
@@ -471,7 +502,7 @@ export default {
         'James\' Rating', 'James\' Comments']
       this.childTableValues = dish['children'].map(dishMealId => {
         let dishMeal = this.restaurantsPageData['dish_meal'][dishMealId]
-        let handleClick = this.showDishMeal.bind(this, dishMeal)
+        let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { 'dish-meal': '' + dishMeal['id'] })
         return {
           id: dishMealId,
           handleClick: handleClick,
@@ -489,14 +520,21 @@ export default {
       this.entity = dishMeal
       this.backLinks =
           [
-            { id: 'cities', name: 'Cities', handleClick: this.showCities.bind(this) },
-            { id: 'city-' + city['id'], name: city['name'], handleClick: this.showCity.bind(this, city) },
+            { id: 'cities', name: 'Cities', handleClick: this.navigateTo.bind(this, 'restaurantsPage', {}) },
+            {
+              id: 'city-' + city['id'],
+              name: city['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { city: '' + city['id'] }) },
             {
               id: 'restaurant-' + restaurant['id'],
               name: restaurant['name'],
-              handleClick: this.showRestaurant.bind(this, restaurant)
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
             },
-            { id: 'dish-' + dish['id'], name: dish['name'], handleClick: this.showDish.bind(this, dish) }
+            {
+              id: 'dish-' + dish['id'],
+              name: dish['name'],
+              handleClick: this.navigateTo.bind(this, 'restaurantsPage', { dish: '' + dish['id'] })
+            }
           ]
       this.title = 'Meal for ' + restaurant['name'] + ': ' + dish['name']
       this.hasInfo = true
@@ -516,9 +554,31 @@ export default {
       axios.post(GET_RESTAURANTS_PAGE_DATA_URL).then(
         response => {
           this.restaurantsPageData = response.data
-          this.showCities()
+          this.renderPageFromProps()
         }
       )
+    },
+    renderPageFromProps () {
+      if (!this.cityIdParam && !this.restaurantIdParam && !this.dishIdParam && !this.dishMealIdParam) {
+        this.showCities()
+        return
+      }
+
+      let entity = null
+      if (this.cityIdParam) {
+        entity = this.restaurantsPageData['city'][parseInt(this.cityIdParam)]
+      } else if (this.restaurantIdParam) {
+        entity = this.restaurantsPageData['restaurant'][parseInt(this.restaurantIdParam)]
+      } else if (this.dishIdParam) {
+        entity = this.restaurantsPageData['dish'][parseInt(this.dishIdParam)]
+      } else if (this.dishMealIdParam) {
+        entity = this.restaurantsPageData['dish_meal'][parseInt(this.dishMealIdParam)]
+      }
+      if (entity) {
+        this.showEntity(entity)
+        return
+      }
+      this.setCurrentStatus('Unable to perform navigation.')
     },
     setCurrentStatus (text) {
       this.currentStatus = text
