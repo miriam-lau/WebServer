@@ -7,9 +7,10 @@
         <a href="#" class="nav-pantry-known-words" v-on:click="navigateToSubPath('known-words')">Known Words</a>
       </nav>
     </div>
-    <div class="status" v-if="currentStatus != ''">
-      {{ currentStatus }}
-    </div>
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
     <div v-if="currentPage === 'grocery-lists'">
       <h2>Grocery Lists</h2>
       <div class="pantry-single-grocery-list" v-for="groceryList in groceryLists" :key="groceryList['id']">
@@ -37,7 +38,6 @@
         <div v-else>
           Unsaved.
           <button @click="editGroceryList(groceryList)">Save</button>
-          <button @click="cancelEditGroceryListText(groceryList)">Cancel</button>
         </div>
       </div>
       <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
@@ -104,6 +104,9 @@
   @import "../assets/style/pantry.css"
 </style>
 <script>
+import ButterBar from './shared/ButterBar'
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
@@ -133,7 +136,6 @@ export default {
       pantryItemToAdd: '',
       knownWordToAdd: '',
       knownWordToAddShouldSave: 'True',
-      currentStatus: '',
       modalTitle: '',
       modalFormLines: [],
       groceryListToImport: {},
@@ -144,13 +146,15 @@ export default {
       pantryGroceryListKey: 0,
       shouldShowModal: false,
       shouldShowImportModal: false,
-      timeoutHandle: null,
       currentPage: '',
       importModalErrorText: '',
       willImportWords: [],
       willIgnoreWords: [],
       unrecognizedWords: [],
-      alreadyInPantryWords: []
+      alreadyInPantryWords: [],
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
   },
   created () {
@@ -158,7 +162,7 @@ export default {
     this.setCurrentPage()
   },
   components: {
-    FormModal, EditableDiv, ImportToPantryModal
+    FormModal, EditableDiv, ImportToPantryModal, ButterBar
   },
   computed: {
     navigationClass () {
@@ -187,7 +191,7 @@ export default {
             response['data']['already_in_pantry'])
         })
         .catch(error => {
-          this.setCurrentStatus('An error occurred during import')
+          setButterBarMessage(this, 'An error occurred during import', ButterBarType.ERROR)
           console.log(error)
         })
     },
@@ -204,17 +208,8 @@ export default {
     updateGroceryListText (groceryList, newText) {
       if (groceryList['saved']) {
         groceryList['saved'] = false
-        groceryList['backedUpListText'] = groceryList['list']
       }
       groceryList['list'] = newText.target.innerText
-    },
-    cancelEditGroceryListText (groceryList) {
-      if (!groceryList['saved']) {
-        groceryList['saved'] = true
-        groceryList['list'] = groceryList['backedUpListText']
-        delete groceryList['backedUpListText']
-        this.pantryGroceryListKey += 1 // Force a re-render of the EditableDiv of this grocery list.
-      }
     },
     closeModal () {
       this.shouldShowModal = false
@@ -283,7 +278,7 @@ export default {
         .then(response => {
           this.updatePantryPageDisplay()
           this.closeImportModal()
-          this.setCurrentStatus('Imported ' + groceryList['title'] + ' to the pantry.')
+          setButterBarMessage(this, 'Imported ' + groceryList['title'] + ' to the pantry.', ButterBarType.INFO)
         })
         .catch(error => {
           this.importModalErrorText = 'An error occurred during import.'
@@ -304,7 +299,7 @@ export default {
           newGroceryListItem['title'] = response['data']['title']
           this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
           this.closeModal()
-          this.setCurrentStatus('Saved ' + groceryList['title'])
+          setButterBarMessage(this, 'Saved the title of ' + groceryList['title'], ButterBarType.INFO)
         })
         .catch(error => {
           this.modalErrorText = 'An error occurred during edit.'
@@ -318,7 +313,7 @@ export default {
             this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
           response['data']['saved'] = true
           this.groceryLists.splice(currentGroceryListIndex, 1, response['data'])
-          this.setCurrentStatus('Saved ' + groceryList['title'])
+          setButterBarMessage(this, 'Saved the contents of ' + groceryList['title'], ButterBarType.INFO)
         })
         .catch(error => {
           this.modalErrorText = 'An error occurred during edit.'
@@ -331,7 +326,7 @@ export default {
         this.groceryLists.splice(
           this.groceryLists.findIndex(groceryList => groceryList['id'] === deletedGroceryList['id']), 1)
         this.closeModal()
-        this.setCurrentStatus('Deleted ' + deletedGroceryList['title'])
+        setButterBarMessage(this, 'Deleted ' + deletedGroceryList['title'], ButterBarType.INFO)
       })
         .catch(error => {
           this.modalErrorText = 'An error occurred during delete.'
@@ -344,7 +339,7 @@ export default {
         this.pantry.splice(
           this.pantry.findIndex(pantry => pantry['item'] === deletedPantryItem['item']), 1)
         this.closeModal()
-        this.setCurrentStatus('Deleted ' + deletedPantryItem['item'] + ' from the pantry')
+        setButterBarMessage(this, 'Deleted ' + deletedPantryItem['item'] + ' from the pantry', ButterBarType.INFO)
       })
         .catch(error => {
           this.modalErrorText = 'An error occurred during delete.'
@@ -358,11 +353,11 @@ export default {
             this.pantryItemToAdd = ''
             let pantryItem = response['data']
             this.pantry.push(pantryItem)
-            this.setCurrentStatus('Added ' + pantryItem['item'])
+            setButterBarMessage(this, 'Added ' + pantryItem['item'] + ' to the pantry', ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during add.'
-          this.setCurrentStatus('Error adding ' + this.pantryItemToAdd)
+          setButterBarMessage(this, 'Error adding ' + this.pantryItemToAdd, ButterBarType.ERROR)
           console.log(error)
         })
     },
@@ -372,10 +367,10 @@ export default {
         this.knownWords.splice(
           this.knownWords.findIndex(knownWord => knownWord['word'] === deletedKnownWord['word']), 1)
         this.closeModal()
-        this.setCurrentStatus('Deleted ' + deletedKnownWord['word'] + ' from the list of known words')
+        setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
       })
         .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
+          this.modalErrorText = 'An error occurred during delete'
           console.log(error)
         })
     },
@@ -386,11 +381,11 @@ export default {
             this.knownWordToAdd = ''
             let knownWord = response['data']
             this.knownWords.push(knownWord)
-            this.setCurrentStatus('Added ' + knownWord['word'])
+            setButterBarMessage(this, 'Added ' + knownWord['word'] + ' to the list of known words', ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during add.'
-          this.setCurrentStatus('Error adding ' + this.knownWordToAdd)
+          setButterBarMessage(this, 'Error adding ' + this.knownWordToAdd, ButterBarType.ERROR)
           console.log(error)
         })
     },
@@ -402,7 +397,7 @@ export default {
             let groceryList = response['data']
             this.groceryLists.push(groceryList)
             this.closeModal()
-            this.setCurrentStatus('Added ' + groceryList['title'])
+            setButterBarMessage(this, 'Added ' + groceryList['title'], ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during add.'
@@ -419,11 +414,6 @@ export default {
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
         })
-    },
-    setCurrentStatus (text) {
-      this.currentStatus = text
-      window.clearTimeout(this.timeoutHandle)
-      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="recipe-restaurant-status" v-if="currentStatus != ''">
-      {{ currentStatus }}
-    </div>
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
     <span :key="backLink.id" v-for="(backLink, index) in backLinks">
       <a href="#" @click.prevent="backLink.handleClick">{{ backLink.name }}</a>
       <span v-if="index !== backLinks.length - 1">
@@ -62,6 +63,7 @@
 </style>
 <script>
 import FormModal from './FormModal'
+import ButterBar from './ButterBar'
 
 // TODO: Possibly need to add more id annotations as keys in the v-fors.
 export default {
@@ -94,7 +96,6 @@ export default {
      *   values: An array of primitive values to display in the table.
      */
     childTableValues: Array,
-    currentStatus: String,
     closeModal: Function,
     showEditModal: Function,
     showDeleteModal: Function,
@@ -105,14 +106,17 @@ export default {
     modalCallback: Function,
     modalButtonText: String,
     modalErrorText: String,
-    shouldShowModal: Boolean
+    shouldShowModal: Boolean,
+
+    butterBar_message: String,
+    butterBar_css: String
   },
   data () {
     return {
     }
   },
   components: {
-    FormModal
+    FormModal, ButterBar
   }
 }
 </script>

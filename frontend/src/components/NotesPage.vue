@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div class="status" v-if="currentStatus != ''">
-      {{ currentStatus }}
-    </div>
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
     <div class="notes-notes">
         <h2>Notes</h2>
         <div class="notes-single-note" v-for="note in notes" :key="note['id']">
@@ -46,6 +47,9 @@
   @import "../assets/style/notes.css"
 </style>
 <script>
+import ButterBar from './shared/ButterBar'
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
 import axios from 'axios'
@@ -63,7 +67,6 @@ export default {
     return {
       notes: [],
       noteTitleToAdd: '',
-      currentStatus: '',
       modalTitle: '',
       modalFormLines: [],
       modalPassThroughProps: {},
@@ -72,14 +75,16 @@ export default {
       modalErrorText: '',
       noteKey: 0,
       shouldShowModal: false,
-      timeoutHandle: null
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
+  },
+  components: {
+    FormModal, EditableDiv, ButterBar
   },
   created () {
     this.updateNotesPageDisplay()
-  },
-  components: {
-    FormModal, EditableDiv
   },
   methods: {
     updateNoteText (note, newText) {
@@ -144,7 +149,7 @@ export default {
           newNoteItem['title'] = response['data']['title']
           this.notes.splice(currentNoteIndex, 1, newNoteItem)
           this.closeModal()
-          this.setCurrentStatus('Saved ' + note['title'])
+          setButterBarMessage(this, 'Saved title of ' + note['title'], ButterBarType.INFO)
         })
         .catch(error => {
           this.modalErrorText = 'An error occurred during edit.'
@@ -158,7 +163,7 @@ export default {
             this.notes.findIndex(note => note['id'] === response['data']['id'])
           response['data']['saved'] = true
           this.notes.splice(currentNoteIndex, 1, response['data'])
-          this.setCurrentStatus('Saved ' + note['title'])
+          setButterBarMessage(this, 'Saved contents of ' + note['title'], ButterBarType.INFO)
         })
         .catch(error => {
           this.modalErrorText = 'An error occurred during edit.'
@@ -171,7 +176,7 @@ export default {
         this.notes.splice(
           this.notes.findIndex(note => note['id'] === deletedNote['id']), 1)
         this.closeModal()
-        this.setCurrentStatus('Deleted ' + deletedNote['title'])
+        setButterBarMessage(this, 'Deleted ' + deletedNote['title'], ButterBarType.INFO)
       })
         .catch(error => {
           this.modalErrorText = 'An error occurred during delete.'
@@ -186,7 +191,7 @@ export default {
             let note = response['data']
             this.notes.push(note)
             this.closeModal()
-            this.setCurrentStatus('Added ' + note['title'])
+            setButterBarMessage(this, 'Added ' + note['title'], ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during add.'
@@ -201,11 +206,6 @@ export default {
             this.notes[index]['saved'] = true
           }
         })
-    },
-    setCurrentStatus (text) {
-      this.currentStatus = text
-      window.clearTimeout(this.timeoutHandle)
-      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

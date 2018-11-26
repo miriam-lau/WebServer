@@ -1,0 +1,20 @@
+.butter-bar {
+    color: black;
+    text-align: center;
+    width: 50%;
+    margin: 0 auto;
+      margin-bottom: 10px;
+      visibility: hidden;
+  }
+
+  .butter-bar-info {
+      background-color: #FDE79C;
+      color: black;
+      visibility: visible;
+  }
+
+  .butter-bar-error {
+      background-color: red;
+      color: white;
+      visibility: visible;
+  }
