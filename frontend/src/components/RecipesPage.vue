@@ -9,10 +9,10 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
+
       :showEditModal="showEditModal"
       :showDeleteModal="showDeleteModal"
       :showAddModal="showAddModal"
-
       :formModal_show="formModal_show"
       :formModal_close="formModal_close"
       :formModal_title="formModal_title"
@@ -30,8 +30,7 @@
 </template>
 <script>
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
-
-import { createFormModalEntry } from '../common/form_modal_component'
+import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
 import { getFullBackendUrlForPath, isEqual, getDisplayDate } from '../common/utils'
@@ -63,13 +62,15 @@ export default {
       hasChildren: false,
       childTableHeaders: [],
       childTableValues: [],
-      modalTitle: '',
-      modalFormLines: [],
-      modalPassThroughProps: {},
-      modalCallback: Function,
-      modalButtonText: '',
-      modalErrorText: '',
-      shouldShowModal: false,
+
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
 
       butterBar_message: '',
       butterBar_css: ''
@@ -98,17 +99,8 @@ export default {
     this.getRecipesPageDataAndRender()
   },
   methods: {
-    closeModal () {
-      this.shouldShowModal = false
-    },
-    showModal (title, formLines, passThroughProps, callback, buttonText) {
-      this.modalTitle = title
-      this.modalFormLines = formLines
-      this.modalPassThroughProps = passThroughProps
-      this.modalCallback = callback
-      this.modalButtonText = buttonText
-      this.modalErrorText = ''
-      this.shouldShowModal = true
+    formModal_close () {
+      this.formModal_show = false
     },
     showEditModal () {
       let modalFormLines = []
@@ -149,12 +141,15 @@ export default {
               recipeMeal['user_2_comments'])
           ]
       }
-      this.showModal(
+      let editUrl = EDIT_ENTITY_URL_PREFIX + this.entity['entity_type']
+      showModal(
+        this,
         'Editing ' + this.title,
         modalFormLines,
         this.entity,
-        this.editEntity,
-        'Save')
+        generateAxiosModalCallback(this, editUrl, this.editEntity),
+        'Save',
+        'Error editing ' + this.title)
     },
     showAddModal () {
       let modalTitle = ''
@@ -187,22 +182,27 @@ export default {
           ]
           break
       }
-      this.showModal(
+      let addUrl = ADD_ENTITY_URL_PREFIX + this.getChildEntityTypeFor(this.entity)
+      showModal(
+        this,
         modalTitle,
         modalFormLines,
         { parent_id: this.entity['id'], entity_type: this.getChildEntityTypeFor(this.entity) },
-        this.addEntity,
-        'Add')
+        generateAxiosModalCallback(this, addUrl, this.addEntity),
+        'Add',
+        'Error adding item')
     },
     showDeleteModal () {
       this.deleteModalTitle = 'Deleting ' + this.title
-      this.showModal(
+      let deleteUrl = DELETE_ENTITY_URL_PREFIX + this.entity['entity_type']
+      showModal(
+        this,
         'Deleting ' + this.title,
         [],
         this.entity,
-        this.deleteEntity,
-        'Delete'
-      )
+        generateAxiosModalCallback(this, deleteUrl, this.deleteEntity),
+        'Delete',
+        'Error deleting ' + this.title)
     },
     getParentEntityFor (entity) {
       let parentEntityType = this.getParentEntityTypeFor(entity)
@@ -245,66 +245,35 @@ export default {
           this.showRecipeMeal(entity)
       }
     },
-    deleteEntity (entity) {
+    deleteEntity (response) {
+      let entity = response['data']
       let entityType = entity['entity_type']
       let entityId = entity['id']
-      let deleteUrl = DELETE_ENTITY_URL_PREFIX + entityType
-      axios.post(deleteUrl, {id: entityId})
-        .then(
-          response => {
-            let entity = response['data']
-            let title = entity['entity_type'] === 'recipe_meal' ? 'Meal' : entity['name']
-            let parent = this.getParentEntityFor(entity)
-            parent['children'].splice(parent['children'].indexOf(entityId), 1)
-            delete this.recipesPageData[entityType][entityId]
-            this.showEntity(parent)
-            setButterBarMessage(this, 'Deleted ' + title, ButterBarType.INFO)
-            this.closeModal()
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
-          console.log(error)
-        })
+      let title = entity['entity_type'] === 'recipe_meal' ? 'Meal' : entity['name']
+      let parent = this.getParentEntityFor(entity)
+      parent['children'].splice(parent['children'].indexOf(entityId), 1)
+      delete this.recipesPageData[entityType][entityId]
+      this.showEntity(parent)
+      setButterBarMessage(this, 'Deleted ' + title, ButterBarType.INFO)
     },
-    editEntity (entity) {
-      let entityId = entity['id']
-      let entityType = entity['entity_type']
-
-      let editUrl = EDIT_ENTITY_URL_PREFIX + entity['entity_type']
-      axios.post(editUrl, entity)
-        .then(
-          response => {
-            let newEntity = response['data']
-            let title = newEntity['entity_type'] === 'recipe_meal' ? 'Meal' : newEntity['name']
-            for (let prop in newEntity) {
-              this.recipesPageData[entityType][entityId][prop] = newEntity[prop]
-            }
-            this.showEntity(this.entity)
-            setButterBarMessage(this, 'Saved ' + title, ButterBarType.INFO)
-            this.closeModal()
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
-        })
+    editEntity (response) {
+      let newEntity = response['data']
+      let entityId = newEntity['id']
+      let entityType = newEntity['entity_type']
+      let title = newEntity['entity_type'] === 'recipe_meal' ? 'Meal' : newEntity['name']
+      for (let prop in newEntity) {
+        this.recipesPageData[entityType][entityId][prop] = newEntity[prop]
+      }
+      this.showEntity(this.entity)
+      setButterBarMessage(this, 'Saved ' + title, ButterBarType.INFO)
     },
-    addEntity (entity) {
-      let addUrl = ADD_ENTITY_URL_PREFIX + entity['entity_type']
-      axios.post(addUrl, entity)
-        .then(
-          response => {
-            let newEntity = response.data
-            let title = newEntity['entity_type'] === 'recipe_meal' ? 'Meal' : newEntity['name']
-            this.recipesPageData[newEntity['entity_type']][newEntity['id']] = newEntity
-            this.entity['children'].push(newEntity['id'])
-            this.showEntity(this.entity)
-            setButterBarMessage(this, 'Added ' + title, ButterBarType.INFO)
-            this.closeModal()
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
-        })
+    addEntity (response) {
+      let newEntity = response.data
+      let title = newEntity['entity_type'] === 'recipe_meal' ? 'Meal' : newEntity['name']
+      this.recipesPageData[newEntity['entity_type']][newEntity['id']] = newEntity
+      this.entity['children'].push(newEntity['id'])
+      this.showEntity(this.entity)
+      setButterBarMessage(this, 'Added ' + title, ButterBarType.INFO)
     },
     getNumRecipesMadeFromCookbook (cookbook) {
       return cookbook['children'].length

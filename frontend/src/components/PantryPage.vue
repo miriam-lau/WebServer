@@ -109,7 +109,7 @@ import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
-import { createFormModalEntry } from '../common/form_modal_component'
+import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
@@ -139,15 +139,8 @@ export default {
       pantryItemToAdd: '',
       knownWordToAdd: '',
       knownWordToAddShouldSave: 'True',
-      modalTitle: '',
-      modalFormLines: [],
       groceryListToImport: {},
-      modalPassThroughProps: {},
-      modalCallback: Function,
-      modalButtonText: '',
-      modalErrorText: '',
       pantryGroceryListKey: 0,
-      shouldShowModal: false,
       shouldShowImportModal: false,
       currentPage: '',
       importModalErrorText: '',
@@ -155,6 +148,15 @@ export default {
       willIgnoreWords: [],
       unrecognizedWords: [],
       alreadyInPantryWords: [],
+
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
 
       butterBar_message: '',
       butterBar_css: ''
@@ -185,6 +187,9 @@ export default {
     }
   },
   methods: {
+    formModal_close () {
+      this.formModal_show = false
+    },
     attemptAddToPantry (groceryList) {
       axios.post(
         ATTEMPT_IMPORT_GROCERY_LIST_TO_PANTRY_URL,
@@ -214,20 +219,8 @@ export default {
       }
       groceryList['list'] = newText.target.innerText
     },
-    closeModal () {
-      this.shouldShowModal = false
-    },
     closeImportModal () {
       this.shouldShowImportModal = false
-    },
-    showModal (title, formLines, passThroughProps, callback, buttonText) {
-      this.modalTitle = title
-      this.modalFormLines = formLines
-      this.modalPassThroughProps = passThroughProps
-      this.modalCallback = callback
-      this.modalButtonText = buttonText
-      this.modalErrorText = ''
-      this.shouldShowModal = true
     },
     showImportModal (groceryList, willImportWords, willIgnoreWords, unrecognizedWords, alreadyInPantryWords) {
       this.groceryListToImport = groceryList
@@ -243,36 +236,44 @@ export default {
         createFormModalEntry(
           'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title'])
       ]
-      this.showModal(
+      showModal(
+        this,
         'Editing ' + groceryList['title'],
         modalFormLines,
         groceryList,
-        this.editGroceryListMetadata,
-        'Save')
+        generateAxiosModalCallback(this, EDIT_GROCERY_LIST_METADATA_URL, this.editGroceryListMetadata),
+        'Save',
+        'Error saving ' + groceryList['title'])
     },
     showDeleteGroceryListModal (groceryList) {
-      this.showModal(
+      showModal(
+        this,
         'Deleting ' + groceryList['title'],
         [],
         { id: groceryList['id'] },
-        this.deleteGroceryList,
-        'Delete')
+        generateAxiosModalCallback(this, DELETE_GROCERY_LIST_URL, this.deleteGroceryList),
+        'Delete',
+        'Error deleting ' + groceryList['title'])
     },
     showDeletePantryItemModal (pantryItem) {
-      this.showModal(
+      showModal(
+        this,
         'Deleting ' + pantryItem['item'],
         [],
         { item: pantryItem['item'] },
-        this.deletePantryItem,
-        'Delete')
+        generateAxiosModalCallback(this, DELETE_PANTRY_ITEM_URL, this.deletePantryItem),
+        'Delete',
+        'Error deleting ' + pantryItem['item'])
     },
     showDeleteKnownWordModal (knownWord) {
-      this.showModal(
+      showModal(
+        this,
         'Deleting ' + knownWord['word'],
         [],
         { word: knownWord['word'] },
-        this.deleteKnownWord,
-        'Delete')
+        generateAxiosModalCallback(this, DELETE_KNOWN_WORD_URL, this.deleteKnownWord),
+        'Delete',
+        'Error deleting ' + knownWord['word'])
     },
     addToPantry (groceryList) {
       axios.post(
@@ -288,26 +289,14 @@ export default {
           console.log(error)
         })
     },
-    editGroceryListMetadata (groceryList) {
-      axios.post(
-        EDIT_GROCERY_LIST_METADATA_URL,
-        {
-          id: groceryList['id'],
-          title: groceryList['title']
-        })
-        .then(response => {
-          let currentGroceryListIndex =
-            this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
-          let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
-          newGroceryListItem['title'] = response['data']['title']
-          this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
-          this.closeModal()
-          setButterBarMessage(this, 'Saved the title of ' + groceryList['title'], ButterBarType.INFO)
-        })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
-        })
+    editGroceryListMetadata (response) {
+      let currentGroceryListIndex =
+        this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
+      let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
+      let oldTitle = this.groceryLists[currentGroceryListIndex]['title']
+      newGroceryListItem['title'] = response['data']['title']
+      this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
+      setButterBarMessage(this, 'Saved the title of ' + oldTitle, ButterBarType.INFO)
     },
     editGroceryList (groceryList) {
       axios.post(EDIT_GROCERY_LIST_URL, {id: groceryList['id'], list: groceryList['list']})
@@ -323,31 +312,17 @@ export default {
           console.log(error)
         })
     },
-    deleteGroceryList (groceryList) {
-      axios.post(DELETE_GROCERY_LIST_URL, {id: groceryList['id']}).then(response => {
-        let deletedGroceryList = response['data']
-        this.groceryLists.splice(
-          this.groceryLists.findIndex(groceryList => groceryList['id'] === deletedGroceryList['id']), 1)
-        this.closeModal()
-        setButterBarMessage(this, 'Deleted ' + deletedGroceryList['title'], ButterBarType.INFO)
-      })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
-          console.log(error)
-        })
+    deleteGroceryList (response) {
+      let deletedGroceryList = response['data']
+      this.groceryLists.splice(
+        this.groceryLists.findIndex(groceryList => groceryList['id'] === deletedGroceryList['id']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedGroceryList['title'], ButterBarType.INFO)
     },
-    deletePantryItem (pantryItem) {
-      axios.post(DELETE_PANTRY_ITEM_URL, {item: pantryItem['item']}).then(response => {
-        let deletedPantryItem = response['data']
-        this.pantry.splice(
-          this.pantry.findIndex(pantry => pantry['item'] === deletedPantryItem['item']), 1)
-        this.closeModal()
-        setButterBarMessage(this, 'Deleted ' + deletedPantryItem['item'] + ' from the pantry', ButterBarType.INFO)
-      })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
-          console.log(error)
-        })
+    deletePantryItem (response) {
+      let deletedPantryItem = response['data']
+      this.pantry.splice(
+        this.pantry.findIndex(pantry => pantry['item'] === deletedPantryItem['item']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedPantryItem['item'] + ' from the pantry', ButterBarType.INFO)
     },
     addPantryItem () {
       axios.post(ADD_PANTRY_ITEM_URL, {item: this.pantryItemToAdd})
@@ -364,18 +339,11 @@ export default {
           console.log(error)
         })
     },
-    deleteKnownWord (knownWord) {
-      axios.post(DELETE_KNOWN_WORD_URL, {word: knownWord['word']}).then(response => {
-        let deletedKnownWord = response['data']
-        this.knownWords.splice(
-          this.knownWords.findIndex(knownWord => knownWord['word'] === deletedKnownWord['word']), 1)
-        this.closeModal()
-        setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
-      })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete'
-          console.log(error)
-        })
+    deleteKnownWord (response) {
+      let deletedKnownWord = response['data']
+      this.knownWords.splice(
+        this.knownWords.findIndex(knownWord => knownWord['word'] === deletedKnownWord['word']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
     },
     addKnownWord () {
       axios.post(ADD_KNOWN_WORD_URL, {word: this.knownWordToAdd, should_save: this.knownWordToAddShouldSave === 'True'})

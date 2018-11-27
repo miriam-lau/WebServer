@@ -7,7 +7,7 @@
 
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
-      <button class="hobby-buttons" @click="showAddHobbyModal">Add Hobby</button>
+      <button class="hobby-buttons" @click="showAddModal">Add Hobby</button>
       <button class="hobby-buttons" v-if="!editable" @click="editMode">Edit</button>
       <button class="hobby-buttons" v-else @click="editHobbies">Save</button>
     </div>
@@ -29,7 +29,7 @@
             <td><input v-model="hobby['completed_hours_for_week']"/></td>
             <td>{{ getHoursRemaining(hobby) }}</td>
             <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
-            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])"/></td>
+            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="showDeleteModal(hobby)"/></td>
           </template>
           <template v-else>
             <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
@@ -37,28 +37,10 @@
             <td>{{ hobby['completed_hours_for_week'] }}</td>
             <td>{{ getHoursRemaining(hobby) }} </td>
             <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
-            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="deleteHobby(hobby['id'])" /></td>
+            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="showDeleteModal(hobby)" /></td>
           </template>
         </tr>
       </table>
-    </div>
-
-    <div class="hobby-modal-container" v-if="showModal">
-      <div class="hobby-modal">
-        <section class="add-hobby-title">Add a Hobby</section>
-        <section class="hobby-modal-sections">
-          <article class="add-hobby-section-titles">Hobby Name</article>
-          <input class="add-hobby-inputs" v-model="hobbyName" placeholder="What's your passion?">
-        </section>
-        <section class="hobby-modal-sections">
-          <article class="add-hobby-section-titles">Assigned Hours Per Week</article>
-          <input class="add-hobby-inputs" v-model="assignedHoursPerWeek" placeholder="Enter a number">
-        </section>
-        <section class="hobby-modal-button-container">
-          <button class="hobby-buttons" @click="addHobby">Save</button>
-          <button class="hobby-buttons close-hobby-button" @click="closeHobbyModal">Cancel</button>
-        </section>
-      </div>
     </div>
     <FormModal
       :show="formModal_show"
@@ -78,10 +60,14 @@
 </style>
 
 <script>
-import axios from 'axios'
 import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import FormModal from './shared/FormModal'
+import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
+
+import axios from 'axios'
+
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
@@ -100,6 +86,15 @@ export default {
       hobbies: [],
       editable: false,
 
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
+
       butterBar_message: '',
       butterBar_css: ''
     }
@@ -117,30 +112,31 @@ export default {
     this.updateHobbyDisplay()
   },
   methods: {
-    addHobby () {
-      let hobbyItem = {}
-      hobbyItem['username'] = this.username
-      hobbyItem['hobby'] = this.hobbyName
-      hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
-
-      axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(response => {
-        let addedHobby = response.data
-        this.updateHobbyDisplay()
-        this.showModal = false
-        setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
-      })
+    formModal_close () {
+      this.formModal_show = false
+    },
+    addHobby (response) {
+      let addedHobby = response.data
+      this.updateHobbyDisplay()
+      setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
     },
     updateHobbyDisplay () {
       axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
     },
-    deleteHobby (id) {
-      axios.post(DELETE_HOBBY_URL, { id: id }).then(response => {
-        let deletedHobby = response.data
-        console.log('deletedHobby')
-        console.log(deletedHobby)
-        this.updateHobbyDisplay()
-        setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
-      })
+    showDeleteModal (hobby) {
+      showModal(
+        this,
+        'Deleting ' + hobby['hobby'],
+        [],
+        { id: hobby['id'] },
+        generateAxiosModalCallback(this, DELETE_HOBBY_URL, this.deleteHobby),
+        'Delete',
+        'Error deleting ' + hobby['hobby'])
+    },
+    deleteHobby (response) {
+      let deletedHobby = response.data
+      this.updateHobbyDisplay()
+      setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
     },
     editHobbies () {
       axios.post(EDIT_HOBBIES_URL, { hobbies: this.hobbies }).then(response => {
@@ -149,13 +145,19 @@ export default {
         setButterBarMessage(this, 'Edits Saved', ButterBarType.INFO)
       })
     },
-    showAddHobbyModal () {
-      this.showModal = true
-      this.hobbyName = ''
-      this.assignedHoursPerWeek = 0
-    },
-    closeHobbyModal () {
-      this.showModal = false
+    showAddModal () {
+      let formModalFormLines = [
+        createFormModalEntry('add-hobby-modal-hobby', 'hobby', 'Hobby Name:'),
+        createFormModalEntry('add-hobby-modal-assigned-hours', 'assigned_hours_per_week', 'Assigned Hours Per Week:')
+      ]
+      showModal(
+        this,
+        'Add a Hobby',
+        formModalFormLines,
+        { username: this.username },
+        generateAxiosModalCallback(this, ADD_HOBBY_URL, this.addHobby),
+        'Save',
+        'Error adding hobby')
     },
     editMode () {
       this.editable = true
