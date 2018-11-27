@@ -32,14 +32,15 @@
         </div>
         <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         <FormModal
-          :show="shouldShowModal"
-          :close="closeModal"
-          :title="modalTitle"
-          :initialFormLines="modalFormLines"
-          :errorText="modalErrorText"
-          :handleButtonClick="modalCallback"
-          :passThroughProps="modalPassThroughProps"
-          :buttonText="modalButtonText" />
+          :show="formModal_show"
+          :close="formModal_close"
+          :title="formModal_title"
+          :initialFormLines="formModal_formLines"
+          :errorText="formModal_errorText"
+          :callback="formModal_callback"
+          :passThroughProps="formModal_passThroughProps"
+          :buttonText="formModal_buttonText"
+          :shouldShowError="formModal_shouldShowError" />
     </div>
   </div>
 </template>
@@ -50,10 +51,12 @@
 import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
+import { createFormModalEntry } from '../common/form_modal_component'
+
 import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 
 const GET_NOTES_PAGE_URL = getFullBackendUrlForPath('/get_notes_page')
 const EDIT_NOTES_METADATA_URL = getFullBackendUrlForPath('/edit_note_metadata')
@@ -67,6 +70,16 @@ export default {
     return {
       notes: [],
       noteTitleToAdd: '',
+
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
+
       modalTitle: '',
       modalFormLines: [],
       modalPassThroughProps: {},

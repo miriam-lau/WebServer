@@ -9,17 +9,19 @@
       :hasChildren="hasChildren"
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
-      :closeModal="closeModal"
       :showEditModal="showEditModal"
       :showDeleteModal="showDeleteModal"
       :showAddModal="showAddModal"
-      :modalTitle="modalTitle"
-      :modalFormLines="modalFormLines"
-      :modalPassThroughProps="modalPassThroughProps"
-      :modalButtonText="modalButtonText"
-      :modalErrorText="modalErrorText"
-      :modalCallback="modalCallback"
-      :shouldShowModal="shouldShowModal"
+
+      :formModal_show="formModal_show"
+      :formModal_close="formModal_close"
+      :formModal_title="formModal_title"
+      :formModal_formLines="formModal_formLines"
+      :formModal_errorText="formModal_errorText"
+      :formModal_callback="formModal_callback"
+      :formModal_passThroughProps="formModal_passThroughProps"
+      :formModal_buttonText="formModal_buttonText"
+      :formModal_shouldShowError="formModal_shouldShowError"
 
       :butterBar_message="butterBar_message"
       :butterBar_css="butterBar_css"
@@ -29,8 +31,10 @@
 <script>
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
+import { createFormModalEntry } from '../common/form_modal_component'
+
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
-import { getFullBackendUrlForPath, isEqual, getDisplayDate, createFormModalEntry } from '../common/utils'
+import { getFullBackendUrlForPath, isEqual, getDisplayDate } from '../common/utils'
 import axios from 'axios'
 
 const GET_RECIPES_PAGE_DATA_URL = getFullBackendUrlForPath('/get_recipes_page_data')

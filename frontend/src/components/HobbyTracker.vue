@@ -55,7 +55,16 @@
         </section>
       </div>
     </div>
-
+    <FormModal
+      :show="formModal_show"
+      :close="formModal_close"
+      :title="formModal_title"
+      :initialFormLines="formModal_formLines"
+      :errorText="formModal_errorText"
+      :callback="formModal_callback"
+      :passThroughProps="formModal_passThroughProps"
+      :buttonText="formModal_buttonText"
+      :shouldShowError="formModal_shouldShowError" />
   </div>
 </template>
 

@@ -9,7 +9,7 @@ from src.recipes_page.recipes_page import RecipesPage
 from src.restaurants_page.restaurants_page import RestaurantsPage
 from src.pantry_page.pantry_page import PantryPage
 from src.notes_page.notes_page import NotesPage
-
+import traceback
 
 app = Flask(__name__)
 CORS(app)
@@ -60,13 +60,13 @@ def delete_document():
 
 @app.route("/edit_document", methods=["POST"])
 def edit_document():
-    document = request.json["document"]
+    document = request.json
     return jsonify(current_documents.edit_document(document))
 
 
 @app.route("/add_document", methods=["POST"])
 def add_document():
-    document = request.json["document"]
+    document = request.json
     return jsonify(current_documents.add_document(document))
 
 
@@ -348,7 +348,14 @@ def add_note():
     title = request.json["title"]
     return jsonify(notes_page.add_note(title))
 
-# ----------------------------------------------------------------------------------------------
+# Error handling ----------------------------------------------------------------------------------------------
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    tb = traceback.format_exc()
+    response = jsonify({'exception': tb})
+    response.status_code = 500
+    return response
 
 
 initialize_app()

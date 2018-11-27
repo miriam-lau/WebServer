@@ -3,7 +3,7 @@
     <div class="modal-header">
      <h3>{{ title }}</h3>
     </div>
-    <div class="modal-error" v-if="errorText != ''">
+    <div class="modal-error" v-if="shouldShowError">
       {{ errorText }}
     </div>
     <div class="modal-body">
@@ -16,7 +16,7 @@
     </div>
     <div class="modal-footer text-right">
       <button class="modal-default-button"
-          @click="generateModalOutputAndHandleButtonClick">
+          @click="handleClick">
         {{ buttonText }}
       </button>
     </div>
@@ -26,6 +26,12 @@
   @import "../../assets/style/modal.css"
 </style>
 <script>
+/**
+ * This modal takes in a list of form lines that will be displayed to the user as text input fields. When the
+ * modal button is clicked, it will make an ajax request to the url passed in and call the callback function
+ * passed in. Upon ajax success, it will close the modal. On ajax error, it will leave the modal open and display the
+ * error message.
+ */
 import Modal from './Modal'
 
 export default {
@@ -48,7 +54,7 @@ export default {
      *   displayName: The text to display when this form is shown.
      *   value: The value of the property. This is bound to the model for the form.
      * }
-     * When the form is saved, the handleSave function is called with the properties of the form saved in an object
+     * When the form is saved, the callback function is called with the properties of the form saved in an object
      * with key 'name' and value 'value'.
      */
     initialFormLines: Array,
@@ -62,9 +68,10 @@ export default {
      * 1. The form lines are returned with 'name' as the key and 'value' as the value.
      * 2. The passThroughProps are populated into the response with exactly the same key/value pairs.
      */
-    handleButtonClick: Function,
+    callback: Function,
     /** The text to display on the action button. */
-    buttonText: String
+    buttonText: String,
+    shouldShowError: Boolean
   },
   watch: {
     initialFormLines () {
@@ -81,9 +88,9 @@ export default {
     }
   },
   methods: {
-    generateModalOutputAndHandleButtonClick () {
+    handleClick () {
       let modalOutput = this.generateModalOutput()
-      this.handleButtonClick(modalOutput)
+      this.callback(modalOutput)
     },
     generateModalOutput () {
       let ret = Object.assign({}, this.passThroughProps)

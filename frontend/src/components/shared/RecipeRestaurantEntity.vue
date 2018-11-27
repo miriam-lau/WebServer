@@ -48,14 +48,15 @@
       <button @click="showAddModal">Add</button>
     </div>
     <FormModal
-      :show="shouldShowModal"
-      :close="closeModal"
-      :title="modalTitle"
-      :initialFormLines="modalFormLines"
-      :errorText="modalErrorText"
-      :handleButtonClick="modalCallback"
-      :passThroughProps="modalPassThroughProps"
-      :buttonText="modalButtonText" />
+      :show="formModal_show"
+      :close="formModal_close"
+      :title="formModal_title"
+      :initialFormLines="formModal_formLines"
+      :errorText="formModal_errorText"
+      :callback="formModal_callback"
+      :passThroughProps="formModal_passThroughProps"
+      :buttonText="formModal_buttonText"
+      :shouldShowError="formModal_shouldShowError" />
   </div>
 </template>
 <style>
@@ -96,17 +97,19 @@ export default {
      *   values: An array of primitive values to display in the table.
      */
     childTableValues: Array,
-    closeModal: Function,
     showEditModal: Function,
     showDeleteModal: Function,
     showAddModal: Function,
-    modalTitle: String,
-    modalFormLines: Array,
-    modalPassThroughProps: Object,
-    modalCallback: Function,
-    modalButtonText: String,
-    modalErrorText: String,
-    shouldShowModal: Boolean,
+
+    formModal_show: Boolean,
+    formModal_close: Function,
+    formModal_title: String,
+    formModal_formLines: Array,
+    formModal_errorText: String,
+    formModal_callback: Function,
+    formModal_passThroughProps: Object,
+    formModal_buttonText: String,
+    formModal_shouldShowError: Boolean,
 
     butterBar_message: String,
     butterBar_css: String

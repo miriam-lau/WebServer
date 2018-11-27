@@ -90,14 +90,15 @@
       <button @click="addKnownWord">Add Word</button>
     </div>
     <FormModal
-      :show="shouldShowModal"
-      :close="closeModal"
-      :title="modalTitle"
-      :initialFormLines="modalFormLines"
-      :errorText="modalErrorText"
-      :handleButtonClick="modalCallback"
-      :passThroughProps="modalPassThroughProps"
-      :buttonText="modalButtonText" />
+      :show="formModal_show"
+      :close="formModal_close"
+      :title="formModal_title"
+      :initialFormLines="formModal_formLines"
+      :errorText="formModal_errorText"
+      :callback="formModal_callback"
+      :passThroughProps="formModal_passThroughProps"
+      :buttonText="formModal_buttonText"
+      :shouldShowError="formModal_shouldShowError" />
   </div>
 </template>
 <style>
@@ -107,11 +108,13 @@
 import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
-import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
+import { createFormModalEntry } from '../common/form_modal_component'
+
+import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
 const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath('/edit_grocery_list_metadata')
