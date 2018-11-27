@@ -1,13 +1,13 @@
 .hobby-tracker {
   font-size: 20px;
   font-weight: bold;
-  background-color: pink;
   margin: 20px 0px 5px 0px;
 }
 
 .hobby-title {
   display: flex;
-  padding: 5px;
+  background-color: #1e90ff;
+  padding: 10px;
 }
 
 /* All buttons -------------------------------------------------------------------------------------------------- */
@@ -19,13 +19,18 @@
   margin: 0px 5px 0px 5px;
 }
 
-.hobby-buttons:hover {
+.hobby-buttons:hover, .hobby-icon:hover {
   cursor: pointer;
 }
 
 /* Hobby Table ------------------------------------------------------------------------------------------------ */
+th {
+  padding: 10px;
+}
+
 .hobby-header {
   margin-right: 25px;
+  color: black;
 }
 
 .hobby-table {
@@ -38,9 +43,7 @@
 }
 
 .hobby-table-headers {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  background-color: purple;
+  background-color: #0059b3;
   color: white;
 }
 
