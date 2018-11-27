@@ -1,5 +1,9 @@
 <template>
   <div>
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
     <div v-if="shouldDisplayGame">
       <div class="codenames-gameboard">
         <div class="codenames-codeword-row" :key="rowIndex" v-for="(codewordRow, rowIndex) in codewords">
@@ -63,6 +67,9 @@
   @import "../assets/style/codenames.css"
 </style>
 <script>
+import ButterBar from './shared/ButterBar'
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import axios from 'axios'
 import { store } from '../store/store'
 import { playSound, getFullBackendUrlForPath, generateExpandIcon } from '../common/utils'
@@ -98,8 +105,14 @@ export default {
       newHintWord: '',
       newHintNumber: 0,
       logs: [],
-      isExpanded: true
+      isExpanded: true,
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
+  },
+  components: {
+    ButterBar
   },
   computed: {
     /*
@@ -193,6 +206,7 @@ export default {
         player1: randomizedPlayers[0],
         player2: randomizedPlayers[1]
       })
+      setButterBarMessage(this, 'Invited ' + this.playerToInvite + ' to a game.', ButterBarType.INFO)
     },
     endGuesses () {
       axios.post(

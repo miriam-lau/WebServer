@@ -10,7 +10,6 @@
       :childTableHeaders="childTableHeaders"
       :childTableValues="childTableValues"
       :closeModal="closeModal"
-      :currentStatus="currentStatus"
       :showEditModal="showEditModal"
       :showDeleteModal="showDeleteModal"
       :showAddModal="showAddModal"
@@ -21,10 +20,15 @@
       :modalErrorText="modalErrorText"
       :modalCallback="modalCallback"
       :shouldShowModal="shouldShowModal"
+
+      :butterBar_message="butterBar_message"
+      :butterBar_css="butterBar_css"
     />
   </div>
 </template>
 <script>
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
 import { getFullBackendUrlForPath, isEqual, getDisplayDate, createFormModalEntry } from '../common/utils'
 import axios from 'axios'
@@ -55,14 +59,16 @@ export default {
       hasChildren: false,
       childTableHeaders: [],
       childTableValues: [],
-      currentStatus: '',
       modalTitle: '',
       modalFormLines: [],
       modalPassThroughProps: {},
       modalCallback: Function,
       modalButtonText: '',
       modalErrorText: '',
-      shouldShowModal: false
+      shouldShowModal: false,
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
   },
   components: {
@@ -279,7 +285,7 @@ export default {
             parent['children'].splice(parent['children'].indexOf(entityId), 1)
             delete this.restaurantsPageData[entityType][entityId]
             this.showEntity(parent)
-            this.setCurrentStatus('Deleted ' + title)
+            setButterBarMessage(this, 'Deleted ' + title, ButterBarType.INFO)
             this.closeModal()
           })
         .catch(error => {
@@ -301,7 +307,7 @@ export default {
               this.restaurantsPageData[entityType][entityId][prop] = newEntity[prop]
             }
             this.showEntity(this.entity)
-            this.setCurrentStatus('Edited ' + title)
+            setButterBarMessage(this, 'Edited ' + title, ButterBarType.INFO)
             this.closeModal()
           })
         .catch(error => {
@@ -319,7 +325,7 @@ export default {
             this.entity['children'].push(newEntity['id'])
             this.restaurantsPageData[newEntity['entity_type']][newEntity['id']] = newEntity
             this.showEntity(this.entity)
-            this.setCurrentStatus('Added ' + title)
+            setButterBarMessage(this, 'Added ' + title, ButterBarType.INFO)
             this.closeModal()
           })
         .catch(
@@ -578,12 +584,7 @@ export default {
         this.showEntity(entity)
         return
       }
-      this.setCurrentStatus('Unable to perform navigation.')
-    },
-    setCurrentStatus (text) {
-      this.currentStatus = text
-      window.clearTimeout(this.timeoutHandle)
-      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
+      setButterBarMessage(this, 'Unable to perform navigation.', ButterBarType.ERROR)
     }
   }
 }

@@ -88,7 +88,7 @@ create table hobby_tracker (
 
 create table hobby_completed_hours_timestamped (
   id serial primary key,
-  hobby_id integer references hobby_tracker not null,
+  hobby_id integer references hobby_tracker ON DELETE CASCADE not null,
   timestamp timestamp default localtimestamp not null,
   completed_hours_for_week real not null
 );

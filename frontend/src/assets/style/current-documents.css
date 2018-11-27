@@ -2,40 +2,6 @@
   margin-bottom: 5px;
 }
 
-.table {
-  width: 100%;
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  margin: auto;
-}
-
-.table td, .table th {
-  padding: 8px;
-}
-
-.table td, .table th {
-  border: 1px solid #ddd;
-}
-
-.table tr:nth-child(even){background-color: #f2f2f2;}
-
-.table tr:hover {background-color: #ddd;}
-
-.table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  background-color: blue;
-  color: white;
-}
-
-.current-documents-icon {
-  margin-right: 2px;
-}
-
-.current-documents-icon:hover {
-  cursor: pointer;
-}
-
 .current-documents-list {
   margin-bottom: 5px;
 }
@@ -75,13 +41,4 @@ hr {
 
 .current-documents-input {
   width: 240px;
-}
-
-.current-documents-status {
-  color: black;
-  text-align: center;
-  background-color: rgb(163, 238, 163);
-  width: 50%;
-  margin: 0 auto;
-  margin-bottom: 10px;
 }

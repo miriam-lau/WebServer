@@ -1,14 +1,19 @@
 <template>
   <div class="hobby-tracker">
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
+
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
       <button class="hobby-buttons" @click="showAddHobbyModal">Add Hobby</button>
-      <button class="hobby-buttons" @click="editMode">Edit</button>
-      <button class="hobby-buttons" @click="editHobbies">Save</button>
+      <button class="hobby-buttons" v-if="!editable" @click="editMode">Edit</button>
+      <button class="hobby-buttons" v-else @click="editHobbies">Save</button>
     </div>
 
     <div class="hobby-table-container">
-      <table class="hobby-table">
+      <table class="hobby-table table">
         <tr class="hobby-table-headers">
           <th>Hobby</th>
           <th>Assigned Hours</th>
@@ -65,6 +70,9 @@
 
 <script>
 import axios from 'axios'
+import ButterBar from './shared/ButterBar'
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import FormModal from './shared/FormModal'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
@@ -81,8 +89,15 @@ export default {
       hobbyName: '',
       assignedHoursPerWeek: 0,
       hobbies: [],
-      editable: false
+      editable: false,
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
+  },
+  components: {
+    ButterBar,
+    FormModal
   },
   computed: {
     username () {
@@ -100,20 +115,29 @@ export default {
       hobbyItem['assigned_hours_per_week'] = this.assignedHoursPerWeek
 
       axios.post(ADD_HOBBY_URL, { hobby: hobbyItem }).then(response => {
+        let addedHobby = response.data
         this.updateHobbyDisplay()
         this.showModal = false
+        setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
       })
     },
     updateHobbyDisplay () {
       axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
     },
     deleteHobby (id) {
-      axios.post(DELETE_HOBBY_URL, { id: id }).then(response => { this.updateHobbyDisplay() })
+      axios.post(DELETE_HOBBY_URL, { id: id }).then(response => {
+        let deletedHobby = response.data
+        console.log('deletedHobby')
+        console.log(deletedHobby)
+        this.updateHobbyDisplay()
+        setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
+      })
     },
     editHobbies () {
       axios.post(EDIT_HOBBIES_URL, { hobbies: this.hobbies }).then(response => {
         this.updateHobbyDisplay()
         this.editable = false
+        setButterBarMessage(this, 'Edits Saved', ButterBarType.INFO)
       })
     },
     showAddHobbyModal () {

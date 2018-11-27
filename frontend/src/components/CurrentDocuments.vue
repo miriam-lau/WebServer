@@ -1,8 +1,9 @@
 <template>
   <div class="current-documents">
-    <div class="current-documents-status" v-if="currentStatus != ''">
-      {{ currentStatus }}
-    </div>
+    <ButterBar
+      :message="butterBar_message"
+      :css="butterBar_css"
+    />
     <table class="current-documents-list table">
       <tr>
         <th>Title</th><th>Notes</th><th>Modify</th>
@@ -38,6 +39,9 @@
   @import "../assets/style/current-documents.css"
 </style>
 <script>
+import ButterBar from './shared/ButterBar'
+import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+
 import FormModal from './shared/FormModal'
 import axios from 'axios'
 import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
@@ -54,7 +58,6 @@ export default {
   data () {
     return {
       currentDocuments: [],
-      currentStatus: '',
       modalTitle: '',
       modalFormLines: [],
       modalPassThroughProps: {},
@@ -62,8 +65,13 @@ export default {
       modalButtonText: '',
       modalErrorText: '',
       shouldShowModal: false,
-      timeoutHandle: null
+
+      butterBar_message: '',
+      butterBar_css: ''
     }
+  },
+  components: {
+    FormModal, ButterBar
   },
   created () {
     this.reloadCurrentDocumentsData()
@@ -77,9 +85,6 @@ export default {
     username () {
       this.reloadCurrentDocumentsData()
     }
-  },
-  components: {
-    FormModal
   },
   methods: {
     closeModal () {
@@ -182,7 +187,7 @@ export default {
             this.currentDocuments.splice(
               this.currentDocuments.findIndex(document => document['id'] === deletedDocument['id']), 1)
             this.closeModal()
-            this.setCurrentStatus('Deleted ' + deletedDocument['title'])
+            setButterBarMessage(this, 'Deleted ' + deletedDocument['title'], ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during delete.'
@@ -197,7 +202,7 @@ export default {
               this.currentDocuments.findIndex(document => document.id === response['data']['id'])
             this.currentDocuments[currentDocumentIndex] = response['data']
             this.closeModal()
-            this.setCurrentStatus('Saved ' + document['title'])
+            setButterBarMessage(this, 'Saved ' + document['title'], ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during edit.'
@@ -211,17 +216,12 @@ export default {
             let document = response['data']
             this.currentDocuments.push(document)
             this.closeModal()
-            this.setCurrentStatus('Added ' + document['title'])
+            setButterBarMessage(this, 'Added ' + document['title'], ButterBarType.INFO)
           })
         .catch(error => {
           this.modalErrorText = 'An error occurred during add.'
           console.log(error)
         })
-    },
-    setCurrentStatus (text) {
-      this.currentStatus = text
-      window.clearTimeout(this.timeoutHandle)
-      this.timeoutHandle = setTimeout(function () { this.currentStatus = '' }.bind(this), 10000)
     }
   }
 }

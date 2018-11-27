@@ -19,10 +19,12 @@ class HobbyTracker:
             last_hobby = cur.fetchone()
             new_sort_order = last_hobby['sort_order'] + 1 if last_hobby is not None else 0
             cur.execute("INSERT INTO hobby_tracker(username, hobby, sort_order, assigned_hours_per_week) " +
-                        "VALUES(%s, %s, %s, %s)",
+                        "VALUES(%s, %s, %s, %s) RETURNING *",
                         (hobby["username"], hobby["hobby"], new_sort_order, hobby["assigned_hours_per_week"]))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
@@ -52,9 +54,11 @@ class HobbyTracker:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from hobby_tracker where id = %s", (hobby_id,))
+            cur.execute("DELETE from hobby_tracker where id = %s RETURNING *", (hobby_id,))
+            ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            return ret
         except psycopg2.Error:
             self._database.rollback()
             cur.close()

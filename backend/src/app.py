@@ -140,8 +140,7 @@ def _codenames_send_socketio_refresh(game_id, player_triggering_update):
 @app.route("/add_hobby", methods=["POST"])
 def add_hobby():
     hobby = request.json["hobby"]
-    hobby_tracker.add_hobby(hobby)
-    return ""
+    return jsonify(hobby_tracker.add_hobby(hobby))
 
 @app.route("/get_hobbies", methods=["POST"])
 def get_hobbies():
