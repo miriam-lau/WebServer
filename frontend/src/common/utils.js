@@ -53,17 +53,5 @@ function getDisplayDate (dateString) {
   return date.toLocaleDateString('en-US', options)
 }
 
-function createFormModalEntry (id, name, displayName, value) {
-  if (value === null || value === undefined) {
-    value = ''
-  }
-  return {
-    id: id,
-    name: name,
-    displayName: displayName,
-    value: value
-  }
-}
-
 export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate, createFormModalEntry }
+  isEqual, getDisplayDate }

@@ -6,12 +6,15 @@
     />
     <div class="notes-notes">
         <h2>Notes</h2>
+        <div class="input-form">
+          <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
+        </div>
         <div class="notes-single-note" v-for="note in notes" :key="note['id']">
             <div>
                 {{ note['title'] }}
-                <font-awesome-icon icon="pencil-alt" class="notes-icon"
+                <font-awesome-icon icon="pencil-alt" class="icon"
                     @click="showEditNoteMetadataModal(note)" />
-                <font-awesome-icon icon="trash" class="notes-icon"
+                <font-awesome-icon icon="trash" class="icon"
                     @click="showDeleteNoteModal(note)" />
             </div>
             <div class="notes-text">
@@ -27,19 +30,18 @@
             <div v-else>
                 Unsaved.
                 <button @click="editNote(note)">Save</button>
-                <button @click="cancelEditNoteText(note)">Cancel</button>
             </div>
         </div>
-        <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         <FormModal
-          :show="shouldShowModal"
-          :close="closeModal"
-          :title="modalTitle"
-          :initialFormLines="modalFormLines"
-          :errorText="modalErrorText"
-          :handleButtonClick="modalCallback"
-          :passThroughProps="modalPassThroughProps"
-          :buttonText="modalButtonText" />
+          :show="formModal_show"
+          :close="formModal_close"
+          :title="formModal_title"
+          :initialFormLines="formModal_formLines"
+          :errorText="formModal_errorText"
+          :callback="formModal_callback"
+          :passThroughProps="formModal_passThroughProps"
+          :buttonText="formModal_buttonText"
+          :shouldShowError="formModal_shouldShowError" />
     </div>
   </div>
 </template>
@@ -50,10 +52,12 @@
 import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
-import EditableDiv from './shared/EditableDiv'
 import FormModal from './shared/FormModal'
+import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
+
+import EditableDiv from './shared/EditableDiv'
 import axios from 'axios'
-import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 
 const GET_NOTES_PAGE_URL = getFullBackendUrlForPath('/get_notes_page')
 const EDIT_NOTES_METADATA_URL = getFullBackendUrlForPath('/edit_note_metadata')
@@ -67,14 +71,17 @@ export default {
     return {
       notes: [],
       noteTitleToAdd: '',
-      modalTitle: '',
-      modalFormLines: [],
-      modalPassThroughProps: {},
-      modalCallback: Function,
-      modalButtonText: '',
-      modalErrorText: '',
+
       noteKey: 0,
-      shouldShowModal: false,
+
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
 
       butterBar_message: '',
       butterBar_css: ''
@@ -86,75 +93,79 @@ export default {
   created () {
     this.updateNotesPageDisplay()
   },
+  watch: {
+    allNotesSaved: function (oldValue, newValue) {
+      if (newValue) {
+        window.onbeforeunload = function () { return '' }
+      } else {
+        window.onbeforeunload = function () { return null }
+      }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (!this.allNotesSaved) {
+      const answer = window.confirm('You haven\'t saved your changes. Are you sure you want to leave?')
+      if (answer) {
+        window.onbeforeunload = function () { return null }
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
+  },
+  computed: {
+    allNotesSaved: function () {
+      for (let index in this.notes) {
+        if (!this.notes[index]['saved']) {
+          return false
+        }
+      }
+      return true
+    }
+  },
   methods: {
+    formModal_close () {
+      this.formModal_show = false
+    },
     updateNoteText (note, newText) {
-      console.log(note)
       if (note['saved']) {
         note['saved'] = false
-        note['backedUpText'] = note['text']
       }
       note['text'] = newText.target.innerText
-    },
-    cancelEditNoteText (note) {
-      if (!note['saved']) {
-        note['saved'] = true
-        note['text'] = note['backedUpText']
-        delete note['backedUpText']
-        this.noteKey += 1 // Force a re-render of the EditableDiv of this note.
-      }
-    },
-    closeModal () {
-      this.shouldShowModal = false
-    },
-    showModal (title, formLines, passThroughProps, callback, buttonText) {
-      this.modalTitle = title
-      this.modalFormLines = formLines
-      this.modalPassThroughProps = passThroughProps
-      this.modalCallback = callback
-      this.modalButtonText = buttonText
-      this.modalErrorText = ''
-      this.shouldShowModal = true
     },
     showEditNoteMetadataModal (note) {
       let modalFormLines = [
         createFormModalEntry(
           'edit-note-metadata-modal-title-' + note['id'], 'title', 'Title:', note['title'])
       ]
-      this.showModal(
+      showModal(
+        this,
         'Editing ' + note['title'],
         modalFormLines,
         note,
-        this.editNoteMetadata,
-        'Save')
+        generateAxiosModalCallback(this, EDIT_NOTES_METADATA_URL, this.editNoteMetadata),
+        'Save',
+        'Error editing ' + note['title'])
     },
     showDeleteNoteModal (note) {
-      this.showModal(
+      showModal(
+        this,
         'Deleting ' + note['title'],
         [],
         { id: note['id'] },
-        this.deleteNote,
-        'Delete')
+        generateAxiosModalCallback(this, DELETE_NOTES_URL, this.deleteNote),
+        'Delete',
+        'Error deleting ' + note['title'])
     },
-    editNoteMetadata (note) {
-      axios.post(
-        EDIT_NOTES_METADATA_URL,
-        {
-          id: note['id'],
-          title: note['title']
-        })
-        .then(response => {
-          let currentNoteIndex =
-            this.notes.findIndex(note => note['id'] === response['data']['id'])
-          let newNoteItem = this.notes[currentNoteIndex]
-          newNoteItem['title'] = response['data']['title']
-          this.notes.splice(currentNoteIndex, 1, newNoteItem)
-          this.closeModal()
-          setButterBarMessage(this, 'Saved title of ' + note['title'], ButterBarType.INFO)
-        })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
-        })
+    editNoteMetadata (response) {
+      let currentNoteIndex = this.notes.findIndex(note => note['id'] === response['data']['id'])
+      let newNoteItem = this.notes[currentNoteIndex]
+      let oldTitle = this.notes[currentNoteIndex]['title']
+      newNoteItem['title'] = response['data']['title']
+      this.notes.splice(currentNoteIndex, 1, newNoteItem)
+      setButterBarMessage(this, 'Saved title of ' + oldTitle, ButterBarType.INFO)
     },
     editNote (note) {
       axios.post(EDIT_NOTES_URL, {id: note['id'], text: note['text']})
@@ -170,18 +181,11 @@ export default {
           console.log(error)
         })
     },
-    deleteNote (note) {
-      axios.post(DELETE_NOTES_URL, {id: note['id']}).then(response => {
-        let deletedNote = response['data']
-        this.notes.splice(
-          this.notes.findIndex(note => note['id'] === deletedNote['id']), 1)
-        this.closeModal()
-        setButterBarMessage(this, 'Deleted ' + deletedNote['title'], ButterBarType.INFO)
-      })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
-          console.log(error)
-        })
+    deleteNote (response) {
+      let deletedNote = response['data']
+      this.notes.splice(
+        this.notes.findIndex(note => note['id'] === deletedNote['id']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedNote['title'], ButterBarType.INFO)
     },
     addNote () {
       axios.post(ADD_NOTES_URL, {title: this.noteTitleToAdd})
@@ -201,10 +205,10 @@ export default {
     updateNotesPageDisplay () {
       axios.post(GET_NOTES_PAGE_URL).then(
         response => {
-          this.notes = response['data']
-          for (let index in this.notes) {
-            this.notes[index]['saved'] = true
+          for (let index in response['data']) {
+            response['data'][index]['saved'] = true
           }
+          this.notes = response['data']
         })
     }
   }

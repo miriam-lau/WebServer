@@ -98,8 +98,12 @@ nav.nav-notes-page .nav-notes-page {
   margin-right: 2px;
 }
 
-.icon:hover {
+.button:hover, .icon:hover {
   cursor: pointer;
+}
+
+.input-form {
+	margin-bottom: 10px;
 }
 
 .table {

@@ -3,20 +3,20 @@
     <div class="modal-header">
      <h3>{{ title }}</h3>
     </div>
-    <div class="modal-error" v-if="errorText != ''">
+    <div class="modal-error" v-if="shouldShowError">
       {{ errorText }}
     </div>
     <div class="modal-body">
-      <div :key="formLine['id']" v-for="formLine in formLines">
+      <div :key="formLine.id" v-for="(formLine, index) in formLines">
         <label class="form-label">
-          {{ formLine['displayName'] }}
-          <input v-model="formLine['value']" class="form-control">
+          {{ formLine.displayName }}
+          <input v-model="formLine.value" :ref="'form-modal-input-' + index" class="form-control">
         </label>
       </div>
     </div>
     <div class="modal-footer text-right">
-      <button class="modal-default-button"
-          @click="generateModalOutputAndHandleButtonClick">
+      <button class="modal-default-button" ref="form-modal-button"
+          @click="handleClick">
         {{ buttonText }}
       </button>
     </div>
@@ -26,7 +26,14 @@
   @import "../../assets/style/modal.css"
 </style>
 <script>
+/**
+ * This modal takes in a list of form lines that will be displayed to the user as text input fields. When the
+ * modal button is clicked, it will make an ajax request to the url passed in and call the callback function
+ * passed in. Upon ajax success, it will close the modal. On ajax error, it will leave the modal open and display the
+ * error message.
+ */
 import Modal from './Modal'
+import Vue from 'vue'
 
 export default {
   name: 'FormModal',
@@ -48,7 +55,7 @@ export default {
      *   displayName: The text to display when this form is shown.
      *   value: The value of the property. This is bound to the model for the form.
      * }
-     * When the form is saved, the handleSave function is called with the properties of the form saved in an object
+     * When the form is saved, the callback function is called with the properties of the form saved in an object
      * with key 'name' and value 'value'.
      */
     initialFormLines: Array,
@@ -62,14 +69,31 @@ export default {
      * 1. The form lines are returned with 'name' as the key and 'value' as the value.
      * 2. The passThroughProps are populated into the response with exactly the same key/value pairs.
      */
-    handleButtonClick: Function,
+    callback: Function,
     /** The text to display on the action button. */
-    buttonText: String
+    buttonText: String,
+    /**
+     * Whether or not to show the error message.
+     */
+    shouldShowError: Boolean
   },
   watch: {
     initialFormLines () {
-      // If the form lines passed in by the parent ever change, reset this form to those values.
       this.formLines = this.initialFormLines
+    },
+    show () {
+      if (this.show) {
+        let self = this
+        Vue.nextTick()
+          .then(function () {
+            let elements = self.$refs['form-modal-input-0']
+            if (elements && elements.length > 0) {
+              elements[0].focus()
+            } else {
+              self.$refs['form-modal-button'].focus()
+            }
+          })
+      }
     }
   },
   data () {
@@ -81,15 +105,15 @@ export default {
     }
   },
   methods: {
-    generateModalOutputAndHandleButtonClick () {
+    handleClick () {
       let modalOutput = this.generateModalOutput()
-      this.handleButtonClick(modalOutput)
+      this.callback(modalOutput)
     },
     generateModalOutput () {
       let ret = Object.assign({}, this.passThroughProps)
       for (let index in this.formLines) {
         let formLine = this.formLines[index]
-        ret[formLine['name']] = formLine['value']
+        ret[formLine.name] = formLine.value
       }
       return ret
     }

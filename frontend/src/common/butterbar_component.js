@@ -6,10 +6,7 @@
  *
  * It will automatically define a butterBar_timeoutHandle on the same component for its own use.
  *
- * To use it, the following html should be included in the template:
- *   <div :class="'butter-bar ' + butterBar_css">
- *     {{ butterBar_message }}&nbsp;
- *   </div>
+ * To use it, add the ButterBar component.
  */
 
 let ButterBarType = {

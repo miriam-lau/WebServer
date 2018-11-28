@@ -4,6 +4,9 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
+    <div class="input-form">
+      <button @click="showAddModal">Add Document</button>
+    </div>
     <table class="current-documents-list table">
       <tr>
         <th>Title</th><th>Notes</th><th>Modify</th>
@@ -23,16 +26,16 @@
         </td>
       </tr>
     </table>
-    <button @click="showAddModal">Add Document</button>
     <FormModal
-      :show="shouldShowModal"
-      :close="closeModal"
-      :title="modalTitle"
-      :initialFormLines="modalFormLines"
-      :errorText="modalErrorText"
-      :handleButtonClick="modalCallback"
-      :passThroughProps="modalPassThroughProps"
-      :buttonText="modalButtonText" />
+      :show="formModal_show"
+      :close="formModal_close"
+      :title="formModal_title"
+      :initialFormLines="formModal_formLines"
+      :errorText="formModal_errorText"
+      :callback="formModal_callback"
+      :passThroughProps="formModal_passThroughProps"
+      :buttonText="formModal_buttonText"
+      :shouldShowError="formModal_shouldShowError" />
   </div>
 </template>
 <style>
@@ -43,8 +46,10 @@ import ButterBar from './shared/ButterBar'
 import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
+import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
+
 import axios from 'axios'
-import { getFullBackendUrlForPath, createFormModalEntry } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
 const GET_CURRENT_DOCUMENTS_URL = getFullBackendUrlForPath('/get_current_documents')
@@ -58,13 +63,15 @@ export default {
   data () {
     return {
       currentDocuments: [],
-      modalTitle: '',
-      modalFormLines: [],
-      modalPassThroughProps: {},
-      modalCallback: Function,
-      modalButtonText: '',
-      modalErrorText: '',
-      shouldShowModal: false,
+
+      formModal_show: false,
+      formModal_title: '',
+      formModal_formLines: [],
+      formModal_errorText: '',
+      formModal_callback: Function,
+      formModal_passThroughProps: {},
+      formModal_buttonText: '',
+      formModal_shouldShowError: false,
 
       butterBar_message: '',
       butterBar_css: ''
@@ -87,8 +94,8 @@ export default {
     }
   },
   methods: {
-    closeModal () {
-      this.shouldShowModal = false
+    formModal_close () {
+      this.formModal_show = false
     },
     reloadCurrentDocumentsData () {
       axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
@@ -96,48 +103,45 @@ export default {
           this.currentDocuments = response['data']
         })
     },
-    showModal (title, formLines, passThroughProps, callback, buttonText) {
-      this.modalTitle = title
-      this.modalFormLines = formLines
-      this.modalPassThroughProps = passThroughProps
-      this.modalCallback = callback
-      this.modalButtonText = buttonText
-      this.modalErrorText = ''
-      this.shouldShowModal = true
-    },
     showEditModal (document) {
-      let modalFormLines = [
+      let formModalFormLines = [
         createFormModalEntry('edit-document-modal-title-' + document['id'], 'title', 'Title:', document['title']),
         createFormModalEntry('edit-document-modal-url-' + document['id'], 'url', 'URL:', document['url']),
         createFormModalEntry('edit-document-modal-notes-' + document['id'], 'notes', 'Notes:', document['notes'])
       ]
-      this.showModal(
+      showModal(
+        this,
         'Editing ' + document['title'],
-        modalFormLines,
+        formModalFormLines,
         document,
-        this.editDocument,
-        'Save')
+        generateAxiosModalCallback(this, EDIT_DOCUMENT_URL, this.editDocument),
+        'Save',
+        'Error saving ' + document['title'])
     },
     showDeleteModal (document) {
-      this.showModal(
+      showModal(
+        this,
         'Deleting ' + document['title'],
         [],
         { id: document['id'] },
-        this.deleteDocument,
-        'Delete')
+        generateAxiosModalCallback(this, DELETE_DOCUMENT_URL, this.deleteDocument),
+        'Delete',
+        'Error deleting ' + document['title'])
     },
     showAddModal () {
-      let modalFormLines = [
+      let formModalFormLines = [
         createFormModalEntry('add-document-modal-title', 'title', 'Title:'),
         createFormModalEntry('add-document-modal-url', 'url', 'URL:'),
         createFormModalEntry('add-document-modal-notes', 'notes', 'Notes:')
       ]
-      this.showModal(
+      showModal(
+        this,
         'Adding a new document',
-        modalFormLines,
+        formModalFormLines,
         { username: this.username },
-        this.addDocument,
-        'Save')
+        generateAxiosModalCallback(this, ADD_DOCUMENT_URL, this.addDocument),
+        'Save',
+        'Error adding document')
     },
     moveDocumentUp (document) {
       let index = this.currentDocuments.indexOf(document)
@@ -179,49 +183,23 @@ export default {
           this.reloadCurrentDocumentsData()
         })
     },
-    deleteDocument (modalOutput) {
-      axios.post(DELETE_DOCUMENT_URL, {id: modalOutput['id']})
-        .then(
-          response => {
-            let deletedDocument = response['data']
-            this.currentDocuments.splice(
-              this.currentDocuments.findIndex(document => document['id'] === deletedDocument['id']), 1)
-            this.closeModal()
-            setButterBarMessage(this, 'Deleted ' + deletedDocument['title'], ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during delete.'
-          console.log(error)
-        })
+    deleteDocument (response) {
+      let deletedDocument = response['data']
+      this.currentDocuments.splice(
+        this.currentDocuments.findIndex(document => document['id'] === deletedDocument['id']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedDocument['title'], ButterBarType.INFO)
     },
-    editDocument (document) {
-      axios.post(EDIT_DOCUMENT_URL, {document: document})
-        .then(
-          response => {
-            let currentDocumentIndex =
-              this.currentDocuments.findIndex(document => document.id === response['data']['id'])
-            this.currentDocuments[currentDocumentIndex] = response['data']
-            this.closeModal()
-            setButterBarMessage(this, 'Saved ' + document['title'], ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
-        })
+    editDocument (response) {
+      let currentDocumentIndex =
+        this.currentDocuments.findIndex(document => document.id === response['data']['id'])
+      this.currentDocuments[currentDocumentIndex] = response['data']
+      this.formModal_close()
+      setButterBarMessage(this, 'Saved ' + document['title'], ButterBarType.INFO)
     },
-    addDocument (document) {
-      axios.post(ADD_DOCUMENT_URL, {document: document})
-        .then(
-          response => {
-            let document = response['data']
-            this.currentDocuments.push(document)
-            this.closeModal()
-            setButterBarMessage(this, 'Added ' + document['title'], ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during add.'
-          console.log(error)
-        })
+    addDocument (response) {
+      let document = response['data']
+      this.currentDocuments.push(document)
+      setButterBarMessage(this, 'Added ' + document['title'], ButterBarType.INFO)
     }
   }
 }
