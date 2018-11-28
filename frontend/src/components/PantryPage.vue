@@ -13,12 +13,15 @@
     />
     <div v-if="currentPage === 'grocery-lists'">
       <h2>Grocery Lists</h2>
+      <div class="input-form">
+        <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
+      </div>
       <div class="pantry-single-grocery-list" v-for="groceryList in groceryLists" :key="groceryList['id']">
         <div>
           {{ groceryList['title'] }}
-          <font-awesome-icon icon="pencil-alt" class="pantry-icon"
+          <font-awesome-icon icon="pencil-alt" class="icon"
               @click="showEditGroceryMetadataModal(groceryList)" />
-          <font-awesome-icon icon="trash" class="pantry-icon"
+          <font-awesome-icon icon="trash" class="icon"
               @click="showDeleteGroceryListModal(groceryList)" />
         </div>
         <div class="pantry-grocery-list-text">
@@ -40,7 +43,6 @@
           <button @click="editGroceryList(groceryList)">Save</button>
         </div>
       </div>
-      <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
       <ImportToPantryModal
         :close="closeImportModal"
         :show="shouldShowImportModal"
@@ -55,6 +57,9 @@
     </div>
     <div v-else-if="currentPage === 'pantry-store'">
       <h2>Pantry</h2>
+      <div class="input-form">
+        <input v-model="pantryItemToAdd" ref="pantry-item-to-add" /> <button @click="addPantryItem">Add Item</button>
+      </div>
       <table class="table">
         <tr>
           <th>Name</th><th>Delete</th>
@@ -66,10 +71,17 @@
           </td>
         </tr>
       </table>
-      <input v-model="pantryItemToAdd" /> <button @click="addPantryItem">Add Item</button>
     </div>
     <div v-else-if="currentPage === 'known-words'">
       <h2>Known Words</h2>
+      <div class="input-form">
+        <input v-model="knownWordToAdd" ref="known-word-to-add" />
+        <select v-model="knownWordToAddShouldSave">
+          <option>True</option>
+          <option>False</option>
+        </select>
+        <button @click="addKnownWord">Add Word</button>
+      </div>
       <table class="table">
         <tr>
           <th>Name</th><th>Addable to Pantry</th><th>Delete</th>
@@ -82,12 +94,6 @@
           </td>
         </tr>
       </table>
-      <input v-model="knownWordToAdd" />
-      <select v-model="knownWordToAddShouldSave">
-        <option>True</option>
-        <option>False</option>
-      </select>
-      <button @click="addKnownWord">Add Word</button>
     </div>
     <FormModal
       :show="formModal_show"
@@ -179,11 +185,39 @@ export default {
         case 'known-words':
           return 'nav-pantry-known-words'
       }
+    },
+    allGroceryListsSaved: function () {
+      for (let index in this.groceryLists) {
+        if (!this.groceryLists[index]['saved']) {
+          return false
+        }
+      }
+      return true
     }
   },
   watch: {
     '$route': function () {
       this.setCurrentPage()
+    },
+    allGroceryListsSaved: function (oldValue, newValue) {
+      if (newValue) {
+        window.onbeforeunload = function () { return '' }
+      } else {
+        window.onbeforeunload = function () { return null }
+      }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (!this.allGroceryListsSaved) {
+      const answer = window.confirm('You haven\'t saved your changes. Are you sure you want to leave?')
+      if (answer) {
+        window.onbeforeunload = function () { return null }
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
     }
   },
   methods: {
@@ -331,6 +365,7 @@ export default {
             this.pantryItemToAdd = ''
             let pantryItem = response['data']
             this.pantry.push(pantryItem)
+            this.$refs['pantry-item-to-add'].focus()
             setButterBarMessage(this, 'Added ' + pantryItem['item'] + ' to the pantry', ButterBarType.INFO)
           })
         .catch(error => {
@@ -352,6 +387,7 @@ export default {
             this.knownWordToAdd = ''
             let knownWord = response['data']
             this.knownWords.push(knownWord)
+            this.$refs['known-word-to-add'].focus()
             setButterBarMessage(this, 'Added ' + knownWord['word'] + ' to the list of known words', ButterBarType.INFO)
           })
         .catch(error => {
@@ -378,10 +414,10 @@ export default {
     updatePantryPageDisplay () {
       axios.post(GET_PANTRY_PAGE_URL).then(
         response => {
-          this.groceryLists = response['data']['grocery_lists']
-          for (let index in this.groceryLists) {
-            this.groceryLists[index]['saved'] = true
+          for (let index in response['data']['grocery_lists']) {
+            response['data']['grocery_lists'][index]['saved'] = true
           }
+          this.groceryLists = response['data']['grocery_lists']
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
         })

@@ -4,6 +4,9 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
+    <div class="input-form">
+      <button @click="showAddModal">Add Document</button>
+    </div>
     <table class="current-documents-list table">
       <tr>
         <th>Title</th><th>Notes</th><th>Modify</th>
@@ -23,7 +26,6 @@
         </td>
       </tr>
     </table>
-    <button @click="showAddModal">Add Document</button>
     <FormModal
       :show="formModal_show"
       :close="formModal_close"

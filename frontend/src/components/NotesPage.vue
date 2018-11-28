@@ -6,12 +6,15 @@
     />
     <div class="notes-notes">
         <h2>Notes</h2>
+        <div class="input-form">
+          <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
+        </div>
         <div class="notes-single-note" v-for="note in notes" :key="note['id']">
             <div>
                 {{ note['title'] }}
-                <font-awesome-icon icon="pencil-alt" class="notes-icon"
+                <font-awesome-icon icon="pencil-alt" class="icon"
                     @click="showEditNoteMetadataModal(note)" />
-                <font-awesome-icon icon="trash" class="notes-icon"
+                <font-awesome-icon icon="trash" class="icon"
                     @click="showDeleteNoteModal(note)" />
             </div>
             <div class="notes-text">
@@ -29,7 +32,6 @@
                 <button @click="editNote(note)">Save</button>
             </div>
         </div>
-        <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         <FormModal
           :show="formModal_show"
           :close="formModal_close"
@@ -90,6 +92,38 @@ export default {
   },
   created () {
     this.updateNotesPageDisplay()
+  },
+  watch: {
+    allNotesSaved: function (oldValue, newValue) {
+      if (newValue) {
+        window.onbeforeunload = function () { return '' }
+      } else {
+        window.onbeforeunload = function () { return null }
+      }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (!this.allNotesSaved) {
+      const answer = window.confirm('You haven\'t saved your changes. Are you sure you want to leave?')
+      if (answer) {
+        window.onbeforeunload = function () { return null }
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
+    }
+  },
+  computed: {
+    allNotesSaved: function () {
+      for (let index in this.notes) {
+        if (!this.notes[index]['saved']) {
+          return false
+        }
+      }
+      return true
+    }
   },
   methods: {
     formModal_close () {
@@ -171,10 +205,10 @@ export default {
     updateNotesPageDisplay () {
       axios.post(GET_NOTES_PAGE_URL).then(
         response => {
-          this.notes = response['data']
-          for (let index in this.notes) {
-            this.notes[index]['saved'] = true
+          for (let index in response['data']) {
+            response['data'][index]['saved'] = true
           }
+          this.notes = response['data']
         })
     }
   }

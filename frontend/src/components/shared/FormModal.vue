@@ -7,15 +7,15 @@
       {{ errorText }}
     </div>
     <div class="modal-body">
-      <div :key="formLine['id']" v-for="formLine in formLines">
+      <div :key="formLine.id" v-for="(formLine, index) in formLines">
         <label class="form-label">
-          {{ formLine['displayName'] }}
-          <input v-model="formLine['value']" class="form-control">
+          {{ formLine.displayName }}
+          <input v-model="formLine.value" :ref="'form-modal-input-' + index" class="form-control">
         </label>
       </div>
     </div>
     <div class="modal-footer text-right">
-      <button class="modal-default-button"
+      <button class="modal-default-button" ref="form-modal-button"
           @click="handleClick">
         {{ buttonText }}
       </button>
@@ -33,6 +33,7 @@
  * error message.
  */
 import Modal from './Modal'
+import Vue from 'vue'
 
 export default {
   name: 'FormModal',
@@ -71,12 +72,28 @@ export default {
     callback: Function,
     /** The text to display on the action button. */
     buttonText: String,
+    /**
+     * Whether or not to show the error message.
+     */
     shouldShowError: Boolean
   },
   watch: {
     initialFormLines () {
-      // If the form lines passed in by the parent ever change, reset this form to those values.
       this.formLines = this.initialFormLines
+    },
+    show () {
+      if (this.show) {
+        let self = this
+        Vue.nextTick()
+          .then(function () {
+            let elements = self.$refs['form-modal-input-0']
+            if (elements && elements.length > 0) {
+              elements[0].focus()
+            } else {
+              self.$refs['form-modal-button'].focus()
+            }
+          })
+      }
     }
   },
   data () {
@@ -96,7 +113,7 @@ export default {
       let ret = Object.assign({}, this.passThroughProps)
       for (let index in this.formLines) {
         let formLine = this.formLines[index]
-        ret[formLine['name']] = formLine['value']
+        ret[formLine.name] = formLine.value
       }
       return ret
     }

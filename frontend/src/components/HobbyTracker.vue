@@ -7,9 +7,9 @@
 
     <div class="hobby-title">
       <header class="hobby-header">Hobbies</header>
-      <button class="hobby-buttons" @click="showAddModal">Add Hobby</button>
-      <button class="hobby-buttons" v-if="!editable" @click="editMode">Edit</button>
-      <button class="hobby-buttons" v-else @click="editHobbies">Save</button>
+      <button class="button" @click="showAddModal">Add Hobby</button>
+      <button class="button" v-if="!editable" @click="editMode">Edit</button>
+      <button class="button" v-else @click="editHobbies">Save</button>
     </div>
 
     <div class="hobby-table-container">
@@ -29,7 +29,7 @@
             <td><input v-model="hobby['completed_hours_for_week']"/></td>
             <td>{{ getHoursRemaining(hobby) }}</td>
             <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
-            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="showDeleteModal(hobby)"/></td>
+            <td><font-awesome-icon icon="trash" class="icon" @click="showDeleteModal(hobby)"/></td>
           </template>
           <template v-else>
             <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
@@ -37,7 +37,7 @@
             <td>{{ hobby['completed_hours_for_week'] }}</td>
             <td>{{ getHoursRemaining(hobby) }} </td>
             <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
-            <td><font-awesome-icon icon="trash" class="hobby-icon" @click="showDeleteModal(hobby)" /></td>
+            <td><font-awesome-icon icon="trash" class="icon" @click="showDeleteModal(hobby)" /></td>
           </template>
         </tr>
       </table>

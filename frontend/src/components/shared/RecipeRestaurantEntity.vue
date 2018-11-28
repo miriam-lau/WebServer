@@ -13,8 +13,8 @@
     <h1 class="recipe-restaurant-entity-title">
       {{ title }}
       <span v-if="hasInfo">
-        <font-awesome-icon icon="pencil-alt" class="current-documents-icon" @click="showEditModal" />
-        <font-awesome-icon icon="trash" class="current-documents-icon" @click="showDeleteModal" />
+        <font-awesome-icon icon="pencil-alt" class="icon" @click="showEditModal" />
+        <font-awesome-icon icon="trash" class="icon" @click="showDeleteModal" />
       </span>
     </h1>
     <div v-if="hasInfo">
@@ -23,18 +23,21 @@
       </div>
       <div class="recipe-restaurant-entity-info">
         <table class="recipe-restaurant-entity-infotable">
-          <tr v-for="info in infoDicts" :key="info['id']">
+          <tr v-for="info in infoDicts" :key="info.id">
             <td>{{ info.name }}:</td><td>{{ info.value }}</td>
           </tr>
         </table>
       </div>
     </div>
     <div v-if="hasChildren" class="recipe-restaurant-entity-children-list">
+      <div class="input-form">
+        <button @click="showAddModal">Add</button>
+      </div>
       <table class="recipe-restaurant-entity-table">
         <tr>
           <th v-for="header in childTableHeaders" :key="header">{{ header }}</th>
         </tr>
-        <tr v-for="childTableValue in childTableValues" :key="childTableValue['id']">
+        <tr v-for="childTableValue in childTableValues" :key="childTableValue.id">
           <td v-for="(colValue, index) in childTableValue.values" :key="index">
             <span v-if="index === 0">
               <a href="#" @click.prevent="childTableValue.handleClick">{{ colValue }}</a>
@@ -45,7 +48,6 @@
           </td>
         </tr>
       </table>
-      <button @click="showAddModal">Add</button>
     </div>
     <FormModal
       :show="formModal_show"
