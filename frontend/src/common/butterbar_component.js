@@ -1,3 +1,5 @@
+import { callAxios } from './utils'
+
 /**
  * This file defines utility functions for the ButterBar component. It relies on the
  * following data being defined in the component:
@@ -44,4 +46,21 @@ function getCssClassForButterBarType (type) {
   }
 }
 
-export { setButterBarMessage, ButterBarType }
+/**
+ * Calls axios and sets the butter bar text on error.
+ * @param {Function} successCallback
+ */
+function callAxiosAndSetButterBar (component, backendPath, params, successMessage, errorMessage, successCallback) {
+  callAxios(
+    backendPath,
+    params,
+    function (response) {
+      successCallback(response)
+      setButterBarMessage(component, successMessage, ButterBarType.INFO)
+    },
+    function (response) {
+      setButterBarMessage(component, errorMessage, ButterBarType.ERROR)
+    })
+}
+
+export { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar }

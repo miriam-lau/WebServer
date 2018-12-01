@@ -238,13 +238,19 @@ create table dish_images (
 create table grocery_lists (
   id serial primary key,
   title varchar(150) not null,
+  date date,
   imported boolean not null,
   list text not null
 );
 
 create table grocery_known_words (
   word varchar(150) primary key,
+  category varchar(150),
   should_save boolean not null
+);
+
+create table grocery_categories (
+  word varchar(150) primary key
 );
 
 create table pantry (

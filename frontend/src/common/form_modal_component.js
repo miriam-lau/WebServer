@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { callAxios } from './utils'
 
 /**
  * This file defines utility functions for the FormModal component. It relies on the
@@ -39,19 +39,19 @@ function createFormModalEntry (id, name, displayName, value) {
  * Generates a callback function that can be called by the modal upon button click which will make an axios call
  * to the backend specified. Upon success, the callback passed into this function is called after which the modal
  * will be closed. On error, it will update the modal status with the error text specified
- * @param {Function} callback
+ * @param {Function} successCallback
  */
-function generateAxiosModalCallback (component, backendPath, callback) {
+function generateAxiosModalCallback (component, backendPath, successCallback) {
   return function (modalOutput) {
-    axios.post(backendPath, modalOutput)
-      .then(
-        response => {
-          callback(response)
-          component.formModal_close()
-        })
-      .catch(error => {
+    callAxios(
+      backendPath,
+      modalOutput,
+      function (response) {
+        successCallback(response)
+        component.formModal_close()
+      },
+      function (response) {
         component.formModal_shouldShowError = true
-        console.log(error['response']['data']['exception'])
       })
   }
 }

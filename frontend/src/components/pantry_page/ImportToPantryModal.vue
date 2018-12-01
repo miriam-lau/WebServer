@@ -9,7 +9,7 @@
     <div class="modal-body">
       <h4>Unrecognized Items</h4>
       <div :key="word" v-for="word in unrecognizedWords">
-        {{ word }}
+        {{ word }}<span v-if="word === ''">[ ignored ]</span>
       </div>
       <h4>Items to Import</h4>
       <div :key="word" v-for="word in willImportWords">
@@ -24,11 +24,14 @@
         {{ word }}
       </div>
     </div>
-    <div class="modal-footer text-right">
+    <div v-if="unrecognizedWords.length == 0" class="modal-footer text-right">
       <button class="modal-default-button"
           @click="handleImportButtonClick(groceryList)">
         Confirm
       </button>
+    </div>
+    <div v-else class="import-modal-import-failed">
+      Import failed - unrecognized items
     </div>
   </Modal>
 </template>

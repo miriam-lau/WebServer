@@ -5,6 +5,7 @@
         <a href="#" class="nav-pantry-grocery-lists" v-on:click="navigateToSubPath('grocery-lists')">Grocery Lists</a>
         <a href="#" class="nav-pantry-pantry-store" v-on:click="navigateToSubPath('pantry-store')">Pantry Store</a>
         <a href="#" class="nav-pantry-known-words" v-on:click="navigateToSubPath('known-words')">Known Words</a>
+        <a href="#" class="nav-pantry-categories" v-on:click="navigateToSubPath('categories')">Categories</a>
       </nav>
     </div>
     <ButterBar
@@ -14,7 +15,9 @@
     <div v-if="currentPage === 'grocery-lists'">
       <h2>Grocery Lists</h2>
       <div class="input-form">
-        <input v-model="groceryListTitleToAdd" /> <button @click="addGroceryList">Add Grocery List</button>
+        <input v-model="groceryListTitleToAdd" ref="grocery-list-to-add" />
+        <input v-model="groceryListDateToAdd" type="date"/>
+        <button @click="addGroceryList">Add Grocery List</button>
       </div>
       <div class="pantry-single-grocery-list" v-for="groceryList in groceryLists" :key="groceryList['id']">
         <div>
@@ -23,6 +26,9 @@
               @click="showEditGroceryMetadataModal(groceryList)" />
           <font-awesome-icon icon="trash" class="icon"
               @click="showDeleteGroceryListModal(groceryList)" />
+        </div>
+        <div>
+          Date: {{ getDisplayDate(groceryList['date']) }}
         </div>
         <div class="pantry-grocery-list-text">
           <EditableDiv
@@ -75,7 +81,8 @@
     <div v-else-if="currentPage === 'known-words'">
       <h2>Known Words</h2>
       <div class="input-form">
-        <input v-model="knownWordToAdd" ref="known-word-to-add" />
+        Word: <input v-model="knownWordToAdd" ref="known-word-to-add" />
+        Category: <input v-model="knownWordToAddCategory"/>
         <select v-model="knownWordToAddShouldSave">
           <option>True</option>
           <option>False</option>
@@ -84,13 +91,31 @@
       </div>
       <table class="table">
         <tr>
-          <th>Name</th><th>Addable to Pantry</th><th>Delete</th>
+          <th>Name</th><th>Category</th><th>Addable to Pantry</th><th>Delete</th>
         </tr>
         <tr :key="knownWord['word']" v-for="knownWord in knownWords">
           <td>{{ knownWord['word'] }}</td>
+          <td>{{ knownWord['category'] }}</td>
           <td>{{ knownWord['should_save'] }}</td>
           <td><font-awesome-icon icon="trash" class="icon"
               @click="showDeleteKnownWordModal(knownWord)" />
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div v-else-if="currentPage === 'categories'">
+      <h2>Category</h2>
+      <div class="input-form">
+        <input v-model="categoryToAdd" ref="category-to-add" /> <button @click="addCategory">Add Category</button>
+      </div>
+      <table class="table">
+        <tr>
+          <th>Name</th><th>Delete</th>
+        </tr>
+        <tr :key="category['word']" v-for="category in categories">
+          <td>{{ category['word'] }}</td>
+          <td><font-awesome-icon icon="trash" class="icon"
+              @click="showDeleteCategoryModal(category)" />
           </td>
         </tr>
       </table>
@@ -112,7 +137,7 @@
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
@@ -120,7 +145,7 @@ import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath } from '../common/utils'
+import { getFullBackendUrlForPath, getDisplayDate } from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
 const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath('/edit_grocery_list_metadata')
@@ -133,6 +158,8 @@ const DELETE_PANTRY_ITEM_URL = getFullBackendUrlForPath('/delete_pantry_item')
 const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
+const DELETE_CATEGORY_URL = getFullBackendUrlForPath('/delete_category')
+const ADD_CATEGORY_URL = getFullBackendUrlForPath('/add_category')
 
 export default {
   name: 'PantryPage',
@@ -140,10 +167,14 @@ export default {
     return {
       groceryLists: [],
       pantry: [],
+      categories: [],
       knownWords: [],
       groceryListTitleToAdd: '',
+      groceryListDateToAdd: '',
       pantryItemToAdd: '',
+      categoryToAdd: '',
       knownWordToAdd: '',
+      knownWordToAddCategory: '',
       knownWordToAddShouldSave: 'True',
       groceryListToImport: {},
       pantryGroceryListKey: 0,
@@ -184,6 +215,8 @@ export default {
           return 'nav-pantry-pantry-store'
         case 'known-words':
           return 'nav-pantry-known-words'
+        case 'categories':
+          return 'nav-pantry-categories'
       }
     },
     allGroceryListsSaved: function () {
@@ -223,6 +256,9 @@ export default {
   methods: {
     formModal_close () {
       this.formModal_show = false
+    },
+    getDisplayDate (date) {
+      return getDisplayDate(date)
     },
     attemptAddToPantry (groceryList) {
       axios.post(
@@ -268,7 +304,9 @@ export default {
     showEditGroceryMetadataModal (groceryList) {
       let modalFormLines = [
         createFormModalEntry(
-          'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title'])
+          'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title']),
+        createFormModalEntry(
+          'edit-grocery-metadata-modal-date-' + groceryList['id'], 'date', 'Date:', groceryList['date'])
       ]
       showModal(
         this,
@@ -299,6 +337,16 @@ export default {
         'Delete',
         'Error deleting ' + pantryItem['item'])
     },
+    showDeleteCategoryModal (category) {
+      showModal(
+        this,
+        'Deleting ' + category['word'],
+        [],
+        { word: category['word'] },
+        generateAxiosModalCallback(this, DELETE_CATEGORY_URL, this.deleteCategory),
+        'Delete',
+        'Error deleting ' + category['word'])
+    },
     showDeleteKnownWordModal (knownWord) {
       showModal(
         this,
@@ -310,17 +358,13 @@ export default {
         'Error deleting ' + knownWord['word'])
     },
     addToPantry (groceryList) {
-      axios.post(
-        IMPORT_GROCERY_LIST_TO_PANTRY_URL,
-        { id: groceryList['id'] })
-        .then(response => {
+      callAxiosAndSetButterBar(
+        this, IMPORT_GROCERY_LIST_TO_PANTRY_URL, { id: groceryList['id'] },
+        'Imported ' + groceryList['title'] + ' to the pantry.',
+        'Error importing ' + groceryList['title'] + ' to the pantry.',
+        response => {
           this.updatePantryPageDisplay()
           this.closeImportModal()
-          setButterBarMessage(this, 'Imported ' + groceryList['title'] + ' to the pantry.', ButterBarType.INFO)
-        })
-        .catch(error => {
-          this.importModalErrorText = 'An error occurred during import.'
-          console.log(error)
         })
     },
     editGroceryListMetadata (response) {
@@ -329,21 +373,20 @@ export default {
       let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
       let oldTitle = this.groceryLists[currentGroceryListIndex]['title']
       newGroceryListItem['title'] = response['data']['title']
+      newGroceryListItem['date'] = response['data']['date']
       this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
       setButterBarMessage(this, 'Saved the title of ' + oldTitle, ButterBarType.INFO)
     },
     editGroceryList (groceryList) {
-      axios.post(EDIT_GROCERY_LIST_URL, {id: groceryList['id'], list: groceryList['list']})
-        .then(response => {
+      callAxiosAndSetButterBar(
+        this, EDIT_GROCERY_LIST_URL, { id: groceryList['id'], list: groceryList['list'] },
+        'Saved the contents of ' + groceryList['title'],
+        'Error saving the contents of ' + groceryList['title'],
+        response => {
           let currentGroceryListIndex =
             this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
           response['data']['saved'] = true
           this.groceryLists.splice(currentGroceryListIndex, 1, response['data'])
-          setButterBarMessage(this, 'Saved the contents of ' + groceryList['title'], ButterBarType.INFO)
-        })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
         })
     },
     deleteGroceryList (response) {
@@ -359,19 +402,33 @@ export default {
       setButterBarMessage(this, 'Deleted ' + deletedPantryItem['item'] + ' from the pantry', ButterBarType.INFO)
     },
     addPantryItem () {
-      axios.post(ADD_PANTRY_ITEM_URL, {item: this.pantryItemToAdd})
-        .then(
-          response => {
-            this.pantryItemToAdd = ''
-            let pantryItem = response['data']
-            this.pantry.push(pantryItem)
-            this.$refs['pantry-item-to-add'].focus()
-            setButterBarMessage(this, 'Added ' + pantryItem['item'] + ' to the pantry', ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during add.'
-          setButterBarMessage(this, 'Error adding ' + this.pantryItemToAdd, ButterBarType.ERROR)
-          console.log(error)
+      callAxiosAndSetButterBar(
+        this, ADD_PANTRY_ITEM_URL, { item: this.pantryItemToAdd },
+        'Added ' + this.pantryItemToAdd + ' to the pantry',
+        'Error adding ' + this.pantryItemToAdd + ' to the pantry',
+        response => {
+          this.pantryItemToAdd = ''
+          let pantryItem = response['data']
+          this.pantry.push(pantryItem)
+          this.$refs['pantry-item-to-add'].focus()
+        })
+    },
+    deleteCategory (response) {
+      let deletedCategory = response['data']
+      this.categories.splice(
+        this.categories.findIndex(category => category['word'] === deletedCategory['word']), 1)
+      setButterBarMessage(this, 'Deleted ' + deletedCategory['word'] + ' from the pantry', ButterBarType.INFO)
+    },
+    addCategory () {
+      callAxiosAndSetButterBar(
+        this, ADD_CATEGORY_URL, { word: this.categoryToAdd },
+        'Added ' + this.categoryToAdd + ' to the categories',
+        'Error adding ' + this.categoryToAdd + ' to the categories',
+        response => {
+          this.categoryToAdd = ''
+          let category = response['data']
+          this.categories.push(category)
+          this.$refs['category-to-add'].focus()
         })
     },
     deleteKnownWord (response) {
@@ -381,34 +438,35 @@ export default {
       setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
     },
     addKnownWord () {
-      axios.post(ADD_KNOWN_WORD_URL, {word: this.knownWordToAdd, should_save: this.knownWordToAddShouldSave === 'True'})
-        .then(
-          response => {
-            this.knownWordToAdd = ''
-            let knownWord = response['data']
-            this.knownWords.push(knownWord)
-            this.$refs['known-word-to-add'].focus()
-            setButterBarMessage(this, 'Added ' + knownWord['word'] + ' to the list of known words', ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during add.'
-          setButterBarMessage(this, 'Error adding ' + this.knownWordToAdd, ButterBarType.ERROR)
-          console.log(error)
+      callAxiosAndSetButterBar(
+        this, ADD_KNOWN_WORD_URL,
+        {
+          word: this.knownWordToAdd,
+          category: this.knownWordToAddCategory,
+          should_save: this.knownWordToAddShouldSave === 'True'
+        },
+        'Added ' + this.knownWordToAdd + ' to the list of known words',
+        'Error adding ' + this.knownWordToAdd + ' to the list of known words',
+        response => {
+          this.knownWordToAdd = ''
+          this.knownWordToAddCategory = ''
+          let knownWord = response['data']
+          this.knownWords.push(knownWord)
+          this.$refs['known-word-to-add'].focus()
         })
     },
     addGroceryList () {
-      axios.post(ADD_GROCERY_LIST_URL, {title: this.groceryListTitleToAdd})
-        .then(
-          response => {
-            this.groceryListTitleToAdd = ''
-            let groceryList = response['data']
-            this.groceryLists.push(groceryList)
-            this.closeModal()
-            setButterBarMessage(this, 'Added ' + groceryList['title'], ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during add.'
-          console.log(error)
+      callAxiosAndSetButterBar(
+        this, ADD_GROCERY_LIST_URL, { title: this.groceryListTitleToAdd, date: this.groceryListDateToAdd },
+        'Added ' + this.groceryListTitleToAdd + ' to the grocery lists',
+        'Error adding ' + this.groceryListTitleToAdd + ' to the grocery lists',
+        response => {
+          this.groceryListTitleToAdd = ''
+          this.groceryListDateToAdd = ''
+          let groceryList = response['data']
+          response['data']['saved'] = true
+          this.groceryLists.push(groceryList)
+          this.$refs['grocery-list-to-add'].focus()
         })
     },
     updatePantryPageDisplay () {
@@ -418,6 +476,7 @@ export default {
             response['data']['grocery_lists'][index]['saved'] = true
           }
           this.groceryLists = response['data']['grocery_lists']
+          this.categories = response['data']['categories']
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
         })
