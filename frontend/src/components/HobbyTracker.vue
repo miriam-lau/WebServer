@@ -6,7 +6,7 @@
     />
 
     <div class="hobby-title">
-      <header class="hobby-header">Hobbies</header>
+      <header>Hobbies</header>
       <button class="button" @click="showAddModal">Add Hobby</button>
       <button class="button" v-if="!editable" @click="editMode">Edit</button>
       <button class="button" v-else @click="editHobbies">Save</button>

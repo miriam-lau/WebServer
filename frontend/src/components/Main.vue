@@ -20,6 +20,7 @@
         <a href="#" class="nav-recipes-page" v-on:click="navigateTo('recipesPage')">Recipes</a>
         <a href="#" class="nav-restaurants-page" v-on:click="navigateTo('restaurantsPage')">Restaurants</a>
         <a href="#" class="nav-pantry-page" v-on:click="navigateTo('pantryPage')">Pantry</a>
+        <a href="#" class="nav-inventory-tracker" v-on:click="navigateTo('inventoryTracker')">Inventory Tracker</a>
       </nav>
     </div>
     <router-view/>
@@ -30,6 +31,7 @@
 import Codenames from './Codenames'
 import CurrentDocuments from './CurrentDocuments'
 import HobbyTracker from './HobbyTracker'
+import InventoryTracker from './InventoryTracker'
 import RecipesPage from './RecipesPage'
 import RestaurantsPage from './RestaurantsPage'
 import PantryPage from './PantryPage'
@@ -53,7 +55,7 @@ export default {
     }
   },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
+    CurrentDocuments, Codenames, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -80,6 +82,8 @@ export default {
           return 'nav-pantry-page'
         case 'notesPage':
           return 'nav-notes-page'
+        case 'inventoryTracker':
+          return 'nav-inventory-tracker'
       }
     }
   }

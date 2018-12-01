@@ -6,7 +6,6 @@
 
 .hobby-title {
   display: flex;
-  background-color: #1e90ff;
   padding: 10px;
 }
 
@@ -30,7 +29,6 @@ th {
 
 .hobby-header {
   margin-right: 25px;
-  color: black;
 }
 
 .hobby-table {

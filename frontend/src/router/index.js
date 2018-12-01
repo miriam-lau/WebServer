@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import CurrentDocuments from '@/components/CurrentDocuments'
 import HobbyTracker from '@/components/HobbyTracker'
+import InventoryTracker from '@/components/InventoryTracker'
 import Codenames from '@/components/Codenames'
 import RecipesPage from '@/components/RecipesPage'
 import RestaurantsPage from '@/components/RestaurantsPage'
@@ -59,6 +60,11 @@ export default new Router({
       path: '/notes',
       name: 'notesPage',
       component: NotesPage
+    },
+    {
+      path: '/inventory-tracker',
+      name: 'inventoryTracker',
+      component: InventoryTracker
     },
     {
       path: '*',
