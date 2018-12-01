@@ -78,3 +78,8 @@
     color: white;
     margin-bottom: 5px;
 }
+
+.import-modal-import-failed {
+    background-color: red;
+    color: white;
+}

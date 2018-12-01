@@ -24,11 +24,14 @@
         {{ word }}
       </div>
     </div>
-    <div class="modal-footer text-right">
+    <div v-if="unrecognizedWords.length == 0" class="modal-footer text-right">
       <button class="modal-default-button"
           @click="handleImportButtonClick(groceryList)">
         Confirm
       </button>
+    </div>
+    <div v-else class="import-modal-import-failed">
+      Import failed - unrecognized items
     </div>
   </Modal>
 </template>
