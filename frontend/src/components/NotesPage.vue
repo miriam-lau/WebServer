@@ -50,7 +50,7 @@
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
@@ -168,17 +168,15 @@ export default {
       setButterBarMessage(this, 'Saved title of ' + oldTitle, ButterBarType.INFO)
     },
     editNote (note) {
-      axios.post(EDIT_NOTES_URL, {id: note['id'], text: note['text']})
-        .then(response => {
+      callAxiosAndSetButterBar(
+        this, EDIT_NOTES_URL, { id: note['id'], text: note['text'] },
+        'Saved contents of ' + note['title'],
+        'Error saving contents of ' + note['title'],
+        response => {
           let currentNoteIndex =
             this.notes.findIndex(note => note['id'] === response['data']['id'])
           response['data']['saved'] = true
           this.notes.splice(currentNoteIndex, 1, response['data'])
-          setButterBarMessage(this, 'Saved contents of ' + note['title'], ButterBarType.INFO)
-        })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during edit.'
-          console.log(error)
         })
     },
     deleteNote (response) {
@@ -188,18 +186,15 @@ export default {
       setButterBarMessage(this, 'Deleted ' + deletedNote['title'], ButterBarType.INFO)
     },
     addNote () {
-      axios.post(ADD_NOTES_URL, {title: this.noteTitleToAdd})
-        .then(
-          response => {
-            this.noteTitleToAdd = ''
-            let note = response['data']
-            this.notes.push(note)
-            this.closeModal()
-            setButterBarMessage(this, 'Added ' + note['title'], ButterBarType.INFO)
-          })
-        .catch(error => {
-          this.modalErrorText = 'An error occurred during add.'
-          console.log(error)
+      callAxiosAndSetButterBar(
+        this, ADD_NOTES_URL, { title: this.noteTitleToAdd },
+        'Added ' + this.noteTitleToAdd,
+        'Error adding ' + this.noteTitleToAdd,
+        response => {
+          this.noteTitleToAdd = ''
+          let note = response['data']
+          note['saved'] = true
+          this.notes.push(note)
         })
     },
     updateNotesPageDisplay () {

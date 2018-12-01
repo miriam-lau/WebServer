@@ -61,7 +61,7 @@
 
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
@@ -139,11 +139,14 @@ export default {
       setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
     },
     editHobbies () {
-      axios.post(EDIT_HOBBIES_URL, { hobbies: this.hobbies }).then(response => {
-        this.updateHobbyDisplay()
-        this.editable = false
-        setButterBarMessage(this, 'Edits Saved', ButterBarType.INFO)
-      })
+      callAxiosAndSetButterBar(
+        this, EDIT_HOBBIES_URL, { hobbies: this.hobbies },
+        'Edits saved',
+        'Error saving edits',
+        response => {
+          this.updateHobbyDisplay()
+          this.editable = false
+        })
     },
     showAddModal () {
       let formModalFormLines = [

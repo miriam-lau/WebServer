@@ -9,7 +9,7 @@
     <div class="modal-body">
       <h4>Unrecognized Items</h4>
       <div :key="word" v-for="word in unrecognizedWords">
-        {{ word }}
+        {{ word }}<span v-if="word === ''">[ ignored ]</span>
       </div>
       <h4>Items to Import</h4>
       <div :key="word" v-for="word in willImportWords">

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 /*
  * Gets the element specified by the id.
  */
@@ -53,5 +55,17 @@ function getDisplayDate (dateString) {
   return date.toLocaleDateString('en-US', options)
 }
 
+function callAxios (backendPath, params, successCallback, errorCallback) {
+  axios.post(backendPath, params)
+    .then(
+      response => {
+        successCallback(response)
+      })
+    .catch(error => {
+      errorCallback(error)
+      console.log(error['response']['data']['exception'])
+    })
+}
+
 export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate }
+  isEqual, getDisplayDate, callAxios }

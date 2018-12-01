@@ -18,6 +18,7 @@
 
 nav.nav-pantry-grocery-lists .nav-pantry-grocery-lists,
 nav.nav-pantry-pantry-store .nav-pantry-pantry-store,
-nav.nav-pantry-known-words .nav-pantry-known-words {
-	background-color:#e35885;
+nav.nav-pantry-known-words .nav-pantry-known-words,
+nav.nav-pantry-categories .nav-pantry-categories {
+        background-color:#e35885;
 }

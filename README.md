@@ -244,7 +244,12 @@ create table grocery_lists (
 
 create table grocery_known_words (
   word varchar(150) primary key,
+  category varchar(150),
   should_save boolean not null
+);
+
+create table grocery_categories (
+  word varchar(150) primary key
 );
 
 create table pantry (

@@ -290,6 +290,18 @@ def add_pantry_item():
     return jsonify(pantry_page.add_pantry_item(pantry_item))
 
 
+@app.route("/delete_category", methods=["POST"])
+def delete_category():
+    category = request.json["word"]
+    return jsonify(pantry_page.delete_category(category))
+
+
+@app.route("/add_category", methods=["POST"])
+def add_category():
+    category = request.json["word"]
+    return jsonify(pantry_page.add_category(category))
+
+
 @app.route("/delete_known_word", methods=["POST"])
 def delete_known_word():
     known_word = request.json["word"]
@@ -299,8 +311,9 @@ def delete_known_word():
 @app.route("/add_known_word", methods=["POST"])
 def add_known_word():
     known_word = request.json["word"]
+    category = request.json["category"]
     should_save = request.json["should_save"]
-    return jsonify(pantry_page.add_known_word(known_word, should_save))
+    return jsonify(pantry_page.add_known_word(known_word, category, should_save))
 
 
 @app.route("/attempt_add_to_pantry", methods=["POST"])
