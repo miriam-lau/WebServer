@@ -1,7 +1,7 @@
 <template>
   <div class="inventory-tracker">
     <div class="inventory-title">
-      <header>Inventory</header>
+      <h2>Inventory</h2>
       <button class="button" @click="addInventoryBox">Add New Box</button>
     </div>
   </div>
@@ -18,7 +18,8 @@ export default {
   name: 'InventoryTracker',
   data () {
     return {
-      inventory: []
+      inventoryBoxId: 0,
+      inventoryItems: []
     }
   },
   computed: {

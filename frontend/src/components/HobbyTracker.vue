@@ -6,10 +6,12 @@
     />
 
     <div class="hobby-title">
-      <header>Hobbies</header>
-      <button class="button" @click="showAddModal">Add Hobby</button>
-      <button class="button" v-if="!editable" @click="editMode">Edit</button>
-      <button class="button" v-else @click="editHobbies">Save</button>
+      <h2>Hobbies</h2>
+      <div class="hobby-buttons">
+        <button class="button" @click="showAddModal">Add Hobby</button>
+        <button class="button" v-if="!editable" @click="editMode">Edit</button>
+        <button class="button" v-else @click="editHobbies">Save</button>
+      </div>
     </div>
 
     <div class="hobby-table-container">
