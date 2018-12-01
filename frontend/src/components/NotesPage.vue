@@ -10,7 +10,7 @@
           <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         </div>
         <div class="notes-single-note" v-for="note in notes" :key="note['id']">
-            <div>
+            <div class="notes-title">
                 {{ note['title'] }}
                 <font-awesome-icon icon="pencil-alt" class="icon"
                     @click="showEditNoteMetadataModal(note)" />
