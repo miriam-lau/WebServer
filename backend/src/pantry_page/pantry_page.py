@@ -34,7 +34,7 @@ class PantryPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("SELECT * from grocery_lists order by id")
+            cur.execute("SELECT * from grocery_lists order by date desc")
             grocery_lists = cur.fetchall()
             cur.execute("SELECT * from pantry")
             pantry_items = cur.fetchall()
@@ -96,15 +96,15 @@ class PantryPage:
             cur.close()
             raise
 
-    def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title):
+    def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title, grocery_list_date):
         if not grocery_list_title:
             raise Exception("Title must not be empty.")
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET title = %s where id = %s RETURNING *",
-                        (grocery_list_title, grocery_list_id))
+            cur.execute("UPDATE grocery_lists SET title = %s, date = %s where id = %s RETURNING *",
+                        (grocery_list_title, grocery_list_date, grocery_list_id))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -129,14 +129,15 @@ class PantryPage:
             cur.close()
             raise
 
-    def add_grocery_list(self, title):
+    def add_grocery_list(self, title, date):
         if not title:
             raise Exception("Title must not be empty.")
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_lists(title, list, imported) VALUES(%s, "", false) RETURNING *", (title,))
+            cur.execute("INSERT INTO grocery_lists(title, date, list, imported) VALUES(%s, %s, %s, false) RETURNING *",
+            (title, date, ""))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -351,5 +352,4 @@ class PantryPage:
         grocery_list_line = grocery_list_line.translate(remove_words)
         line_array = grocery_list_line.split(" ")
         line_array = [word for word in line_array if word not in PantryPage.IGNORED_WORDS]
-        print(line_array)
         return " ".join(line_array)

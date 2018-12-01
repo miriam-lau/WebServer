@@ -263,7 +263,8 @@ def edit_grocery_list():
 def edit_grocery_list_metadata():
     grocery_list_id = request.json["id"]
     title = request.json["title"]
-    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title))
+    date = request.json["date"]
+    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title, date))
 
 
 @app.route("/delete_grocery_list", methods=["POST"])
@@ -275,7 +276,8 @@ def delete_grocery_list():
 @app.route("/add_grocery_list", methods=["POST"])
 def add_grocery_list():
     title = request.json["title"]
-    return jsonify(pantry_page.add_grocery_list(title))
+    date = request.json["date"]
+    return jsonify(pantry_page.add_grocery_list(title, date))
 
 
 @app.route("/delete_pantry_item", methods=["POST"])

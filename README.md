@@ -238,6 +238,7 @@ create table dish_images (
 create table grocery_lists (
   id serial primary key,
   title varchar(150) not null,
+  date date,
   imported boolean not null,
   list text not null
 );
