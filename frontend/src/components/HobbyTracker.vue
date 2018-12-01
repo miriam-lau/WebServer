@@ -6,10 +6,12 @@
     />
 
     <div class="hobby-title">
-      <header class="hobby-header">Hobbies</header>
-      <button class="button" @click="showAddModal">Add Hobby</button>
-      <button class="button" v-if="!editable" @click="editMode">Edit</button>
-      <button class="button" v-else @click="editHobbies">Save</button>
+      <h2>Hobbies</h2>
+      <div class="hobby-buttons">
+        <button class="button" @click="showAddModal">Add Hobby</button>
+        <button class="button" v-if="!editable" @click="editMode">Edit</button>
+        <button class="button" v-else @click="editHobbies">Save</button>
+      </div>
     </div>
 
     <div class="hobby-table-container">
@@ -117,7 +119,7 @@ export default {
     },
     addHobby (response) {
       let addedHobby = response.data
-      this.updateHobbyDisplay()
+      this.hobbies.push(addedHobby)
       setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
     },
     updateHobbyDisplay () {
@@ -135,7 +137,8 @@ export default {
     },
     deleteHobby (response) {
       let deletedHobby = response.data
-      this.updateHobbyDisplay()
+      this.hobbies.splice(
+        this.hobbies.findIndex(hobbies => hobbies['id'] === deletedHobby['id']), 1)
       setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
     },
     editHobbies () {

@@ -1,22 +1,14 @@
 .hobby-tracker {
-  font-size: 20px;
-  font-weight: bold;
   margin: 20px 0px 5px 0px;
 }
 
 .hobby-title {
   display: flex;
-  background-color: #1e90ff;
-  padding: 10px;
 }
 
 /* All buttons -------------------------------------------------------------------------------------------------- */
 .hobby-buttons {
-  color: black;
-  font-size: 12px;
-  border-radius: 5px;
-  border-collapse: collapse;
-  margin: 0px 5px 0px 5px;
+  margin: 22px 0px 0px 15px;
 }
 
 .hobby-buttons:hover, .hobby-icon:hover {
@@ -30,7 +22,6 @@ th {
 
 .hobby-header {
   margin-right: 25px;
-  color: black;
 }
 
 .hobby-table {
