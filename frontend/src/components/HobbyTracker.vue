@@ -117,7 +117,7 @@ export default {
     },
     addHobby (response) {
       let addedHobby = response.data
-      this.updateHobbyDisplay()
+      this.hobbies.push(addedHobby)
       setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
     },
     updateHobbyDisplay () {
@@ -135,7 +135,8 @@ export default {
     },
     deleteHobby (response) {
       let deletedHobby = response.data
-      this.updateHobbyDisplay()
+      this.hobbies.splice(
+        this.hobbies.findIndex(hobbies => hobbies['id'] === deletedHobby['id']), 1)
       setButterBarMessage(this, 'Deleted ' + deletedHobby['hobby'], ButterBarType.INFO)
     },
     editHobbies () {
