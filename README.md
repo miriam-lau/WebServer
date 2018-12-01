@@ -263,15 +263,15 @@ create table notes (
   text text not null
 );
 
-create table inventory_tracker (
+create table inventory_boxes (
   id serial primary key,
-  username varchar (50) references users not null,
-  box_title varchar (500) not null
+  title varchar (500) not null
 );
 
 create table inventory_box_items (
   id serial primary key,
   inventory_box_id integer references inventory_boxes ON DELETE CASCADE not null,
-  item varchar (500) not null,
-  quantity integer not null
+  name varchar (500) not null,
+  description text,
+  image text
 );

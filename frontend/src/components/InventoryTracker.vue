@@ -12,19 +12,12 @@
 </style>
 
 <script>
-import { store } from '../store/store'
-
 export default {
   name: 'InventoryTracker',
   data () {
     return {
       inventoryBoxId: 0,
       inventoryItems: []
-    }
-  },
-  computed: {
-    username () {
-      return store.state.username
     }
   },
   methods: {
