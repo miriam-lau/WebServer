@@ -54,19 +54,7 @@ class PantryPage:
             for grocery_list in grocery_lists:
                 list_text = []
                 for grocery_list_line in (grocery_list["list"].split("\n")):
-                    grocery_list_line = grocery_list_line.lower()
-                    original_grocery_list_line = grocery_list_line
-                    split_on_colon = grocery_list_line.split(":", 1)
-                    if len(split_on_colon) > 0 and split_on_colon[0] in category_arr:
-                        list_text.append(original_grocery_list_line)
-                        continue
-                    grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line, category_arr)
-                    if grocery_list_word in known_words_map:
-                        category = known_words_map[grocery_list_word]
-                        if category:
-                            list_text.append(category + ': ' + original_grocery_list_line)
-                            continue
-                    list_text.append(original_grocery_list_line)
+                    list_text.append(grocery_list_line)
                 list_text.sort()
                 grocery_list["list"] = "\n".join(list_text)
 
@@ -270,12 +258,6 @@ class PantryPage:
             for known_word in known_words:
                 known_words_map[known_word["word"]] = known_word["should_save"]
 
-            cur.execute("SELECT * from grocery_categories")
-            categories = cur.fetchall()
-            category_arr = []
-            for category in categories:
-                category_arr.append(category["word"])
-
             ret = {
                 "add": [],
                 "ignore": [],
@@ -284,7 +266,7 @@ class PantryPage:
             }
 
             for grocery_list_line in (grocery_list["list"].split("\n")):
-                grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line, category_arr)
+                grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line)
                 if grocery_list_word in known_words_map:
                     known_word = known_words_map[grocery_list_word]
                     if known_word:
@@ -338,12 +320,9 @@ class PantryPage:
         return ret
 
     @staticmethod
-    def _get_grocery_word_from_line(grocery_list_line, category_arr):
+    def _get_grocery_word_from_line(grocery_list_line):
         grocery_list_line = grocery_list_line.lower()
         grocery_list_line = grocery_list_line.replace("\xa0", " ")
-        split_on_colon = grocery_list_line.split(":", 1)
-        if len(split_on_colon) > 0 and split_on_colon[0] in category_arr:
-            grocery_list_line = split_on_colon[1]
         split_on_dash = grocery_list_line.split("-", 1)
         if len(split_on_dash) > 0:
             grocery_list_line = split_on_dash[0]
