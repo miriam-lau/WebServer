@@ -19,18 +19,15 @@
         <input v-model="groceryListDateToAdd" type="date"/>
         <button @click="addGroceryList">Add Grocery List</button>
       </div>
-      <div class="pantry-single-grocery-list" v-for="groceryList in groceryLists" :key="groceryList['id']">
-        <div>
-          {{ groceryList['title'] }}
+      <div class="textarea-div" v-for="groceryList in groceryLists" :key="groceryList['id']">
+        <div class="textarea-title">
+          {{ groceryList['title'] }}: {{ getDisplayDate(groceryList['date']) }}
           <font-awesome-icon icon="pencil-alt" class="icon"
               @click="showEditGroceryMetadataModal(groceryList)" />
           <font-awesome-icon icon="trash" class="icon"
               @click="showDeleteGroceryListModal(groceryList)" />
         </div>
-        <div>
-          Date: {{ getDisplayDate(groceryList['date']) }}
-        </div>
-        <div class="pantry-grocery-list-text">
+        <div class="textarea-text">
           <EditableDiv
             :key="pantryGroceryListKey"
             :content="groceryList['list']"
@@ -38,7 +35,6 @@
           />
         </div>
         <div v-if="groceryList['saved']">
-          Saved.
           <span v-if="groceryList['imported']">
             Imported.
           </span>
