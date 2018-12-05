@@ -9,6 +9,7 @@ from src.recipes_page.recipes_page import RecipesPage
 from src.restaurants_page.restaurants_page import RestaurantsPage
 from src.pantry_page.pantry_page import PantryPage
 from src.notes_page.notes_page import NotesPage
+from src.inventory_page.inventory_page import InventoryPage
 import traceback
 
 app = Flask(__name__)
@@ -22,6 +23,7 @@ recipes_page = None
 restaurants_page = None
 pantry_page = None
 notes_page = None
+inventory_page = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -34,6 +36,7 @@ def initialize_app():
     global restaurants_page
     global pantry_page
     global notes_page
+    global inventory_page
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
@@ -42,6 +45,7 @@ def initialize_app():
     restaurants_page = RestaurantsPage(database)
     pantry_page = PantryPage(database)
     notes_page = NotesPage(database)
+    inventory_page = InventoryPage(database)
 
 
 # TODO: This is totally insecure.
@@ -361,6 +365,38 @@ def delete_note():
 def add_note():
     title = request.json["title"]
     return jsonify(notes_page.add_note(title))
+
+# Inventory ------------------------------------------------------------------------------------------------------
+
+@app.route("/get_inventory_page", methods=["POST"])
+def get_inventory_page():
+    return jsonify(inventory_page.get_inventory_page_data())
+
+
+@app.route("/edit_box", methods=["POST"])
+def edit_box():
+    box_id = request.json["id"]
+    box_text = request.json["text"]
+    return jsonify(inventory_page.edit_box(box_id, box_text))
+
+
+@app.route("/edit_box_metadata", methods=["POST"])
+def edit_box_metadata():
+    box_id = request.json["id"]
+    title = request.json["title"]
+    return jsonify(inventory_page.edit_box_metadata(box_id, title))
+
+
+@app.route("/delete_box", methods=["POST"])
+def delete_box():
+    box_id = request.json["id"]
+    return jsonify(inventory_page.delete_box(box_id))
+
+
+@app.route("/add_box", methods=["POST"])
+def add_box():
+    title = request.json["title"]
+    return jsonify(inventory_page.add_box(title))
 
 # Error handling ----------------------------------------------------------------------------------------------
 
