@@ -14,13 +14,13 @@
       <nav :class="navigationClass" v-on:click.prevent>
         <a href="#" class="nav-notes-page" v-on:click="navigateTo('notesPage')">Notes</a>
         <a href="#" class="nav-current-documents"
-          v-on:click="navigateTo('currentDocuments')">Current Documents</a>
-        <a href="#" class="nav-hobby-tracker" v-on:click="navigateTo('hobbyTracker')">Hobby Tracker</a>
-        <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
+          v-on:click="navigateTo('currentDocuments')">Documents</a>
+        <a href="#" class="nav-hobby-tracker" v-on:click="navigateTo('hobbyTracker')">Hobbies</a>
+        <a href="#" class="nav-pantry-page" v-on:click="navigateTo('pantryPage')">Pantry</a>
+        <a href="#" class="nav-inventory-tracker" v-on:click="navigateTo('inventoryTracker')">Inventory</a>
         <a href="#" class="nav-recipes-page" v-on:click="navigateTo('recipesPage')">Recipes</a>
         <a href="#" class="nav-restaurants-page" v-on:click="navigateTo('restaurantsPage')">Restaurants</a>
-        <a href="#" class="nav-pantry-page" v-on:click="navigateTo('pantryPage')">Pantry</a>
-        <a href="#" class="nav-inventory-tracker" v-on:click="navigateTo('inventoryTracker')">Inventory Tracker</a>
+        <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
       </nav>
     </div>
     <router-view/>
