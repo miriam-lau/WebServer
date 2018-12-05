@@ -4,44 +4,41 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
-    <div class="inventory-inventory">
-        <h2>Inventory</h2>
-        <div class="input-form">
-          <input v-model="boxTitleToAdd" /> <button @click="addBox">Add Box</button>
+    <div>
+      <h2>Inventory</h2>
+      <div class="input-form">
+        <input v-model="boxTitleToAdd" /> <button @click="addBox">Add Box</button>
+      </div>
+      <div class="textarea-div" v-for="box in inventory" :key="box['id']">
+        <div class="textarea-title">
+          {{ box['title'] }}
+          <font-awesome-icon icon="pencil-alt" class="icon"
+              @click="showEditBoxMetadataModal(box)" />
+          <font-awesome-icon icon="trash" class="icon"
+              @click="showDeleteBoxModal(box)" />
         </div>
-        <div class="inventory-single-box" v-for="box in inventory" :key="box['id']">
-            <div class="box-title">
-                {{ box['title'] }}
-                <font-awesome-icon icon="pencil-alt" class="icon"
-                    @click="showEditBoxMetadataModal(box)" />
-                <font-awesome-icon icon="trash" class="icon"
-                    @click="showDeleteBoxModal(box)" />
-            </div>
-            <div class="box-text">
-                <EditableDiv
-                  :key="boxKey"
-                  :content="box['text']"
-                  :handleUpdate="updateBoxText.bind(this, box)"
-                />
-            </div>
-            <div v-if="box['saved']">
-                Saved.
-            </div>
-            <div v-else>
-                Unsaved.
-                <button @click="editBox(box)">Save</button>
-            </div>
+        <div class="textarea-text">
+          <EditableDiv
+            :key="boxKey"
+            :content="box['text']"
+            :handleUpdate="updateBoxText.bind(this, box)"
+          />
         </div>
-        <FormModal
-          :show="formModal_show"
-          :close="formModal_close"
-          :title="formModal_title"
-          :initialFormLines="formModal_formLines"
-          :errorText="formModal_errorText"
-          :callback="formModal_callback"
-          :passThroughProps="formModal_passThroughProps"
-          :buttonText="formModal_buttonText"
-          :shouldShowError="formModal_shouldShowError" />
+        <div v-if="!box['saved']">
+          Unsaved.
+          <button @click="editBox(box)">Save</button>
+        </div>
+      </div>
+      <FormModal
+        :show="formModal_show"
+        :close="formModal_close"
+        :title="formModal_title"
+        :initialFormLines="formModal_formLines"
+        :errorText="formModal_errorText"
+        :callback="formModal_callback"
+        :passThroughProps="formModal_passThroughProps"
+        :buttonText="formModal_buttonText"
+        :shouldShowError="formModal_shouldShowError" />
     </div>
   </div>
 </template>

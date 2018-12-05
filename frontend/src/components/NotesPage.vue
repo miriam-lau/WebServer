@@ -4,32 +4,29 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
-    <div class="notes-notes">
+    <div>
         <h2>Notes</h2>
         <div class="input-form">
           <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         </div>
-        <div class="notes-single-note" v-for="note in notes" :key="note['id']">
-            <div class="notes-title">
+        <div class="textarea-div" v-for="note in notes" :key="note['id']">
+            <div class="textarea-title">
                 {{ note['title'] }}
                 <font-awesome-icon icon="pencil-alt" class="icon"
                     @click="showEditNoteMetadataModal(note)" />
                 <font-awesome-icon icon="trash" class="icon"
                     @click="showDeleteNoteModal(note)" />
             </div>
-            <div class="notes-text">
+            <div class="textarea-text">
                 <EditableDiv
                   :key="noteKey"
                   :content="note['text']"
                   :handleUpdate="updateNoteText.bind(this, note)"
                 />
             </div>
-            <div v-if="note['saved']">
-                Saved.
-            </div>
-            <div v-else>
-                Unsaved.
-                <button @click="editNote(note)">Save</button>
+            <div v-if="!note['saved']">
+              Unsaved.
+              <button @click="editNote(note)">Save</button>
             </div>
         </div>
         <FormModal
