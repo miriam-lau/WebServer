@@ -36,7 +36,7 @@ class PantryPage:
         try:
             cur.execute("SELECT * from grocery_lists order by date desc")
             grocery_lists = cur.fetchall()
-            cur.execute("SELECT * from pantry")
+            cur.execute("SELECT * from pantry order by item")
             pantry_items = cur.fetchall()
             cur.execute("SELECT * from grocery_known_words order by should_save desc, word")
             known_words = cur.fetchall()
@@ -45,7 +45,7 @@ class PantryPage:
             for known_word in known_words:
                 known_words_map[known_word["word"]] = known_word["category"]
 
-            cur.execute("SELECT * from grocery_categories")
+            cur.execute("SELECT * from grocery_categories order by word")
             categories = cur.fetchall()
             category_arr = []
             for category in categories:
