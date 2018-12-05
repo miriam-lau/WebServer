@@ -263,15 +263,8 @@ create table notes (
   text text not null
 );
 
-create table inventory_boxes (
+create table inventory (
   id serial primary key,
-  title varchar (500) not null
-);
-
-create table inventory_box_items (
-  id serial primary key,
-  inventory_box_id integer references inventory_boxes ON DELETE CASCADE not null,
-  name varchar (500) not null,
-  description text,
-  image text
+  title varchar(150) not null,
+  text text not null
 );
