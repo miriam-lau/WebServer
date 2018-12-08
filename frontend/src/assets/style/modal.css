@@ -10,7 +10,9 @@
 }
 
 .modal-container {
-    width: 300px;
+    overflow-y: auto;
+    max-height: 80%;
+    width: 450px;
     margin: 40px auto 0;
     padding: 20px 30px;
     background-color: #fff;

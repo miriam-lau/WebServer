@@ -236,6 +236,27 @@ class PantryPage:
             cur.close()
             raise
 
+    def add_known_words(self, known_words):
+        if not known_words:
+            raise Exception("known word must not be empty.")
+
+        cur = self._database.get_cursor()
+        ret = []
+
+        try:
+            for known_word in known_words:
+                cur.execute(
+                    "INSERT INTO grocery_known_words(word, category, should_save) VALUES(%s, %s, %s) RETURNING *",
+                    (known_word['name'], known_word['category'], known_word['should_save']))
+                ret.append(cur.fetchone())
+            self._database.commit()
+            cur.close()
+            return ret
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise
+
     def add_to_pantry(self, grocery_list_id, commit):
         cur = self._database.get_cursor()
 
