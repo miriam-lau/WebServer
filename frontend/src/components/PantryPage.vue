@@ -40,6 +40,7 @@
               Imported.
             </span>
             <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
+            <button @click="showExportGroceryListModal(groceryList)">Export list</button>
           </div>
           <div v-else>
             Unsaved.
@@ -57,6 +58,11 @@
         :willIgnoreWords="willIgnoreWords"
         :unrecognizedWords="unrecognizedWords"
         :handleImportButtonClick="this.addToPantry"
+      />
+      <ExportGroceryListModal
+        :close="closeExportModal"
+        :show="shouldShowExportModal"
+        :exportLines="exportLines"
       />
     </div>
     <div v-else-if="currentPage === 'pantry-store'">
@@ -142,6 +148,7 @@ import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../
 
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
+import ExportGroceryListModal from './pantry_page/ExportGroceryListModal'
 import axios from 'axios'
 import { getFullBackendUrlForPath, getDisplayDate } from '../common/utils'
 
@@ -158,6 +165,7 @@ const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
 const DELETE_CATEGORY_URL = getFullBackendUrlForPath('/delete_category')
 const ADD_CATEGORY_URL = getFullBackendUrlForPath('/add_category')
+const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
 
 export default {
   name: 'PantryPage',
@@ -175,8 +183,10 @@ export default {
       knownWordToAddCategory: '',
       knownWordToAddShouldSave: 'True',
       groceryListToImport: {},
+      exportLines: [],
       pantryGroceryListKey: 0,
       shouldShowImportModal: false,
+      shouldShowExportModal: false,
       currentPage: '',
       importModalErrorText: '',
       willImportWords: [],
@@ -202,7 +212,7 @@ export default {
     this.setCurrentPage()
   },
   components: {
-    FormModal, EditableDiv, ImportToPantryModal, ButterBar
+    FormModal, EditableDiv, ImportToPantryModal, ExportGroceryListModal, ButterBar
   },
   computed: {
     navigationClass () {
@@ -271,6 +281,18 @@ export default {
           console.log(error)
         })
     },
+    showExportGroceryListModal (groceryList) {
+      axios.post(
+        PANTRY_EXPORT_TEXT_URL,
+        { id: groceryList['id'] })
+        .then(response => {
+          this.showExportModal(groceryList, response['data'])
+        })
+        .catch(error => {
+          setButterBarMessage(this, 'An error occurred during export', ButterBarType.ERROR)
+          console.log(error)
+        })
+    },
     navigateToSubPath (path) {
       this.$router.push({ path: '/pantry/' + path })
     },
@@ -299,6 +321,13 @@ export default {
       this.alreadyInPantryWords = alreadyInPantryWords
       this.importModalErrorText = ''
       this.shouldShowImportModal = true
+    },
+    closeExportModal () {
+      this.shouldShowExportModal = false
+    },
+    showExportModal (groceryList, exportLines) {
+      this.exportLines = exportLines
+      this.shouldShowExportModal = true
     },
     showEditGroceryMetadataModal (groceryList) {
       let modalFormLines = [
