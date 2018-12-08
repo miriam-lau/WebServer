@@ -118,8 +118,6 @@ export default {
             createFormModalEntry('recipe-modal-name-' + recipe['id'], 'name', 'Name:', recipe['name']),
             createFormModalEntry(
               'recipe-modal-category-' + recipe['id'], 'category', 'Category:', recipe['category']),
-            createFormModalEntry(
-              'recipe-modal-priority-' + recipe['id'], 'priority', 'Priority:', recipe['priority']),
             createFormModalEntry('recipe-modal-notes-' + recipe['id'], 'notes', 'Notes:', recipe['notes'])
           ]
           break
@@ -167,7 +165,6 @@ export default {
           modalFormLines = [
             createFormModalEntry('add-recipe-modal-name', 'name', 'Name:', ''),
             createFormModalEntry('add-recipe-modal-category', 'category', 'Category:', ''),
-            createFormModalEntry('add-recipe-modal-priority', 'priority', 'Priority:', ''),
             createFormModalEntry('add-recipe-modal-notes', 'notes', 'Notes:', '')
           ]
           break
@@ -284,15 +281,6 @@ export default {
         return acc
       }, 0)
     },
-    getNumRecipesWeWantToMakeForCookbook (cookbook) {
-      return cookbook['children'].reduce((acc, recipeId) => {
-        let recipe = this.recipesPageData['recipe'][recipeId]
-        if (recipe['priority'] > 0) {
-          return acc + 1
-        }
-        return acc
-      }, 0)
-    },
     getSuccessRatePercentageForCookbook (cookbook) {
       let numRecipesMade = this.getNumRecipesMadeFromCookbook(cookbook)
       if (numRecipesMade === 0) {
@@ -352,17 +340,16 @@ export default {
       this.infoImages = []
       this.infoDicts = []
       this.hasChildren = true
-      this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate', 'Num Recipes We Want To Make']
+      this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate']
       this.childTableValues = this.entity['children'].map(cookbookId => {
         let cookbook = this.recipesPageData['cookbook'][cookbookId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
         let numRecipesMade = this.getNumRecipesMadeFromCookbook(cookbook)
-        let numRecipesWeWantToMake = this.getNumRecipesWeWantToMakeForCookbook(cookbook)
         let successRate = this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
         return {
           id: cookbookId,
           handleClick: handleClick,
-          values: [cookbook['name'], numRecipesMade, successRate, numRecipesWeWantToMake]
+          values: [cookbook['name'], numRecipesMade, successRate]
         }
       })
     },
@@ -387,15 +374,10 @@ export default {
           name: 'Success Rate',
           value: this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
         },
-        {
-          id: 'cookbook-num-recipes-we-want-to-make-' + id,
-          name: 'Num Recipes We Want To Make',
-          value: this.getNumRecipesWeWantToMakeForCookbook(cookbook)
-        },
         { id: 'cookbook-notes-' + id, name: 'Notes', value: cookbook['notes'] }
       ]
       this.hasChildren = true
-      this.childTableHeaders = ['Name', 'Num Times Made', 'Best Rating', 'Latest Rating', 'Priority', 'Category']
+      this.childTableHeaders = ['Name', 'Num Times Made', 'Best Rating', 'Latest Rating', 'Category']
       this.childTableValues = cookbook['children'].map(recipeId => {
         let recipe = this.recipesPageData['recipe'][recipeId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { recipe: '' + recipeId })
@@ -407,7 +389,6 @@ export default {
             this.getNumTimesRecipeMade(recipe),
             this.getBestRatingForRecipe(recipe).toFixed(1),
             this.getLatestRatingForRecipe(recipe).toFixed(1),
-            recipe['priority'],
             recipe['category']]
         }
       })
@@ -441,7 +422,6 @@ export default {
         },
         { id: 'recipe-num-times-made-' + id, name: 'Num Times Made', value: this.getNumTimesRecipeMade(recipe) },
         { id: 'recipe-category-' + id, name: 'Category', value: recipe['category'] },
-        { id: 'recipe-priority-' + id, name: 'Priority', value: recipe['priority'] },
         { id: 'recipe-notes-' + id, name: 'Notes', value: recipe['notes'] }
       ]
       this.hasChildren = true

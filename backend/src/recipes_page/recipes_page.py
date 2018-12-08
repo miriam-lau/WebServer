@@ -23,7 +23,7 @@ class RecipesPage:
             cur.close()
             raise
 
-    def add_recipe(self, parent_id, name, priority, category, notes):
+    def add_recipe(self, parent_id, name, category, notes):
         if not name:
             raise Exception('Name must not be empty.')
 
@@ -31,9 +31,9 @@ class RecipesPage:
 
         try:
             cur.execute(
-                "INSERT INTO recipes(parent_id, name, priority, category, notes) VALUES(%s, %s, %s, %s, %s) " +
+                "INSERT INTO recipes(parent_id, name, category, notes) VALUES(%s, %s, %s, %s) " +
                 "RETURNING *",
-                (parent_id, name, priority, category, notes))
+                (parent_id, name, category, notes))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -77,7 +77,7 @@ class RecipesPage:
             cur.close()
             raise
 
-    def edit_recipe(self, id, name, priority, category, notes):
+    def edit_recipe(self, id, name, category, notes):
         if not name:
             raise Exception('Name must not be empty.')
 
@@ -85,8 +85,8 @@ class RecipesPage:
 
         try:
             cur.execute(
-                "UPDATE recipes set name = %s, priority = %s, category = %s, notes = %s where id = %s RETURNING *",
-                (name, priority, category, notes, id))
+                "UPDATE recipes set name = %s, category = %s, notes = %s where id = %s RETURNING *",
+                (name, category, notes, id))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()

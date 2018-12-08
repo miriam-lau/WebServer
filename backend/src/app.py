@@ -175,7 +175,7 @@ def add_recipe_restaurant_entity(entity_type: str):
         ret = recipes_page.add_cookbook(data["name"], data["notes"])
     elif entity_type == "recipe":
         ret = recipes_page.add_recipe(
-            data["parent_id"], data["name"], data["priority"], data["category"], data["notes"])
+            data["parent_id"], data["name"], data["category"], data["notes"])
     elif entity_type == "recipe_meal":
         ret = recipes_page.add_recipe_meal(
             data["parent_id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
@@ -202,7 +202,7 @@ def edit_recipe_restaurant_entity(entity_type: str):
     if entity_type == "cookbook":
         ret = recipes_page.edit_cookbook(data["id"], data["name"], data["notes"])
     elif entity_type == "recipe":
-        ret = recipes_page.edit_recipe(data["id"], data["name"], data["priority"], data["category"], data["notes"])
+        ret = recipes_page.edit_recipe(data["id"], data["name"], data["category"], data["notes"])
     elif entity_type == "recipe_meal":
         ret = recipes_page.edit_recipe_meal(
             data["id"], data["date"], data["user_1_rating"], data["user_2_rating"], data["user_1_comments"],
