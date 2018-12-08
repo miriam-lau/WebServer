@@ -11,7 +11,7 @@ class NotesPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("SELECT * from notes order by id")
+            cur.execute("SELECT * from notes order by sort_order")
             notes = cur.fetchall()
             cur.close()
             return notes
@@ -74,11 +74,33 @@ class NotesPage:
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO notes(title, text) VALUES(%s, '') RETURNING *", (title,))
+            cur.execute("SELECT * from notes ORDER BY sort_order desc")
+            last_note = cur.fetchone()
+            new_sort_order = last_note['sort_order'] + 1 if last_note is not None else 0
+            cur.execute(
+                "INSERT INTO notes(title, text, sort_order) VALUES(%s, '', %s) RETURNING *", (title,new_sort_order))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
             return ret
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise
+
+    # No return.
+    def reorder_notes(self, ordered_note_ids):
+        cur = self._database.get_cursor()
+
+        try:
+            cur.execute("SELECT * from notes ORDER BY sort_order")
+            num_notes = len(cur.fetchall())
+            if num_notes != len(ordered_note_ids):
+                raise Exception("Must pass all notes ids for a user to reorder them.")
+            for index, note_id in enumerate(ordered_note_ids):
+                cur.execute("UPDATE notes SET sort_order = %s where id = %s", (index, note_id))
+            self._database.commit()
+            cur.close()
         except psycopg2.Error:
             self._database.rollback()
             cur.close()

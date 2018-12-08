@@ -9,6 +9,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faPencilAlt, faSave, faTimes, faTrash, faLongArrowAltUp, faLongArrowAltDown, faPlusCircle } from
   '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {VueMasonryPlugin} from 'vue-masonry'
 
 library.add(faLongArrowAltDown)
 library.add(faLongArrowAltUp)
@@ -22,6 +23,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 Vue.use(VueCookies)
+Vue.use(VueMasonryPlugin)
 
 /* eslint-disable no-new */
 new Vue({

@@ -276,7 +276,13 @@ export default {
       setButterBarMessage(this, 'Added ' + title, ButterBarType.INFO)
     },
     getNumRecipesMadeFromCookbook (cookbook) {
-      return cookbook['children'].length
+      return cookbook['children'].reduce((acc, recipeId) => {
+        let recipe = this.recipesPageData['recipe'][recipeId]
+        if (this.getNumTimesRecipeMade(recipe) > 0) {
+          return acc + 1
+        }
+        return acc
+      }, 0)
     },
     getNumRecipesWeWantToMakeForCookbook (cookbook) {
       return cookbook['children'].reduce((acc, recipeId) => {

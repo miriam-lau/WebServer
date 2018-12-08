@@ -9,17 +9,21 @@
         <div class="input-form">
           <input v-model="noteTitleToAdd" /> <button @click="addNote">Add Note</button>
         </div>
-        <div class="textarea-div" v-for="note in notes" :key="note['id']">
+        <div v-masonry transition-duration="0" item-selector=".item">
+          <div v-masonry-tile class="item textarea-div" v-for="note in notes" :key="noteKey + ':' + note['id']">
             <div class="textarea-title">
                 {{ note['title'] }}
                 <font-awesome-icon icon="pencil-alt" class="icon"
                     @click="showEditNoteMetadataModal(note)" />
                 <font-awesome-icon icon="trash" class="icon"
                     @click="showDeleteNoteModal(note)" />
+                <font-awesome-icon icon="long-arrow-alt-up" class="icon"
+                    @click="moveNoteUp(note)" />
+                <font-awesome-icon icon="long-arrow-alt-down" class="icon"
+                    @click="moveNoteDown(note)" />
             </div>
             <div class="textarea-text">
                 <EditableDiv
-                  :key="noteKey"
                   :content="note['text']"
                   :handleUpdate="updateNoteText.bind(this, note)"
                 />
@@ -28,6 +32,7 @@
               Unsaved.
               <button @click="editNote(note)">Save</button>
             </div>
+          </div>
         </div>
         <FormModal
           :show="formModal_show"
@@ -60,6 +65,7 @@ const GET_NOTES_PAGE_URL = getFullBackendUrlForPath('/get_notes_page')
 const EDIT_NOTES_METADATA_URL = getFullBackendUrlForPath('/edit_note_metadata')
 const DELETE_NOTES_URL = getFullBackendUrlForPath('/delete_note')
 const EDIT_NOTES_URL = getFullBackendUrlForPath('/edit_note')
+const REORDER_NOTES_URL = getFullBackendUrlForPath('/reorder_notes')
 const ADD_NOTES_URL = getFullBackendUrlForPath('/add_note')
 
 export default {
@@ -131,6 +137,7 @@ export default {
         note['saved'] = false
       }
       note['text'] = newText.target.innerText
+      this.$redrawVueMasonry()
     },
     showEditNoteMetadataModal (note) {
       let modalFormLines = [
@@ -194,6 +201,46 @@ export default {
           this.notes.push(note)
         })
     },
+    moveNoteUp (note) {
+      let index = this.notes.indexOf(note)
+      if (index === 0) {
+        return
+      }
+      let noteIds = []
+      for (let i = 0; i < this.notes.length; ++i) {
+        let indexToAdd = i
+        if (i === index) {
+          indexToAdd = i - 1
+        } else if (i === (index - 1)) {
+          indexToAdd = i + 1
+        }
+        noteIds.push(this.notes[indexToAdd]['id'])
+      }
+      axios.post(REORDER_NOTES_URL, { note_ids: noteIds }).then(
+        response => {
+          this.updateNotesPageDisplay()
+        })
+    },
+    moveNoteDown (note) {
+      let index = this.notes.indexOf(note)
+      if (index === (this.notes.length - 1)) {
+        return
+      }
+      let noteIds = []
+      for (let i = 0; i < this.notes.length; ++i) {
+        let indexToAdd = i
+        if (i === index) {
+          indexToAdd = i + 1
+        } else if (i === (index + 1)) {
+          indexToAdd = i - 1
+        }
+        noteIds.push(this.notes[indexToAdd]['id'])
+      }
+      axios.post(REORDER_NOTES_URL, { note_ids: noteIds }).then(
+        response => {
+          this.updateNotesPageDisplay()
+        })
+    },
     updateNotesPageDisplay () {
       axios.post(GET_NOTES_PAGE_URL).then(
         response => {
@@ -201,6 +248,7 @@ export default {
             response['data'][index]['saved'] = true
           }
           this.notes = response['data']
+          this.noteKey += 1
         })
     }
   }

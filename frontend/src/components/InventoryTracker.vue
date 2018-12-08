@@ -9,24 +9,26 @@
       <div class="input-form">
         <input v-model="boxTitleToAdd" /> <button @click="addBox">Add Box</button>
       </div>
-      <div class="textarea-div" v-for="box in inventory" :key="box['id']">
-        <div class="textarea-title">
-          {{ box['title'] }}
-          <font-awesome-icon icon="pencil-alt" class="icon"
-              @click="showEditBoxMetadataModal(box)" />
-          <font-awesome-icon icon="trash" class="icon"
-              @click="showDeleteBoxModal(box)" />
-        </div>
-        <div class="textarea-text">
-          <EditableDiv
-            :key="boxKey"
-            :content="box['text']"
-            :handleUpdate="updateBoxText.bind(this, box)"
-          />
-        </div>
-        <div v-if="!box['saved']">
-          Unsaved.
-          <button @click="editBox(box)">Save</button>
+      <div v-masonry transition-duration="0" item-selector=".item">
+        <div v-masonry-tile class="item textarea-div" v-for="box in inventory" :key="box['id']">
+          <div class="textarea-title">
+            {{ box['title'] }}
+            <font-awesome-icon icon="pencil-alt" class="icon"
+                @click="showEditBoxMetadataModal(box)" />
+            <font-awesome-icon icon="trash" class="icon"
+                @click="showDeleteBoxModal(box)" />
+          </div>
+          <div class="textarea-text">
+            <EditableDiv
+              :key="boxKey"
+              :content="box['text']"
+              :handleUpdate="updateBoxText.bind(this, box)"
+            />
+          </div>
+          <div v-if="!box['saved']">
+            Unsaved.
+            <button @click="editBox(box)">Save</button>
+          </div>
         </div>
       </div>
       <FormModal
@@ -131,6 +133,7 @@ export default {
         box['saved'] = false
       }
       box['text'] = newText.target.innerText
+      this.$redrawVueMasonry()
     },
     showEditBoxMetadataModal (box) {
       let modalFormLines = [
