@@ -43,8 +43,23 @@ class HobbyTracker:
                 "where username = %s order by hobby_tracker.id, timestamp desc",
                 (username,))
             hobbies = cur.fetchall()
+            cur.execute(
+                "select distinct on (hobby_tracker.id) hobby_tracker.*, " +
+                "coalesce(completed_hours.completed_hours_for_week, 0) as completed_hours_for_week " +
+                "from hobby_tracker left join hobby_completed_hours_timestamped completed_hours on " +
+                "hobby_tracker.id = completed_hours.hobby_id and completed_hours.timestamp >= " +
+                "(select date_trunc('week', (current_date + interval '1 day')) - interval '1 day' - " +
+                "interval '1 week') " +
+                "and completed_hours.timestamp < " +
+                "(select date_trunc('week', (current_date + interval '1 day')) - interval '1 day' - " +
+                "interval '1 week') where username = %s order by hobby_tracker.id, timestamp desc",
+                (username,))
+            last_week_hobbies = cur.fetchall()
             cur.close()
-            return hobbies
+            return {
+                "hobbies": hobbies,
+                "last_week_hobbies": last_week_hobbies
+            }
         except psycopg2.Error:
             self._database.rollback()
             cur.close()

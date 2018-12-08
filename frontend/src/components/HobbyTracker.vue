@@ -42,6 +42,23 @@
             <td><font-awesome-icon icon="trash" class="icon" @click="showDeleteModal(hobby)" /></td>
           </template>
         </tr>
+      </table><br/>
+      <h3>Last week:</h3>
+      <table class="hobby-table table">
+        <tr class="hobby-table-headers">
+          <th>Hobby</th>
+          <th>Assigned Hours</th>
+          <th>Hours Completed</th>
+          <th>Hours Remaining</th>
+          <th>Completed?</th>
+        </tr>
+        <tr class="hobby-items" :key="hobby['id']" v-for="hobby in last_week_hobbies">
+          <td class="hobby-item-name">{{ hobby['hobby'] }}</td>
+          <td>{{ hobby['assigned_hours_per_week'] }}</td>
+          <td>{{ hobby['completed_hours_for_week'] }}</td>
+          <td>{{ getHoursRemaining(hobby) }} </td>
+          <td>{{ isHobbyCompletedForWeek(hobby) }}</td>
+        </tr>
       </table>
     </div>
     <FormModal
@@ -86,6 +103,7 @@ export default {
       hobbyName: '',
       assignedHoursPerWeek: 0,
       hobbies: [],
+      last_week_hobbies: [],
       editable: false,
 
       formModal_show: false,
@@ -123,7 +141,11 @@ export default {
       setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
     },
     updateHobbyDisplay () {
-      axios.post(GET_HOBBIES_URL, { username: this.username }).then(response => { this.hobbies = response.data })
+      axios.post(GET_HOBBIES_URL, { username: this.username }).then(
+        response => {
+          this.hobbies = response.data['hobbies']
+          this.last_week_hobbies = response.data['last_week_hobbies']
+        })
     },
     showDeleteModal (hobby) {
       showModal(
