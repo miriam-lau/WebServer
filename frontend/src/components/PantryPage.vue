@@ -58,6 +58,8 @@
         :willIgnoreWords="willIgnoreWords"
         :unrecognizedWords="unrecognizedWords"
         :handleImportButtonClick="this.addToPantry"
+        :addToKnownWords="this.addToKnownWords"
+        :showErrorText="this.importModalShowErrorText"
       />
       <ExportGroceryListModal
         :close="closeExportModal"
@@ -150,7 +152,7 @@ import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
 import ExportGroceryListModal from './pantry_page/ExportGroceryListModal'
 import axios from 'axios'
-import { getFullBackendUrlForPath, getDisplayDate } from '../common/utils'
+import { getFullBackendUrlForPath, getDisplayDate, callAxios } from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
 const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath('/edit_grocery_list_metadata')
@@ -163,6 +165,7 @@ const DELETE_PANTRY_ITEM_URL = getFullBackendUrlForPath('/delete_pantry_item')
 const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
+const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
 const DELETE_CATEGORY_URL = getFullBackendUrlForPath('/delete_category')
 const ADD_CATEGORY_URL = getFullBackendUrlForPath('/add_category')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
@@ -267,6 +270,9 @@ export default {
     },
     getDisplayDate (date) {
       return getDisplayDate(date)
+    },
+    importModalShowErrorText (text) {
+      this.importModalErrorText = text
     },
     attemptAddToPantry (groceryList) {
       axios.post(
@@ -464,6 +470,28 @@ export default {
       this.knownWords.splice(
         this.knownWords.findIndex(knownWord => knownWord['word'] === deletedKnownWord['word']), 1)
       setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
+    },
+    addToKnownWords (groceryList, knownWordsData) {
+      let knownWordsDataWithBooleans = knownWordsData.slice()
+      for (let index in knownWordsDataWithBooleans) {
+        knownWordsDataWithBooleans[index].should_save =
+            knownWordsDataWithBooleans[index].shouldAddToPantry === 'true'
+        delete knownWordsDataWithBooleans[index].shouldAddToPantry
+      }
+      let that = this
+      callAxios(
+        ADD_KNOWN_WORDS_URL,
+        knownWordsDataWithBooleans,
+        function (response) {
+          let knownWords = response['data']
+          for (let index in knownWords) {
+            that.knownWords.push(knownWords[index])
+          }
+          that.attemptAddToPantry(groceryList)
+        },
+        function () {
+          that.importModalErrorText = 'Error in adding words.'
+        })
     },
     addKnownWord () {
       callAxiosAndSetButterBar(

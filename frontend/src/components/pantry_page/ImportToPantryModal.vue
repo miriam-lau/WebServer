@@ -8,8 +8,17 @@
     </div>
     <div class="modal-body">
       <h4>Unrecognized Items</h4>
-      <div :key="word" v-for="word in unrecognizedWords">
-        {{ word }}
+      <div :key="word.name" v-for="word in unrecognizedWordsData">
+        {{ word.name }}<br/>
+        Category: <input v-model="word.category"/><br/>
+        Should add to pantry:
+        <input v-model="word.shouldAddToPantry" type="radio" value="unselected" :id="word.name + '-unselected'"/>
+        <label :for="word.name + '-unselected'">Unselected</label>
+        <input v-model="word.shouldAddToPantry" type="radio" value="true" :id="word.name + '-true'"/>
+        <label :for="word.name + '-true'">True</label>
+        <input v-model="word.shouldAddToPantry" type="radio" value=false :id="word.name + '-false'"/>
+        <label :for="word.name + '-false'">False</label>
+        <br/><br/>
       </div>
       <h4>Items to Import</h4>
       <div :key="word" v-for="word in willImportWords">
@@ -30,8 +39,11 @@
         Confirm
       </button>
     </div>
-    <div v-else class="import-modal-import-failed">
-      Import failed - unrecognized items
+    <div v-else>
+      <button class="modal-default-button"
+          @click="handleAddToKnownWordsButtonClick()">
+        Add to Known Words
+      </button>
     </div>
   </Modal>
 </template>
@@ -70,14 +82,50 @@ export default {
     /**
      * The function to run when the import button is clicked.
      */
-    handleImportButtonClick: Function
+    handleImportButtonClick: Function,
+    /**
+     * The function to be called to add input words to the known words table.
+     */
+    addToKnownWords: Function,
+    /**
+     * Shows the error text.
+     */
+    showErrorText: Function
+
   },
   data () {
     return {
+      unrecognizedWordsData: []
     }
   },
   components: {
     Modal
+  },
+  methods: {
+    handleAddToKnownWordsButtonClick () {
+      for (let index in this.unrecognizedWordsData) {
+        let word = this.unrecognizedWordsData[index]
+        if (word.shouldAddToPantry === 'unselected') {
+          this.showErrorText('Must select filter type for each word.')
+          return
+        }
+      }
+      this.addToKnownWords(this.groceryList, this.unrecognizedWordsData)
+    }
+  },
+  watch: {
+    unrecognizedWords () {
+      let unrecognizedWordsData = []
+      for (let index in this.unrecognizedWords) {
+        let word = this.unrecognizedWords[index]
+        unrecognizedWordsData.push({
+          name: word,
+          category: '',
+          shouldAddToPantry: 'unselected'
+        })
+      }
+      this.unrecognizedWordsData = unrecognizedWordsData
+    }
   }
 }
 </script>

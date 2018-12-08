@@ -322,6 +322,12 @@ def add_known_word():
     return jsonify(pantry_page.add_known_word(known_word, category, should_save))
 
 
+@app.route("/add_known_words", methods=["POST"])
+def add_known_words():
+    known_words = request.json
+    return jsonify(pantry_page.add_known_words(known_words))
+
+
 @app.route("/attempt_add_to_pantry", methods=["POST"])
 def attempt_add_to_pantry():
     grocery_list_id = request.json["id"]
