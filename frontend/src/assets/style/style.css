@@ -142,7 +142,6 @@ nav.nav-inventory-tracker .nav-inventory-tracker {
 
 .textarea-div {
 	width: 500px;
-	float: left;
 	margin: 5px;
 	border: 1px solid #dadce0;
 	padding: 10px;
@@ -160,3 +159,5 @@ nav.nav-inventory-tracker .nav-inventory-tracker {
 .textarea-title {
 	font-size: 1.3em;
 }
+
+.grid-item { width: 500px; }

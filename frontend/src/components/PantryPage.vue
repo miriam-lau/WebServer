@@ -19,30 +19,32 @@
         <input v-model="groceryListDateToAdd" type="date"/>
         <button @click="addGroceryList">Add Grocery List</button>
       </div>
-      <div class="textarea-div" v-for="groceryList in groceryLists" :key="groceryList['id']">
-        <div class="textarea-title">
-          {{ groceryList['title'] }}: {{ getDisplayDate(groceryList['date']) }}
-          <font-awesome-icon icon="pencil-alt" class="icon"
-              @click="showEditGroceryMetadataModal(groceryList)" />
-          <font-awesome-icon icon="trash" class="icon"
-              @click="showDeleteGroceryListModal(groceryList)" />
-        </div>
-        <div class="textarea-text">
-          <EditableDiv
-            :key="pantryGroceryListKey"
-            :content="groceryList['list']"
-            :handleUpdate="updateGroceryListText.bind(this, groceryList)"
-          />
-        </div>
-        <div v-if="groceryList['saved']">
-          <span v-if="groceryList['imported']">
-            Imported.
-          </span>
-          <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
-        </div>
-        <div v-else>
-          Unsaved.
-          <button @click="editGroceryList(groceryList)">Save</button>
+      <div v-masonry transition-duration="0" item-selector=".item">
+        <div v-masonry-tile class="item textarea-div" v-for="groceryList in groceryLists" :key="groceryList['id']">
+          <div class="textarea-title">
+            {{ groceryList['title'] }}: {{ getDisplayDate(groceryList['date']) }}
+            <font-awesome-icon icon="pencil-alt" class="icon"
+                @click="showEditGroceryMetadataModal(groceryList)" />
+            <font-awesome-icon icon="trash" class="icon"
+                @click="showDeleteGroceryListModal(groceryList)" />
+          </div>
+          <div class="textarea-text">
+            <EditableDiv
+              :key="pantryGroceryListKey"
+              :content="groceryList['list']"
+              :handleUpdate="updateGroceryListText.bind(this, groceryList)"
+            />
+          </div>
+          <div v-if="groceryList['saved']">
+            <span v-if="groceryList['imported']">
+              Imported.
+            </span>
+            <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
+          </div>
+          <div v-else>
+            Unsaved.
+            <button @click="editGroceryList(groceryList)">Save</button>
+          </div>
         </div>
       </div>
       <ImportToPantryModal
@@ -284,6 +286,7 @@ export default {
         groceryList['saved'] = false
       }
       groceryList['list'] = newText.target.innerText
+      this.$redrawVueMasonry()
     },
     closeImportModal () {
       this.shouldShowImportModal = false

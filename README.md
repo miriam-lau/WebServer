@@ -26,6 +26,7 @@ sudo npm i --save @fortawesome/fontawesome-svg-core
 sudo  npm i --save @fortawesome/free-solid-svg-icons
 sudo  npm i --save @fortawesome/vue-fontawesome
 sudo npm install --save @fortawesome/vue-fontawesome
+sudo npm install vue-masonry --save
 
 ## To run in dev mode:
 from backend/src: flask run --reload --debugger --host=0.0.0.0
@@ -260,7 +261,8 @@ create table pantry (
 create table notes (
   id serial primary key,
   title varchar(150) not null,
-  text text not null
+  text text not null,
+  sort_order integer not null
 );
 
 create table inventory (

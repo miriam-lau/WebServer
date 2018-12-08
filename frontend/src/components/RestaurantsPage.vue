@@ -307,7 +307,13 @@ export default {
       setButterBarMessage(this, 'Added ' + title, ButterBarType.INFO)
     },
     getNumDishesTriedAtRestaurant (restaurant) {
-      return restaurant['children'].length
+      return restaurant['children'].reduce((acc, dishId) => {
+        let dish = this.restaurantsPageData['dish'][dishId]
+        if (this.getNumTimesDishTried(dish) > 0) {
+          return acc + 1
+        }
+        return acc
+      }, 0)
     },
     getBestRatingForRestaurant (restaurant) {
       if (restaurant['children'].length === 0) {

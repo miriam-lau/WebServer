@@ -366,6 +366,12 @@ def add_note():
     title = request.json["title"]
     return jsonify(notes_page.add_note(title))
 
+@app.route("/reorder_notes", methods=["POST"])
+def reorder_notes():
+    note_ids = request.json["note_ids"]
+    notes_page.reorder_notes(note_ids)
+    return ""
+
 # Inventory ------------------------------------------------------------------------------------------------------
 
 @app.route("/get_inventory_page", methods=["POST"])
