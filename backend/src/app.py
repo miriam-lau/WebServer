@@ -333,6 +333,10 @@ def add_to_pantry():
     grocery_list_id = request.json["id"]
     return jsonify(pantry_page.add_to_pantry(grocery_list_id, True))
 
+@app.route("/pantry_export_text", methods=["POST"])
+def pantry_export_text():
+    grocery_list_id = request.json["id"]
+    return jsonify(pantry_page.get_export_text(grocery_list_id))
 
 # Notes ------------------------------------------------------------------------------------------------------
 

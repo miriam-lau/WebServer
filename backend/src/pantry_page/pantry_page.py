@@ -266,11 +266,16 @@ class PantryPage:
             }
 
             for grocery_list_line in (grocery_list["list"].split("\n")):
+                grocery_list_line = grocery_list_line.strip()
+                if len(grocery_list_line) > 0 and grocery_list_line[0] == '?':
+                    ret["ignore"].append(grocery_list_line)
+                    continue
+                if grocery_list_line == '':
+                    continue
                 grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line)
                 if grocery_list_word in known_words_map:
                     known_word = known_words_map[grocery_list_word]
                     if known_word:
-
                         if grocery_list_word in pantry_words:
                             ret["already_in_pantry"].append(grocery_list_word)
                         else:
@@ -292,6 +297,43 @@ class PantryPage:
 
             cur.execute("UPDATE grocery_lists SET imported = True where id = %s RETURNING *",
                         (grocery_list_id,))
+
+            cur.close()
+            return ret
+        except psycopg2.Error:
+            self._database.rollback()
+            cur.close()
+            raise
+
+    def get_export_text(self, grocery_list_id):
+        cur = self._database.get_cursor()
+
+        try:
+            cur.execute(
+                "SELECT * from grocery_lists where id = %s", (grocery_list_id,))
+            grocery_list = cur.fetchone()
+            if grocery_list is None:
+                raise Exception("Grocery list could not be found.")
+
+            cur.execute("SELECT * from grocery_known_words")
+            known_words = cur.fetchall()
+            known_words_map = {}
+            for known_word in known_words:
+                known_words_map[known_word["word"]] = known_word["category"]
+
+            ret = []
+
+            for grocery_list_line in (grocery_list["list"].split("\n")):
+                grocery_list_line = grocery_list_line.strip()
+                if grocery_list_line == '':
+                    continue
+                grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line)
+                if grocery_list_word in known_words_map:
+                    category = known_words_map[grocery_list_word]
+                    if category:
+                        ret.append(category + ": " + grocery_list_line)
+                        continue
+                ret.append(grocery_list_line)
 
             cur.close()
             return ret
