@@ -166,7 +166,6 @@ create table recipes (
   parent_id integer references cookbooks not null,
   entity_type recipe_restaurant_entity_type DEFAULT 'recipe' not null,
   name varchar(500) not null,
-  priority integer,
   category varchar(150),
   notes text
 );
