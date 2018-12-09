@@ -8,27 +8,26 @@
     <div class="dominion_section" v-if="normalCards.length > 0">
       <h3>Kingdom Cards:</h3>
       <img class="dominion_card" :key="card.name" v-for="card in normalCards" :src="getImageForCard(card)"/>
-      <div class="clearfix"/>
     </div>
-    <div class="dominion_section" v-if="bane != null">
+    <div class="clearfix"/>
+    <div class="dominion_float dominion_section" v-if="bane != null">
       <h3>Bane:</h3>
       <img class="dominion_card" :src="getImageForCard(bane)"/>
-      <div class="clearfix"/>
     </div>
-    <div class="dominion_section" v-if="sidewaysCards.length > 0">
+    <div class="dominion_float dominion_section" v-if="sidewaysCards.length > 0">
       <h3>Events, Landmarks, and Projects:</h3>
-      <img :key="card.name" v-for="card in sidewaysCards" :src="getImageForCard(card)"/>
-      <div class="clearfix"/>
+      <img class="dominion_sideways_card" :key="card.name" v-for="card in sidewaysCards" :src="getImageForCard(card)"/>
     </div>
-    <div class="dominion_section" v-if="supplementaryCards.length > 0">
+    <div class="dominion_float dominion_section" v-if="supplementaryCards.length > 0">
       <h3>Supplementary Cards:</h3>
       <img class="dominion_card" :key="card.name" v-for="card in supplementaryCards" :src="getImageForCard(card)"/>
-      <div class="clearfix"/>
     </div>
-    <div class="dominion_section" v-if="boons.length > 0">
-      <h3>Boons:</h3>
-      <img :key="card.name" v-for="card in boons" :src="getImageForCard(card)"/>
+    <div v-if="boons.length > 0">
       <div class="clearfix"/>
+      <div class="dominion_float dominion_section">
+        <h3>Boons:</h3>
+        <img class="dominion_card" :key="card.name" v-for="card in boons" :src="getImageForCard(card)"/>
+      </div>
     </div>
   </div>
 </template>
@@ -94,7 +93,7 @@ export default {
       }
       imageName += card.name
       imageName = imageName.toLowerCase()
-      imageName = imageName.replace(/[' /]/g, '')
+      imageName = imageName.replace(/[-' /]/g, '')
       imageName = imageName.replace(/\(2nd\)/g, '2')
       imageName = '/static/dominion/card_images/' + imageName + '.jpg'
       return imageName

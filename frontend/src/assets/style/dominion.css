@@ -1,8 +1,19 @@
 .dominion_card {
   float: left;
-  width: 180px;
+  margin-right: 8px;
+  width: 175px;
+  height: 287px;
+}
+.dominion_sideways_card {
+  float: left;
+  margin-right: 8px;
   height: 287px;
 }
 .dominion_section {
-  margin-top: 30px;
+  margin-top: 10px;
+  float: left;
+}
+
+.dominion_float {
+  margin-right: 30px;
 }

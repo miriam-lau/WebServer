@@ -240,6 +240,7 @@ create table grocery_lists (
   id serial primary key,
   title varchar(150) not null,
   date date,
+  store varchar(150),
   imported boolean not null,
   list text not null
 );
@@ -250,8 +251,11 @@ create table grocery_known_words (
   should_save boolean not null
 );
 
-create table grocery_categories (
-  word varchar(150) primary key
+create table grocery_store_categories (
+  store varchar(150) not null,
+  category varchar(150) not null,
+  label varchar(150),
+  primary key (store, category)
 );
 
 create table pantry (

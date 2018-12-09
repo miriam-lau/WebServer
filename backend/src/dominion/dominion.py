@@ -2,6 +2,7 @@ import yaml
 import random
 import pprint
 
+# Static files taken from DominionRandomizer/DominionWiki.
 class Dominion:
     def __init__(self):
         # Cards includes all cards to select the randomized kingdom from. It includes events and
@@ -23,7 +24,6 @@ class Dominion:
         self._add_cards_from_file("static/dominion/sets/renaissance.yaml")
         self._add_cards_from_file("static/dominion/sets/seaside.yaml")
         self.remove_banned_cards_from_kingdom()
-        self.generate_random_kingdom()
 
     def _add_cards_from_file(self, filename):
         with open(filename, 'r') as stream:
@@ -34,7 +34,6 @@ class Dominion:
                         card["set"] = set["name"]
                         card["type"] = "card"
                         self._cards.append(card)
-
                 if "events" in set:
                     for card in set["events"]:
                         card["set"] = set["name"]
@@ -126,7 +125,8 @@ class Dominion:
 
     @staticmethod
     def should_add_platinum_and_colony(cards):
-        if cards[0]["set"] == "Prosperity":
+        first_set = cards[0]["set"]
+        if first_set == "Prosperity" or first_set == "Empires" or first_set == "Cornucopia":
             return True
         return False
 

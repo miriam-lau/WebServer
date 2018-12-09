@@ -272,8 +272,9 @@ def edit_grocery_list():
 def edit_grocery_list_metadata():
     grocery_list_id = request.json["id"]
     title = request.json["title"]
+    store = request.json["store"]
     date = request.json["date"]
-    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title, date))
+    return jsonify(pantry_page.edit_grocery_list_metadata(grocery_list_id, title, store, date))
 
 
 @app.route("/delete_grocery_list", methods=["POST"])
@@ -285,8 +286,9 @@ def delete_grocery_list():
 @app.route("/add_grocery_list", methods=["POST"])
 def add_grocery_list():
     title = request.json["title"]
+    store = request.json["store"]
     date = request.json["date"]
-    return jsonify(pantry_page.add_grocery_list(title, date))
+    return jsonify(pantry_page.add_grocery_list(title, store, date))
 
 
 @app.route("/delete_pantry_item", methods=["POST"])
@@ -301,16 +303,19 @@ def add_pantry_item():
     return jsonify(pantry_page.add_pantry_item(pantry_item))
 
 
-@app.route("/delete_category", methods=["POST"])
-def delete_category():
-    category = request.json["word"]
-    return jsonify(pantry_page.delete_category(category))
+@app.route("/delete_store_category", methods=["POST"])
+def delete_store_category():
+    store = request.json["store"]
+    category = request.json["category"]
+    return jsonify(pantry_page.delete_store_category(store, category))
 
 
-@app.route("/add_category", methods=["POST"])
-def add_category():
-    category = request.json["word"]
-    return jsonify(pantry_page.add_category(category))
+@app.route("/add_store_category", methods=["POST"])
+def add_store_category():
+    store = request.json["store"]
+    category = request.json["category"]
+    label = request.json["label"]
+    return jsonify(pantry_page.add_store_category(store, category, label))
 
 
 @app.route("/delete_known_word", methods=["POST"])
