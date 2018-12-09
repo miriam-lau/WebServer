@@ -2,6 +2,7 @@ import yaml
 import random
 import pprint
 
+# Static files taken from DominionRandomizer/DominionWiki.
 class Dominion:
     def __init__(self):
         # Cards includes all cards to select the randomized kingdom from. It includes events and

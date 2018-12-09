@@ -40,16 +40,12 @@ class PantryPage:
             pantry_items = cur.fetchall()
             cur.execute("SELECT * from grocery_known_words order by should_save desc, word")
             known_words = cur.fetchall()
+            cur.execute("SELECT * from grocery_store_categories order by store, category")
+            store_categories = cur.fetchall()
 
             known_words_map = {}
             for known_word in known_words:
                 known_words_map[known_word["word"]] = known_word["category"]
-
-            cur.execute("SELECT * from grocery_categories order by word")
-            categories = cur.fetchall()
-            category_arr = []
-            for category in categories:
-                category_arr.append(category["word"])
 
             for grocery_list in grocery_lists:
                 list_text = []
@@ -62,7 +58,7 @@ class PantryPage:
             return {
                 "grocery_lists": grocery_lists,
                 "pantry": pantry_items,
-                "categories": categories,
+                "store_categories": store_categories,
                 "known_words": known_words
             }
         except psycopg2.Error:
@@ -84,15 +80,15 @@ class PantryPage:
             cur.close()
             raise
 
-    def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title, grocery_list_date):
+    def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title, grocery_list_store, grocery_list_date):
         if not grocery_list_title:
             raise Exception("Title must not be empty.")
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("UPDATE grocery_lists SET title = %s, date = %s where id = %s RETURNING *",
-                        (grocery_list_title, grocery_list_date, grocery_list_id))
+            cur.execute("UPDATE grocery_lists SET title = %s, store = %s, date = %s where id = %s RETURNING *",
+                        (grocery_list_title, grocery_list_store, grocery_list_date, grocery_list_id))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -117,15 +113,15 @@ class PantryPage:
             cur.close()
             raise
 
-    def add_grocery_list(self, title, date):
+    def add_grocery_list(self, title, store, date):
         if not title:
             raise Exception("Title must not be empty.")
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_lists(title, date, list, imported) VALUES(%s, %s, %s, false) RETURNING *",
-            (title, date, ""))
+            cur.execute("INSERT INTO grocery_lists(title, store, date, list, imported) VALUES(%s, %s, %s, %s, false) RETURNING *",
+            (title, store, date, ""))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -172,11 +168,12 @@ class PantryPage:
             cur.close()
             raise
 
-    def delete_category(self, category):
+    def delete_store_category(self, store, category):
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("DELETE from grocery_categories where word = %s RETURNING *", (category,))
+            cur.execute(
+              "DELETE from grocery_store_categories where store = %s and category = %s RETURNING *", (store, category))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -186,14 +183,16 @@ class PantryPage:
             cur.close()
             raise
 
-    def add_category(self, category):
-        if not category:
-            raise Exception("category must not be empty.")
+    def add_store_category(self, store, category, label):
+        if not category or not store or not label:
+            raise Exception("store, category, and label must all not be empty.")
 
         cur = self._database.get_cursor()
 
         try:
-            cur.execute("INSERT INTO grocery_categories(word) VALUES(%s) RETURNING *", (category,))
+            cur.execute(
+              "INSERT INTO grocery_store_categories(store, category, label) VALUES(%s, %s, %s) RETURNING *",
+              (store, category, label))
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
@@ -342,6 +341,12 @@ class PantryPage:
             for known_word in known_words:
                 known_words_map[known_word["word"]] = known_word["category"]
 
+            cur.execute("SELECT * from grocery_store_categories where store  = %s", (grocery_list["store"],))
+            grocery_store_categories = cur.fetchall()
+            category_labels = {}
+            for grocery_store_category in grocery_store_categories:
+                category_labels[grocery_store_category["category"]] = grocery_store_category["label"]
+
             ret = []
 
             for grocery_list_line in (grocery_list["list"].split("\n")):
@@ -349,12 +354,15 @@ class PantryPage:
                 if grocery_list_line == '':
                     continue
                 grocery_list_word = PantryPage._get_grocery_word_from_line(grocery_list_line)
-                if grocery_list_word in known_words_map:
+                line_to_add = ''
+                if grocery_list_word in known_words_map and known_words_map[grocery_list_word]:
                     category = known_words_map[grocery_list_word]
-                    if category:
-                        ret.append(category + ": " + grocery_list_line)
-                        continue
-                ret.append(grocery_list_line)
+                    if category in category_labels and category_labels[category]:
+                        label = category_labels[category]
+                        line_to_add += label + " - "
+                    line_to_add += category + ": "
+                line_to_add += grocery_list_line
+                ret.append(line_to_add)
 
             cur.close()
             return ret

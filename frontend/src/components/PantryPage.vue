@@ -5,7 +5,7 @@
         <a href="#" class="nav-pantry-grocery-lists" v-on:click="navigateToSubPath('grocery-lists')">Grocery Lists</a>
         <a href="#" class="nav-pantry-pantry-store" v-on:click="navigateToSubPath('pantry-store')">Pantry Store</a>
         <a href="#" class="nav-pantry-known-words" v-on:click="navigateToSubPath('known-words')">Known Words</a>
-        <a href="#" class="nav-pantry-categories" v-on:click="navigateToSubPath('categories')">Categories</a>
+        <a href="#" class="nav-pantry-categories" v-on:click="navigateToSubPath('store-categories')">Categories</a>
       </nav>
     </div>
     <ButterBar
@@ -15,14 +15,15 @@
     <div v-if="currentPage === 'grocery-lists'">
       <h2>Grocery Lists</h2>
       <div class="input-form">
-        <input v-model="groceryListTitleToAdd" ref="grocery-list-to-add" />
+        Store: <input v-model="groceryListStoreToAdd" ref="grocery-list-store-to-add" />
+        Title: <input v-model="groceryListTitleToAdd" />
         <input v-model="groceryListDateToAdd" type="date"/>
         <button @click="addGroceryList">Add Grocery List</button>
       </div>
       <div v-masonry transition-duration="0" item-selector=".item">
         <div v-masonry-tile class="item textarea-div" v-for="groceryList in groceryLists" :key="groceryList['id']">
           <div class="textarea-title">
-            {{ groceryList['title'] }}: {{ getDisplayDate(groceryList['date']) }}
+            {{ groceryList['store'] }}: {{groceryList['title']}} - {{ getDisplayDate(groceryList['date']) }}
             <font-awesome-icon icon="pencil-alt" class="icon"
                 @click="showEditGroceryMetadataModal(groceryList)" />
             <font-awesome-icon icon="trash" class="icon"
@@ -109,19 +110,24 @@
         </tr>
       </table>
     </div>
-    <div v-else-if="currentPage === 'categories'">
-      <h2>Category</h2>
+    <div v-else-if="currentPage === 'store-categories'">
+      <h2>Store Categories</h2>
       <div class="input-form">
-        <input v-model="categoryToAdd" ref="category-to-add" /> <button @click="addCategory">Add Category</button>
+        Store: <input v-model="storeCategoryStoreToAdd" ref="store-category-store-to-add" />
+        Category: <input v-model="storeCategoryCategoryToAdd" />
+        Label: <input v-model="storeCategoryLabelToAdd" />
+        <button @click="addStoreCategory">Add Store Category</button>
       </div>
       <table class="table">
         <tr>
-          <th>Name</th><th>Delete</th>
+          <th>Store</th><th>Category</th><th>Label</th><th>Delete</th>
         </tr>
-        <tr :key="category['word']" v-for="category in categories">
-          <td>{{ category['word'] }}</td>
+        <tr :key="storeCategory['store'] + '@@' + storeCategory['category']" v-for="storeCategory in storeCategories">
+          <td>{{ storeCategory['store'] }}</td>
+          <td>{{ storeCategory['category'] }}</td>
+          <td>{{ storeCategory['label'] }}</td>
           <td><font-awesome-icon icon="trash" class="icon"
-              @click="showDeleteCategoryModal(category)" />
+              @click="showDeleteStoreCategoryModal(storeCategory)" />
           </td>
         </tr>
       </table>
@@ -166,8 +172,8 @@ const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
 const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
-const DELETE_CATEGORY_URL = getFullBackendUrlForPath('/delete_category')
-const ADD_CATEGORY_URL = getFullBackendUrlForPath('/add_category')
+const DELETE_STORE_CATEGORY_URL = getFullBackendUrlForPath('/delete_store_category')
+const ADD_STORE_CATEGORY_URL = getFullBackendUrlForPath('/add_store_category')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
 
 export default {
@@ -176,12 +182,15 @@ export default {
     return {
       groceryLists: [],
       pantry: [],
-      categories: [],
+      storeCategories: [],
       knownWords: [],
       groceryListTitleToAdd: '',
+      groceryListStoreToAdd: '',
       groceryListDateToAdd: '',
       pantryItemToAdd: '',
-      categoryToAdd: '',
+      storeCategoryStoreToAdd: '',
+      storeCategoryCategoryToAdd: '',
+      storeCategoryLabelToAdd: '',
       knownWordToAdd: '',
       knownWordToAddCategory: '',
       knownWordToAddShouldSave: 'True',
@@ -338,6 +347,8 @@ export default {
     showEditGroceryMetadataModal (groceryList) {
       let modalFormLines = [
         createFormModalEntry(
+          'edit-grocery-metadata-modal-store-' + groceryList['id'], 'store', 'Store:', groceryList['store']),
+        createFormModalEntry(
           'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title']),
         createFormModalEntry(
           'edit-grocery-metadata-modal-date-' + groceryList['id'], 'date', 'Date:', groceryList['date'])
@@ -371,15 +382,15 @@ export default {
         'Delete',
         'Error deleting ' + pantryItem['item'])
     },
-    showDeleteCategoryModal (category) {
+    showDeleteStoreCategoryModal (storeCategory) {
       showModal(
         this,
-        'Deleting ' + category['word'],
+        'Deleting category ' + storeCategory['category'] + ' for store ' + storeCategory['store'],
         [],
-        { word: category['word'] },
-        generateAxiosModalCallback(this, DELETE_CATEGORY_URL, this.deleteCategory),
+        { store: storeCategory['store'], category: storeCategory['category'] },
+        generateAxiosModalCallback(this, DELETE_STORE_CATEGORY_URL, this.deleteStoreCategory),
         'Delete',
-        'Error deleting ' + category['word'])
+        'Error deleting category ' + storeCategory['category'] + ' for store ' + storeCategory['store'])
     },
     showDeleteKnownWordModal (knownWord) {
       showModal(
@@ -406,10 +417,12 @@ export default {
         this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
       let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
       let oldTitle = this.groceryLists[currentGroceryListIndex]['title']
+      let oldStore = this.groceryLists[currentGroceryListIndex]['store']
       newGroceryListItem['title'] = response['data']['title']
+      newGroceryListItem['store'] = response['data']['store']
       newGroceryListItem['date'] = response['data']['date']
       this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
-      setButterBarMessage(this, 'Saved the title of ' + oldTitle, ButterBarType.INFO)
+      setButterBarMessage(this, 'Saved the data of ' + oldStore + ': ' + oldTitle, ButterBarType.INFO)
     },
     editGroceryList (groceryList) {
       callAxiosAndSetButterBar(
@@ -447,22 +460,34 @@ export default {
           this.$refs['pantry-item-to-add'].focus()
         })
     },
-    deleteCategory (response) {
-      let deletedCategory = response['data']
-      this.categories.splice(
-        this.categories.findIndex(category => category['word'] === deletedCategory['word']), 1)
-      setButterBarMessage(this, 'Deleted ' + deletedCategory['word'] + ' from the pantry', ButterBarType.INFO)
+    deleteStoreCategory (response) {
+      let deletedStoreCategory = response['data']
+      this.storeCategories.splice(
+        this.storeCategories.findIndex(storeCategory => storeCategory['store'] === deletedStoreCategory['store'] &&
+          storeCategory['category'] === deletedStoreCategory['category']), 1)
+      setButterBarMessage(
+        this,
+        'Deleted category ' + deletedStoreCategory['category'] + ' from the store ' + deletedStoreCategory['store'],
+        'Error deleting category ' + deletedStoreCategory['category'] + ' from the store ' + deletedStoreCategory['store'],
+        ButterBarType.INFO)
     },
-    addCategory () {
+    addStoreCategory () {
       callAxiosAndSetButterBar(
-        this, ADD_CATEGORY_URL, { word: this.categoryToAdd },
-        'Added ' + this.categoryToAdd + ' to the categories',
-        'Error adding ' + this.categoryToAdd + ' to the categories',
+        this, ADD_STORE_CATEGORY_URL,
+        {
+          store: this.storeCategoryStoreToAdd,
+          category: this.storeCategoryCategoryToAdd,
+          label: this.storeCategoryLabelToAdd
+        },
+        'Added ' + this.storeCategoryCategoryToAdd + ' to the store ' + this.storeCategoryStoreToAdd,
+        'Error adding ' + this.storeCategoryCategoryToAdd + ' to the store ' + this.storeCategoryStoreToAdd,
         response => {
-          this.categoryToAdd = ''
-          let category = response['data']
-          this.categories.push(category)
-          this.$refs['category-to-add'].focus()
+          this.storeCategoryStoreToAdd = ''
+          this.storeCategoryCategoryToAdd = ''
+          this.storeCategoryLabelToAdd = ''
+          let storeCategory = response['data']
+          this.storeCategories.push(storeCategory)
+          this.$refs['store-category-store-to-add'].focus()
         })
     },
     deleteKnownWord (response) {
@@ -513,16 +538,19 @@ export default {
     },
     addGroceryList () {
       callAxiosAndSetButterBar(
-        this, ADD_GROCERY_LIST_URL, { title: this.groceryListTitleToAdd, date: this.groceryListDateToAdd },
+        this, ADD_GROCERY_LIST_URL, {
+          title: this.groceryListTitleToAdd, store: this.groceryListStoreToAdd, date: this.groceryListDateToAdd
+        },
         'Added ' + this.groceryListTitleToAdd + ' to the grocery lists',
         'Error adding ' + this.groceryListTitleToAdd + ' to the grocery lists',
         response => {
           this.groceryListTitleToAdd = ''
+          this.groceryListStoreToAdd = ''
           this.groceryListDateToAdd = ''
           let groceryList = response['data']
-          response['data']['saved'] = true
+          groceryList['saved'] = true
           this.groceryLists.push(groceryList)
-          this.$refs['grocery-list-to-add'].focus()
+          this.$refs['grocery-list-store-to-add'].focus()
         })
     },
     updatePantryPageDisplay () {
@@ -532,7 +560,7 @@ export default {
             response['data']['grocery_lists'][index]['saved'] = true
           }
           this.groceryLists = response['data']['grocery_lists']
-          this.categories = response['data']['categories']
+          this.storeCategories = response['data']['store_categories']
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
         })
