@@ -58,6 +58,9 @@ export default {
   components: {
     ButterBar
   },
+  created () {
+    this.generateKingdom()
+  },
   methods: {
     generateKingdom () {
       let that = this
