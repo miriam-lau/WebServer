@@ -365,7 +365,7 @@ class PantryPage:
                 ret.append(line_to_add)
 
             cur.close()
-            return ret
+            return ret.sort()
         except psycopg2.Error:
             self._database.rollback()
             cur.close()
