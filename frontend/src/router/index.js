@@ -9,6 +9,7 @@ import RestaurantsPage from '@/components/RestaurantsPage'
 import PantryPage from '@/components/PantryPage'
 import NotesPage from '@/components/NotesPage'
 import NotFound from '@/components/NotFound'
+import Dominion from '@/components/Dominion'
 
 Vue.use(Router)
 
@@ -65,6 +66,11 @@ export default new Router({
       path: '/inventory-tracker',
       name: 'inventoryTracker',
       component: InventoryTracker
+    },
+    {
+      path: '/dominion',
+      name: 'dominion',
+      component: Dominion
     },
     {
       path: '*',

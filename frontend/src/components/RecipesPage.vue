@@ -340,7 +340,7 @@ export default {
       this.infoImages = []
       this.infoDicts = []
       this.hasChildren = true
-      this.childTableHeaders = ['Name', 'Num Recipes Made', 'Success Rate']
+      this.childTableHeaders = ['Name', 'Num Recipes Made', 'Recipes Liked']
       this.childTableValues = this.entity['children'].map(cookbookId => {
         let cookbook = this.recipesPageData['cookbook'][cookbookId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
@@ -371,7 +371,7 @@ export default {
           value: this.getNumRecipesMadeFromCookbook(cookbook)},
         {
           id: 'cookbook-success-rate-' + id,
-          name: 'Success Rate',
+          name: 'Recipes Liked',
           value: this.getSuccessRatePercentageForCookbook(cookbook).toFixed(0) + '%'
         },
         { id: 'cookbook-notes-' + id, name: 'Notes', value: cookbook['notes'] }
