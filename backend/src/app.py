@@ -10,6 +10,8 @@ from src.restaurants_page.restaurants_page import RestaurantsPage
 from src.pantry_page.pantry_page import PantryPage
 from src.notes_page.notes_page import NotesPage
 from src.inventory_page.inventory_page import InventoryPage
+from src.dominion.dominion import Dominion
+
 import traceback
 
 app = Flask(__name__)
@@ -24,6 +26,7 @@ restaurants_page = None
 pantry_page = None
 notes_page = None
 inventory_page = None
+dominion = None
 
 
 # Initialize app ----------------------------------------------------------------------------------------------
@@ -37,6 +40,7 @@ def initialize_app():
     global pantry_page
     global notes_page
     global inventory_page
+    global dominion
     database = Database()
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
@@ -46,6 +50,7 @@ def initialize_app():
     pantry_page = PantryPage(database)
     notes_page = NotesPage(database)
     inventory_page = InventoryPage(database)
+    dominion = Dominion()
 
 
 # TODO: This is totally insecure.
@@ -413,6 +418,12 @@ def delete_box():
 def add_box():
     title = request.json["title"]
     return jsonify(inventory_page.add_box(title))
+
+# Dominion ----------------------------------------------------------------------------------------------------
+
+@app.route("/generate_dominion_kingdom", methods=["POST"])
+def generate_dominion_kingdom():
+    return jsonify(dominion.generate_random_kingdom())
 
 # Error handling ----------------------------------------------------------------------------------------------
 

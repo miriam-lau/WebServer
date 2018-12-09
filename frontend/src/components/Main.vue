@@ -21,6 +21,7 @@
         <a href="#" class="nav-recipes-page" v-on:click="navigateTo('recipesPage')">Recipes</a>
         <a href="#" class="nav-restaurants-page" v-on:click="navigateTo('restaurantsPage')">Restaurants</a>
         <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
+        <a href="#" class="nav-dominion" v-on:click="navigateTo('dominion')">Dominion</a>
       </nav>
     </div>
     <router-view/>
@@ -36,6 +37,7 @@ import RecipesPage from './RecipesPage'
 import RestaurantsPage from './RestaurantsPage'
 import PantryPage from './PantryPage'
 import NotesPage from './NotesPage'
+import Dominion from './Dominion'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -55,7 +57,7 @@ export default {
     }
   },
   components: {
-    CurrentDocuments, Codenames, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
+    CurrentDocuments, Codenames, Dominion, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -84,6 +86,8 @@ export default {
           return 'nav-notes-page'
         case 'inventoryTracker':
           return 'nav-inventory-tracker'
+        case 'dominion':
+          return 'nav-dominion'
       }
     }
   }

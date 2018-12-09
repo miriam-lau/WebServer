@@ -27,6 +27,7 @@ sudo  npm i --save @fortawesome/free-solid-svg-icons
 sudo  npm i --save @fortawesome/vue-fontawesome
 sudo npm install --save @fortawesome/vue-fontawesome
 sudo npm install vue-masonry --save
+sudo pip3 install pyyaml
 
 ## To run in dev mode:
 from backend/src: flask run --reload --debugger --host=0.0.0.0
