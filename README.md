@@ -14,8 +14,6 @@ sudo pip3 install pyyaml<br><br>
 // navigate to "frontend" directory
 sudo apt install npm<br>
 sudo npm install -g vue-cli<br>
-sudo npm install -g n<br>
-sudo n stable<br>
 sudo npm install vue-cookies --save<br>
 sudo npm install vuex --save<br>
 sudo npm install axios --save<br>
