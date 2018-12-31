@@ -52,7 +52,6 @@ def initialize_app():
     inventory_page = InventoryPage(database)
     dominion = Dominion()
 
-
 # TODO: This is totally insecure.
 # Current documents methods -------------------------------------------------------------------------------------
 
@@ -429,6 +428,10 @@ def add_box():
 @app.route("/generate_dominion_kingdom", methods=["POST"])
 def generate_dominion_kingdom():
     return jsonify(dominion.generate_random_kingdom())
+
+@app.route("/generate_dominion_kingdom_for_online_game", methods=["POST"])
+def generate_dominion_kingdom_for_online_game():
+    return jsonify(dominion.generate_random_kingdom_for_online_game())
 
 # Error handling ----------------------------------------------------------------------------------------------
 

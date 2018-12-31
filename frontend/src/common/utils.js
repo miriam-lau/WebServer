@@ -63,7 +63,7 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
       })
     .catch(error => {
       errorCallback(error)
-      console.log(error['response']['data']['exception'])
+      console.log(error)
     })
 }
 

@@ -10,6 +10,7 @@ import PantryPage from '@/components/PantryPage'
 import NotesPage from '@/components/NotesPage'
 import NotFound from '@/components/NotFound'
 import Dominion from '@/components/Dominion'
+import DominionGame from '@/components/DominionGame'
 
 Vue.use(Router)
 
@@ -71,6 +72,11 @@ export default new Router({
       path: '/dominion',
       name: 'dominion',
       component: Dominion
+    },
+    {
+      path: '/dominion-game',
+      name: 'dominionGame',
+      component: DominionGame
     },
     {
       path: '*',

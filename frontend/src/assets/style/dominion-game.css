@@ -1,0 +1,73 @@
+.vp_treasure {
+  float: left;
+  width: 376px; /* 94 * 4 */
+}
+
+.kingdom {
+  float: left;
+  width: 470px; /* 94 * 5 */
+}
+
+.non_kingdom {
+  float: left;
+  width: 236px;
+}
+
+.card {
+  height: 144px;
+  width: 90px;
+  margin: 2px;
+}
+
+.sideways_card {
+  height: 144px;
+  width: 232px;
+  margin: 2px;
+}
+
+.play_area {
+  margin-top: 2px;
+  height: 148px;
+  background-color: teal;
+}
+
+.stats {
+  margin-top: 2px;
+}
+
+.deck_and_hand {
+  margin-top: 2px;
+}
+
+.deck {
+  float: left;
+  width: 94px;
+  background-color: green;
+}
+
+.discard {
+  float: left;
+  width: 94px;
+  background-color: grey;
+}
+
+.hand {
+  float: left;
+  width: 1145px;
+  background-color: orange;
+}
+
+.counter {
+  text-align: center;
+  width: 30px;
+}
+
+.preview {
+  float: right;
+  height: 296px;
+  width: 185px;
+}
+
+.c {
+  clear: both;
+}

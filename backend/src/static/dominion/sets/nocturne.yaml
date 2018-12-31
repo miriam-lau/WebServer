@@ -647,3 +647,17 @@ boons:
   - name: The Sun's Gift
   - name: The Swamp's Gift
   - name: The Wind's Gift
+
+hexes:
+  - name: Bad Omens
+  - name: Delusion
+  - name: Envy
+  - name: Famine
+  - name: Fear
+  - name: Greed
+  - name: Haunting
+  - name: Locusts
+  - name: Misery
+  - name: Plague
+  - name: Poverty
+  - name: War
