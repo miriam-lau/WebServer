@@ -3,33 +3,33 @@
 
 ## Build Setup
 
-git clone git@github.com:miriam-lau/WebServer.git<br>
-python3 -m pip install --user virtualenv
-python3 -m virtualenv env
-pip3 install flask flask-socketio eventlet
-sudo pip3 install psycopg2
-sudo pip3 install -U flask-cors
-sudo pip3 install pyyaml
+git clone git@github.com:miriam-lau/WebServer.git<br><br>
+python3 -m pip install --user virtualenv<br>
+python3 -m virtualenv env<br>
+pip3 install flask flask-socketio eventlet<br>
+sudo pip3 install psycopg2<br>
+sudo pip3 install -U flask-cors<br>
+sudo pip3 install pyyaml<br><br>
 
 // navigate to "frontend" directory
-sudo apt install npm
-sudo npm install -g vue-cli
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-sudo npm install vue-cookies --save
-sudo npm install vuex --save
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-sudo npm install axios --save
-sudo npm i --save @fortawesome/fontawesome-svg-core
-sudo  npm i --save @fortawesome/free-solid-svg-icons
-sudo  npm i --save @fortawesome/vue-fontawesome
-sudo npm install --save @fortawesome/vue-fontawesome
-sudo npm install vue-masonry --save
+sudo apt install npm<br>
+sudo npm install -g vue-cli<br>
+sudo npm install -g n<br>
+sudo n stable<br>
+sudo npm install vue-cookies --save<br>
+sudo npm install vuex --save<br>
+sudo npm install axios --save<br>
+sudo npm i --save @fortawesome/fontawesome-svg-core<br>
+sudo  npm i --save @fortawesome/free-solid-svg-icons<br>
+sudo  npm i --save @fortawesome/vue-fontawesome<br>
+sudo npm install --save @fortawesome/vue-fontawesome<br>
+sudo npm install vue-masonry --save<br><br>
+
+sudo apt-get update<br>
+sudo apt-get install postgresql postgresql-contrib<br>
 
 ## To run in dev mode:
-from backend/src: flask run --reload --debugger --host=0.0.0.0
+from backend/src: flask run --reload --debugger --host=0.0.0.0<br>
 from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
