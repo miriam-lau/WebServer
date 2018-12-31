@@ -19,7 +19,6 @@ sudo npm install vuex --save<br>
 sudo npm install axios --save<br>
 sudo npm i --save @fortawesome/fontawesome-svg-core<br>
 sudo  npm i --save @fortawesome/free-solid-svg-icons<br>
-sudo  npm i --save @fortawesome/vue-fontawesome<br>
 sudo npm install --save @fortawesome/vue-fontawesome<br>
 sudo npm install vue-masonry --save<br><br>
 
