@@ -28,7 +28,7 @@
   width: calc(var(--card-width-with-margin) * 5);
 }
 
-.non-supply, .bane, .your-mats, .opponent-mats, .trash, .reveal-area, .notes, .discard-area, .all-your-cards {
+.non-supply, .bane, .your-mats, .opponent-mats, .trash, .reveal-area, .notes, .discard-area, .all-your-cards, .shortcuts {
   float: left;
   width: calc(var(--card-width-with-margin) * 11 + var(--scrollbar-width));
   height: calc(var(--card-height-with-margin) * 2);

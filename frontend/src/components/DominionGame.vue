@@ -16,12 +16,13 @@
       <button v-if="hasBoons" @click="showBoons">Boons</button>
       <button v-if="hasHexes" @click="showHexes">Hexes</button>
       <button @click="showYourMats">Your Mats</button>
+      <button @click="showDiscard">Your Discard</button>
       <button @click="showOpponentMats">Opponent Mats</button>
-      <button @click="showTrash">Trash</button>
       <button @click="showRevealArea">Revealed</button>
-      <button @click="showDiscard">Discard</button>
-      <button @click="showAllYourCards">All your cards</button>
+      <button @click="showTrash">Trash</button>
       <button @click="showNotes">Notes</button>
+      <button @click="showAllYourCards">All your cards</button>
+      <button @click="showShortcuts">Shortcuts</button>
       <div v-if="player.shownPage === 'kingdom'">
         <div class="vp-treasure">
           <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in treasureCards">
@@ -142,10 +143,10 @@
       <div v-else-if="player.shownPage === 'yourMats'">
         <div class="your-mats">
           <img
-              v-for="(card, index) in player['playArea']"
+              v-for="(card, index) in player['mats']"
               :key="index"
               v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(player['playArea'], index)"
+              v-on:mouseover="setCurrentSelection(player['mats'], index)"
               v-on:mouseout="clearCurrentSelection()"
               class="card"
               :src="getImageForCard(card)"/>
@@ -154,11 +155,8 @@
       <div v-else-if="player.shownPage === 'opponentMats'">
         <div class="opponent-mats">
           <img
-              v-for="(card, index) in player['playArea']"
+              v-for="(card, index) in opponent['mats']"
               :key="index"
-              v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(player['playArea'], index)"
-              v-on:mouseout="clearCurrentSelection()"
               class="card"
               :src="getImageForCard(card)"/>
         </div>
@@ -190,6 +188,23 @@
           <textarea class="note" v-model="player['notes']"></textarea>
         </div>
       </div>
+      <div v-else-if="player.shownPage === 'shortcuts'">
+        <div class="shortcuts">
+          D - Discard all cards in your hand and play area.<br/>
+          H - Draw 5 new cards into your hand.<br/>
+          P - Play all cards in your hand.<br/>
+          s - Shuffle your deck.<br/><br/>
+          d - Discard the card.<br/>
+          h - Draw the card into your hand.<br/>
+          k - Topdeck the card onto your deck.<br/>
+          m - Move the card to your mat.<br/>
+          p - Play the card to your play area.<br/>
+          t - Trash the card.<br/>
+          v - Reveal the card in the revealed area.<br/>
+          o - Move the card to your opponent's hand.<br/>
+          r - Return the card to its original pile.<br/>
+        </div>
+      </div>
       <div v-else-if="player.shownPage === 'discard'">
         <div class="discard-area">
           <img
@@ -204,7 +219,7 @@
       <div v-else-if="player.shownPage === 'allYourCards'">
         <div class="all-your-cards">
           <img
-              v-for="(card, index) in [].concat(player['deck'], player['discard'], player['playArea'], player['hand'], player['mat'])"
+              v-for="(card, index) in [].concat(player['deck'], player['discard'], player['playArea'], player['hand'], player['mats'])"
               :key="index"
               class="card"
               :src="getImageForCard(card)"/>
@@ -303,7 +318,7 @@ export default {
         notes: '',
         playArea: [],
         deck: [],
-        mat: [],
+        mats: [],
         hand: [],
         discard: [],
         numActions: 0,
@@ -318,7 +333,7 @@ export default {
         playArea: [],
         deck: [],
         hand: [],
-        mat: [],
+        mats: [],
         discard: [],
         numActions: 0,
         numBuys: 0,
@@ -398,7 +413,7 @@ export default {
             playArea: [],
             deck: [],
             hand: [],
-            mat: [],
+            mats: [],
             discard: [],
             numActions: 0,
             numBuys: 0,
@@ -412,7 +427,7 @@ export default {
             playArea: [],
             deck: [],
             hand: [],
-            mat: [],
+            mats: [],
             discard: [],
             numActions: 0,
             numBuys: 0,
@@ -584,6 +599,27 @@ export default {
       this.player['discard'].push(...this.player['deck'])
       this.emptyArray(this.player['deck'])
     },
+    deckToHand () {
+      for (let i = 0; i < 5; ++i) {
+        this.moveCard(this.player['deck'], undefined, this.player['hand'])
+      }
+    },
+    handAndPlayAreaToDiscard () {
+      this.player['discard'].push(...this.player['hand'])
+      this.player['discard'].push(...this.player['playArea'])
+      this.emptyArray(this.player['hand'])
+      this.emptyArray(this.player['playArea'])
+      if (this.currentSelection['array'] === this.player['hand'] || this.currentSelection['array'] === this.player['playArea']) {
+        this.clearCurrentSelection()
+      }
+    },
+    handToPlayArea () {
+      this.player['playArea'].push(...this.player['hand'])
+      this.emptyArray(this.player['hand'])
+      if (this.currentSelection['array'] === this.player['hand']) {
+        this.clearCurrentSelection()
+      }
+    },
     shuffle (array) { // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
       var currentIndex = array.length
       var temporaryValue, randomIndex
@@ -651,10 +687,27 @@ export default {
     showNotes () {
       this.player.shownPage = 'notes'
     },
+    showShortcuts () {
+      this.player.shownPage = 'shortcuts'
+    },
     changePlayerTurn () {
       this.currentPlayerTurn = 1 - this.currentPlayerTurn
     },
     handleKeyPress (event) {
+      switch (event.key) {
+        case 'D':
+          this.handAndPlayAreaToDiscard()
+          return
+        case 'H':
+          this.deckToHand()
+          return
+        case 'P':
+          this.handToPlayArea()
+          return
+        case 'Z': // For lack of a better letter
+          this.deckToDiscard()
+          return
+      }
       if (!this.currentSelection['exists']) {
         return
       }
@@ -670,7 +723,7 @@ export default {
           destinationArray = this.player['deck']
           break
         case 'm':
-          destinationArray = this.player['mat']
+          destinationArray = this.player['mats']
           break
         case 'p':
           destinationArray = this.player['playArea']
@@ -709,9 +762,6 @@ export default {
         case 'o':
           destinationArray = this.opponent['hand']
           break
-        case 'z': // For lack of a better letter
-          this.deckToDiscard()
-          return
       }
       if (!destinationArray) {
         return
