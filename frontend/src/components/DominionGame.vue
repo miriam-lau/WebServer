@@ -5,15 +5,18 @@
       :css="butterBar_css"
     />
     <button @click="generateKingdom">New Game</button><br/><br/><br/>
-    <button @click="showKingdom">Show Kingdom</button>
-    <button v-if="nonSupplyCards.length > 0" @click="showOtherCardPage">Show More Cards</button>
-    <button v-if="hasBane" @click="showBane">Show Bane</button>
-    <button v-if="hasBoons" @click="showBoons">Show Boons</button>
-    <button v-if="hasHexes" @click="showHexes">Show Hexes</button>
-    <button @click="showYourMats">Show Your Mats</button>
-    <button @click="showOpponentMats">Show Opponent Mats</button>
-    <button @click="showTrash">Show Trash</button>
-    <button @click="showRevealArea">Show Reveal Area</button>
+    <button @click="showKingdom">Kingdom</button>
+    <button v-if="nonSupplyCards.length > 0" @click="showOtherCardPage">Non Supply</button>
+    <button v-if="hasBane" @click="showBane">Bane</button>
+    <button v-if="hasBoons" @click="showBoons">Boons</button>
+    <button v-if="hasHexes" @click="showHexes">Hexes</button>
+    <button @click="showYourMats">Your Mats</button>
+    <button @click="showOpponentMats">Opponent Mats</button>
+    <button @click="showTrash">Trash</button>
+    <button @click="showRevealArea">Revealed</button>
+    <button @click="showDiscard">Discard</button>
+    <button @click="showAllYourCards">All your cards</button>
+    <button @click="showNotes">Notes</button>
     <div v-if="player.shownPage === 'kingdom'">
       <div class="vp-treasure">
         <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in treasureCards">
@@ -144,7 +147,7 @@
       </div>
     </div>
     <div v-else-if="player.shownPage === 'yourMats'">
-      <div class="yourMats">
+      <div class="your-mats">
         <img
             v-for="(card, index) in player['playArea']"
             :key="index"
@@ -156,7 +159,7 @@
       </div>
     </div>
     <div v-else-if="player.shownPage === 'opponentMats'">
-      <div class="opponentMats">
+      <div class="opponent-mats">
         <img
             v-for="(card, index) in player['playArea']"
             :key="index"
@@ -179,7 +182,7 @@
       </div>
     </div>
     <div v-else-if="player.shownPage === 'reveal'">
-      <div class="revealArea">
+      <div class="reveal-area">
         <img
             v-for="(card, index) in revealArea"
             :key="index"
@@ -188,6 +191,27 @@
             class="card"
             :src="getImageForCard(card)"/>
       </div>
+    </div>
+    <div v-else-if="player.shownPage === 'notes'">
+      <div class="notes">
+        <textarea class="note" v-model="player['notes']"></textarea>
+      </div>
+    </div>
+    <div v-else-if="player.shownPage === 'discard'">
+      <img
+          v-for="(card, index) in player['discard']"
+          :key="index"
+          v-on:mouseover="setCurrentSelection(player['discard'], index)"
+          v-on:mouseout="clearCurrentSelection()"
+          class="card"
+          :src="getImageForCard(card)"/>
+    </div>
+    <div v-else-if="player.shownPage === 'all-your-cards'">
+      <img
+          v-for="(card, index) in [].concat(player['deck'], player['discard'], player['playArea'], player['hand'], player['mat'])"
+          :key="index"
+          class="card"
+          :src="getImageForCard(card)"/>
     </div>
     <img class="preview" v-if="currentSelection['exists']" :src="getImageForCurrentSelection()"/>
     <div class="c">
@@ -210,6 +234,7 @@
       <span class="stat-item">Coins: <button @click="player['numCoins']--">-</button><input class="counter" v-model="player['numCoins']"/><button @click="player['numCoins']++">+</button></span>
       <span class="stat-item">Coffers: <button @click="player['numCoffers']--">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="player['numCoffers']++">+</button></span>
       <span class="stat-item">Villagers: <button @click="player['numVillagers']--">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="player['numVillagers']++">+</button></span>
+      <button @click="changePlayerTurn" v-if="currentPlayerTurn === currentPlayerIndex">End Turn</button>
     </div>
     <div class="deck-and-hand">
       <div class="deck">
@@ -256,36 +281,13 @@ import { getFullBackendUrlForPath } from '../common/utils'
 
 const GENERATE_KINGDOM_URL = getFullBackendUrlForPath('/generate_dominion_kingdom_for_online_game')
 
-/*
-# Hand to Trash - del
-# Reveal all discard - r
-# Reveal N cards from deck (or add to revealed area) - #
-# Gain kingdom card on top of deck - t
-# Revealed card to play area - p
-# Revealed card to top of deck - t
-# Kingdom card to trash - del
-# Reveal all trash - r
-# Player hand to other player hand - z
-# Unimplemented - Stash, Secret Passage - haven - just set aside face up. native village, island - set aside
-#   philosopher's stone - need count of cards in deck and discard, coin of the realm - tavern mat, ratcatcher, gear, guide, miser, transmogrify, distant lands
-#   type reason for set aside card, stash
-# Reveal bottom card of deck - ?
-# Shuffle deck - s
-# Always display num cards in deck, buttons for actions, buttons for coffers, buttons for villagers
-# Return kingdom card to the original pile? (page line, peasant line)
-# Put whole deck in discard
-# Implement notepad
-# Reveal all cards you own together
-# Move from play area to set aside - ?
-# Type in notes who has the flag and artifacts
-*/
-
 export default {
   name: 'DominionGame',
   data () {
     return {
       currentSelection: {}, // Object with keys 'array', and 'index', and 'exists'
       playerIndex: 0,
+      currentPlayerTurn: 0,
       nonSupplyCards: [],
       kingdomCards: [],
       vpCards: [],
@@ -294,6 +296,7 @@ export default {
       trash: [],
       revealArea: [],
       players: [{
+        notes: '',
         playArea: [],
         deck: [],
         mat: [],
@@ -306,6 +309,7 @@ export default {
         numVillagers: 0,
         shownPage: 'kingdom'
       }, {
+        notes: '',
         playArea: [],
         deck: [],
         hand: [],
@@ -344,6 +348,11 @@ export default {
     this.generateKingdom()
     this.player = this.players[0]
   },
+  computed: {
+    username () {
+      return store.state.username
+    }
+  },
   methods: {
     generateKingdom () {
       let that = this
@@ -354,10 +363,11 @@ export default {
         'Generated Kingdom',
         'Failed to generate kingdom.',
         function (response) {
+          that.currentPlayerTurn = 0
           that.currentSelection = {}
           that.revealArea = []
-          that.playerIndex = 0
           that.players = [{
+            notes: '',
             playArea: [],
             deck: [],
             hand: [],
@@ -370,6 +380,7 @@ export default {
             numVillagers: 0,
             shownPage: 'kingdom'
           }, {
+            notes: '',
             playArea: [],
             deck: [],
             hand: [],
@@ -408,6 +419,7 @@ export default {
           that.hasBane = that.bane.length > 0
           that.hasBoons = that.boons.length > 0
           that.hasHexes = that.hexes.length > 0
+          that.playerIndex = data['player_order'][0] === this.username ? 0 : 1
         })
     },
     getImageForCurrentSelection () {
@@ -523,6 +535,13 @@ export default {
         }
       }
     },
+    shuffleDeck () {
+      this.shuffle(this.player['deck'])
+    },
+    deckToDiscard () {
+      this.player['discard'].push(...this.player['deck'])
+      this.player['deck'] = []
+    },
     shuffle (array) { // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
       var currentIndex = array.length
       var temporaryValue, randomIndex
@@ -581,6 +600,12 @@ export default {
     showRevealArea () {
       this.player.shownPage = 'reveal'
     },
+    showNotes () {
+      this.player.shownPage = 'notes'
+    },
+    changePlayerTurn () {
+      this.currentPlayerTurn = 1 - this.currentPlayerTurn
+    },
     handleKeyPress (event) {
       if (!this.currentSelection['exists']) {
         return
@@ -593,11 +618,14 @@ export default {
         case 'h':
           destinationArray = this.player['hand']
           break
-        case 't':
-          destinationArray = this.trash
+        case 'k':
+          destinationArray = this.player['deck']
           break
         case 'm':
           destinationArray = this.player['mat']
+          break
+        case 'p':
+          destinationArray = this.player['playArea']
           break
         case 'r':
           let currentSelectionCard = this.getCurrentSelectionCard()
@@ -621,9 +649,21 @@ export default {
               break
           }
           break
+        case 's':
+          this.shuffleDeck()
+          return
+        case 't':
+          destinationArray = this.trash
+          break
         case 'v':
           destinationArray = this.revealArea
           break
+        case 'o':
+          destinationArray = this.opponent['hand']
+          break
+        case 'z': // For lack of a better letter
+          this.deckToDiscard()
+          return
       }
       if (!destinationArray) {
         return

@@ -88,6 +88,7 @@ class Dominion:
     # should_include_platinum_and_colony: Whether or not to include platinum and colony.
     # should_include_shelters: Whether or not to use shelters instead of estates.
     # boons: If Druid is in the game, these are the boons to use for it.
+    # TODO: Skips Stash, Pearl Diver, and Secret Passage because they're unimplemented in the front end.
     def generate_random_kingdom(self):
         normal_cards = []
         sideways_cards = []
@@ -97,6 +98,8 @@ class Dominion:
 
         shuffled_kingdom_cards = random.sample( self._cards, len(self._cards))
         for card in shuffled_kingdom_cards:
+            if card["name"] in ["Stash", "Secret Passage", "Pearl Diver"]:
+                continue
             if bane is None:
                 if card["type"] == "card":
                     bane = card
@@ -128,7 +131,7 @@ class Dominion:
         ret["boons"] = boons
         return ret
 
-    def generate_random_kingdom_for_online_game(self):
+    def generate_random_kingdom_for_online_game(self, player1, player2):
         random_cards = self.generate_random_kingdom()
         normal_cards = random_cards["normal_cards"].copy()
         normal_cards.sort(key=lambda card: card["cost"]["treasure"])
@@ -189,7 +192,7 @@ class Dominion:
             if card_name == "Page":
                 has_page_line = True
             if card_name == "Peasant":
-                has_peasant_line = True 
+                has_peasant_line = True
             if card_name == "Hermit":
                 has_madman = True
             if card_name == "Tournament":
@@ -208,7 +211,7 @@ class Dominion:
                 has_ruins = True
             if card_name in ["Bandit Camp", "Marauder", "Pillage"]:
                 has_spoils = True
-            if card_name in ["Witch", "Sea Hag", "Familiar", "Mountebank", "Young Witch", 
+            if card_name in ["Witch", "Sea Hag", "Familiar", "Mountebank", "Young Witch",
                 "Ill-Gotten Gains", "Soothsayer", "Old Witch", "Swindler", "Replace",
                 "Torturer", "Ambassador", "Tournament", "Giant", "Swamg Hag", "Embargo",
                 "Hideout", "Leprechaun", "Skulk", "Cursed Village", "Tormentor", "Vampire",
@@ -242,13 +245,13 @@ class Dominion:
         for card in sideways_cards:
             if card["name"] == "Ritual":
                 has_curses = True
-        
+
         if has_boons:
             has_will_o_wisp = True
 
         if has_page_line:
             Dominion.add_page_line(ret)
-        
+
         if has_peasant_line:
             Dominion.add_peasant_line(ret)
 
@@ -269,10 +272,10 @@ class Dominion:
 
         if has_boons:
             self.add_boons(ret)
-        
+
         if has_hexes:
             self.add_hexes(ret)
-        
+
         if has_spoils:
             Dominion.add_spoils(ret)
 
@@ -290,7 +293,7 @@ class Dominion:
 
         if has_wishes:
             Dominion.add_wishes(ret)
-        
+
         if has_ruins:
             Dominion.add_ruins(ret)
 
@@ -300,10 +303,10 @@ class Dominion:
         Dominion.add_vp_cards(ret, has_platinum_and_colony)
         Dominion.add_treasure_cards(ret, has_platinum_and_colony)
         Dominion.generate_player_cards(
-            ret[Dominion.PLAYER_1_DECK], has_magic_lamp, has_haunted_mirror, has_goat, 
+            ret[Dominion.PLAYER_1_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
         Dominion.generate_player_cards(
-            ret[Dominion.PLAYER_2_DECK], has_magic_lamp, has_haunted_mirror, has_goat, 
+            ret[Dominion.PLAYER_2_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
 
         for card in normal_cards:
@@ -313,6 +316,9 @@ class Dominion:
             ret[Dominion.BANE] = Dominion.generate_pile(bane)
 
         Dominion.annotate_card_piles(ret)
+        players = [player1, player2]
+        random.shuffle(players)
+        ret['player_order'] = players
         return ret
 
     @staticmethod
@@ -345,7 +351,7 @@ class Dominion:
                     card["pile_type"] = Dominion.VP_CARDS
                     card["pile_index"] = estate_pile_index
 
-    @staticmethod 
+    @staticmethod
     def add_treasure_cards(card_map, has_platinum_and_colony):
         if has_platinum_and_colony:
             card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies({
@@ -373,7 +379,7 @@ class Dominion:
             "type": "card"
         }, 46))
 
-    @staticmethod 
+    @staticmethod
     def add_vp_cards(card_map, has_platinum_and_colony):
         if has_platinum_and_colony:
             card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies({
@@ -602,7 +608,7 @@ class Dominion:
                 "type": "card"
             })
             return ret
-        
+
         num_cards = 10
         if "isVictory" in card and card["isVictory"]:
             num_cards = 8
@@ -612,8 +618,8 @@ class Dominion:
             num_cards = 20
         ret += Dominion.create_n_copies(card, num_cards)
         return ret
-        
-    @staticmethod 
+
+    @staticmethod
     def add_page_line(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Treasure Hunter",
@@ -640,7 +646,7 @@ class Dominion:
             "type": "card"
         }, 5))
 
-    @staticmethod 
+    @staticmethod
     def add_peasant_line(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Soldier",
@@ -667,7 +673,7 @@ class Dominion:
             "type": "card"
         }, 5))
 
-    @staticmethod 
+    @staticmethod
     def add_madman(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Madman",
@@ -676,7 +682,7 @@ class Dominion:
             "type": "card"
         }, 10))
 
-    @staticmethod 
+    @staticmethod
     def add_prizes(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Trusty Steed",
@@ -709,7 +715,7 @@ class Dominion:
             "type": "card"
         }, 1))
 
-    @staticmethod 
+    @staticmethod
     def add_mercenary(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Mercenary",
@@ -718,7 +724,7 @@ class Dominion:
             "type": "card"
         }, 10))
 
-    @staticmethod 
+    @staticmethod
     def add_potion(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Potion",
@@ -727,7 +733,7 @@ class Dominion:
             "type": "card"
         }, 16))
 
-    @staticmethod 
+    @staticmethod
     def add_bat(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Bat",
@@ -736,7 +742,7 @@ class Dominion:
             "type": "card"
         }, 10))
 
-    @staticmethod 
+    @staticmethod
     def add_zombies(card_map):
         card_map[Dominion.TRASH].append({
             "name": "Zombie Apprentice",
@@ -763,7 +769,7 @@ class Dominion:
     def add_hexes(self, card_map):
         card_map[Dominion.HEXES] = random.sample( self._hexes, len(self._hexes))
 
-    @staticmethod 
+    @staticmethod
     def add_spoils(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Spoils",
@@ -772,7 +778,7 @@ class Dominion:
             "type": "card"
         }, 15))
 
-    @staticmethod 
+    @staticmethod
     def add_curses(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Curse",
@@ -781,7 +787,7 @@ class Dominion:
             "type": "card"
         }, 10))
 
-    @staticmethod 
+    @staticmethod
     def add_imp(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Imp",
@@ -790,7 +796,7 @@ class Dominion:
             "type": "card"
         }, 13))
 
-    @staticmethod 
+    @staticmethod
     def add_will_o_wisp(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Will-o'-Wisp",
@@ -799,7 +805,7 @@ class Dominion:
             "type": "card"
         }, 12))
 
-    @staticmethod 
+    @staticmethod
     def add_ghost(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Ghost",
@@ -808,7 +814,7 @@ class Dominion:
             "type": "card"
         }, 6))
 
-    @staticmethod 
+    @staticmethod
     def add_wishes(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
             "name": "Wish",
@@ -817,8 +823,8 @@ class Dominion:
             "type": "card"
         }, 12))
 
-    @staticmethod 
-    def generate_player_cards(player_deck, has_magic_lamp, has_haunted_mirror, has_goat, 
+    @staticmethod
+    def generate_player_cards(player_deck, has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters):
         copper = {
             "name": "Copper",
@@ -895,7 +901,7 @@ class Dominion:
             })
         else:
             player_deck.append(copper)
-        
+
         if has_shelters:
             player_deck.append({
                 "name": "Necropolis",
@@ -927,7 +933,7 @@ class Dominion:
             player_deck.append(estate)
         random.shuffle(player_deck)
 
-    @staticmethod 
+    @staticmethod
     def add_ruins(card_map):
         ruins = []
         ruins += Dominion.create_n_copies({

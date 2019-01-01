@@ -19,10 +19,15 @@
   width: calc(var(--card-width-with-margin) * 5);
 }
 
-.non-supply, .bane, .yourMats, .opponentMats, .trash, .revealArea {
+.non-supply, .bane, .your-mats, .opponent-mats, .trash, .reveal-area, .notes, .discard-area, .all-your-cards {
   float: left;
   width: calc(var(--card-width-with-margin) * 11);
   height: calc(var(--card-height-with-margin) * 2);
+}
+
+.note {
+  height: 100%;
+  width: 100%;
 }
 
 .boons-deck_and-discard, .hexes-deck-and-discard {
