@@ -4,150 +4,216 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
-    <button @click="generateKingdom">New Game</button><br/><br/><br/>
-    <button @click="showKingdom">Kingdom</button>
-    <button v-if="nonSupplyCards.length > 0" @click="showOtherCardPage">Non Supply</button>
-    <button v-if="hasBane" @click="showBane">Bane</button>
-    <button v-if="hasBoons" @click="showBoons">Boons</button>
-    <button v-if="hasHexes" @click="showHexes">Hexes</button>
-    <button @click="showYourMats">Your Mats</button>
-    <button @click="showOpponentMats">Opponent Mats</button>
-    <button @click="showTrash">Trash</button>
-    <button @click="showRevealArea">Revealed</button>
-    <button @click="showDiscard">Discard</button>
-    <button @click="showAllYourCards">All your cards</button>
-    <button @click="showNotes">Notes</button>
-    <div v-if="player.shownPage === 'kingdom'">
-      <div class="vp-treasure">
-        <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in treasureCards">
-          <div class="card-counter-container">{{cardArray.length}}</div>
-          <img
-              v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(cardArray)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(cardArray)"/>
-        </div>
-        <div class="c"></div>
-        <div class="card-container" :key="'vp' + index" v-for="(cardArray, index) in vpCards">
-          <div class="card-counter-container">{{cardArray.length}}</div>
-          <img
-              v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(cardArray)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(cardArray)"/>
-        </div>
-      </div>
-      <div class="kingdom">
-        <div class="card-container" :key="index" v-for="(cardArray, index) in kingdomCards">
-          <div class="card-counter-container">{{cardArray.length}}</div>
-          <img
-              v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(cardArray)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(cardArray)"/>
-        </div>
-      </div>
-      <div class="events">
-        <img
-            v-for="(card, index) in sidewaysCards"
-            class="sideways-card"
-            :key="index"
-            :src="getImageForCard(card)"/>
-      </div>
+    <div class="new-game">
+      Invite:
+          <input v-model="playerToInvite" class="dominion-player-to-invite"/>
+          <button v-on:click="newGame">New Game</button>
     </div>
-    <div v-else-if="player.shownPage === 'non-supply'">
-      <div class="non-supply">
-        <div class="card-container" :key="index" v-for="(cardArray, index) in nonSupplyCards">
-          <div class="card-counter-container">{{cardArray.length}}</div>
+    <div v-if="isInGame">
+      <button @click="showKingdom">Kingdom</button>
+      <button v-if="nonSupplyCards.length > 0" @click="showOtherCardPage">Non Supply</button>
+      <button v-if="hasBane" @click="showBane">Bane</button>
+      <button v-if="hasBoons" @click="showBoons">Boons</button>
+      <button v-if="hasHexes" @click="showHexes">Hexes</button>
+      <button @click="showYourMats">Your Mats</button>
+      <button @click="showOpponentMats">Opponent Mats</button>
+      <button @click="showTrash">Trash</button>
+      <button @click="showRevealArea">Revealed</button>
+      <button @click="showDiscard">Discard</button>
+      <button @click="showAllYourCards">All your cards</button>
+      <button @click="showNotes">Notes</button>
+      <div v-if="player.shownPage === 'kingdom'">
+        <div class="vp-treasure">
+          <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in treasureCards">
+            <div class="card-counter-container">{{cardArray.length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['discard'])"
+                v-on:mouseover="setCurrentSelection(cardArray)"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(cardArray)"/>
+          </div>
+          <div class="c"></div>
+          <div class="card-container" :key="'vp' + index" v-for="(cardArray, index) in vpCards">
+            <div class="card-counter-container">{{cardArray.length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['discard'])"
+                v-on:mouseover="setCurrentSelection(cardArray)"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(cardArray)"/>
+          </div>
+        </div>
+        <div class="kingdom">
+          <div class="card-container" :key="index" v-for="(cardArray, index) in kingdomCards">
+            <div class="card-counter-container">{{cardArray.length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['discard'])"
+                v-on:mouseover="setCurrentSelection(cardArray)"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(cardArray)"/>
+          </div>
+        </div>
+        <div class="events">
           <img
+              v-for="(card, index) in sidewaysCards"
+              class="sideways-card"
+              :key="index"
+              :src="getImageForCard(card)"/>
+        </div>
+      </div>
+      <div v-else-if="player.shownPage === 'nonSupply'">
+        <div class="non-supply">
+          <div class="card-container" :key="index" v-for="(cardArray, index) in nonSupplyCards">
+            <div class="card-counter-container">{{cardArray.length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['discard'])"
+                v-on:mouseover="setCurrentSelection(cardArray)"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(cardArray)"/>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="player.shownPage === 'bane'">
+        <div class="bane">
+          <div class="card-container">
+            <div class="card-counter-container">{{bane.length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['discard'])"
+                v-on:mouseover="setCurrentSelection(bane)"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(bane)"/>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="player.shownPage === 'boons'">
+        <div class="boons-deck-and-discard">
+          <div class="sideways-card-container">
+            <div class="card-counter-container">{{boonsDeck.length}}</div>
+            <img
+                v-on:click="moveCard(boonsDeck, undefined, boonsReveal)"
+                class="sideways-card card-in-container"
+                :src="getImageForCardArrayOrBlank(boonsDeck)"/>
+          </div>
+          <div class="sideways-card-container">
+            <div class="card-counter-container">{{boonsDiscard.length}}</div>
+            <img
+                class="sideways-card card-in-container"
+                :src="getImageForCardArrayOrBlank(boonsDiscard)"/>
+          </div>
+        </div>
+        <div class="boons-reveal">
+          <img
+              v-for="(card, index) in boonsReveal"
+              :key="index"
+              v-on:click="moveCard(boonsReveal, index, boonsDiscard)"
+              class="sideways-card"
+              :src="getImageForCard(card)"/>
+        </div>
+      </div>
+      <div v-else-if="player.shownPage === 'hexes'">
+        <div class="hexes-deck-and-discard">
+          <div class="sideways-card-container">
+            <div class="card-counter-container">{{hexesDeck.length}}</div>
+            <img
+                v-on:click="moveCard(hexesDeck, undefined, hexesReveal)"
+                class="sideways-card card-in-container"
+                :src="getImageForCardArrayOrBlank(hexesDeck)"/>
+          </div>
+          <div class="sideways-card-container">
+            <div class="card-counter-container">{{hexesDiscard.length}}</div>
+            <img
+                class="sideways-card card-in-container"
+                :src="getImageForCardArrayOrBlank(hexesDiscard)"/>
+          </div>
+        </div>
+        <div class="hexes-reveal">
+          <img
+              v-for="(card, index) in hexesReveal"
+              :key="index"
+              v-on:click="moveCard(hexesReveal, index, hexesDiscard)"
+              class="sideways-card"
+              :src="getImageForCard(card)"/>
+        </div>
+      </div>
+      <div v-else-if="player.shownPage === 'yourMats'">
+        <div class="your-mats">
+          <img
+              v-for="(card, index) in player['playArea']"
+              :key="index"
               v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(cardArray)"
+              v-on:mouseover="setCurrentSelection(player['playArea'], index)"
               v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(cardArray)"/>
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'bane'">
-      <div class="bane">
-        <div class="card-container">
-          <div class="card-counter-container">{{bane.length}}</div>
+      <div v-else-if="player.shownPage === 'opponentMats'">
+        <div class="opponent-mats">
           <img
+              v-for="(card, index) in player['playArea']"
+              :key="index"
               v-on:click="moveCurrentSelection(player['discard'])"
-              v-on:mouseover="setCurrentSelection(bane)"
+              v-on:mouseover="setCurrentSelection(player['playArea'], index)"
               v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(bane)"/>
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'boons'">
-      <div class="boons-deck-and-discard">
-        <div class="card-container">
-          <div class="card-counter-container">{{boonsDeck.length}}</div>
+      <div v-else-if="player.shownPage === 'trash'">
+        <div class="trash">
           <img
-              v-on:click="moveCurrentSelection(boonsReveal)"
-              v-on:mouseover="setCurrentSelection(boonsDeck)"
+              v-for="(card, index) in trash"
+              :key="index"
+              v-on:mouseover="setCurrentSelection(trash, index)"
               v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(boonsDeck)"/>
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
-        <div class="card-container">
-          <div class="card-counter-container">{{boonsDiscard.length}}</div>
+      </div>
+      <div v-else-if="player.shownPage === 'reveal'">
+        <div class="reveal-area">
           <img
-              v-on:mouseover="setCurrentSelection(boonsDiscard)"
+              v-for="(card, index) in revealArea"
+              :key="index"
+              v-on:mouseover="setCurrentSelection(revealArea, index)"
               v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(boonsDiscard)"/>
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div class="boons-reveal">
-        <img
-            v-for="(card, index) in boonsReveal"
-            :key="index"
-            v-on:click="moveCurrentSelection(boonsDiscard)"
-            v-on:mouseover="setCurrentSelection(boonsReveal, index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
+      <div v-else-if="player.shownPage === 'notes'">
+        <div class="notes">
+          <textarea class="note" v-model="player['notes']"></textarea>
+        </div>
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'hexes'">
-      <div class="hexes-deck-and-discard">
-        <div class="card-container">
-          <div class="card-counter-container">{{hexesDeck.length}}</div>
+      <div v-else-if="player.shownPage === 'discard'">
+        <div class="discard-area">
           <img
-              v-on:click="moveCurrentSelection(hexesReveal)"
-              v-on:mouseover="setCurrentSelection(hexesDeck)"
+              v-for="(card, index) in player['discard']"
+              :key="index"
+              v-on:mouseover="setCurrentSelection(player['discard'], index)"
               v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(hexesDeck)"/>
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
-        <div class="card-container">
-          <div class="card-counter-container">{{hexesDiscard.length}}</div>
+      </div>
+      <div v-else-if="player.shownPage === 'allYourCards'">
+        <div class="all-your-cards">
           <img
-              v-on:mouseover="setCurrentSelection(hexesDiscard)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(hexesDiscard)"/>
+              v-for="(card, index) in [].concat(player['deck'], player['discard'], player['playArea'], player['hand'], player['mat'])"
+              :key="index"
+              class="card"
+              :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div class="hexes-reveal">
-        <img
-            v-for="(card, index) in hexesReveal"
-            :key="index"
-            v-on:click="moveCurrentSelection(hexesDiscard)"
-            v-on:mouseover="setCurrentSelection(hexesReveal, index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
+      <img class="preview" v-if="currentSelection['exists']" :src="getImageForCurrentSelection()"/>
+      <div class="c">
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'yourMats'">
-      <div class="your-mats">
+      <div class="play-area">
         <img
             v-for="(card, index) in player['playArea']"
             :key="index"
@@ -157,116 +223,50 @@
             class="card"
             :src="getImageForCard(card)"/>
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'opponentMats'">
-      <div class="opponent-mats">
-        <img
-            v-for="(card, index) in player['playArea']"
-            :key="index"
-            v-on:click="moveCurrentSelection(player['discard'])"
-            v-on:mouseover="setCurrentSelection(player['playArea'], index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
+      <div class="c">
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'trash'">
-      <div class="trash">
-        <img
-            v-for="(card, index) in trash"
-            :key="index"
-            v-on:mouseover="setCurrentSelection(trash, index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
+      <div class="stats">
+        <span class="stat-item">Actions: <button @click="player['numActions']--">-</button><input class="counter" v-model="player['numActions']"/><button @click="player['numActions']++">+</button></span>
+        <span class="stat-item">Buys: <button @click="player['numBuys']--">-</button><input class="counter" v-model="player['numBuys']"/><button @click="player['numBuys']++">+</button></span>
+        <span class="stat-item">Coins: <button @click="player['numCoins']--">-</button><input class="counter" v-model="player['numCoins']"/><button @click="player['numCoins']++">+</button></span>
+        <span class="stat-item">Coffers: <button @click="player['numCoffers']--">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="player['numCoffers']++">+</button></span>
+        <span class="stat-item">Villagers: <button @click="player['numVillagers']--">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="player['numVillagers']++">+</button></span>
+        <button @click="changePlayerTurn" v-if="currentPlayerTurn === playerIndex">End Turn</button>
+        <span v-if="currentPlayerTurn === playerIndex">Your turn</span>
+        <span v-else>{{opponent.name}}'s turn</span>
       </div>
-    </div>
-    <div v-else-if="player.shownPage === 'reveal'">
-      <div class="reveal-area">
-        <img
-            v-for="(card, index) in revealArea"
-            :key="index"
-            v-on:mouseover="setCurrentSelection(revealArea, index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
-      </div>
-    </div>
-    <div v-else-if="player.shownPage === 'notes'">
-      <div class="notes">
-        <textarea class="note" v-model="player['notes']"></textarea>
-      </div>
-    </div>
-    <div v-else-if="player.shownPage === 'discard'">
-      <img
-          v-for="(card, index) in player['discard']"
-          :key="index"
-          v-on:mouseover="setCurrentSelection(player['discard'], index)"
-          v-on:mouseout="clearCurrentSelection()"
-          class="card"
-          :src="getImageForCard(card)"/>
-    </div>
-    <div v-else-if="player.shownPage === 'all-your-cards'">
-      <img
-          v-for="(card, index) in [].concat(player['deck'], player['discard'], player['playArea'], player['hand'], player['mat'])"
-          :key="index"
-          class="card"
-          :src="getImageForCard(card)"/>
-    </div>
-    <img class="preview" v-if="currentSelection['exists']" :src="getImageForCurrentSelection()"/>
-    <div class="c">
-    </div>
-    <div class="play-area">
-      <img
-          v-for="(card, index) in player['playArea']"
-          :key="index"
-          v-on:click="moveCurrentSelection(player['discard'])"
-          v-on:mouseover="setCurrentSelection(player['playArea'], index)"
-          v-on:mouseout="clearCurrentSelection()"
-          class="card"
-          :src="getImageForCard(card)"/>
-    </div>
-    <div class="c">
-    </div>
-    <div class="stats">
-      <span class="stat-item">Actions: <button @click="player['numActions']--">-</button><input class="counter" v-model="player['numActions']"/><button @click="player['numActions']++">+</button></span>
-      <span class="stat-item">Buys: <button @click="player['numBuys']--">-</button><input class="counter" v-model="player['numBuys']"/><button @click="player['numBuys']++">+</button></span>
-      <span class="stat-item">Coins: <button @click="player['numCoins']--">-</button><input class="counter" v-model="player['numCoins']"/><button @click="player['numCoins']++">+</button></span>
-      <span class="stat-item">Coffers: <button @click="player['numCoffers']--">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="player['numCoffers']++">+</button></span>
-      <span class="stat-item">Villagers: <button @click="player['numVillagers']--">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="player['numVillagers']++">+</button></span>
-      <button @click="changePlayerTurn" v-if="currentPlayerTurn === currentPlayerIndex">End Turn</button>
-    </div>
-    <div class="deck-and-hand">
-      <div class="deck">
-        <div class="card-container">
-          <div class="card-counter-container">{{player['deck'].length}}</div>
-          <img
-              v-on:click="moveCurrentSelection(player['hand'])"
-              v-on:mouseover="setCurrentSelection(player['deck'])"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(player['deck'])"/>
+      <div class="deck-and-hand">
+        <div class="deck">
+          <div class="card-container">
+            <div class="card-counter-container">{{player['deck'].length}}</div>
+            <img
+                v-on:click="moveCurrentSelection(player['hand'])"
+                v-on:mouseover="setCurrentSelection(player['deck'])"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(player['deck'])"/>
+          </div>
         </div>
-      </div>
-      <div class="discard">
-        <div class="card-container">
-          <div class="card-counter-container">{{player['discard'].length}}</div>
-          <img
-              v-on:mouseover="setCurrentSelection(player['discard'])"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card card-in-container"
-              :src="getImageForCardArrayOrBlank(player['discard'])"/>
+        <div class="discard">
+          <div class="card-container">
+            <div class="card-counter-container">{{player['discard'].length}}</div>
+            <img
+                v-on:mouseover="setCurrentSelection(player['discard'])"
+                v-on:mouseout="clearCurrentSelection()"
+                class="card card-in-container"
+                :src="getImageForCardArrayOrBlank(player['discard'])"/>
+          </div>
         </div>
-      </div>
-      <div class="hand">
-        <img
-            v-for="(card, index) in player['hand']"
-            :key="index"
-            v-on:click="moveCurrentSelection(player['playArea'])"
-            v-on:mouseover="setCurrentSelection(player['hand'], index)"
-            v-on:mouseout="clearCurrentSelection()"
-            class="card"
-            :src="getImageForCard(card)"/>
+        <div class="hand">
+          <img
+              v-for="(card, index) in player['hand']"
+              :key="index"
+              v-on:click="moveCurrentSelection(player['playArea'])"
+              v-on:mouseover="setCurrentSelection(player['hand'], index)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card"
+              :src="getImageForCard(card)"/>
+        </div>
       </div>
     </div>
   </div>
@@ -278,6 +278,7 @@
 import ButterBar from './shared/ButterBar'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
+import { store } from '../store/store'
 
 const GENERATE_KINGDOM_URL = getFullBackendUrlForPath('/generate_dominion_kingdom_for_online_game')
 
@@ -286,7 +287,9 @@ export default {
   data () {
     return {
       currentSelection: {}, // Object with keys 'array', and 'index', and 'exists'
+      isInGame: false,
       playerIndex: 0,
+      playerToInvite: '',
       currentPlayerTurn: 0,
       nonSupplyCards: [],
       kingdomCards: [],
@@ -296,6 +299,7 @@ export default {
       trash: [],
       revealArea: [],
       players: [{
+        name: '',
         notes: '',
         playArea: [],
         deck: [],
@@ -309,6 +313,7 @@ export default {
         numVillagers: 0,
         shownPage: 'kingdom'
       }, {
+        name: '',
         notes: '',
         playArea: [],
         deck: [],
@@ -345,8 +350,7 @@ export default {
   },
   created () {
     window.addEventListener('keyup', this.handleKeyPress)
-    this.generateKingdom()
-    this.player = this.players[0]
+    this.playerToInvite = this.defaultPlayerToInvite()
   },
   computed: {
     username () {
@@ -354,19 +358,42 @@ export default {
     }
   },
   methods: {
-    generateKingdom () {
+    /*
+     * The default player name to invite to a game.
+     */
+    defaultPlayerToInvite () {
+      if (this.username === 'James') {
+        return 'Miriam'
+      } else if (this.username === 'Miriam') {
+        return 'James'
+      } else if (this.username === 'Angeline') {
+        return 'Sujinda'
+      } else if (this.username === 'Sujinda') {
+        return 'Angeline'
+      }
+      return ''
+    },
+    newGame () {
+      var randomizedPlayers = [this.username, this.playerToInvite]
+      randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
+
       let that = this
       callAxiosAndSetButterBar(
         this,
         GENERATE_KINGDOM_URL,
-        {},
+        {
+          player1: randomizedPlayers[0],
+          player2: randomizedPlayers[1]
+        },
         'Generated Kingdom',
         'Failed to generate kingdom.',
         function (response) {
           that.currentPlayerTurn = 0
           that.currentSelection = {}
           that.revealArea = []
+          that.isInGame = true
           that.players = [{
+            name: '',
             notes: '',
             playArea: [],
             deck: [],
@@ -380,6 +407,7 @@ export default {
             numVillagers: 0,
             shownPage: 'kingdom'
           }, {
+            name: '',
             notes: '',
             playArea: [],
             deck: [],
@@ -403,6 +431,7 @@ export default {
           that.butterBar_message = ''
           that.butterBar_css = ''
           let data = response['data']
+          that.playerIndex = data['player_order'][0] === that.username ? 0 : 1
           that.nonSupplyCards = data['non_supply_cards']
           that.kingdomCards = data['kingdom_cards']
           that.vpCards = data['vp_cards']
@@ -410,6 +439,8 @@ export default {
           that.trash = data['trash']
           that.players[0]['deck'] = data['player_1_deck']
           that.players[1]['deck'] = data['player_2_deck']
+          that.players[0]['name'] = data['player_order'][0]
+          that.players[1]['name'] = data['player_order'][1]
           that.player = that.players[that.playerIndex]
           that.opponent = that.players[1 - that.playerIndex] // Only supports a 2 player game.
           that.bane = data['bane']
@@ -417,9 +448,8 @@ export default {
           that.boonsDeck = data['boons']
           that.sidewaysCards = data['sideways_cards']
           that.hasBane = that.bane.length > 0
-          that.hasBoons = that.boons.length > 0
-          that.hasHexes = that.hexes.length > 0
-          that.playerIndex = data['player_order'][0] === this.username ? 0 : 1
+          that.hasBoons = that.boonsDeck.length > 0
+          that.hasHexes = that.hexesDeck.length > 0
         })
     },
     getImageForCurrentSelection () {
@@ -446,6 +476,10 @@ export default {
         return '/static/dominion/card_images/_blank.jpg'
       } else if (cardArray === this.player['deck']) {
         return '/static/dominion/card_images/backside_blue.jpg'
+      } else if (cardArray === this.boonsDeck) {
+        return '/static/dominion/card_images/Boon-back.jpg'
+      } else if (cardArray === this.hexesDeck) {
+        return '/static/dominion/card_images/Hex-back.jpg'
       } else {
         return this.getImageForCard(cardArray[cardArray.length - 1])
       }
@@ -504,14 +538,28 @@ export default {
       if (cardIndex === undefined) {
         if (originalPile === this.player['deck'] && this.player['deck'].length === 0 && this.player['discard'].length !== 0) {
           this.player['deck'].push(...this.shuffle(this.player['discard']))
-          this.player['discard'] = []
+          this.emptyArray(this.player['discard'])
+        } else if (originalPile === this.boonsDeck && this.boonsDeck.length === 0 && this.boonsDiscard.length !== 0) {
+          this.boonsDeck.push(...this.shuffle(this.boonsDiscard))
+          this.emptyArray(this.boonsDiscard)
+        } else if (originalPile === this.hexesDeck && this.hexesDeck.length === 0 && this.hexesDiscard.length !== 0) {
+          this.hexesDeck.push(...this.shuffle(this.hexesDiscard))
+          this.emptyArray(this.hexesDiscard)
         }
         cardIndex = originalPile.length - 1
+      }
+      if (cardIndex < 0 || cardIndex >= originalPile.length) {
+        return
       }
       let card = originalPile[cardIndex]
       destinationPile.push(card)
       originalPile.splice(cardIndex, 1)
       return true
+    },
+    emptyArray (arr) {
+      for (let i = arr.length; i > 0; --i) {
+        arr.pop()
+      }
     },
     moveCurrentSelection (destinationPile) {
       if (!this.currentSelection.exists) {
@@ -521,13 +569,7 @@ export default {
       if (!success) {
         return
       }
-      if (this.currentSelection.index === undefined) {
-        if (this.currentSelection.array.length > 0) {
-          this.setCurrentSelection(this.currentSelection.array)
-        } else {
-          this.clearCurrentSelection()
-        }
-      } else {
+      if (this.currentSelection.index !== undefined) {
         if (this.currentSelection.array.length > this.currentSelection.index) {
           this.setCurrentSelection(this.currentSelection.array, this.currentSelection.index)
         } else {
@@ -540,7 +582,7 @@ export default {
     },
     deckToDiscard () {
       this.player['discard'].push(...this.player['deck'])
-      this.player['deck'] = []
+      this.emptyArray(this.player['deck'])
     },
     shuffle (array) { // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
       var currentIndex = array.length
@@ -574,7 +616,7 @@ export default {
       this.currentSelection = {}
     },
     showOtherCardPage () {
-      this.player.shownPage = 'non-supply'
+      this.player.shownPage = 'nonSupply'
     },
     showKingdom () {
       this.player.shownPage = 'kingdom'
@@ -599,6 +641,12 @@ export default {
     },
     showRevealArea () {
       this.player.shownPage = 'reveal'
+    },
+    showDiscard () {
+      this.player.shownPage = 'discard'
+    },
+    showAllYourCards () {
+      this.player.shownPage = 'allYourCards'
     },
     showNotes () {
       this.player.shownPage = 'notes'

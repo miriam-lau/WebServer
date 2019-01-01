@@ -316,9 +316,7 @@ class Dominion:
             ret[Dominion.BANE] = Dominion.generate_pile(bane)
 
         Dominion.annotate_card_piles(ret)
-        players = [player1, player2]
-        random.shuffle(players)
-        ret['player_order'] = players
+        ret['player_order'] = [player1, player2]
         return ret
 
     @staticmethod

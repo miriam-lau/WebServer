@@ -7,6 +7,15 @@
   --sideways-card-width: calc(var(--card-height) * 1.6);
   --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
   --standard-margin: 2px;
+  --scrollbar-width: 18px;
+}
+
+.new-game {
+  margin-bottom: 50px;
+}
+
+.dominion-player-to-invite {
+  width: 100px;
 }
 
 .vp-treasure {
@@ -21,8 +30,9 @@
 
 .non-supply, .bane, .your-mats, .opponent-mats, .trash, .reveal-area, .notes, .discard-area, .all-your-cards {
   float: left;
-  width: calc(var(--card-width-with-margin) * 11);
+  width: calc(var(--card-width-with-margin) * 11 + var(--scrollbar-width));
   height: calc(var(--card-height-with-margin) * 2);
+  overflow: auto;
 }
 
 .note {
@@ -30,16 +40,18 @@
   width: 100%;
 }
 
-.boons-deck_and-discard, .hexes-deck-and-discard {
+.boons-deck-and-discard, .hexes-deck-and-discard {
   float: left;
-  width: calc(var(--card-width-with-margin));
+  width: calc(var(--sideways-card-width-with-margin));
   height: calc(var(--card-height-with-margin) * 2);
 }
 
 .boons-reveal, .hexes-reveal {
   float: left;
-  width: calc(var(--card-width-with-margin) * 10);
+  margin-left: 60px;
+  width: calc(var(--sideways-card-width-with-margin) * 3 + var(--scrollbar-width));
   height: calc(var(--card-height-with-margin) * 2);
+  overflow: auto;
 }
 
 .events {
@@ -52,6 +64,14 @@
   float: left;
   height: var(--card-height);
   width: var(--card-width);
+  margin: var(--card-margin);
+}
+
+.sideways-card-container {
+  position: relative;
+  float: left;
+  height: var(--card-height);
+  width: var(--sideways-card-width);
   margin: var(--card-margin);
 }
 
@@ -69,6 +89,8 @@
 }
 
 .sideways-card {
+  top: 0px;
+  left: 0px;
   height: var(--card-height);
   width: var(--sideways-card-width);
   margin: var(--card-margin);

@@ -431,7 +431,9 @@ def generate_dominion_kingdom():
 
 @app.route("/generate_dominion_kingdom_for_online_game", methods=["POST"])
 def generate_dominion_kingdom_for_online_game():
-    return jsonify(dominion.generate_random_kingdom_for_online_game())
+    player1 = request.json["player1"]
+    player2 = request.json["player2"]
+    return jsonify(dominion.generate_random_kingdom_for_online_game(player1, player2))
 
 # Error handling ----------------------------------------------------------------------------------------------
 
