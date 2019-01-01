@@ -18,29 +18,53 @@
       <div class="vp-treasure">
         <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in treasureCards">
           <div class="card-counter-container">{{cardArray.length}}</div>
-          <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(cardArray)" v-on:mouseout="clearCurrentSelection()" class="card card-in-container" :src="getImageForCardArrayOrBlank(cardArray)"/>
+          <img
+              v-on:click="moveCurrentSelection(player['discard'])"
+              v-on:mouseover="setCurrentSelection(cardArray)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(cardArray)"/>
         </div>
         <div class="c"></div>
         <div class="card-container" :key="'vp' + index" v-for="(cardArray, index) in vpCards">
           <div class="card-counter-container">{{cardArray.length}}</div>
-          <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(cardArray)" v-on:mouseout="clearCurrentSelection()" class="card card-in-container" :src="getImageForCardArrayOrBlank(cardArray)"/>
+          <img
+              v-on:click="moveCurrentSelection(player['discard'])"
+              v-on:mouseover="setCurrentSelection(cardArray)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(cardArray)"/>
         </div>
       </div>
       <div class="kingdom">
         <div class="card-container" :key="index" v-for="(cardArray, index) in kingdomCards">
           <div class="card-counter-container">{{cardArray.length}}</div>
-          <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(cardArray)" v-on:mouseout="clearCurrentSelection()" class="card card-in-container" :src="getImageForCardArrayOrBlank(cardArray)"/>
+          <img
+              v-on:click="moveCurrentSelection(player['discard'])"
+              v-on:mouseover="setCurrentSelection(cardArray)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(cardArray)"/>
         </div>
       </div>
       <div class="events">
-        <img class="sideways-card" :key="index" v-for="(card, index) in sidewaysCards" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in sidewaysCards"
+            class="sideways-card"
+            :key="index"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'non-supply'">
       <div class="non-supply">
         <div class="card-container" :key="index" v-for="(cardArray, index) in nonSupplyCards">
           <div class="card-counter-container">{{cardArray.length}}</div>
-          <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(cardArray)" v-on:mouseout="clearCurrentSelection()" class="card card-in-container" :src="getImageForCardArrayOrBlank(cardArray)"/>
+          <img
+              v-on:click="moveCurrentSelection(player['discard'])"
+              v-on:mouseover="setCurrentSelection(cardArray)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(cardArray)"/>
         </div>
       </div>
     </div>
@@ -48,43 +72,135 @@
       <div class="bane">
         <div class="card-container">
           <div class="card-counter-container">{{bane.length}}</div>
-          <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(bane)" v-on:mouseout="clearCurrentSelection()" class="card card-in-container" :src="getImageForCardArrayOrBlank(bane)"/>
+          <img
+              v-on:click="moveCurrentSelection(player['discard'])"
+              v-on:mouseover="setCurrentSelection(bane)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(bane)"/>
         </div>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'boons'">
-      <div class="boons">
+      <div class="boons-deck-and-discard">
+        <div class="card-container">
+          <div class="card-counter-container">{{boonsDeck.length}}</div>
+          <img
+              v-on:click="moveCurrentSelection(boonsReveal)"
+              v-on:mouseover="setCurrentSelection(boonsDeck)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(boonsDeck)"/>
+        </div>
+        <div class="card-container">
+          <div class="card-counter-container">{{boonsDiscard.length}}</div>
+          <img
+              v-on:mouseover="setCurrentSelection(boonsDiscard)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(boonsDiscard)"/>
+        </div>
+      </div>
+      <div class="boons-reveal">
+        <img
+            v-for="(card, index) in boonsReveal"
+            :key="index"
+            v-on:click="moveCurrentSelection(boonsDiscard)"
+            v-on:mouseover="setCurrentSelection(boonsReveal, index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'hexes'">
-      <div class="hexes">
+      <div class="hexes-deck-and-discard">
+        <div class="card-container">
+          <div class="card-counter-container">{{hexesDeck.length}}</div>
+          <img
+              v-on:click="moveCurrentSelection(hexesReveal)"
+              v-on:mouseover="setCurrentSelection(hexesDeck)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(hexesDeck)"/>
+        </div>
+        <div class="card-container">
+          <div class="card-counter-container">{{hexesDiscard.length}}</div>
+          <img
+              v-on:mouseover="setCurrentSelection(hexesDiscard)"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(hexesDiscard)"/>
+        </div>
+      </div>
+      <div class="hexes-reveal">
+        <img
+            v-for="(card, index) in hexesReveal"
+            :key="index"
+            v-on:click="moveCurrentSelection(hexesDiscard)"
+            v-on:mouseover="setCurrentSelection(hexesReveal, index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'yourMats'">
       <div class="yourMats">
-        <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(player['playArea'], index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in player['playArea']" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in player['playArea']"
+            :key="index"
+            v-on:click="moveCurrentSelection(player['discard'])"
+            v-on:mouseover="setCurrentSelection(player['playArea'], index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'opponentMats'">
       <div class="opponentMats">
-        <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(player['playArea'], index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in player['playArea']" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in player['playArea']"
+            :key="index"
+            v-on:click="moveCurrentSelection(player['discard'])"
+            v-on:mouseover="setCurrentSelection(player['playArea'], index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'trash'">
       <div class="trash">
-        <img v-on:mouseover="setCurrentSelection(trash, index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in trash" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in trash"
+            :key="index"
+            v-on:mouseover="setCurrentSelection(trash, index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <div v-else-if="player.shownPage === 'reveal'">
       <div class="revealArea">
-        <img v-on:mouseover="setCurrentSelection(revealArea, index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in revealArea" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in revealArea"
+            :key="index"
+            v-on:mouseover="setCurrentSelection(revealArea, index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
     <img class="preview" v-if="currentSelection['exists']" :src="getImageForCurrentSelection()"/>
     <div class="c">
     </div>
     <div class="play-area">
-      <img v-on:click="moveCurrentSelection(player['discard'])" v-on:mouseover="setCurrentSelection(player['playArea'], index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in player['playArea']" :src="getImageForCard(card)"/>
+      <img
+          v-for="(card, index) in player['playArea']"
+          :key="index"
+          v-on:click="moveCurrentSelection(player['discard'])"
+          v-on:mouseover="setCurrentSelection(player['playArea'], index)"
+          v-on:mouseout="clearCurrentSelection()"
+          class="card"
+          :src="getImageForCard(card)"/>
     </div>
     <div class="c">
     </div>
@@ -97,13 +213,35 @@
     </div>
     <div class="deck-and-hand">
       <div class="deck">
-        <img v-on:mouseover="setCurrentSelection(player['deck'])" v-on:mouseout="clearCurrentSelection()" v-on:click="moveCurrentSelection(player['hand'])" class="card" :src="getImageForCardArrayOrBlank(player['deck'])"/>
+        <div class="card-container">
+          <div class="card-counter-container">{{player['deck'].length}}</div>
+          <img
+              v-on:click="moveCurrentSelection(player['hand'])"
+              v-on:mouseover="setCurrentSelection(player['deck'])"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(player['deck'])"/>
+        </div>
       </div>
       <div class="discard">
-        <img v-on:mouseover="setCurrentSelection(player['discard'])" v-on:mouseout="clearCurrentSelection()" class="card" :src="getImageForCardArrayOrBlank(player['discard'])"/>
+        <div class="card-container">
+          <div class="card-counter-container">{{player['discard'].length}}</div>
+          <img
+              v-on:mouseover="setCurrentSelection(player['discard'])"
+              v-on:mouseout="clearCurrentSelection()"
+              class="card card-in-container"
+              :src="getImageForCardArrayOrBlank(player['discard'])"/>
+        </div>
       </div>
       <div class="hand">
-        <img v-on:click="moveCurrentSelection(player['playArea'])" v-on:mouseover="setCurrentSelection(player['hand'], index)" v-on:mouseout="clearCurrentSelection()" class="card" :key="index" v-for="(card, index) in player['hand']" :src="getImageForCard(card)"/>
+        <img
+            v-for="(card, index) in player['hand']"
+            :key="index"
+            v-on:click="moveCurrentSelection(player['playArea'])"
+            v-on:mouseover="setCurrentSelection(player['hand'], index)"
+            v-on:mouseout="clearCurrentSelection()"
+            class="card"
+            :src="getImageForCard(card)"/>
       </div>
     </div>
   </div>
@@ -158,6 +296,7 @@ export default {
       players: [{
         playArea: [],
         deck: [],
+        mat: [],
         hand: [],
         discard: [],
         numActions: 0,
@@ -170,6 +309,7 @@ export default {
         playArea: [],
         deck: [],
         hand: [],
+        mat: [],
         discard: [],
         numActions: 0,
         numBuys: 0,
@@ -180,10 +320,13 @@ export default {
       }],
       player: {},
       opponent: {},
-      boons: [],
+      boonsDeck: [],
+      boonsReveal: [],
       boonsDiscard: [],
       bane: [],
       hexes: [],
+      hexesDeck: [],
+      hexesReveal: [],
       hexesDiscard: [],
       hasBane: false,
       hasBoons: false,
@@ -218,6 +361,7 @@ export default {
             playArea: [],
             deck: [],
             hand: [],
+            mat: [],
             discard: [],
             numActions: 0,
             numBuys: 0,
@@ -229,6 +373,7 @@ export default {
             playArea: [],
             deck: [],
             hand: [],
+            mat: [],
             discard: [],
             numActions: 0,
             numBuys: 0,
@@ -239,6 +384,10 @@ export default {
           }]
           that.boonsDiscard = []
           that.hexesDiscard = []
+          that.boonsDeck = []
+          that.boonsReveal = []
+          that.hexesDeck = []
+          that.hexesReveal = []
 
           that.butterBar_message = ''
           that.butterBar_css = ''
@@ -253,8 +402,8 @@ export default {
           that.player = that.players[that.playerIndex]
           that.opponent = that.players[1 - that.playerIndex] // Only supports a 2 player game.
           that.bane = data['bane']
-          that.hexes = data['hexes']
-          that.boons = data['boons']
+          that.hexesDeck = data['hexes']
+          that.boonsDeck = data['boons']
           that.sidewaysCards = data['sideways_cards']
           that.hasBane = that.bane.length > 0
           that.hasBoons = that.boons.length > 0
@@ -446,6 +595,9 @@ export default {
           break
         case 't':
           destinationArray = this.trash
+          break
+        case 'm':
+          destinationArray = this.player['mat']
           break
         case 'r':
           let currentSelectionCard = this.getCurrentSelectionCard()

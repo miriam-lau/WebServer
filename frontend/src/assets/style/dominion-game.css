@@ -19,9 +19,21 @@
   width: calc(var(--card-width-with-margin) * 5);
 }
 
-.non-supply, .bane, .boons, .hexes, .yourMats, .opponentMats, .trash, .revealArea {
+.non-supply, .bane, .yourMats, .opponentMats, .trash, .revealArea {
   float: left;
   width: calc(var(--card-width-with-margin) * 11);
+  height: calc(var(--card-height-with-margin) * 2);
+}
+
+.boons-deck_and-discard, .hexes-deck-and-discard {
+  float: left;
+  width: calc(var(--card-width-with-margin));
+  height: calc(var(--card-height-with-margin) * 2);
+}
+
+.boons-reveal, .hexes-reveal {
+  float: left;
+  width: calc(var(--card-width-with-margin) * 10);
   height: calc(var(--card-height-with-margin) * 2);
 }
 
