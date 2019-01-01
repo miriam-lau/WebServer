@@ -3,34 +3,33 @@
 
 ## Build Setup
 
-git clone git@github.com:miriam-lau/WebServer.git
-python3 -m pip install --user virtualenv
-python3 -m virtualenv env
-pip3 install flask flask-socketio eventlet
+git clone git@github.com:miriam-lau/WebServer.git<br><br>
+python3 -m pip install --user virtualenv<br>
+python3 -m virtualenv env<br>
+pip3 install flask flask-socketio eventlet<br>
+sudo pip3 install psycopg2<br>
+sudo pip3 install -U flask-cors<br>
+sudo pip3 install pyyaml<br><br>
+
 // navigate to "frontend" directory
-sudo apt install npm
-sudo npm install -g vue-cli
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-// sudo ln -s /usr/bin/nodejs /usr/bin/node - Might not need to do this either.
-// vue init webpack frontend - Did this but don't need to anymore.
-sudo npm install vue-cookies --save
-sudo npm install vuex --save
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-sudo pip3 install psycopg2
-sudo npm install axios --save
-sudo pip3 install -U flask-cors
-sudo npm i --save @fortawesome/fontawesome-svg-core
-sudo  npm i --save @fortawesome/free-solid-svg-icons
-sudo  npm i --save @fortawesome/vue-fontawesome
-sudo npm install --save @fortawesome/vue-fontawesome
-sudo npm install vue-masonry --save
-sudo pip3 install pyyaml
+sudo apt install npm<br>
+sudo npm install -g vue-cli<br>
+sudo npm install vue-cookies --save<br>
+sudo npm install vuex --save<br>
+sudo npm install axios --save<br>
+sudo npm i --save @fortawesome/fontawesome-svg-core<br>
+sudo  npm i --save @fortawesome/free-solid-svg-icons<br>
+sudo npm install --save @fortawesome/vue-fontawesome<br>
+sudo npm install vue-masonry --save<br><br>
+
+sudo apt-get update<br>
+sudo apt-get install postgresql postgresql-contrib<br>
+
+## Restoring the database in windows
+https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
 
 ## To run in dev mode:
-from backend/src: flask run --reload --debugger --host=0.0.0.0
+from backend/src: flask run --reload --debugger --host=0.0.0.0<br>
 from frontend/: npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
