@@ -244,6 +244,7 @@
         <span class="stat-item">Actions: <button @click="player['numActions']--">-</button><input class="counter" v-model="player['numActions']"/><button @click="player['numActions']++">+</button></span>
         <span class="stat-item">Buys: <button @click="player['numBuys']--">-</button><input class="counter" v-model="player['numBuys']"/><button @click="player['numBuys']++">+</button></span>
         <span class="stat-item">Coins: <button @click="player['numCoins']--">-</button><input class="counter" v-model="player['numCoins']"/><button @click="player['numCoins']++">+</button></span>
+        <span class="stat-item">VP: <button @click="player['numVP']--">-</button><input class="counter" v-model="player['numVP']"/><button @click="player['numVP']++">+</button></span>
         <span class="stat-item">Coffers: <button @click="player['numCoffers']--">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="player['numCoffers']++">+</button></span>
         <span class="stat-item">Villagers: <button @click="player['numVillagers']--">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="player['numVillagers']++">+</button></span>
         <button @click="changePlayerTurn" v-if="currentPlayerTurn === playerIndex">End Turn</button>
@@ -324,6 +325,7 @@ export default {
         numActions: 0,
         numBuys: 0,
         numCoins: 0,
+        numVP: 0,
         numCoffers: 0,
         numVillagers: 0,
         shownPage: 'kingdom'
@@ -338,6 +340,7 @@ export default {
         numActions: 0,
         numBuys: 0,
         numCoins: 0,
+        numVP: 0,
         numCoffers: 0,
         numVillagers: 0,
         shownPage: 'kingdom'
@@ -418,6 +421,7 @@ export default {
             numActions: 0,
             numBuys: 0,
             numCoins: 0,
+            numVP: 0,
             numCoffers: 0,
             numVillagers: 0,
             shownPage: 'kingdom'
@@ -432,6 +436,7 @@ export default {
             numActions: 0,
             numBuys: 0,
             numCoins: 0,
+            numVP: 0,
             numCoffers: 0,
             numVillagers: 0,
             shownPage: 'kingdom'

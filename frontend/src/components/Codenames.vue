@@ -36,7 +36,7 @@
         </div>
         <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
           Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
-          Num Words: <input type="number" class="codenames-hint-num-words" v-model="newHintNumber" />
+          Num Words: <input type="number" min=0 class="codenames-hint-num-words" v-model="newHintNumber" />
           <button @click="giveHint">Give Hint</button>
         </div>
         <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
