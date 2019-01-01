@@ -137,7 +137,7 @@ class Dominion:
 
         sideways_cards = random_cards["sideways_cards"].copy()
         sideways_cards.sort(key=lambda card: card["cost"]["treasure"])
-        all_cards = normal_cards
+        all_cards = normal_cards.copy()
         bane = None
         if random_cards["bane"]:
             all_cards += [random_cards["bane"]]
@@ -316,12 +316,34 @@ class Dominion:
         return ret
 
     @staticmethod
+    def get_copper_pile_index(card_map):
+        for (pile_index, card_array) in enumerate(card_map[Dominion.TREASURE_CARDS]):
+            if card_array[0]["name"] == "Copper":
+                return pile_index
+
+    @staticmethod
+    def get_estate_pile_index(card_map):
+        for (pile_index, card_array) in enumerate(card_map[Dominion.VP_CARDS]):
+            if card_array[0]["name"] == "Estate":
+                return pile_index
+
+    @staticmethod
     def annotate_card_piles(card_map):
+        copper_pile_index = Dominion.get_copper_pile_index(card_map)
+        estate_pile_index = Dominion.get_estate_pile_index(card_map)
         for pile_type in [Dominion.TREASURE_CARDS, Dominion.VP_CARDS, Dominion.KINGDOM_CARDS, Dominion.NON_SUPPLY_CARDS]:
             for (pile_index, card_array) in enumerate(card_map[pile_type]):
                 for card in card_array:
                     card["pile_type"] = pile_type
                     card["pile_index"] = pile_index
+        for pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK]:
+            for card in card_map[pile_type]:
+                if card["name"] == "Copper":
+                    card["pile_type"] = Dominion.TREASURE_CARDS
+                    card["pile_index"] = copper_pile_index
+                elif card["name"] == "Estate":
+                    card["pile_type"] = Dominion.VP_CARDS
+                    card["pile_index"] = estate_pile_index
 
     @staticmethod 
     def add_treasure_cards(card_map, has_platinum_and_colony):
@@ -703,7 +725,7 @@ class Dominion:
             "cost": { "treasure": 4 },
             "set": "Alchemy",
             "type": "card"
-        }, 10))
+        }, 16))
 
     @staticmethod 
     def add_bat(card_map):
@@ -771,7 +793,7 @@ class Dominion:
     @staticmethod 
     def add_will_o_wisp(card_map):
         card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Will-O'-Wisp",
+            "name": "Will-o'-Wisp",
             "cost": { "treasure": 0 },
             "set": "Nocturne",
             "type": "card"

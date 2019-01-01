@@ -1,60 +1,104 @@
-.vp_treasure {
+:root {
+  --card-height: 168px;
+  --card-margin: 2px;
+  --card-width: calc(var(--card-height) / 1.6);
+  --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
+  --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin));
+  --sideways-card-width: calc(var(--card-height) * 1.6);
+  --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
+  --standard-margin: 2px;
+}
+
+.vp-treasure {
   float: left;
-  width: 376px; /* 94 * 4 */
+  width: calc(var(--card-width-with-margin) * 4);
 }
 
 .kingdom {
   float: left;
-  width: 470px; /* 94 * 5 */
+  width: calc(var(--card-width-with-margin) * 5);
 }
 
-.non_kingdom {
+.non-supply, .bane, .boons, .hexes, .yourMats, .opponentMats, .trash, .revealArea {
   float: left;
-  width: 236px;
+  width: calc(var(--card-width-with-margin) * 11);
+  height: calc(var(--card-height-with-margin) * 2);
+}
+
+.events {
+  float: left;
+  width: var(--sideways-card-width-with-margin);
+}
+
+.card-container {
+  position: relative;
+  float: left;
+  height: var(--card-height);
+  width: var(--card-width);
+  margin: var(--card-margin);
 }
 
 .card {
-  height: 144px;
-  width: 90px;
-  margin: 2px;
+  top: 0px;
+  left: 0px;
+  height: var(--card-height);
+  width: var(--card-width);
+  margin: var(--card-margin);
+  border-radius: 4px;
 }
 
-.sideways_card {
-  height: 144px;
-  width: 232px;
-  margin: 2px;
+.card-in-container {
+  position: absolute;
 }
 
-.play_area {
-  margin-top: 2px;
-  height: 148px;
+.sideways-card {
+  height: var(--card-height);
+  width: var(--sideways-card-width);
+  margin: var(--card-margin);
+  border-radius: 4px;
+}
+
+.play-area {
+  margin-top: var(--standard-margin);
+  height: var(--card-height-with-margin);
   background-color: teal;
+  overflow: auto;
 }
 
 .stats {
-  margin-top: 2px;
+  margin-top: var(--standard-margin);
 }
 
-.deck_and_hand {
-  margin-top: 2px;
+.stat-item {
+  margin-right: 20px;
+}
+
+.deck-and-hand {
+  margin-top: var(--standard-margin);
+  height: var(--card-height-with-margin);
 }
 
 .deck {
   float: left;
-  width: 94px;
+  width: var(--card-width-with-margin);
+  height: var(--card-height-with-margin);
   background-color: green;
 }
 
 .discard {
   float: left;
-  width: 94px;
+  width: var(--card-width-with-margin);
+  height: var(--card-height-with-margin);
   background-color: grey;
 }
 
 .hand {
   float: left;
-  width: 1145px;
+  margin-left: 30px;
+  width: calc(100% - 30px - 2 * var(--card-width-with-margin));
+  height: var(--card-height-with-margin);
   background-color: orange;
+  overflow: auto;
 }
 
 .counter {
@@ -64,10 +108,30 @@
 
 .preview {
   float: right;
-  height: 296px;
-  width: 185px;
+  height: calc(2 * var(--card-height-with-margin));
+  width: calc(2 * var(--card-height-with-margin) / 1.6);
+  border-radius: 8px;
 }
 
 .c {
   clear: both;
+}
+
+/* From dominion.games */
+.card-counter-container {
+  top: 0px;
+  left: 0px;
+  position: relative;
+  z-index: 900;
+  background-color: rgba(255,0,0,.9);
+  box-shadow: 0 0 2px 2px rgba(0,0,0,.75);
+  font-family: Monospaced;
+  border-radius: 3px;
+  transform-origin: 0 0;
+  height: 15px;
+  width: 15px;
+  font-size: 13px;
+  line-height: 15px;
+  color: #fff;
+  text-align: center;
 }

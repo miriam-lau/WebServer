@@ -95,6 +95,7 @@ export default {
       gameId: 0,
       player1: '',
       player2: '',
+      playerToInvite: '',
       turnNumber: 0,
       timeTokensUsed: 0,
       turnType: '',
@@ -123,17 +124,6 @@ export default {
       return this.isCurrentUserPlayer1() === isPlayer1Turn
     },
     /*
-     * The default player name to invite to a game.
-     */
-    playerToInvite () {
-      if (this.username === 'James') {
-        return 'Miriam'
-      } else if (this.username === 'Miriam') {
-        return 'James'
-      }
-      return ''
-    },
-    /*
      * The name of the other player in the current game. That is, the one playing with the current user.
      */
     otherPlayer () {
@@ -156,6 +146,7 @@ export default {
   },
   created () {
     this.updateCodenamesDisplayWithLatestGame(null)
+    this.playerToInvite = this.defaultPlayerToInvite()
   },
   mounted () {
     var socket = io.connect('http://' + window.location.hostname + ':5000')
@@ -167,6 +158,21 @@ export default {
     })
   },
   methods: {
+    /*
+     * The default player name to invite to a game.
+     */
+    defaultPlayerToInvite () {
+      if (this.username === 'James') {
+        return 'Miriam'
+      } else if (this.username === 'Miriam') {
+        return 'James'
+      } else if (this.username === 'Angeline') {
+        return 'Sujinda'
+      } else if (this.username === 'Sujinda') {
+        return 'Angeline'
+      }
+      return ''
+    },
     toggleExpand () {
       this.isExpanded = !this.isExpanded
     },
