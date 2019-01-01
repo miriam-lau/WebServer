@@ -29,8 +29,11 @@ sudo apt-get install postgresql postgresql-contrib<br>
 https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
 
 ## To run in dev mode:
-from backend/src: flask run --reload --debugger --host=0.0.0.0<br>
-from frontend/: npm run dev -- --hot --host 0.0.0.0
+from backend/src:<br/>
+flask run --reload --debugger --host=0.0.0.0<br><br/>
+
+from frontend/:<br/>
+npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
