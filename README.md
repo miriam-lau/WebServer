@@ -7,23 +7,23 @@ git clone git@github.com:miriam-lau/WebServer.git<br><br>
 python3 -m pip install --user virtualenv<br>
 python3 -m virtualenv env<br>
 pip3 install flask flask-socketio eventlet<br>
-sudo pip3 install psycopg2<br>
-sudo pip3 install -U flask-cors<br>
-sudo pip3 install pyyaml<br><br>
+pip3 install psycopg2<br>
+pip3 install -U flask-cors<br>
+pip3 install pyyaml<br><br>
 
 // navigate to "frontend" directory
-sudo apt install npm<br>
-sudo npm install -g vue-cli<br>
-sudo npm install vue-cookies --save<br>
-sudo npm install vuex --save<br>
-sudo npm install axios --save<br>
-sudo npm i --save @fortawesome/fontawesome-svg-core<br>
-sudo  npm i --save @fortawesome/free-solid-svg-icons<br>
-sudo npm install --save @fortawesome/vue-fontawesome<br>
-sudo npm install vue-masonry --save<br><br>
+apt install npm<br>
+npm install -g vue-cli<br>
+npm install vue-cookies --save<br>
+npm install vuex --save<br>
+npm install axios --save<br>
+npm i --save @fortawesome/fontawesome-svg-core<br>
+npm i --save @fortawesome/free-solid-svg-icons<br>
+npm install --save @fortawesome/vue-fontawesome<br>
+npm install vue-masonry --save<br><br>
 
-sudo apt-get update<br>
-sudo apt-get install postgresql postgresql-contrib<br>
+apt-get update<br>
+apt-get install postgresql postgresql-contrib<br>
 
 ## Restoring the database in windows
 https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
