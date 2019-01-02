@@ -190,19 +190,24 @@
       </div>
       <div v-else-if="player.shownPage === 'shortcuts'">
         <div class="shortcuts">
-          D - Discard all cards in your hand and play area.<br/>
-          H - Draw 5 new cards into your hand.<br/>
-          P - Play all cards in your hand.<br/>
-          s - Shuffle your deck.<br/><br/>
+          a (A) - Increment num actions (Decrement num actions)<br/>
+          b (B) - Increment num buys (Decrement num buys)<br/>
+          c (C) - Increment num coins (Decrement num coins)<br/>
           d - Discard the card.<br/>
+          D - Discard all cards in your hand and play area and end the turn.<br/>
+          e - End the turn.
           h - Draw the card into your hand.<br/>
+          H - Draw 5 new cards into your hand.<br/>
           k - Topdeck the card onto your deck.<br/>
           m - Move the card to your mat.<br/>
-          p - Play the card to your play area.<br/>
-          t - Trash the card.<br/>
-          v - Reveal the card in the revealed area.<br/>
           o - Move the card to your opponent's hand.<br/>
+          P - Play all cards in your hand.<br/>
+          p - Play the card to your play area.<br/>
           r - Return the card to its original pile.<br/>
+          s - Shuffle your deck.<br/><br/>
+          t - Trash the card.<br/>
+          w - Draw a single card from deck into your hand.<br/>
+          v - Reveal the card in the revealed area.<br/>
         </div>
       </div>
       <div v-else-if="player.shownPage === 'discard'">
@@ -241,13 +246,14 @@
       <div class="c">
       </div>
       <div class="stats">
-        <span class="stat-item">Actions: <button @click="player['numActions']--">-</button><input class="counter" v-model="player['numActions']"/><button @click="player['numActions']++">+</button></span>
-        <span class="stat-item">Buys: <button @click="player['numBuys']--">-</button><input class="counter" v-model="player['numBuys']"/><button @click="player['numBuys']++">+</button></span>
-        <span class="stat-item">Coins: <button @click="player['numCoins']--">-</button><input class="counter" v-model="player['numCoins']"/><button @click="player['numCoins']++">+</button></span>
-        <span class="stat-item">VP: <button @click="player['numVP']--">-</button><input class="counter" v-model="player['numVP']"/><button @click="player['numVP']++">+</button></span>
-        <span class="stat-item">Coffers: <button @click="player['numCoffers']--">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="player['numCoffers']++">+</button></span>
-        <span class="stat-item">Villagers: <button @click="player['numVillagers']--">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="player['numVillagers']++">+</button></span>
-        <button @click="changePlayerTurn" v-if="currentPlayerTurn === playerIndex">End Turn</button>
+        <span class="stat-item">Actions: <button @click="decrementNumActions">-</button><input class="counter" v-model="player['numActions']"/><button @click="incrementNumActions">+</button></span>
+        <span class="stat-item">Buys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="player['numBuys']"/><button @click="incrementNumBuys">+</button></span>
+        <span class="stat-item">Coins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="player['numCoins']"/><button @click="incrementNumCoins">+</button></span>
+        <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="player['numVP']"/><button @click="incrementNumVP">+</button></span>
+        <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="player['numCoffers']"/><button @click="incrementNumCoffers">+</button></span>
+        <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="player['numVillagers']"/><button @click="incrementNumVillagers">+</button></span>
+        <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="player['numDebt']"/><button @click="incrementNumDebt">+</button></span>
+        <button @click="endPlayerTurn" v-if="currentPlayerTurn === playerIndex">End Turn</button>
         <span v-if="currentPlayerTurn === playerIndex">Your turn</span>
         <span v-else>{{opponent.name}}'s turn</span>
       </div>
@@ -328,12 +334,13 @@ export default {
         mats: [],
         hand: [],
         discard: [],
-        numActions: 0,
-        numBuys: 0,
+        numActions: 1,
+        numBuys: 1,
         numCoins: 0,
         numVP: 0,
         numCoffers: 0,
         numVillagers: 0,
+        numDebt: 0,
         shownPage: 'kingdom'
       }, {
         name: '',
@@ -343,12 +350,13 @@ export default {
         hand: [],
         mats: [],
         discard: [],
-        numActions: 0,
-        numBuys: 0,
+        numActions: 1,
+        numBuys: 1,
         numCoins: 0,
         numVP: 0,
         numCoffers: 0,
         numVillagers: 0,
+        numDebt: 0,
         shownPage: 'kingdom'
       }],
       player: {},
@@ -670,17 +678,24 @@ export default {
     },
     shuffleDeck () {
       this.shuffle(this.player['deck'])
+      this.saveDominionGame()
     },
     deckToDiscard () {
       this.player['discard'].push(...this.player['deck'])
       this.emptyArray(this.player['deck'])
+      this.saveDominionGame()
     },
     deckToHand () {
       for (let i = 0; i < 5; ++i) {
         this.moveCard(this.player['deck'], undefined, this.player['hand'])
       }
+      this.saveDominionGame()
     },
-    handAndPlayAreaToDiscard () {
+    singleCardFromDeckToHand () {
+      this.moveCard(this.player['deck'], undefined, this.player['hand'])
+      this.saveDominionGame()
+    },
+    endTurnAndCleanUp () {
       this.player['discard'].push(...this.player['hand'])
       this.player['discard'].push(...this.player['playArea'])
       this.emptyArray(this.player['hand'])
@@ -688,6 +703,67 @@ export default {
       if (this.currentSelection['array'] === this.player['hand'] || this.currentSelection['array'] === this.player['playArea']) {
         this.clearCurrentSelection()
       }
+      this.player['numActions'] = 1
+      this.player['numBuys'] = 1
+      this.player['numCoins'] = 0
+      this.endPlayerTurn()
+      this.saveDominionGame()
+    },
+    incrementNumActions () {
+      this.player['numActions']++
+      this.saveDominionGame()
+    },
+    decrementNumActions () {
+      this.player['numActions']--
+      this.saveDominionGame()
+    },
+    incrementNumBuys () {
+      this.player['numBuys']++
+      this.saveDominionGame()
+    },
+    decrementNumBuys () {
+      this.player['numBuys']--
+      this.saveDominionGame()
+    },
+    incrementNumCoins () {
+      this.player['numCoins']++
+      this.saveDominionGame()
+    },
+    decrementNumCoins () {
+      this.player['numCoins']--
+      this.saveDominionGame()
+    },
+    incrementNumVP () {
+      this.player['numVP']++
+      this.saveDominionGame()
+    },
+    decrementNumVP () {
+      this.player['numVP']--
+      this.saveDominionGame()
+    },
+    incrementNumVillagers () {
+      this.player['numVillagers']++
+      this.saveDominionGame()
+    },
+    decrementNumVillagers () {
+      this.player['numVillagers']--
+      this.saveDominionGame()
+    },
+    incrementNumCoffers () {
+      this.player['numCoffers']++
+      this.saveDominionGame()
+    },
+    decrementNumCoffers () {
+      this.player['numCoffers']--
+      this.saveDominionGame()
+    },
+    incrementNumDebt () {
+      this.player['numDebt']++
+      this.saveDominionGame()
+    },
+    decrementNumDebt () {
+      this.player['numDebt']--
+      this.saveDominionGame()
     },
     handToPlayArea () {
       this.player['playArea'].push(...this.player['hand'])
@@ -695,6 +771,7 @@ export default {
       if (this.currentSelection['array'] === this.player['hand']) {
         this.clearCurrentSelection()
       }
+      this.saveDominionGame()
     },
     shuffle (array) { // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
       var currentIndex = array.length
@@ -766,13 +843,32 @@ export default {
     showShortcuts () {
       this.player.shownPage = 'shortcuts'
     },
-    changePlayerTurn () {
-      this.currentPlayerTurn = 1 - this.currentPlayerTurn
+    endPlayerTurn () {
+      this.currentPlayerTurn = 1 - this.playerIndex
+      this.saveDominionGame()
     },
     handleKeyPress (event) {
       switch (event.key) {
+        case 'a':
+          this.incrementNumActions()
+          break
+        case 'b':
+          this.incrementNumBuys()
+          break
+        case 'c':
+          this.incrementNumCoins()
+          break
+        case 'A':
+          this.decrementNumActions()
+          break
+        case 'B':
+          this.decrementNumBuys()
+          break
+        case 'C':
+          this.decrementNumCoins()
+          break
         case 'D':
-          this.handAndPlayAreaToDiscard()
+          this.endTurnAndCleanUp()
           return
         case 'H':
           this.deckToHand()
@@ -782,6 +878,12 @@ export default {
           return
         case 'Z': // For lack of a better letter
           this.deckToDiscard()
+          return
+        case 'e':
+          this.endPlayerTurn()
+          break
+        case 'w':
+          this.singleCardFromDeckToHand()
           return
       }
       if (!this.currentSelection['exists']) {

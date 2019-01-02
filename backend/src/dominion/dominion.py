@@ -1039,12 +1039,13 @@ class Dominion:
             "hand": [],
             "mats": [],
             "discard": [],
-            "numActions": 0,
-            "numBuys": 0,
+            "numActions": 1,
+            "numBuys": 1,
             "numCoins": 0,
             "numVP": 0,
             "numCoffers": 0,
             "numVillagers": 0,
+            "numDebt": 0,
             "shownPage": 'kingdom'
         }, {
             "name": player2,
@@ -1054,12 +1055,13 @@ class Dominion:
             "hand": [],
             "mats": [],
             "discard": [],
-            "numActions": 0,
-            "numBuys": 0,
+            "numActions": 1,
+            "numBuys": 1,
             "numCoins": 0,
             "numVP": 0,
             "numCoffers": 0,
             "numVillagers": 0,
+            "numDebt": 0,
             "shownPage": 'kingdom'
         }]
         data["boonsDiscard"] = []
