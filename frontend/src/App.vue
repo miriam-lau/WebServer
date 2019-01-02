@@ -19,7 +19,6 @@ export default {
   },
   beforeCreate () {
     connect()
-    console.log('here')
   }
 }
 </script>

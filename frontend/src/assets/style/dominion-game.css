@@ -1,21 +1,21 @@
 :root {
-  --card-height: 168px;
-  --card-margin: 2px;
-  --card-width: calc(var(--card-height) / 1.6);
+  --card-margin: 0.14vw;
+  --card-width: 6.6vw;
+  --card-height: calc(var(--card-width) * 1.6);
   --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
   --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin));
   --sideways-card-width: calc(var(--card-height) * 1.6);
   --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
-  --standard-margin: 2px;
+  --standard-margin: 0.14vw;
   --scrollbar-width: 18px;
 }
 
 .new-game {
-  margin-bottom: 50px;
+  margin-bottom: 3vw;
 }
 
 .dominion-player-to-invite {
-  width: 100px;
+  width: 7vw;
 }
 
 .vp-treasure {
@@ -81,7 +81,7 @@
   height: var(--card-height);
   width: var(--card-width);
   margin: var(--card-margin);
-  border-radius: 4px;
+  border-radius: 0.24vw;
 }
 
 .card-in-container {
@@ -94,7 +94,7 @@
   height: var(--card-height);
   width: var(--sideways-card-width);
   margin: var(--card-margin);
-  border-radius: 4px;
+  border-radius: 0.24vw;
 }
 
 .play-area {
@@ -109,7 +109,7 @@
 }
 
 .stat-item {
-  margin-right: 20px;
+  margin-right: 1.2vw;
 }
 
 .deck-and-hand {
@@ -133,8 +133,8 @@
 
 .hand {
   float: left;
-  margin-left: 30px;
-  width: calc(100% - 30px - 2 * var(--card-width-with-margin));
+  margin-left: 1.8vw;
+  width: calc(100% - 1.8vw - 2 * var(--card-width-with-margin));
   height: var(--card-height-with-margin);
   background-color: orange;
   overflow: auto;
@@ -142,14 +142,14 @@
 
 .counter {
   text-align: center;
-  width: 30px;
+  width: 1.8vw;
 }
 
 .preview {
   float: right;
   height: calc(2 * var(--card-height-with-margin));
   width: calc(2 * var(--card-height-with-margin) / 1.6);
-  border-radius: 8px;
+  border-radius: 0.48vw;
 }
 
 .c {
@@ -163,14 +163,14 @@
   position: relative;
   z-index: 900;
   background-color: rgba(255,0,0,.9);
-  box-shadow: 0 0 2px 2px rgba(0,0,0,.75);
+  box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
   font-family: Monospaced;
-  border-radius: 3px;
+  border-radius: 0.18vw;
   transform-origin: 0 0;
-  height: 15px;
-  width: 15px;
-  font-size: 13px;
-  line-height: 15px;
+  height: 0.9vw;
+  width: 0.9vw;
+  font-size: 0.78vw;
+  line-height: 0.9vw;
   color: #fff;
   text-align: center;
 }
