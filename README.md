@@ -23,7 +23,9 @@ npm install axios --save<br>
 npm i --save @fortawesome/fontawesome-svg-core<br>
 npm i --save @fortawesome/free-solid-svg-icons<br>
 npm install --save @fortawesome/vue-fontawesome<br>
-npm install vue-masonry --save<br><br>
+npm install vue-masonry --save<br>
+<br>
+psql databasename < data_base_dump
 
 ## Restoring the database in windows
 https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
