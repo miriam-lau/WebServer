@@ -457,6 +457,7 @@ def dominion_save_game():
     game_data = request.json["gameData"]
     dominion.update_game(game_id, game_data)
     _dominion_send_socketio_refresh(game_data, username)
+    return ""
 
 # Error handling ----------------------------------------------------------------------------------------------
 

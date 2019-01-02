@@ -1119,9 +1119,9 @@ class Dominion:
         try:
             DominionDatabase.update_game(cur, game_id, data)
 
-            self.dominion_database.commit()
+            self._dominion_database.commit()
             cur.close()
         except psycopg2.Error:
-            self.dominion_database.rollback()
+            self._dominion_database.rollback()
             cur.close()
             raise

@@ -491,17 +491,13 @@ export default {
       return data
     },
     saveDominionGame () {
-      callAxiosAndSetButterBar(
-        this,
+      axios.post(
         SAVE_DOMINION_GAME_URL,
         {
           gameId: this.gameId,
-          data: this.getGameData(),
+          gameData: this.getGameData(),
           username: this.username
-        },
-        'Generated Kingdom',
-        'Failed to generate kingdom.',
-        function (response) {})
+        })
     },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
