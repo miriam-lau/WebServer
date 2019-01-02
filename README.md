@@ -3,7 +3,11 @@
 
 ## Build Setup
 
-git clone git@github.com:miriam-lau/WebServer.git<br><br>
+git clone git@github.com:miriam-lau/WebServer.git<br>
+install python<br>
+install npm<br>
+install postgres<br>
+<br>
 python3 -m pip install --user virtualenv<br>
 python3 -m virtualenv env<br>
 pip3 install flask flask-socketio eventlet<br>
@@ -12,7 +16,6 @@ pip3 install -U flask-cors<br>
 pip3 install pyyaml<br><br>
 
 // navigate to "frontend" directory
-apt install npm<br>
 npm install -g vue-cli<br>
 npm install vue-cookies --save<br>
 npm install vuex --save<br>
@@ -21,9 +24,6 @@ npm i --save @fortawesome/fontawesome-svg-core<br>
 npm i --save @fortawesome/free-solid-svg-icons<br>
 npm install --save @fortawesome/vue-fontawesome<br>
 npm install vue-masonry --save<br><br>
-
-apt-get update<br>
-apt-get install postgresql postgresql-contrib<br>
 
 ## Restoring the database in windows
 https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
