@@ -73,8 +73,7 @@ import { setButterBarMessage, ButterBarType } from '../common/butterbar_componen
 import axios from 'axios'
 import { store } from '../store/store'
 import { playSound, getFullBackendUrlForPath, generateExpandIcon } from '../common/utils'
-import * as io from 'socket.io-client'
-window.io = io
+import { socket } from '../common/socketio'
 
 // Todo: Make the CSS in this file less hacky. There's hardcoded widths everywhere.
 const CODENAMES_CREATE_GAME_URL = getFullBackendUrlForPath('/codenames_create_game')
@@ -149,7 +148,6 @@ export default {
     this.playerToInvite = this.defaultPlayerToInvite()
   },
   mounted () {
-    var socket = io.connect('http://' + window.location.hostname + ':5000')
     var that = this
     socket.on('refresh_codenames', function (data) {
       if (data['players'].includes(that.username)) {

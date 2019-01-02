@@ -295,9 +295,8 @@ import ButterBar from './shared/ButterBar'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import * as io from 'socket.io-client'
+import { socket } from '../common/socketio'
 import axios from 'axios'
-window.io = io
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -389,7 +388,6 @@ export default {
     }
   },
   mounted () {
-    var socket = io.connect('http://' + window.location.hostname + ':5000')
     var that = this
     socket.on('refresh_dominion', function (data) {
       if (data['players'].includes(that.username) && data['player_triggering_update'] !== that.username) {
@@ -514,6 +512,7 @@ export default {
       })
     },
     updateDominionDisplayWithGameData (gameData) {
+      this.currentSelection = {}
       this.currentPlayerTurn = gameData['currentPlayerTurn']
       this.revealArea = gameData['revealArea']
       this.isInGame = gameData['isInGame']
