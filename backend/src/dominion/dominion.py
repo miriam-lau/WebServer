@@ -1,6 +1,9 @@
 import yaml
 import random
 import pprint
+from src.dominion.dominion_database import DominionDatabase
+from typing import List, Optional, Dict
+import psycopg2
 
 # Static files taken from DominionRandomizer/DominionWiki.
 class Dominion:
@@ -17,7 +20,7 @@ class Dominion:
     BANE = "bane"
     HEXES = "hexes"
 
-    def __init__(self):
+    def __init__(self, database):
         # Cards includes all cards to select the randomized kingdom from. It includes events and
         # landmarks and does not include cards dependent on others like potion.
         self._cards = []
@@ -38,6 +41,7 @@ class Dominion:
         self._add_cards_from_file("static/dominion/sets/renaissance.yaml")
         self._add_cards_from_file("static/dominion/sets/seaside.yaml")
         self.remove_banned_cards_from_kingdom()
+        self._dominion_database = DominionDatabase(database)
 
     def _add_cards_from_file(self, filename):
         with open(filename, 'r') as stream:
@@ -131,7 +135,7 @@ class Dominion:
         ret["boons"] = boons
         return ret
 
-    def generate_random_kingdom_for_online_game(self, player1, player2):
+    def generate_random_kingdom_for_online_game(self):
         random_cards = self.generate_random_kingdom()
         normal_cards = random_cards["normal_cards"].copy()
         normal_cards.sort(key=lambda card: card["cost"]["treasure"])
@@ -316,7 +320,6 @@ class Dominion:
             ret[Dominion.BANE] = Dominion.generate_pile(bane)
 
         Dominion.annotate_card_piles(ret)
-        ret['player_order'] = [player1, player2]
         return ret
 
     @staticmethod
@@ -1003,3 +1006,122 @@ class Dominion:
             if card["name"] == "Druid":
                 return True
         return False
+
+    # Returns both players in the game as a list with the order: [player1, player2].
+    def get_players_in_game(self, game_id) -> List[str]:
+        cur = self._dominion_database.get_cursor()
+
+        try:
+            game = DominionDatabase.get_game(cur, game_id)
+            cur.close()
+        except psycopg2.Error:
+            self._dominion_database.rollback()
+            cur.close()
+            raise
+
+        if game is None:
+            return None
+        return [game[DominionDatabase.DOMINION_GAMES_PLAYER1], game[DominionDatabase.DOMINION_GAMES_PLAYER2]]
+
+    def create_game(self, player1, player2) -> int:
+        game_data = self.generate_random_kingdom_for_online_game()
+
+        data = {}
+        data["playerOrder"] = [player1, player2]
+        data["currentPlayerTurn"] = 0
+        data["revealArea"] = []
+        data["isInGame"] = True
+        data["players"] = [{
+            "name": player1,
+            "notes": '',
+            "playArea": [],
+            "deck": game_data["player_1_deck"],
+            "hand": [],
+            "mats": [],
+            "discard": [],
+            "numActions": 0,
+            "numBuys": 0,
+            "numCoins": 0,
+            "numVP": 0,
+            "numCoffers": 0,
+            "numVillagers": 0,
+            "shownPage": 'kingdom'
+        }, {
+            "name": player2,
+            "notes": '',
+            "playArea": [],
+            "deck": game_data["player_2_deck"],
+            "hand": [],
+            "mats": [],
+            "discard": [],
+            "numActions": 0,
+            "numBuys": 0,
+            "numCoins": 0,
+            "numVP": 0,
+            "numCoffers": 0,
+            "numVillagers": 0,
+            "shownPage": 'kingdom'
+        }]
+        data["boonsDiscard"] = []
+        data["hexesDiscard"] = []
+        data["boonsDeck"] = []
+        data["boonsReveal"] = []
+        data["hexesDeck"] = []
+        data["hexesReveal"] = []
+        data["nonSupplyCards"] = game_data["non_supply_cards"]
+        data["kingdomCards"] = game_data["kingdom_cards"]
+        data["vpCards"] = game_data["vp_cards"]
+        data["treasureCards"] = game_data["treasure_cards"]
+        data["trash"] = game_data["trash"]
+        data["bane"] = game_data["bane"]
+        data["hexesDeck"] = game_data["hexes"]
+        data["boonsDeck"] = game_data["boons"]
+        data["sidewaysCards"] = game_data["sideways_cards"]
+        data["hasBane"] = len(game_data["bane"]) > 0
+        data["hasBoons"] = len(game_data["boons"]) > 0
+        data["hasHexes"] = len(game_data["hexes"]) > 0
+
+        cur = self._dominion_database.get_cursor()
+
+        try:
+            game_id = DominionDatabase.add_game(cur, player1, player2, {})
+            data["gameId"] = game_id
+            DominionDatabase.update_game(cur, game_id, data)
+
+            self._dominion_database.commit()
+            cur.close()
+        except psycopg2.Error:
+            self._dominion_database.rollback()
+            cur.close()
+            raise
+
+        return data
+
+    # Returns the game as a dict.
+    def get_latest_game(self, player) -> Optional[Dict]:
+        cur = self._dominion_database.get_cursor()
+
+        try:
+            game = DominionDatabase.get_latest_game(cur, player)
+            cur.close()
+            if game is None:
+                return None
+        except psycopg2.Error:
+            self._dominion_database.rollback()
+            cur.close()
+            raise
+
+        return game
+
+    def update_game(self, game_id, data) -> int:
+        cur = self._dominion_database.get_cursor()
+
+        try:
+            DominionDatabase.update_game(cur, game_id, data)
+
+            self.dominion_database.commit()
+            cur.close()
+        except psycopg2.Error:
+            self.dominion_database.rollback()
+            cur.close()
+            raise

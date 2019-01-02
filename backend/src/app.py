@@ -50,7 +50,7 @@ def initialize_app():
     pantry_page = PantryPage(database)
     notes_page = NotesPage(database)
     inventory_page = InventoryPage(database)
-    dominion = Dominion()
+    dominion = Dominion(database)
 
 # TODO: This is totally insecure.
 # Current documents methods -------------------------------------------------------------------------------------
@@ -142,6 +142,13 @@ def _codenames_send_socketio_refresh(game_id, player_triggering_update):
                   {"players": players, "player_triggering_update": player_triggering_update},
                   broadcast=True)
 
+# This is sent to all players in the current game to tell Vue to refresh the client.
+def _dominion_send_socketio_refresh(game_data, player_triggering_update):
+    players = game_data["playerOrder"]
+    socketio.emit("refresh_dominion",
+                  {"players": players,
+                   "player_triggering_update": player_triggering_update,
+                   "gameData": game_data}, broadcast=True)
 
 # Hobby Tracker methods ----------------------------------------------------------------------------------------------
 
@@ -429,11 +436,27 @@ def add_box():
 def generate_dominion_kingdom():
     return jsonify(dominion.generate_random_kingdom())
 
-@app.route("/generate_dominion_kingdom_for_online_game", methods=["POST"])
-def generate_dominion_kingdom_for_online_game():
+@app.route("/create_dominion_game", methods=["POST"])
+def create_dominion_game():
     player1 = request.json["player1"]
     player2 = request.json["player2"]
-    return jsonify(dominion.generate_random_kingdom_for_online_game(player1, player2))
+    username = request.json["username"]
+    game_data = dominion.create_game(player1, player2)
+    _dominion_send_socketio_refresh(game_data, username)
+    return jsonify(game_data)
+
+@app.route("/dominion_get_latest_game", methods=["POST"])
+def dominion_get_latest_game():
+    username = request.json["username"]
+    return jsonify(dominion.get_latest_game(username))
+
+@app.route("/save_dominion_game", methods=["POST"])
+def dominion_save_game():
+    username = request.json["username"]
+    game_id = request.json["gameId"]
+    game_data = request.json["gameData"]
+    dominion.update_game(game_id, game_data)
+    _dominion_send_socketio_refresh(game_data, username)
 
 # Error handling ----------------------------------------------------------------------------------------------
 

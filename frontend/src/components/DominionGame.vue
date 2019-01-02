@@ -295,14 +295,21 @@ import ButterBar from './shared/ButterBar'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
+import * as io from 'socket.io-client'
+import axios from 'axios'
+window.io = io
 
-const GENERATE_KINGDOM_URL = getFullBackendUrlForPath('/generate_dominion_kingdom_for_online_game')
+const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
+const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
+const SAVE_DOMINION_GAME_URL = getFullBackendUrlForPath('/save_dominion_game')
 
 export default {
   name: 'DominionGame',
   data () {
     return {
       currentSelection: {}, // Object with keys 'array', and 'index', and 'exists'
+      gameId: 0,
+      playerOrder: [],
       isInGame: false,
       playerIndex: 0,
       playerToInvite: '',
@@ -367,6 +374,7 @@ export default {
     ButterBar
   },
   created () {
+    this.updateDominionDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
     this.playerToInvite = this.defaultPlayerToInvite()
   },
@@ -374,6 +382,20 @@ export default {
     username () {
       return store.state.username
     }
+  },
+  watch: {
+    username () {
+      this.updateDominionDisplayWithLatestGame()
+    }
+  },
+  mounted () {
+    var socket = io.connect('http://' + window.location.hostname + ':5000')
+    var that = this
+    socket.on('refresh_dominion', function (data) {
+      if (data['players'].includes(that.username) && data['player_triggering_update'] !== that.username) {
+        that.updateDominionDisplayWithGameData(data['gameData'])
+      }
+    })
   },
   methods: {
     /*
@@ -398,79 +420,132 @@ export default {
       let that = this
       callAxiosAndSetButterBar(
         this,
-        GENERATE_KINGDOM_URL,
+        CREATE_DOMINION_GAME_URL,
         {
           player1: randomizedPlayers[0],
-          player2: randomizedPlayers[1]
+          player2: randomizedPlayers[1],
+          username: this.username
         },
         'Generated Kingdom',
         'Failed to generate kingdom.',
         function (response) {
-          that.currentPlayerTurn = 0
-          that.currentSelection = {}
-          that.revealArea = []
-          that.isInGame = true
-          that.players = [{
-            name: '',
-            notes: '',
-            playArea: [],
-            deck: [],
-            hand: [],
-            mats: [],
-            discard: [],
-            numActions: 0,
-            numBuys: 0,
-            numCoins: 0,
-            numVP: 0,
-            numCoffers: 0,
-            numVillagers: 0,
-            shownPage: 'kingdom'
-          }, {
-            name: '',
-            notes: '',
-            playArea: [],
-            deck: [],
-            hand: [],
-            mats: [],
-            discard: [],
-            numActions: 0,
-            numBuys: 0,
-            numCoins: 0,
-            numVP: 0,
-            numCoffers: 0,
-            numVillagers: 0,
-            shownPage: 'kingdom'
-          }]
-          that.boonsDiscard = []
-          that.hexesDiscard = []
-          that.boonsDeck = []
-          that.boonsReveal = []
-          that.hexesDeck = []
-          that.hexesReveal = []
-
-          that.butterBar_message = ''
-          that.butterBar_css = ''
           let data = response['data']
-          that.playerIndex = data['player_order'][0] === that.username ? 0 : 1
-          that.nonSupplyCards = data['non_supply_cards']
-          that.kingdomCards = data['kingdom_cards']
-          that.vpCards = data['vp_cards']
-          that.treasureCards = data['treasure_cards']
+          that.currentPlayerTurn = data['currentPlayerTurn']
+          that.currentSelection = {}
+          that.revealArea = data['revealArea']
+          that.isInGame = data['isInGame']
+          that.playerOrder = data['playerOrder']
+          that.players = data['players']
+          that.boonsDiscard = data['boonsDiscard']
+          that.hexesDiscard = data['hexesDiscard']
+          that.boonsDeck = data['boonsDeck']
+          that.boonsReveal = data['boonsReveal']
+          that.hexesDeck = data['hexesDeck']
+          that.hexesReveal = data['hexesReveal']
+          that.gameId = data['gameId']
+
+          that.playerIndex = data['playerOrder'][0] === that.username ? 0 : 1
+          that.nonSupplyCards = data['nonSupplyCards']
+          that.kingdomCards = data['kingdomCards']
+          that.vpCards = data['vpCards']
+          that.treasureCards = data['treasureCards']
           that.trash = data['trash']
-          that.players[0]['deck'] = data['player_1_deck']
-          that.players[1]['deck'] = data['player_2_deck']
-          that.players[0]['name'] = data['player_order'][0]
-          that.players[1]['name'] = data['player_order'][1]
           that.player = that.players[that.playerIndex]
           that.opponent = that.players[1 - that.playerIndex] // Only supports a 2 player game.
           that.bane = data['bane']
-          that.hexesDeck = data['hexes']
-          that.boonsDeck = data['boons']
-          that.sidewaysCards = data['sideways_cards']
-          that.hasBane = that.bane.length > 0
-          that.hasBoons = that.boonsDeck.length > 0
-          that.hasHexes = that.hexesDeck.length > 0
+          that.hexesDeck = data['hexesDeck']
+          that.boonsDeck = data['boonsDeck']
+          that.sidewaysCards = data['sidewaysCards']
+          that.hasBane = data['hasBane']
+          that.hasBoons = data['hasBoons']
+          that.hasHexes = data['hasHexes']
         })
+    },
+    getGameData () {
+      let data = {}
+      data['currentPlayerTurn'] = this.currentPlayerTurn
+      data['revealArea'] = this.revealArea
+      data['isInGame'] = this.isInGame
+      data['players'] = this.players
+      data['boonsDiscard'] = this.boonsDiscard
+      data['hexesDiscard'] = this.hexesDiscard
+      data['boonsDeck'] = this.boonsDeck
+      data['boonsReveal'] = this.boonsReveal
+      data['hexesDeck'] = this.hexesDeck
+      data['hexesReveal'] = this.hexesReveal
+      data['gameId'] = this.gameId
+
+      data['playerOrder'] = this.playerOrder
+      data['nonSupplyCards'] = this.nonSupplyCards
+      data['kingdomCards'] = this.kingdomCards
+      data['vpCards'] = this.vpCards
+      data['treasureCards'] = this.treasureCards
+      data['trash'] = this.trash
+      data['bane'] = this.bane
+      data['hexesDeck'] = this.hexesDeck
+      data['boonsDeck'] = this.boonsDeck
+      data['sidewaysCards'] = this.sidewaysCards
+      data['hasBane'] = this.hasBane
+      data['hasBoons'] = this.hasBoons
+      data['hasHexes'] = this.hasHexes
+      return data
+    },
+    saveDominionGame () {
+      callAxiosAndSetButterBar(
+        this,
+        SAVE_DOMINION_GAME_URL,
+        {
+          gameId: this.gameId,
+          data: this.getGameData(),
+          username: this.username
+        },
+        'Generated Kingdom',
+        'Failed to generate kingdom.',
+        function (response) {})
+    },
+    /**
+     * Fetches the latest game for the currently logged in user and displays it if any exists.
+     * playerTriggeringUpdate may be null.
+     */
+    updateDominionDisplayWithLatestGame () {
+      let that = this
+      axios.post(DOMINION_GET_LATEST_GAME_URL, {username: this.username}).then(response => {
+        if (response.data === null) {
+          this.isInGame = false
+          return
+        }
+        that.updateDominionDisplayWithGameData(response.data.data)
+      })
+    },
+    updateDominionDisplayWithGameData (gameData) {
+      this.currentPlayerTurn = gameData['currentPlayerTurn']
+      this.revealArea = gameData['revealArea']
+      this.isInGame = gameData['isInGame']
+      this.players = gameData['players']
+      this.boonsDiscard = gameData['boonsDiscard']
+      this.hexesDiscard = gameData['hexesDiscard']
+      this.boonsDeck = gameData['boonsDeck']
+      this.boonsReveal = gameData['boonsReveal']
+      this.hexesDeck = gameData['hexesDeck']
+      this.hexesReveal = gameData['hexesReveal']
+      this.gameId = gameData['gameId']
+      this.playerOrder = gameData['playerOrder']
+
+      this.playerIndex = gameData['playerOrder'][0] === this.username ? 0 : 1
+      this.nonSupplyCards = gameData['nonSupplyCards']
+      this.kingdomCards = gameData['kingdomCards']
+      this.vpCards = gameData['vpCards']
+      this.treasureCards = gameData['treasureCards']
+      this.trash = gameData['trash']
+      this.player = this.players[this.playerIndex]
+      this.opponent = this.players[1 - this.playerIndex] // Only supports a 2 player game.
+      this.bane = gameData['bane']
+      this.hexesDeck = gameData['hexesDeck']
+      this.boonsDeck = gameData['boonsDeck']
+      this.sidewaysCards = gameData['sidewaysCards']
+      this.hasBane = gameData['hasBane']
+      this.hasBoons = gameData['hasBoons']
+      this.hasHexes = gameData['hasHexes']
     },
     getImageForCurrentSelection () {
       if (!this.currentSelection.exists) {
@@ -574,6 +649,7 @@ export default {
       let card = originalPile[cardIndex]
       destinationPile.push(card)
       originalPile.splice(cardIndex, 1)
+      this.saveDominionGame()
       return true
     },
     emptyArray (arr) {
