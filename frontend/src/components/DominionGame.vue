@@ -624,7 +624,7 @@ export default {
       let cardIndex = this.currentSelection['index']
       let cardArray = this.currentSelection['array']
       if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= cardArray.length)) {
-        return false
+        return null
       }
       if (cardIndex === undefined) {
         cardIndex = cardArray.length - 1
@@ -896,6 +896,9 @@ export default {
           break
         case 'r':
           let currentSelectionCard = this.getCurrentSelectionCard()
+          if (currentSelectionCard == null) {
+            return
+          }
           let destinationPileType = currentSelectionCard.pile_type
           let destinationPileIndex = currentSelectionCard.pile_index
           if (!destinationPileType) {
