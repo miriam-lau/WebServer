@@ -1046,7 +1046,8 @@ class Dominion:
             "numCoffers": 0,
             "numVillagers": 0,
             "numDebt": 0,
-            "shownPage": 'kingdom'
+            "shownPage": "kingdom",
+            "displayedPlayArea": 0
         }, {
             "name": player2,
             "notes": '',
@@ -1062,7 +1063,8 @@ class Dominion:
             "numCoffers": 0,
             "numVillagers": 0,
             "numDebt": 0,
-            "shownPage": 'kingdom'
+            "shownPage": "kingdom",
+            "displayedPlayArea": 1
         }]
         data["boonsDiscard"] = []
         data["hexesDiscard"] = []

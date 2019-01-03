@@ -1,19 +1,29 @@
+:root {
+  --card-margin: 1vw;
+  --card-width: 8vw;
+  --card-height: calc(var(--card-width) * 1.6);
+  --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
+  --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin));
+  --sideways-card-width: calc(var(--card-height) * 1.6);
+  --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
+}
+
 .dominion_card {
   float: left;
-  margin-right: 8px;
-  width: 175px;
-  height: 287px;
+  margin-right: var(--card-margin);
+  width: var(--card-width);
+  height: var(--card-height);
 }
 .dominion_sideways_card {
   float: left;
-  margin-right: 8px;
-  height: 287px;
+  margin-right: var(--card-margin);
+  height: var(--card-height);
 }
 .dominion_section {
-  margin-top: 10px;
+  margin-top: var(--card-margin);
   float: left;
 }
 
 .dominion_float {
-  margin-right: 30px;
+  margin-right: var(--vard-margin);
 }
