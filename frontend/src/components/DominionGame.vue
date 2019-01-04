@@ -318,7 +318,6 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import axios from 'axios'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -498,27 +497,35 @@ export default {
       return data
     },
     saveDominionGame () {
-      axios.post(
+      callAxiosAndSetButterBar(
+        this,
         SAVE_DOMINION_GAME_URL,
         {
           gameId: this.game.gameId,
           gameData: this.getGameData(),
           username: this.username
-        })
+        },
+        null,
+        'Failed to save dominion game.')
     },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
      * playerTriggeringUpdate may be null.
      */
     updateDominionDisplayWithLatestGame () {
-      let that = this
-      axios.post(DOMINION_GET_LATEST_GAME_URL, {username: this.username}).then(response => {
-        if (response.data === null) {
-          this.isInGame = false
-          return
-        }
-        that.updateDominionDisplayWithGameData(response.data.data)
-      })
+      callAxiosAndSetButterBar(
+        this,
+        DOMINION_GET_LATEST_GAME_URL,
+        { username: this.username },
+        null,
+        'Failed to save dominion game.',
+        (response) => {
+          if (response.data === null) {
+            this.isInGame = false
+            return
+          }
+          this.updateDominionDisplayWithGameData(response.data.data)
+        })
     },
     updateDominionDisplayWithGameData (gameData) {
       this.clearCurrentSelection()

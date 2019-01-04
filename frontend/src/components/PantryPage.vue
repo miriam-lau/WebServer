@@ -157,7 +157,6 @@ import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
 import ExportGroceryListModal from './pantry_page/ExportGroceryListModal'
-import axios from 'axios'
 import { getFullBackendUrlForPath, getDisplayDate, callAxios } from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
@@ -284,28 +283,26 @@ export default {
       this.importModalErrorText = text
     },
     attemptAddToPantry (groceryList) {
-      axios.post(
+      callAxiosAndSetButterBar(
+        this,
         ATTEMPT_IMPORT_GROCERY_LIST_TO_PANTRY_URL,
-        { id: groceryList['id'] })
-        .then(response => {
+        { id: groceryList['id'] },
+        null,
+        'Failed to move note.',
+        (response) => {
           this.showImportModal(groceryList, response['data']['add'], response['data']['ignore'], response['data']['unrecognized'],
             response['data']['already_in_pantry'])
         })
-        .catch(error => {
-          setButterBarMessage(this, 'An error occurred during import', ButterBarType.ERROR)
-          console.log(error)
-        })
     },
     showExportGroceryListModal (groceryList) {
-      axios.post(
+      callAxiosAndSetButterBar(
+        this,
         PANTRY_EXPORT_TEXT_URL,
-        { id: groceryList['id'] })
-        .then(response => {
+        { id: groceryList['id'] },
+        null,
+        'Failed to move note.',
+        (response) => {
           this.showExportModal(groceryList, response['data'])
-        })
-        .catch(error => {
-          setButterBarMessage(this, 'An error occurred during export', ButterBarType.ERROR)
-          console.log(error)
         })
     },
     navigateToSubPath (path) {
@@ -554,8 +551,13 @@ export default {
         })
     },
     updatePantryPageDisplay () {
-      axios.post(GET_PANTRY_PAGE_URL).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_PANTRY_PAGE_URL,
+        {},
+        null,
+        'Failed to move note.',
+        (response) => {
           for (let index in response['data']['grocery_lists']) {
             response['data']['grocery_lists'][index]['saved'] = true
           }

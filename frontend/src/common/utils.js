@@ -55,15 +55,26 @@ function getDisplayDate (dateString) {
   return date.toLocaleDateString('en-US', options)
 }
 
+/**
+ * Use axios to make a call to a backend then call one of the callback functions.
+ * @param {string} backendPath the backend path.
+ * @param {Object} params the params object to pass to the backend.
+ * @param {Function?} successCallback optional.
+ * @param {Function?} errorCallback optional.
+ */
 function callAxios (backendPath, params, successCallback, errorCallback) {
   axios.post(backendPath, params)
     .then(
       response => {
-        successCallback(response)
+        if (successCallback) {
+          successCallback(response)
+        }
       })
     .catch(error => {
-      errorCallback(error)
-      console.log(error)
+      console.warn('Backend exception:\n' + error.response.data.exception)
+      if (errorCallback) {
+        errorCallback(error.response)
+      }
     })
 }
 

@@ -177,13 +177,3 @@ class CodenamesDatabase:
           "INSERT INTO codenames_turns_to_hints(game_id, turn_number, player, hint_word, hint_number) " +
           "VALUES(%s, %s, %s, %s, %s)",
           (game_id, turn_number, player, hint_word, hint_number))
-
-    # Returned Dict has all fields of codenames_words
-    @staticmethod
-    def get_all_words(cur) -> List[str]:
-        cur.execute("SELECT word from codenames_words", ())
-        word_maps = cur.fetchall()
-        ret = []
-        for word_map in word_maps:
-            ret.append(word_map["word"])
-        return ret

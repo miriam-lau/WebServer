@@ -3,10 +3,12 @@ from src.codenames.location import Location
 import random
 from typing import List, Dict, Optional
 import psycopg2
+import yaml
 
 
 class Codenames:
     NUM_AGENTS_FOR_VICTORY = 15
+    CODENAMES_WORDS_FILE = "static/codenames/words.yaml"
 
     def __init__(self, database):
         self._codenames_database = CodenamesDatabase(database)
@@ -30,7 +32,7 @@ class Codenames:
     def create_game(self, player1, player2) -> int:
         cur = self._codenames_database.get_cursor()
 
-        words = self._get_words_for_new_game(cur)
+        words = self._get_words_for_new_game()
         locations = Codenames._generate_locations()
 
         try:
@@ -258,8 +260,12 @@ class Codenames:
         return is_current_user_player1 == is_player1_turn
 
     @staticmethod
-    def _get_words_for_new_game(cur) -> List[str]:
-        words = CodenamesDatabase.get_all_words(cur)
+    def _get_words_for_new_game() -> List[str]:
+        with open(Codenames.CODENAMES_WORDS_FILE, 'r') as stream:
+            try:
+                words = yaml.load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
         random.shuffle(words)
         return words[:25]
 
