@@ -7,7 +7,13 @@ git clone git@github.com:miriam-lau/WebServer.git<br>
 install python<br>
 install npm<br>
 install postgres<br>
+in postgres, <br>
+create database webserver;<br>
+create user webserver with password <password>;<br>
+grant all privileges on database webserver to webserver;<br>
+
 <br>
+From WebServer/<br>
 python3 -m pip install --user virtualenv<br>
 python3 -m virtualenv env<br>
 pip3 install flask flask-socketio eventlet<br>
@@ -281,8 +287,8 @@ create table inventory (
 );
 
 create table dominion_games (
-  id serial primary key,
-  player1 varchar(50) references users not null,
-  player2 varchar(50) references users not null,
-  data jsonb
+id serial primary key,
+player1 varchar(50) references users not null,
+player2 varchar(50) references users not null,
+data jsonb
 );
