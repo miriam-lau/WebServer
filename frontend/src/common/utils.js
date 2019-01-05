@@ -71,6 +71,7 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
         }
       })
     .catch(error => {
+      console.warn(error)
       console.warn('Backend exception:\n' + error.response.data.exception)
       if (errorCallback) {
         errorCallback(error.response)

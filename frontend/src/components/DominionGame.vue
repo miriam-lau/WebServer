@@ -10,51 +10,36 @@
           <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
-      <button @click="showKingdom">Kingdom</button>
-      <button v-if="game.nonSupplyCards.length > 0" @click="showOtherCardPage">Non Supply</button>
-      <button v-if="game.hasBane" @click="showBane">Bane</button>
-      <button v-if="game.hasBoons" @click="showBoons">Boons</button>
-      <button v-if="game.hasHexes" @click="showHexes">Hexes</button>
-      <button @click="showYourMats">Your Mats</button>
-      <button @click="showDiscard">Your Discard</button>
-      <button @click="showOpponentMats">Opponent Mats</button>
-      <button @click="showRevealArea">Revealed</button>
-      <button @click="showTrash">Trash</button>
-      <button @click="showNotes">Notes</button>
-      <button @click="showAllYourCards">All your cards</button>
-      <button @click="showShortcuts">Shortcuts</button>
+      <button @click="game.player.shownPage = 'kingdom'">Kingdom</button>
+      <button v-if="game.nonSupplyCards.length > 0" @click="game.player.shownPage = 'nonSupply'">Non Supply</button>
+      <button v-if="game.hasBane" @click="game.player.shownPage = 'bane'">Bane</button>
+      <button v-if="game.hasBoons" @click="game.player.shownPage = 'boons'">Boons</button>
+      <button v-if="game.hasHexes" @click="game.player.shownPage = 'hexes'">Hexes</button>
+      <button @click="game.player.shownPage = 'yourMats'">Your Mats</button>
+      <button @click="game.player.shownPage = 'discard'">Your Discard</button>
+      <button @click="game.player.shownPage = 'opponentMats'">Opponent Mats</button>
+      <button @click="game.player.shownPage = 'reveal'">Revealed</button>
+      <button @click="game.player.shownPage = 'trash'">Trash</button>
+      <button @click="game.player.shownPage = 'notes'">Notes</button>
+      <button @click="game.player.shownPage = 'allYourCards'">All your cards</button>
+      <button @click="game.player.shownPage = 'shortcuts'">Shortcuts</button>
       <div v-if="game.player.shownPage === 'kingdom'">
         <div class="vp-treasure">
-          <div class="card-container" :key="'treasure' + index" v-for="(cardArray, index) in game.treasureCards">
-            <div class="card-counter-container">{{cardArray.length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['discard'])"
-                v-on:mouseover="setCurrentSelection(cardArray)"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(cardArray)"/>
-          </div>
+          <CardStack
+            :key="'treasure' + index" v-for="(cardArray, index) in game.treasureCards"
+            :defaultMoveArray="game.player['discard']"
+            :cardArray="cardArray"/>
           <div class="c"></div>
-          <div class="card-container" :key="'vp' + index" v-for="(cardArray, index) in game.vpCards">
-            <div class="card-counter-container">{{cardArray.length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['discard'])"
-                v-on:mouseover="setCurrentSelection(cardArray)"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(cardArray)"/>
-          </div>
+          <CardStack
+            :key="'vp' + index" v-for="(cardArray, index) in game.vpCards"
+            :defaultMoveArray="game.player['discard']"
+            :cardArray="cardArray"/>
         </div>
         <div class="kingdom">
-          <div class="card-container" :key="index" v-for="(cardArray, index) in game.kingdomCards">
-            <div class="card-counter-container">{{cardArray.length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['discard'])"
-                v-on:mouseover="setCurrentSelection(cardArray)"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(cardArray)"/>
-          </div>
+          <CardStack
+            :key="'vp' + index" v-for="(cardArray, index) in game.kingdomCards"
+            :defaultMoveArray="game.player['discard']"
+            :cardArray="cardArray"/>
         </div>
         <div class="events">
           <img
@@ -66,28 +51,17 @@
       </div>
       <div v-else-if="game.player.shownPage === 'nonSupply'">
         <div class="non-supply">
-          <div class="card-container" :key="index" v-for="(cardArray, index) in game.nonSupplyCards">
-            <div class="card-counter-container">{{cardArray.length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['discard'])"
-                v-on:mouseover="setCurrentSelection(cardArray)"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(cardArray)"/>
-          </div>
+          <CardStack
+            :key="index" v-for="(cardArray, index) in game.nonSupplyCards"
+            :defaultMoveArray="game.player['discard']"
+            :cardArray="cardArray"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'bane'">
         <div class="bane">
-          <div class="card-container">
-            <div class="card-counter-container">{{game.bane.length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['discard'])"
-                v-on:mouseover="setCurrentSelection(game.bane)"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.bane)"/>
-          </div>
+          <CardStack
+            :defaultMoveArray="game.player['discard']"
+            :cardArray="game.bane"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'boons'">
@@ -95,7 +69,7 @@
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.boonsDeck.length}}</div>
             <img
-                v-on:click="moveCard(boonsDeck, undefined, boonsReveal)"
+                v-on:click="moveCard(game.boonsDeck, undefined, game.boonsReveal, game.boonsDiscard)"
                 class="sideways-card card-in-container"
                 :src="getImageForCardArrayOrBlank(game.boonsDeck)"/>
           </div>
@@ -120,7 +94,7 @@
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.hexesDeck.length}}</div>
             <img
-                v-on:click="moveCard(game.hexesDeck, undefined, game.hexesReveal)"
+                v-on:click="moveCard(game.hexesDeck, undefined, game.hexesReveal, game.hexesDiscard)"
                 class="sideways-card card-in-container"
                 :src="getImageForCardArrayOrBlank(game.hexesDeck)"/>
           </div>
@@ -142,14 +116,9 @@
       </div>
       <div v-else-if="game.player.shownPage === 'yourMats'">
         <div class="your-mats">
-          <img
-              v-for="(card, index) in game.player['mats']"
-              :key="index"
-              v-on:click="moveCurrentSelection(game.player['discard'])"
-              v-on:mouseover="setCurrentSelection(game.player['mats'], index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList
+              :cardArray="game.player['mats']"
+              :defaultMoveArray="game.player['discard']"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'opponentMats'">
@@ -163,24 +132,12 @@
       </div>
       <div v-else-if="game.player.shownPage === 'trash'">
         <div class="trash">
-          <img
-              v-for="(card, index) in game.trash"
-              :key="index"
-              v-on:mouseover="setCurrentSelection(game.trash, index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList :cardArray="game.trash"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'reveal'">
         <div class="reveal-area">
-          <img
-              v-for="(card, index) in game.revealArea"
-              :key="index"
-              v-on:mouseover="setCurrentSelection(game.revealArea, index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList :cardArray="game.revealArea"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'notes'">
@@ -212,13 +169,7 @@
       </div>
       <div v-else-if="game.player.shownPage === 'discard'">
         <div class="discard-area">
-          <img
-              v-for="(card, index) in game.player['discard']"
-              :key="index"
-              v-on:mouseover="setCurrentSelection(game.player['discard'], index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList :cardArray="game.player['discard']"/>
         </div>
       </div>
       <div v-else-if="game.player.shownPage === 'allYourCards'">
@@ -230,7 +181,7 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <img class="preview" v-if="currentSelection['exists']" :src="getImageForCurrentSelection()"/>
+      <img class="preview" v-if="games_currentCardSelection['exists']" :src="getImageForGames_CurrentCardSelection()"/>
       <div class="c">
       </div>
       <div v-if="game.player['displayedPlayArea'] === playerIndex">
@@ -241,21 +192,12 @@
       </div>
       <div class="play-area">
         <div v-if="game.player['displayedPlayArea'] === playerIndex">
-          <img
-              v-for="(card, index) in game.player['playArea']"
-              :key="index"
-              v-on:click="moveCurrentSelection(game.player['discard'])"
-              v-on:mouseover="setCurrentSelection(game.player['playArea'], index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList
+              :cardArray="game.player['playArea']"
+              :defaultMoveArray="game.player['discard']"/>
         </div>
         <div v-else>
-          <img
-              v-for="(card, index) in game.opponent['playArea']"
-              :key="index"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList :cardArray="game.opponent['playArea']"/>
         </div>
       </div>
       <div class="c">
@@ -275,35 +217,19 @@
       </div>
       <div class="deck-and-hand">
         <div class="deck">
-          <div class="card-container">
-            <div class="card-counter-container">{{game.player['deck'].length}}</div>
-            <img
-                v-on:click="moveCurrentSelection(game.player['hand'])"
-                v-on:mouseover="setCurrentSelection(game.player['deck'])"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.player['deck'])"/>
-          </div>
+          <CardStack
+            :reshufflePileArray="game.player['discard']"
+            :defaultMoveArray="game.player['hand']"
+            :cardArray="game.player['deck']"/>
         </div>
         <div class="discard">
-          <div class="card-container">
-            <div class="card-counter-container">{{game.player['discard'].length}}</div>
-            <img
-                v-on:mouseover="setCurrentSelection(game.player['discard'])"
-                v-on:mouseout="clearCurrentSelection()"
-                class="card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.player['discard'])"/>
-          </div>
+          <CardStack
+            :cardArray="game.player['discard']"/>
         </div>
         <div class="hand">
-          <img
-              v-for="(card, index) in game.player['hand']"
-              :key="index"
-              v-on:click="moveCurrentSelection(game.player['playArea'])"
-              v-on:mouseover="setCurrentSelection(game.player['hand'], index)"
-              v-on:mouseout="clearCurrentSelection()"
-              class="card"
-              :src="getImageForCard(card)"/>
+          <CardList
+              :defaultMoveArray="game.player['playerArea']"
+              :cardArray="game.player['hand']"/>
         </div>
       </div>
     </div>
@@ -314,10 +240,13 @@
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
+import CardStack from './shared/games/CardStack'
+import CardList from './shared/games/CardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
+import { shuffle, moveCard, moveCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -327,7 +256,7 @@ export default {
   name: 'DominionGame',
   data () {
     return {
-      currentSelection: {}, // Object with keys 'array', and 'index', and 'exists'
+      games_currentCardSelection: {}, // Object with keys 'array', and 'index', and 'exists'
       shouldSaveChanges: false,
       playerToInvite: '',
       playerIndex: 0,
@@ -396,7 +325,7 @@ export default {
     }
   },
   components: {
-    ButterBar
+    ButterBar, CardStack, CardList
   },
   created () {
     this.updateDominionDisplayWithLatestGame()
@@ -432,6 +361,7 @@ export default {
     })
   },
   methods: {
+    moveCard: moveCard,
     /*
      * The default player name to invite to a game.
      */
@@ -528,7 +458,7 @@ export default {
         })
     },
     updateDominionDisplayWithGameData (gameData) {
-      this.clearCurrentSelection()
+      clearCurrentCardSelection(this)
       this.shouldSaveChanges = false
       this.isInGame = gameData['isInGame']
       this.game.currentPlayerTurn = gameData['currentPlayerTurn']
@@ -559,23 +489,23 @@ export default {
       this.game.hasBoons = gameData['hasBoons']
       this.game.hasHexes = gameData['hasHexes']
     },
-    getImageForCurrentSelection () {
-      if (!this.currentSelection.exists) {
+    getImageForGames_CurrentCardSelection () {
+      if (!this.games_currentCardSelection.exists) {
         return
       }
-      if (this.currentSelection.array === this.game.players['deck']) {
+      if (this.games_currentCardSelection.array === this.game.players['deck']) {
         return '/static/dominion/card_images/backside_blue.jpg'
       }
-      let index = this.currentSelection.index
+      let index = this.games_currentCardSelection.index
       if (index === undefined) {
-        index = this.currentSelection.array.length - 1
+        index = this.games_currentCardSelection.array.length - 1
       }
       if (index < 0) {
         return '/static/dominion/card_images/_blank.jpg'
-      } else if (this.currentSelection.array.length <= index) {
+      } else if (this.games_currentCardSelection.array.length <= index) {
         return ''
       } else {
-        return this.getImageForCard(this.currentSelection.array[index])
+        return this.getImageForCard(this.games_currentCardSelection.array[index])
       }
     },
     getImageForCardArrayOrBlank (cardArray) {
@@ -627,9 +557,9 @@ export default {
         return cardName + '\n$' + cardArray[cardArray.length - 1].cost.treasure + ', ' + cardArray.length + ' left'
       }
     },
-    getCurrentSelectionCard () {
-      let cardIndex = this.currentSelection['index']
-      let cardArray = this.currentSelection['array']
+    getGames_CurrentCardSelectionCard () {
+      let cardIndex = this.games_currentCardSelection['index']
+      let cardArray = this.games_currentCardSelection['array']
       if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= cardArray.length)) {
         return null
       }
@@ -638,54 +568,8 @@ export default {
       }
       return cardArray[cardIndex]
     },
-    moveCard (originalPile, cardIndex, destinationPile) {
-      if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= originalPile.length)) {
-        return false
-      }
-      if (cardIndex === undefined) {
-        if (originalPile === this.game.player['deck'] && this.game.player['deck'].length === 0 && this.game.player['discard'].length !== 0) {
-          this.game.player['deck'].push(...this.shuffle(this.game.player['discard']))
-          this.emptyArray(this.game.player['discard'])
-        } else if (originalPile === this.game.boonsDeck && this.game.boonsDeck.length === 0 && this.game.boonsDiscard.length !== 0) {
-          this.game.boonsDeck.push(...this.shuffle(this.game.boonsDiscard))
-          this.emptyArray(this.game.boonsDiscard)
-        } else if (originalPile === this.game.hexesDeck && this.game.hexesDeck.length === 0 && this.game.hexesDiscard.length !== 0) {
-          this.game.hexesDeck.push(...this.shuffle(this.game.hexesDiscard))
-          this.emptyArray(this.game.hexesDiscard)
-        }
-        cardIndex = originalPile.length - 1
-      }
-      if (cardIndex < 0 || cardIndex >= originalPile.length) {
-        return
-      }
-      let card = originalPile[cardIndex]
-      destinationPile.push(card)
-      originalPile.splice(cardIndex, 1)
-      return true
-    },
-    emptyArray (arr) {
-      for (let i = arr.length; i > 0; --i) {
-        arr.pop()
-      }
-    },
-    moveCurrentSelection (destinationPile) {
-      if (!this.currentSelection.exists) {
-        return
-      }
-      let success = this.moveCard(this.currentSelection['array'], this.currentSelection['index'], destinationPile)
-      if (!success) {
-        return
-      }
-      if (this.currentSelection.index !== undefined) {
-        if (this.currentSelection.array.length > this.currentSelection.index) {
-          this.setCurrentSelection(this.currentSelection.array, this.currentSelection.index)
-        } else {
-          this.clearCurrentSelection()
-        }
-      }
-    },
     shuffleDeck () {
-      this.shuffle(this.game.player['deck'])
+      shuffle(this.game.player['deck'])
     },
     deckToDiscard () {
       this.game.player['discard'].push(...this.game.player['deck'])
@@ -693,19 +577,19 @@ export default {
     },
     deckToHand () {
       for (let i = 0; i < 5; ++i) {
-        this.moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
+        moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
       }
     },
     singleCardFromDeckToHand () {
-      this.moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
+      moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
     },
     endTurnAndCleanUp () {
       this.game.player['discard'].push(...this.game.player['hand'])
       this.game.player['discard'].push(...this.game.player['playArea'])
       this.emptyArray(this.game.player['hand'])
       this.emptyArray(this.game.player['playArea'])
-      if (this.currentSelection['array'] === this.game.player['hand'] || this.currentSelection['array'] === this.game.player['playArea']) {
-        this.clearCurrentSelection()
+      if (this.games_currentCardSelection['array'] === this.game.player['hand'] || this.games_currentCardSelection['array'] === this.game.player['playArea']) {
+        clearCurrentCardSelection(this)
       }
       this.game.player['numActions'] = 1
       this.game.player['numBuys'] = 1
@@ -714,9 +598,7 @@ export default {
       this.game.opponent['displayedPlayArea'] = 1 - this.playerIndex
       this.endPlayerTurn()
     },
-    incrementNumActions () {
-      this.game.player['numActions']++
-    },
+    incrementNumActions () { this.game.player['numActions']++ },
     decrementNumActions () {
       this.game.player['numActions']--
     },
@@ -759,79 +641,9 @@ export default {
     handToPlayArea () {
       this.game.player['playArea'].push(...this.game.player['hand'])
       this.emptyArray(this.game.player['hand'])
-      if (this.currentSelection['array'] === this.game.player['hand']) {
-        this.clearCurrentSelection()
+      if (this.games_currentCardSelection['array'] === this.game.player['hand']) {
+        clearCurrentCardSelection(this)
       }
-    },
-    shuffle (array) { // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
-      var currentIndex = array.length
-      var temporaryValue, randomIndex
-
-      while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex)
-        currentIndex -= 1
-
-        temporaryValue = array[currentIndex]
-        array[currentIndex] = array[randomIndex]
-        array[randomIndex] = temporaryValue
-      }
-      return array
-    },
-    /**
-     * If index is undefined, then show the default card. i.e. the topmost card in most cases or a card back for the deck.
-     */
-    setCurrentSelection (cardArray, index) {
-      if (index < 0 || index >= cardArray.length) {
-        this.clearCurrentSelection()
-        return
-      }
-      this.currentSelection = {
-        array: cardArray,
-        index: index,
-        exists: true
-      }
-    },
-    clearCurrentSelection () {
-      this.currentSelection = {}
-    },
-    showOtherCardPage () {
-      this.game.player.shownPage = 'nonSupply'
-    },
-    showKingdom () {
-      this.game.player.shownPage = 'kingdom'
-    },
-    showBane () {
-      this.game.player.shownPage = 'bane'
-    },
-    showBoons () {
-      this.game.player.shownPage = 'boons'
-    },
-    showHexes () {
-      this.game.player.shownPage = 'hexes'
-    },
-    showYourMats () {
-      this.game.player.shownPage = 'yourMats'
-    },
-    showOpponentMats () {
-      this.game.player.shownPage = 'opponentMats'
-    },
-    showTrash () {
-      this.game.player.shownPage = 'trash'
-    },
-    showRevealArea () {
-      this.game.player.shownPage = 'reveal'
-    },
-    showDiscard () {
-      this.game.player.shownPage = 'discard'
-    },
-    showAllYourCards () {
-      this.game.player.shownPage = 'allYourCards'
-    },
-    showNotes () {
-      this.game.player.shownPage = 'notes'
-    },
-    showShortcuts () {
-      this.game.player.shownPage = 'shortcuts'
     },
     endPlayerTurn () {
       this.game.currentPlayerTurn = 1 - this.playerIndex
@@ -881,10 +693,11 @@ export default {
           this.singleCardFromDeckToHand()
           return
       }
-      if (!this.currentSelection['exists']) {
+      if (!this.games_currentCardSelection['exists']) {
         return
       }
       let destinationArray = null
+      let reshufflePile = null
       switch (event.key) {
         case 'd':
           destinationArray = this.game.player['discard']
@@ -902,12 +715,12 @@ export default {
           destinationArray = this.game.player['playArea']
           break
         case 'r':
-          let currentSelectionCard = this.getCurrentSelectionCard()
-          if (currentSelectionCard == null) {
+          let gamesCurrentCardSelectionCard = this.getGames_CurrentCardSelectionCard()
+          if (gamesCurrentCardSelectionCard == null) {
             return
           }
-          let destinationPileType = currentSelectionCard.pile_type
-          let destinationPileIndex = currentSelectionCard.pile_index
+          let destinationPileType = gamesCurrentCardSelectionCard.pile_type
+          let destinationPileIndex = gamesCurrentCardSelectionCard.pile_index
           if (!destinationPileType) {
             return
           }
@@ -942,7 +755,14 @@ export default {
       if (!destinationArray) {
         return
       }
-      this.moveCurrentSelection(destinationArray)
+      if (this.games_currentCardSelection.array === this.game.player['deck']) {
+        reshufflePile = this.game.player['discard']
+      } else if (this.games_currentCardSelection.array === this.game.boonsDeck) {
+        reshufflePile = this.game.boonsDiscard
+      } else if (this.games_currentCardSelection.array === this.game.hexesDeck) {
+        reshufflePile = this.game.hexesDiscard
+      }
+      moveCurrentCardSelection(this, destinationArray, reshufflePile)
     }
   }
 }

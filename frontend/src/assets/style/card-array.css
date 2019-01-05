@@ -1,0 +1,46 @@
+:root {
+    --card-margin: 0.14vw;
+    --card-width: 6.6vw;
+    --card-height: calc(var(--card-width) * 1.6);
+    --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
+    --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin));
+  }
+
+  .card-container {
+    position: relative;
+    float: left;
+    height: var(--card-height);
+    width: var(--card-width);
+    margin: var(--card-margin);
+  }
+
+  .card {
+    top: 0px;
+    left: 0px;
+    height: var(--card-height);
+    width: var(--card-width);
+    margin: var(--card-margin);
+    border-radius: 0.24vw;
+  }
+
+  .card-in-container {
+    position: absolute;
+  }
+
+  .card-counter-container {
+    top: 0px;
+    left: 0px;
+    position: relative;
+    z-index: 900;
+    background-color: rgba(255,0,0,.9);
+    box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
+    font-family: Monospaced;
+    border-radius: 0.18vw;
+    transform-origin: 0 0;
+    height: 0.9vw;
+    width: 0.9vw;
+    font-size: 0.78vw;
+    line-height: 0.9vw;
+    color: #fff;
+    text-align: center;
+  }
