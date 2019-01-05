@@ -67,7 +67,6 @@ drop table dish_images cascade;
 drop table current_documents cascade;
 drop table hobby_tracker cascade;
 drop table hobby_completed_hours_timestamped cascade;
-drop table codenames_words cascade;
 drop table codenames_games cascade;
 drop table codenames_turns_to_hints cascade;
 drop table codenames_turns_to_guesses cascade;
@@ -106,9 +105,6 @@ create table hobby_completed_hours_timestamped (
   completed_hours_for_week real not null
 );
 
-create table codenames_words (
-  word varchar (50) primary key);
-
 CREATE TYPE turn_type AS ENUM ('guess', 'give_hint');
 
 create table codenames_games (
@@ -138,7 +134,7 @@ create table codenames_turns_to_guesses (
   game_id integer references codenames_games not null,
   turn_number integer not null,
   player varchar(50) references users not null,
-  guessed_word varchar(50) references codenames_words not null,
+  guessed_word varchar(50) not null,
   guess_outcome guess_outcome not null
 );
 
@@ -147,7 +143,7 @@ CREATE TYPE word_status AS ENUM ('agent_found', 'player_1_hit_bystander', 'playe
 create table codenames_games_to_words (
   game_id integer references codenames_games,
   word_index integer,
-  word varchar(50) references codenames_words not null,
+  word varchar(50) not null,
   word_status word_status not null,
   primary key (game_id, word_index)
 );
