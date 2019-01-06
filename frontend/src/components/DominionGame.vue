@@ -228,7 +228,7 @@
         </div>
         <div class="hand">
           <CardList
-              :defaultMoveArray="game.player['playerArea']"
+              :defaultMoveArray="game.player['playArea']"
               :cardArray="game.player['hand']"/>
         </div>
       </div>
@@ -243,10 +243,10 @@ import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { getFullBackendUrlForPath } from '../common/utils'
+import { getFullBackendUrlForPath, findPath, fetchFromPath, emptyArray } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
+import { shuffle, moveCard, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -458,7 +458,10 @@ export default {
         })
     },
     updateDominionDisplayWithGameData (gameData) {
-      clearCurrentCardSelection(this)
+      let currentCardSelectionArrayPath
+      if (this.games_currentCardSelection.exists) {
+        currentCardSelectionArrayPath = findPath(this.games_currentCardSelection.array, this.game)
+      }
       this.shouldSaveChanges = false
       this.isInGame = gameData['isInGame']
       this.game.currentPlayerTurn = gameData['currentPlayerTurn']
@@ -488,6 +491,10 @@ export default {
       this.game.hasBane = gameData['hasBane']
       this.game.hasBoons = gameData['hasBoons']
       this.game.hasHexes = gameData['hasHexes']
+
+      if (currentCardSelectionArrayPath) {
+        setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
+      }
     },
     getImageForGames_CurrentCardSelection () {
       if (!this.games_currentCardSelection.exists) {
@@ -573,21 +580,21 @@ export default {
     },
     deckToDiscard () {
       this.game.player['discard'].push(...this.game.player['deck'])
-      this.emptyArray(this.game.player['deck'])
+      emptyArray(this.game.player['deck'])
     },
     deckToHand () {
       for (let i = 0; i < 5; ++i) {
-        moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
+        moveCard(this.game.player['deck'], undefined, this.game.player['hand'], this.game.player['discard'])
       }
     },
     singleCardFromDeckToHand () {
-      moveCard(this.game.player['deck'], undefined, this.game.player['hand'])
+      moveCard(this.game.player['deck'], undefined, this.game.player['hand'], this.game.player['discard'])
     },
     endTurnAndCleanUp () {
       this.game.player['discard'].push(...this.game.player['hand'])
       this.game.player['discard'].push(...this.game.player['playArea'])
-      this.emptyArray(this.game.player['hand'])
-      this.emptyArray(this.game.player['playArea'])
+      emptyArray(this.game.player['hand'])
+      emptyArray(this.game.player['playArea'])
       if (this.games_currentCardSelection['array'] === this.game.player['hand'] || this.games_currentCardSelection['array'] === this.game.player['playArea']) {
         clearCurrentCardSelection(this)
       }
@@ -640,7 +647,7 @@ export default {
     },
     handToPlayArea () {
       this.game.player['playArea'].push(...this.game.player['hand'])
-      this.emptyArray(this.game.player['hand'])
+      emptyArray(this.game.player['hand'])
       if (this.games_currentCardSelection['array'] === this.game.player['hand']) {
         clearCurrentCardSelection(this)
       }

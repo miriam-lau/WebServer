@@ -79,5 +79,35 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
     })
 }
 
+/**
+ * Finds the path of keys to a given variable within an object. The return is represented as as an array.
+ * From https://stackoverflow.com/questions/43636000/javascript-find-path-to-object-reference-in-nested-object
+ */
+function findPath (a, obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      if (a === obj[key]) return [key]
+      else if (obj[key] && typeof obj[key] === 'object') {
+        var path = findPath(a, obj[key])
+        if (path) return [key].concat(path)
+      }
+    }
+  }
+}
+
+function fetchFromPath (obj, path) {
+  let curObj = obj
+  for (var idx in path) {
+    curObj = curObj[path[idx]]
+  }
+  return curObj
+}
+
+function emptyArray (arr) {
+  for (let i = arr.length; i > 0; --i) {
+    arr.pop()
+  }
+}
+
 export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate, callAxios }
+  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray }
