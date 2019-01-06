@@ -10,35 +10,35 @@
           <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
-      <button @click="game.player.shownPage = 'kingdom'">Kingdom</button>
-      <button v-if="game.nonSupplyCards.length > 0" @click="game.player.shownPage = 'nonSupply'">Non Supply</button>
-      <button v-if="game.hasBane" @click="game.player.shownPage = 'bane'">Bane</button>
-      <button v-if="game.hasBoons" @click="game.player.shownPage = 'boons'">Boons</button>
-      <button v-if="game.hasHexes" @click="game.player.shownPage = 'hexes'">Hexes</button>
-      <button @click="game.player.shownPage = 'yourMats'">Your Mats</button>
-      <button @click="game.player.shownPage = 'discard'">Your Discard</button>
-      <button @click="game.player.shownPage = 'opponentMats'">Opponent Mats</button>
-      <button @click="game.player.shownPage = 'reveal'">Revealed</button>
-      <button @click="game.player.shownPage = 'trash'">Trash</button>
-      <button @click="game.player.shownPage = 'notes'">Notes</button>
-      <button @click="game.player.shownPage = 'allYourCards'">All your cards</button>
-      <button @click="game.player.shownPage = 'shortcuts'">Shortcuts</button>
-      <div v-if="game.player.shownPage === 'kingdom'">
+      <button @click="player.shownPage = 'kingdom'">Kingdom</button>
+      <button v-if="game.nonSupplyCards.length > 0" @click="player.shownPage = 'nonSupply'">Non Supply</button>
+      <button v-if="game.hasBane" @click="player.shownPage = 'bane'">Bane</button>
+      <button v-if="game.hasBoons" @click="player.shownPage = 'boons'">Boons</button>
+      <button v-if="game.hasHexes" @click="player.shownPage = 'hexes'">Hexes</button>
+      <button v-if="player.mats.length > 0" @click="player.shownPage = 'yourMats'">Your Mats</button>
+      <button @click="player.shownPage = 'discard'">Your Discard</button>
+      <button v-if="opponent.mats.length > 0" @click="player.shownPage = 'opponentMats'">Opponent Mats</button>
+      <button v-if="game.revealArea.length > 0" @click="player.shownPage = 'reveal'"><u>R</u>evealed</button>
+      <button @click="player.shownPage = 'trash'"><u>T</u>rash</button>
+      <button @click="player.shownPage = 'notes'">Notes</button>
+      <button @click="player.shownPage = 'allYourCards'">All your cards</button>
+      <button @click="player.shownPage = 'shortcuts'">Shortcuts</button>
+      <div v-if="player.shownPage === 'kingdom'">
         <div class="vp-treasure">
           <CardStack
             :key="'treasure' + index" v-for="(cardArray, index) in game.treasureCards"
-            :defaultMoveArray="game.player['discard']"
+            :defaultMoveArray="player.discard"
             :cardArray="cardArray"/>
           <div class="c"></div>
           <CardStack
             :key="'vp' + index" v-for="(cardArray, index) in game.vpCards"
-            :defaultMoveArray="game.player['discard']"
+            :defaultMoveArray="player.discard"
             :cardArray="cardArray"/>
         </div>
         <div class="kingdom">
           <CardStack
             :key="'vp' + index" v-for="(cardArray, index) in game.kingdomCards"
-            :defaultMoveArray="game.player['discard']"
+            :defaultMoveArray="player.discard"
             :cardArray="cardArray"/>
         </div>
         <div class="events">
@@ -49,22 +49,22 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'nonSupply'">
+      <div v-else-if="player.shownPage === 'nonSupply'">
         <div class="non-supply">
           <CardStack
             :key="index" v-for="(cardArray, index) in game.nonSupplyCards"
-            :defaultMoveArray="game.player['discard']"
+            :defaultMoveArray="player.discard"
             :cardArray="cardArray"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'bane'">
+      <div v-else-if="player.shownPage === 'bane'">
         <div class="bane">
           <CardStack
-            :defaultMoveArray="game.player['discard']"
+            :defaultMoveArray="player.discard"
             :cardArray="game.bane"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'boons'">
+      <div v-else-if="player.shownPage === 'boons'">
         <div class="boons-deck-and-discard">
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.boonsDeck.length}}</div>
@@ -89,7 +89,7 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'hexes'">
+      <div v-else-if="player.shownPage === 'hexes'">
         <div class="hexes-deck-and-discard">
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.hexesDeck.length}}</div>
@@ -114,38 +114,38 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'yourMats'">
+      <div v-else-if="player.shownPage === 'yourMats'">
         <div class="your-mats">
           <CardList
-              :cardArray="game.player['mats']"
-              :defaultMoveArray="game.player['discard']"/>
+              :cardArray="player.mats"
+              :defaultMoveArray="player.discard"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'opponentMats'">
+      <div v-else-if="player.shownPage === 'opponentMats'">
         <div class="opponent-mats">
           <img
-              v-for="(card, index) in game.opponent['mats']"
+              v-for="(card, index) in opponent.mats"
               :key="index"
               class="card"
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'trash'">
+      <div v-else-if="player.shownPage === 'trash'">
         <div class="trash">
           <CardList :cardArray="game.trash"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'reveal'">
+      <div v-else-if="player.shownPage === 'reveal'">
         <div class="reveal-area">
           <CardList :cardArray="game.revealArea"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'notes'">
+      <div v-else-if="player.shownPage === 'notes'">
         <div class="notes">
-          <textarea class="note" v-model="game.player['notes']"></textarea>
+          <textarea class="note" v-model="player.notes"></textarea>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'shortcuts'">
+      <div v-else-if="player.shownPage === 'shortcuts'">
         <div class="shortcuts">
           a (A) - Increment num actions (Decrement num actions)<br/>
           b (B) - Increment num buys (Decrement num buys)<br/>
@@ -167,69 +167,124 @@
           v - Reveal the card in the revealed area.<br/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'discard'">
+      <div v-else-if="player.shownPage === 'discard'">
         <div class="discard-area">
-          <CardList :cardArray="game.player['discard']"/>
+          <CardList :cardArray="player.discard"/>
         </div>
       </div>
-      <div v-else-if="game.player.shownPage === 'allYourCards'">
+      <div v-else-if="player.shownPage === 'allYourCards'">
         <div class="all-your-cards">
           <img
-              v-for="(card, index) in [].concat(game.player['deck'], game.player['discard'], game.player['playArea'], game.player['hand'], game.player['mats'])"
+              v-for="(card, index) in [].concat(player.deck, player.discard, player.playArea, player.hand, player.mats)"
               :key="index"
               class="card"
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <img class="preview" v-if="games_currentCardSelection['exists']" :src="getImageForGames_CurrentCardSelection()"/>
+      <img class="preview" v-if="games_currentCardSelection.exists" :src="getImageForGames_CurrentCardSelection()"/>
       <div class="c">
       </div>
-      <div v-if="game.player['displayedPlayArea'] === playerIndex">
-      Your play area
-      </div>
-      <div v-else>
-      {{game.players[game.player['displayedPlayArea']].name}}'s play area
-      </div>
+      <span v-if="player.displayedPlayer === playerIndex">
+      Your display
+      </span>
+      <span v-else>
+      {{game.players[player.displayedPlayer].name}}'s display
+      </span>
+      <button @click="toggledisplayedPlayer">Toggle Display</button>
+      <br/>
       <div class="play-area">
-        <div v-if="game.player['displayedPlayArea'] === playerIndex">
-          <CardList
-              :cardArray="game.player['playArea']"
-              :defaultMoveArray="game.player['discard']"/>
+        <div class="play-cards">
+          <div v-if="player.displayedPlayer === playerIndex">
+            <CardList
+                :cardArray="player.playArea"
+                :defaultMoveArray="player.discard"/>
+          </div>
+          <div v-else>
+            <CardList :cardArray="opponent.playArea"/>
+          </div>
         </div>
-        <div v-else>
-          <CardList :cardArray="game.opponent['playArea']"/>
+        <u>P</u>layed Cards
+      </div>
+      <div class="duration-area">
+        <div class="duration-cards">
+          <div v-if="player.displayedPlayer === playerIndex">
+            <CardList
+                :cardArray="player.durationArea"
+                :defaultMoveArray="player.discard"/>
+          </div>
+          <div v-else>
+            <CardList :cardArray="opponent.durationArea"/>
+          </div>
         </div>
+        D<u>u</u>ration
       </div>
       <div class="c">
       </div>
       <div class="stats">
-        <span class="stat-item">Actions: <button @click="decrementNumActions">-</button><input class="counter" v-model="game.player['numActions']"/><button @click="incrementNumActions">+</button></span>
-        <span class="stat-item">Buys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="game.player['numBuys']"/><button @click="incrementNumBuys">+</button></span>
-        <span class="stat-item">Coins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="game.player['numCoins']"/><button @click="incrementNumCoins">+</button></span>
-        <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="game.player['numVP']"/><button @click="incrementNumVP">+</button></span>
-        <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="game.player['numCoffers']"/><button @click="incrementNumCoffers">+</button></span>
-        <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="game.player['numVillagers']"/><button @click="incrementNumVillagers">+</button></span>
-        <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="game.player['numDebt']"/><button @click="incrementNumDebt">+</button></span>
-        <button @click="endPlayerTurn" v-if="game.currentPlayerTurn === playerIndex">End Turn</button>
-        <button @click="toggleDisplayedPlayArea">Toggle Play Area</button>
-        <span v-if="game.currentPlayerTurn === playerIndex">Your turn</span>
-        <span v-else>{{game.opponent.name}}'s turn</span>
+        <div v-if="player.displayedPlayer === playerIndex">
+          <span class="stat-item"><u>A</u>ctions: <button @click="decrementNumActions">-</button><input class="counter" v-model="player.numActions"/><button @click="incrementNumActions">+</button></span>
+          <span class="stat-item"><u>B</u>uys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="player.numBuys"/><button @click="incrementNumBuys">+</button></span>
+          <span class="stat-item"><u>C</u>oins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="player.numCoins"/><button @click="incrementNumCoins">+</button></span>
+          <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="player.numVP"/><button @click="incrementNumVP">+</button></span>
+          <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="player.numCoffers"/><button @click="incrementNumCoffers">+</button></span>
+          <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="player.numVillagers"/><button @click="incrementNumVillagers">+</button></span>
+          <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="player.numDebt"/><button @click="incrementNumDebt">+</button></span>
+          <button @click="endPlayerTurn" v-if="game.currentPlayerTurn === playerIndex">End Turn</button>
+          <span>Your turn</span>
+        </div>
+        <div v-else>
+          <span class="stat-item">Actions: {{opponent.numActions}}</span>
+          <span class="stat-item">Buys: {{opponent.numBuys}}</span>
+          <span class="stat-item">Coins: {{opponent.numCoins}}</span>
+          <span class="stat-item">VP: {{opponent.numVP}}</span>
+          <span class="stat-item">Coffers: {{opponent.numCoffers}}</span>
+          <span class="stat-item">Villagers: {{opponent.numVillagers}}</span>
+          <span class="stat-item">Debt: {{opponent.numDebt}}</span>
+          <span>{{opponent.name}}'s turn</span>
+        </div>
       </div>
       <div class="deck-and-hand">
-        <div class="deck">
-          <CardStack
-            :reshufflePileArray="game.player['discard']"
-            :defaultMoveArray="game.player['hand']"
-            :cardArray="game.player['deck']"/>
+        <div class="single-pile">
+          <div class="single-pile-cards">
+            <div v-if="player.displayedPlayer === playerIndex">
+              <CardStack
+                :reshufflePileArray="player.discard"
+                :defaultMoveArray="player.hand"
+                :cardArray="player.deck"/>
+            </div>
+            <div v-else>
+              <CardStack
+                :cardArray="opponent.deck"/>
+            </div>
+          </div>
+          Dec<u>k</u><br/>
         </div>
-        <div class="discard">
-          <CardStack
-            :cardArray="game.player['discard']"/>
+        <div class="single-pile">
+          <div class="single-pile-cards">
+            <div v-if="player.displayedPlayer === playerIndex">
+              <CardStack
+                :cardArray="player.discard"/>
+            </div>
+            <div v-else>
+              <CardStack
+                :cardArray="opponent.discard"/>
+            </div>
+          </div>
+          <u>D</u>iscard<br/>
         </div>
         <div class="hand">
-          <CardList
-              :defaultMoveArray="game.player['playArea']"
-              :cardArray="game.player['hand']"/>
+          <div class="hand-cards">
+            <div v-if="player.displayedPlayer === playerIndex">
+              <CardList
+                  :defaultMoveArray="player.playArea"
+                  :cardArray="player.hand"/>
+            </div>
+            <div v-else>
+              <CardList
+                  :cardArray="opponent.hand"/>
+            </div>
+          </div>
+          <u>H</u>and
         </div>
       </div>
     </div>
@@ -243,10 +298,10 @@ import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { getFullBackendUrlForPath, findPath, fetchFromPath, emptyArray } from '../common/utils'
+import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
+import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -263,6 +318,8 @@ export default {
       butterBar_message: '',
       butterBar_css: '',
       isInGame: false,
+      player: {},
+      opponent: {},
       game: {
         playerOrder: [],
         currentPlayerTurn: 0,
@@ -276,6 +333,7 @@ export default {
         players: [{
           name: '',
           notes: '',
+          durationArea: [],
           playArea: [],
           deck: [],
           mats: [],
@@ -289,10 +347,11 @@ export default {
           numVillagers: 0,
           numDebt: 0,
           shownPage: 'kingdom',
-          displayedPlayArea: 0
+          displayedPlayer: 0
         }, {
           name: '',
           notes: '',
+          durationArea: [],
           playArea: [],
           deck: [],
           hand: [],
@@ -306,10 +365,8 @@ export default {
           numVillagers: 0,
           numDebt: 0,
           shownPage: 'kingdom',
-          displayedPlayArea: 1
+          displayedPlayer: 1
         }],
-        player: {},
-        opponent: {},
         boonsDeck: [],
         boonsReveal: [],
         boonsDiscard: [],
@@ -355,8 +412,8 @@ export default {
   mounted () {
     var that = this
     socket.on('refresh_dominion', function (data) {
-      if (data['players'].includes(that.username) && data['player_triggering_update'] !== that.username) {
-        that.updateDominionDisplayWithGameData(data['gameData'])
+      if (data.players.includes(that.username) && data.player_triggering_update !== that.username) {
+        that.updateDominionDisplayWithGameData(data.gameData)
       }
     })
   },
@@ -393,38 +450,9 @@ export default {
         'Generated Kingdom',
         'Failed to generate kingdom.',
         function (response) {
-          let data = response['data']
+          let data = response.data
           that.updateDominionDisplayWithGameData(data)
         })
-    },
-    getGameData () {
-      let data = {}
-      data['currentPlayerTurn'] = this.game.currentPlayerTurn
-      data['revealArea'] = this.game.revealArea
-      data['isInGame'] = this.isInGame
-      data['players'] = this.game.players
-      data['boonsDiscard'] = this.game.boonsDiscard
-      data['hexesDiscard'] = this.game.hexesDiscard
-      data['boonsDeck'] = this.game.boonsDeck
-      data['boonsReveal'] = this.game.boonsReveal
-      data['hexesDeck'] = this.game.hexesDeck
-      data['hexesReveal'] = this.game.hexesReveal
-      data['gameId'] = this.game.gameId
-
-      data['playerOrder'] = this.game.playerOrder
-      data['nonSupplyCards'] = this.game.nonSupplyCards
-      data['kingdomCards'] = this.game.kingdomCards
-      data['vpCards'] = this.game.vpCards
-      data['treasureCards'] = this.game.treasureCards
-      data['trash'] = this.game.trash
-      data['bane'] = this.game.bane
-      data['hexesDeck'] = this.game.hexesDeck
-      data['boonsDeck'] = this.game.boonsDeck
-      data['sidewaysCards'] = this.game.sidewaysCards
-      data['hasBane'] = this.game.hasBane
-      data['hasBoons'] = this.game.hasBoons
-      data['hasHexes'] = this.game.hasHexes
-      return data
     },
     saveDominionGame () {
       callAxiosAndSetButterBar(
@@ -432,7 +460,7 @@ export default {
         SAVE_DOMINION_GAME_URL,
         {
           gameId: this.game.gameId,
-          gameData: this.getGameData(),
+          gameData: this.game,
           username: this.username
         },
         null,
@@ -463,34 +491,11 @@ export default {
         currentCardSelectionArrayPath = findPath(this.games_currentCardSelection.array, this.game)
       }
       this.shouldSaveChanges = false
-      this.isInGame = gameData['isInGame']
-      this.game.currentPlayerTurn = gameData['currentPlayerTurn']
-      this.game.revealArea = gameData['revealArea']
-      this.game.players = gameData['players']
-      this.game.boonsDiscard = gameData['boonsDiscard']
-      this.game.hexesDiscard = gameData['hexesDiscard']
-      this.game.boonsDeck = gameData['boonsDeck']
-      this.game.boonsReveal = gameData['boonsReveal']
-      this.game.hexesDeck = gameData['hexesDeck']
-      this.game.hexesReveal = gameData['hexesReveal']
-      this.game.gameId = gameData['gameId']
-      this.game.playerOrder = gameData['playerOrder']
-
-      this.playerIndex = gameData['playerOrder'][0] === this.username ? 0 : 1
-      this.game.nonSupplyCards = gameData['nonSupplyCards']
-      this.game.kingdomCards = gameData['kingdomCards']
-      this.game.vpCards = gameData['vpCards']
-      this.game.treasureCards = gameData['treasureCards']
-      this.game.trash = gameData['trash']
-      this.game.player = this.game.players[this.playerIndex]
-      this.game.opponent = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
-      this.game.bane = gameData['bane']
-      this.game.hexesDeck = gameData['hexesDeck']
-      this.game.boonsDeck = gameData['boonsDeck']
-      this.game.sidewaysCards = gameData['sidewaysCards']
-      this.game.hasBane = gameData['hasBane']
-      this.game.hasBoons = gameData['hasBoons']
-      this.game.hasHexes = gameData['hasHexes']
+      this.isInGame = true
+      this.game = gameData
+      this.playerIndex = gameData.playerOrder[0] === this.username ? 0 : 1
+      this.player = this.game.players[this.playerIndex]
+      this.opponent = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
 
       if (currentCardSelectionArrayPath) {
         setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
@@ -500,7 +505,7 @@ export default {
       if (!this.games_currentCardSelection.exists) {
         return
       }
-      if (this.games_currentCardSelection.array === this.game.players['deck']) {
+      if (this.games_currentCardSelection.array === this.game.players.deck) {
         return '/static/dominion/card_images/backside_blue.jpg'
       }
       let index = this.games_currentCardSelection.index
@@ -518,7 +523,7 @@ export default {
     getImageForCardArrayOrBlank (cardArray) {
       if (cardArray.length === 0) {
         return '/static/dominion/card_images/_blank.jpg'
-      } else if (cardArray === this.game.player['deck']) {
+      } else if (cardArray === this.player.deck || cardArray === this.opponent.deck) {
         return '/static/dominion/card_images/backside_blue.jpg'
       } else if (cardArray === this.game.boonsDeck) {
         return '/static/dominion/card_images/Boon-back.jpg'
@@ -565,8 +570,8 @@ export default {
       }
     },
     getGames_CurrentCardSelectionCard () {
-      let cardIndex = this.games_currentCardSelection['index']
-      let cardArray = this.games_currentCardSelection['array']
+      let cardIndex = this.games_currentCardSelection.index
+      let cardArray = this.games_currentCardSelection.array
       if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= cardArray.length)) {
         return null
       }
@@ -576,152 +581,91 @@ export default {
       return cardArray[cardIndex]
     },
     shuffleDeck () {
-      shuffle(this.game.player['deck'])
+      shuffle(this.player.deck)
     },
     deckToDiscard () {
-      this.game.player['discard'].push(...this.game.player['deck'])
-      emptyArray(this.game.player['deck'])
+      moveAllCards(this.player.deck, this.player.discard)
     },
     deckToHand () {
       for (let i = 0; i < 5; ++i) {
-        moveCard(this.game.player['deck'], undefined, this.game.player['hand'], this.game.player['discard'])
+        moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
       }
     },
     singleCardFromDeckToHand () {
-      moveCard(this.game.player['deck'], undefined, this.game.player['hand'], this.game.player['discard'])
+      moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
     },
     endTurnAndCleanUp () {
-      this.game.player['discard'].push(...this.game.player['hand'])
-      this.game.player['discard'].push(...this.game.player['playArea'])
-      emptyArray(this.game.player['hand'])
-      emptyArray(this.game.player['playArea'])
-      if (this.games_currentCardSelection['array'] === this.game.player['hand'] || this.games_currentCardSelection['array'] === this.game.player['playArea']) {
+      moveAllCards(this.player.hand, this.player.discard)
+      moveAllCards(this.player.playArea, this.player.discard)
+      if (this.games_currentCardSelection.array === this.player.hand || this.games_currentCardSelection.array === this.player.playArea) {
         clearCurrentCardSelection(this)
       }
-      this.game.player['numActions'] = 1
-      this.game.player['numBuys'] = 1
-      this.game.player['numCoins'] = 0
-      this.game.player['displayedPlayArea'] = 1 - this.playerIndex
-      this.game.opponent['displayedPlayArea'] = 1 - this.playerIndex
+      this.player.numActions = 1
+      this.player.numBuys = 1
+      this.player.numCoins = 0
+      this.player.displayedPlayer = 1 - this.playerIndex
+      this.opponent.displayedPlayer = 1 - this.playerIndex
       this.endPlayerTurn()
+      this.deckToHand()
     },
-    incrementNumActions () { this.game.player['numActions']++ },
-    decrementNumActions () {
-      this.game.player['numActions']--
-    },
-    incrementNumBuys () {
-      this.game.player['numBuys']++
-    },
-    decrementNumBuys () {
-      this.game.player['numBuys']--
-    },
-    incrementNumCoins () {
-      this.game.player['numCoins']++
-    },
-    decrementNumCoins () {
-      this.game.player['numCoins']--
-    },
-    incrementNumVP () {
-      this.game.player['numVP']++
-    },
-    decrementNumVP () {
-      this.game.player['numVP']--
-    },
-    incrementNumVillagers () {
-      this.game.player['numVillagers']++
-    },
-    decrementNumVillagers () {
-      this.game.player['numVillagers']--
-    },
-    incrementNumCoffers () {
-      this.game.player['numCoffers']++
-    },
-    decrementNumCoffers () {
-      this.game.player['numCoffers']--
-    },
-    incrementNumDebt () {
-      this.game.player['numDebt']++
-    },
-    decrementNumDebt () {
-      this.game.player['numDebt']--
-    },
+    incrementNumActions () { this.player.numActions++ },
+    decrementNumActions () { this.player.numActions-- },
+    incrementNumBuys () { this.player.numBuys++ },
+    decrementNumBuys () { this.player.numBuys-- },
+    incrementNumCoins () { this.player.numCoins++ },
+    decrementNumCoins () { this.player.numCoins-- },
+    incrementNumVP () { this.player.numVP++ },
+    decrementNumVP () { this.player.numVP-- },
+    incrementNumVillagers () { this.player.numVillagers++ },
+    decrementNumVillagers () { this.player.numVillagers-- },
+    incrementNumCoffers () { this.player.numCoffers++ },
+    decrementNumCoffers () { this.player.numCoffers-- },
+    incrementNumDebt () { this.player.numDebt++ },
+    decrementNumDebt () { this.player.numDebt-- },
     handToPlayArea () {
-      this.game.player['playArea'].push(...this.game.player['hand'])
-      emptyArray(this.game.player['hand'])
-      if (this.games_currentCardSelection['array'] === this.game.player['hand']) {
+      moveAllCards(this.player.hand, this.player.playArea)
+      if (this.games_currentCardSelection.array === this.player.hand) {
         clearCurrentCardSelection(this)
       }
     },
     endPlayerTurn () {
       this.game.currentPlayerTurn = 1 - this.playerIndex
     },
-    toggleDisplayedPlayArea () {
-      this.game.player.displayedPlayArea = 1 - this.game.player.displayedPlayArea
+    toggledisplayedPlayer () {
+      this.player.displayedPlayer = 1 - this.player.displayedPlayer
     },
     handleKeyPress (event) {
       if (!this.isInGame) {
         return
       }
       switch (event.key) {
-        case 'a':
-          this.incrementNumActions()
-          break
-        case 'b':
-          this.incrementNumBuys()
-          break
-        case 'c':
-          this.incrementNumCoins()
-          break
-        case 'A':
-          this.decrementNumActions()
-          break
-        case 'B':
-          this.decrementNumBuys()
-          break
-        case 'C':
-          this.decrementNumCoins()
-          break
-        case 'D':
-          this.endTurnAndCleanUp()
-          return
+        case 'a': this.incrementNumActions(); break
+        case 'b': this.incrementNumBuys(); break
+        case 'c': this.incrementNumCoins(); break
+        case 'A': this.decrementNumActions(); break
+        case 'B': this.decrementNumBuys(); break
+        case 'C': this.decrementNumCoins(); break
+        case 'D': this.endTurnAndCleanUp(); return
         case 'H':
-          this.deckToHand()
-          return
-        case 'P':
-          this.handToPlayArea()
-          return
-        case 'Z': // For lack of a better letter
-          this.deckToDiscard()
-          return
-        case 'e':
-          this.endPlayerTurn()
-          break
-        case 'w':
-          this.singleCardFromDeckToHand()
-          return
+          this.deckToHand(); return
+        case 'P': this.handToPlayArea(); return
+        case 'Z': this.deckToDiscard(); return
+        case 'e': this.endPlayerTurn(); break
+        case 'w': this.singleCardFromDeckToHand(); return
       }
-      if (!this.games_currentCardSelection['exists']) {
+      if (!this.games_currentCardSelection.exists) {
         return
       }
       let destinationArray = null
       let reshufflePile = null
       switch (event.key) {
-        case 'd':
-          destinationArray = this.game.player['discard']
-          break
-        case 'h':
-          destinationArray = this.game.player['hand']
-          break
-        case 'k':
-          destinationArray = this.game.player['deck']
-          break
-        case 'm':
-          destinationArray = this.game.player['mats']
-          break
-        case 'p':
-          destinationArray = this.game.player['playArea']
-          break
-        case 'r':
+        case 'd': destinationArray = this.player.discard; break
+        case 'u': destinationArray = this.player.durationArea; break
+        case 'h': destinationArray = this.player.hand; break
+        case 'k': destinationArray = this.player.deck; break
+        case 'm': destinationArray = this.player.mats; break
+        case 'p': destinationArray = this.player.playArea; break
+        case 'n':
           let gamesCurrentCardSelectionCard = this.getGames_CurrentCardSelectionCard()
           if (gamesCurrentCardSelectionCard == null) {
             return
@@ -746,24 +690,16 @@ export default {
               break
           }
           break
-        case 's':
-          this.shuffleDeck()
-          return
-        case 't':
-          destinationArray = this.game.trash
-          break
-        case 'v':
-          destinationArray = this.game.revealArea
-          break
-        case 'o':
-          destinationArray = this.game.opponent['hand']
-          break
+        case 's': this.shuffleDeck(); return
+        case 't': destinationArray = this.game.trash; break
+        case 'r': destinationArray = this.game.revealArea; break
+        case 'o': destinationArray = this.opponent.hand; break
       }
       if (!destinationArray) {
         return
       }
-      if (this.games_currentCardSelection.array === this.game.player['deck']) {
-        reshufflePile = this.game.player['discard']
+      if (this.games_currentCardSelection.array === this.player.deck) {
+        reshufflePile = this.player.discard
       } else if (this.games_currentCardSelection.array === this.game.boonsDeck) {
         reshufflePile = this.game.boonsDiscard
       } else if (this.games_currentCardSelection.array === this.game.hexesDeck) {

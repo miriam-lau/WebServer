@@ -1034,6 +1034,7 @@ class Dominion:
         data["players"] = [{
             "name": player1,
             "notes": '',
+            "durationArea": [],
             "playArea": [],
             "deck": game_data["player_1_deck"],
             "hand": [],
@@ -1047,10 +1048,11 @@ class Dominion:
             "numVillagers": 0,
             "numDebt": 0,
             "shownPage": "kingdom",
-            "displayedPlayArea": 0
+            "displayedPlayer": 0
         }, {
             "name": player2,
             "notes": '',
+            "durationArea": [],
             "playArea": [],
             "deck": game_data["player_2_deck"],
             "hand": [],
@@ -1064,7 +1066,7 @@ class Dominion:
             "numVillagers": 0,
             "numDebt": 0,
             "shownPage": "kingdom",
-            "displayedPlayArea": 1
+            "displayedPlayer": 1
         }]
         data["boonsDiscard"] = []
         data["hexesDiscard"] = []

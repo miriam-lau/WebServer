@@ -1,4 +1,4 @@
-import { emptyArray } from './utils'
+import { emptyArray, transferContents } from './utils'
 /**
  * Used with components that utilize shared/games/. See shared/games/README.md for usage.
  */
@@ -54,6 +54,10 @@ function moveCard (originalPile, cardIndex, destinationPile, reshufflePile) {
   return true
 }
 
+function moveAllCards (originalPile, destinationPile) {
+  transferContents(originalPile, destinationPile)
+}
+
 // Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
 function shuffle (array) {
   var currentIndex = array.length
@@ -89,4 +93,4 @@ function clearCurrentCardSelection (component) {
   component.games_currentCardSelection = {}
 }
 
-export { shuffle, moveCard, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection }
+export { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection }

@@ -109,5 +109,13 @@ function emptyArray (arr) {
   }
 }
 
+/**
+ * Moves all items in the original array to the destination array.
+ */
+function transferContents (original, destination) {
+  destination.push(...original)
+  emptyArray(original)
+}
+
 export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray }
+  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray, transferContents }

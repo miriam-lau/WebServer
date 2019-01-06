@@ -1,13 +1,14 @@
 :root {
+  --extra-height-fix-for-scrollbars: 4px;
   --card-margin: 0.14vw;
   --card-width: 6.6vw;
   --card-height: calc(var(--card-width) * 1.6);
   --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
-  --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin));
+  --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin) + var(--extra-height-fix-for-scrollbars));
   --sideways-card-width: calc(var(--card-height) * 1.6);
   --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
   --standard-margin: 0.14vw;
-  --scrollbar-width: 18px;
+  --scrollbar-width: 7px;
 }
 
 .new-game {
@@ -97,11 +98,16 @@
   border-radius: 0.24vw;
 }
 
-.play-area {
+.duration-area {
+  float: left;
   margin-top: var(--standard-margin);
-  height: var(--card-height-with-margin);
-  background-color: teal;
-  overflow: auto;
+  width: calc(var(--card-width-with-margin) * 3 + var(--scrollbar-width));
+}
+
+.play-area {
+  float: left;
+  margin-top: var(--standard-margin);
+  width: calc(100% - var(--card-width-with-margin) * 3 - var(--scrollbar-width));
 }
 
 .stats {
@@ -117,27 +123,43 @@
   height: var(--card-height-with-margin);
 }
 
-.deck {
+.single-pile {
   float: left;
   width: var(--card-width-with-margin);
-  height: var(--card-height-with-margin);
-  background-color: green;
+  text-align: center;
 }
 
-.discard {
-  float: left;
-  width: var(--card-width-with-margin);
-  height: var(--card-height-with-margin);
-  background-color: grey;
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 .hand {
   float: left;
   margin-left: 1.8vw;
   width: calc(100% - 1.8vw - 2 * var(--card-width-with-margin));
-  height: var(--card-height-with-margin);
-  background-color: orange;
+}
+
+.hand-cards, .single-pile-cards, .duration-cards, .play-cards {
   overflow: auto;
+  height: var(--card-height-with-margin);
+}
+
+.hand-cards {
+  background-color: orange;
+}
+
+.duration-cards {
+  background-color: lightblue;
+}
+
+.play-cards {
+  background-color: teal;
 }
 
 .counter {
@@ -147,7 +169,7 @@
 
 .preview {
   float: right;
-  height: calc(2 * var(--card-height-with-margin));
+  height: calc(2 * var(--card-height-with-margin) - 10px);
   width: calc(2 * var(--card-height-with-margin) / 1.6);
   border-radius: 0.48vw;
 }
