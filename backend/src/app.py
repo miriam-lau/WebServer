@@ -11,6 +11,8 @@ from src.pantry_page.pantry_page import PantryPage
 from src.notes_page.notes_page import NotesPage
 from src.inventory_page.inventory_page import InventoryPage
 from src.dominion.dominion import Dominion
+import os
+import sys
 
 import traceback
 
@@ -41,7 +43,7 @@ def initialize_app():
     global notes_page
     global inventory_page
     global dominion
-    database = Database()
+    database = Database(is_production())
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
     hobby_tracker = HobbyTracker(database)
@@ -51,9 +53,14 @@ def initialize_app():
     notes_page = NotesPage(database)
     inventory_page = InventoryPage(database)
     dominion = Dominion()
+    if is_production():
+      should_run_app = query_yes_no('Running with production database. Continue?')
+      if not should_run_app:
+        os._exit(0)
 
+def is_production():
+  return app.config["ENV"] == "production"
 
-# TODO: This is totally insecure.
 # Current documents methods -------------------------------------------------------------------------------------
 
 @app.route("/get_current_documents", methods=["POST"])
@@ -439,6 +446,39 @@ def handle_error(e):
     response.status_code = 500
     return response
 
+
+# From http://code.activestate.com/recipes/577058/
+def query_yes_no(question, default="no"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        sys.stdout.write(question + prompt)
+        choice = input().lower()
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            sys.stdout.write("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
 
 initialize_app()
 
