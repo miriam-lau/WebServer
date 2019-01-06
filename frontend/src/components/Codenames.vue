@@ -36,7 +36,7 @@
         </div>
         <div v-else-if="isCurrentPlayerTurn && turnType == 'give_hint'">
           Hint: <input class="codenames-hint-input" v-model="newHintWord" placeholder="Hint word"/>
-          Num Words: <input type="number" class="codenames-hint-num-words" v-model="newHintNumber" />
+          Num Words: <input type="number" min=0 class="codenames-hint-num-words" v-model="newHintNumber" />
           <button @click="giveHint">Give Hint</button>
         </div>
         <div v-else-if="!isCurrentPlayerTurn && turnType == 'guess'">
@@ -68,13 +68,11 @@
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 
-import axios from 'axios'
 import { store } from '../store/store'
 import { playSound, getFullBackendUrlForPath, generateExpandIcon } from '../common/utils'
-import * as io from 'socket.io-client'
-window.io = io
+import { socket } from '../common/socketio'
 
 // Todo: Make the CSS in this file less hacky. There's hardcoded widths everywhere.
 const CODENAMES_CREATE_GAME_URL = getFullBackendUrlForPath('/codenames_create_game')
@@ -95,6 +93,7 @@ export default {
       gameId: 0,
       player1: '',
       player2: '',
+      playerToInvite: '',
       turnNumber: 0,
       timeTokensUsed: 0,
       turnType: '',
@@ -123,17 +122,6 @@ export default {
       return this.isCurrentUserPlayer1() === isPlayer1Turn
     },
     /*
-     * The default player name to invite to a game.
-     */
-    playerToInvite () {
-      if (this.username === 'James') {
-        return 'Miriam'
-      } else if (this.username === 'Miriam') {
-        return 'James'
-      }
-      return ''
-    },
-    /*
      * The name of the other player in the current game. That is, the one playing with the current user.
      */
     otherPlayer () {
@@ -156,9 +144,9 @@ export default {
   },
   created () {
     this.updateCodenamesDisplayWithLatestGame(null)
+    this.playerToInvite = this.defaultPlayerToInvite()
   },
   mounted () {
-    var socket = io.connect('http://' + window.location.hostname + ':5000')
     var that = this
     socket.on('refresh_codenames', function (data) {
       if (data['players'].includes(that.username)) {
@@ -167,6 +155,21 @@ export default {
     })
   },
   methods: {
+    /*
+     * The default player name to invite to a game.
+     */
+    defaultPlayerToInvite () {
+      if (this.username === 'James') {
+        return 'Miriam'
+      } else if (this.username === 'Miriam') {
+        return 'James'
+      } else if (this.username === 'Angeline') {
+        return 'Sujinda'
+      } else if (this.username === 'Sujinda') {
+        return 'Angeline'
+      }
+      return ''
+    },
     toggleExpand () {
       this.isExpanded = !this.isExpanded
     },
@@ -201,156 +204,178 @@ export default {
       var randomizedPlayers = [this.username, this.playerToInvite]
       randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
 
-      axios.post(CODENAMES_CREATE_GAME_URL, {
-        username: this.username,
-        player1: randomizedPlayers[0],
-        player2: randomizedPlayers[1]
-      })
-      setButterBarMessage(this, 'Invited ' + this.playerToInvite + ' to a game.', ButterBarType.INFO)
+      callAxiosAndSetButterBar(
+        this,
+        CODENAMES_CREATE_GAME_URL,
+        {
+          username: this.username,
+          player1: randomizedPlayers[0],
+          player2: randomizedPlayers[1]
+        },
+        'Invited ' + this.playerToInvite + ' to a game.',
+        'Failed to invite ' + this.playerToInvite + ' to a game.')
     },
     endGuesses () {
-      axios.post(
+      callAxiosAndSetButterBar(
+        this,
         CODENAMES_END_GUESSES_URL,
         {
           game_id: this.gameId,
           username: this.username
-        })
+        },
+        null,
+        'Failed to handle end guesses')
     },
     guess (word) {
-      axios.post(CODENAMES_GUESS_URL, {
-        game_id: this.gameId,
-        username: this.username,
-        word: word
-      })
+      callAxiosAndSetButterBar(
+        this,
+        CODENAMES_GUESS_URL,
+        {
+          game_id: this.gameId,
+          username: this.username,
+          word: word
+        },
+        null,
+        'Failed to handle guess.')
     },
     giveHint () {
-      axios.post(
+      callAxiosAndSetButterBar(
+        this,
         CODENAMES_GIVE_HINT_URL,
         {
           game_id: this.gameId,
           username: this.username,
           hint_word: this.newHintWord,
           hint_number: this.newHintNumber
-        }).then(response => {
-        this.newHintWord = ''
-        this.newHintNumber = 0
-      })
+        },
+        null,
+        'Failed to handle giving a hint.',
+        (response) => {
+          this.newHintWord = ''
+          this.newHintNumber = 0
+        })
     },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
      * playerTriggeringUpdate may be null.
      */
     updateCodenamesDisplayWithLatestGame (playerTriggeringUpdate) {
-      axios.post(CODENAMES_GET_LATEST_GAME_URL, {username: this.username}).then(response => {
-        if (response.data === null) {
-          this.shouldDisplayGame = false
-          return
-        }
-        this.shouldDisplayGame = true
-        var game = response.data['game']
-        this.assassinFound = game['assassin_found']
-        this.gameId = game['id']
-        this.gameOver = game['game_over']
-        this.player1 = game['player1']
-        this.player2 = game['player2']
-        this.turnNumber = game['turn_number']
-        this.turnType = game['turn_type']
-        this.timeTokensUsed = game['time_tokens_used']
-
-        var locations = response.data['locations_owned_by_player']
-        var newLocations = []
-        var locationRow = []
-        for (let i in locations) {
-          if (i !== 0 && i % 5 === 0) {
-            newLocations.push(locationRow)
-            locationRow = []
+      callAxiosAndSetButterBar(
+        this,
+        CODENAMES_GET_LATEST_GAME_URL,
+        {username: this.username},
+        null,
+        'Failed to refresh codenames display.',
+        (response) => {
+          if (response.data === null) {
+            this.shouldDisplayGame = false
+            return
           }
-          locationRow.push(locations[i]['location_type'])
-        }
-        newLocations.push(locationRow)
-        this.locations = newLocations
+          this.shouldDisplayGame = true
+          var game = response.data['game']
+          this.assassinFound = game['assassin_found']
+          this.gameId = game['id']
+          this.gameOver = game['game_over']
+          this.player1 = game['player1']
+          this.player2 = game['player2']
+          this.turnNumber = game['turn_number']
+          this.turnType = game['turn_type']
+          this.timeTokensUsed = game['time_tokens_used']
 
-        var words = response['data']['words_for_game']
-        var newWords = []
-        var wordRow = []
-        for (let i in words) {
-          if (i !== 0 && i % 5 === 0) {
-            newWords.push(wordRow)
-            wordRow = []
-          }
-          wordRow.push({'word': words[i]['word'], 'status': words[i]['word_status']})
-        }
-        newWords.push(wordRow)
-        this.codewords = newWords
-
-        var turnsToHints = response['data']['turns_to_hints']
-        if (turnsToHints.length !== 0) {
-          var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
-          this.currentHintWord = currentTurnToHint['hint_word']
-          this.currentHintNumber = currentTurnToHint['hint_number']
-        }
-
-        // Assumes data for turns comes in order and starts with turn 1.
-        var turnsToGuesses = response.data['turns_to_guesses']
-        var turnsToGuessesArray = []
-        turnsToGuessesArray.push([]) // There are no guesses in turn 0.
-        var currentTurn = 1
-        var guessStringsForCurrentTurn = []
-        var i = 0
-        while (i < turnsToGuesses.length) {
-          var guess = turnsToGuesses[i]
-          if (guess['turn_number'] === currentTurn) {
-            var guessString = guess['player'] + ' went to ' + guess['guessed_word'] + ' '
-            switch (guess['guess_outcome']) {
-              case 'agent_found':
-                guessString += 'and rescued an agent.'
-                break
-              case 'hit_bystander':
-                guessString += 'and clobbered an innocent bystander.'
-                break
-              case 'assassin_found':
-                guessString += 'and was killed by an assassin. :('
-                break
+          var locations = response.data['locations_owned_by_player']
+          var newLocations = []
+          var locationRow = []
+          for (let i in locations) {
+            if (i !== 0 && i % 5 === 0) {
+              newLocations.push(locationRow)
+              locationRow = []
             }
-            guessStringsForCurrentTurn.push(guessString)
-            i++
-          } else {
+            locationRow.push(locations[i]['location_type'])
+          }
+          newLocations.push(locationRow)
+          this.locations = newLocations
+
+          var words = response['data']['words_for_game']
+          var newWords = []
+          var wordRow = []
+          for (let i in words) {
+            if (i !== 0 && i % 5 === 0) {
+              newWords.push(wordRow)
+              wordRow = []
+            }
+            wordRow.push({'word': words[i]['word'], 'status': words[i]['word_status']})
+          }
+          newWords.push(wordRow)
+          this.codewords = newWords
+
+          var turnsToHints = response['data']['turns_to_hints']
+          if (turnsToHints.length !== 0) {
+            var currentTurnToHint = turnsToHints[turnsToHints.length - 1]
+            this.currentHintWord = currentTurnToHint['hint_word']
+            this.currentHintNumber = currentTurnToHint['hint_number']
+          }
+
+          // Assumes data for turns comes in order and starts with turn 1.
+          var turnsToGuesses = response.data['turns_to_guesses']
+          var turnsToGuessesArray = []
+          turnsToGuessesArray.push([]) // There are no guesses in turn 0.
+          var currentTurn = 1
+          var guessStringsForCurrentTurn = []
+          var i = 0
+          while (i < turnsToGuesses.length) {
+            var guess = turnsToGuesses[i]
+            if (guess['turn_number'] === currentTurn) {
+              var guessString = guess['player'] + ' went to ' + guess['guessed_word'] + ' '
+              switch (guess['guess_outcome']) {
+                case 'agent_found':
+                  guessString += 'and rescued an agent.'
+                  break
+                case 'hit_bystander':
+                  guessString += 'and clobbered an innocent bystander.'
+                  break
+                case 'assassin_found':
+                  guessString += 'and was killed by an assassin. :('
+                  break
+              }
+              guessStringsForCurrentTurn.push(guessString)
+              i++
+            } else {
+              turnsToGuessesArray.push(guessStringsForCurrentTurn)
+              guessStringsForCurrentTurn = []
+              currentTurn++
+            }
+          }
+          if (guessStringsForCurrentTurn.length !== 0) {
             turnsToGuessesArray.push(guessStringsForCurrentTurn)
-            guessStringsForCurrentTurn = []
-            currentTurn++
           }
-        }
-        if (guessStringsForCurrentTurn.length !== 0) {
-          turnsToGuessesArray.push(guessStringsForCurrentTurn)
-        }
 
-        this.logs = []
-        for (i = 0; i <= this.turnNumber; ++i) {
-          if (i < turnsToGuessesArray.length) {
-            for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
-              this.logs.push('     ' + turnsToGuessesArray[i][j])
+          this.logs = []
+          for (i = 0; i <= this.turnNumber; ++i) {
+            if (i < turnsToGuessesArray.length) {
+              for (var j = 0; j < turnsToGuessesArray[i].length; ++j) {
+                this.logs.push('     ' + turnsToGuessesArray[i][j])
+              }
+            }
+            if (i < turnsToHints.length) {
+              var turnToHint = turnsToHints[i]
+              this.logs.push(
+                turnToHint.player + ' says \'' + turnToHint.hint_word + '\'. ' +
+                turnToHint.hint_number + ' words.')
             }
           }
-          if (i < turnsToHints.length) {
-            var turnToHint = turnsToHints[i]
-            this.logs.push(
-              turnToHint.player + ' says \'' + turnToHint.hint_word + '\'. ' +
-              turnToHint.hint_number + ' words.')
-          }
-        }
 
-        if (this.gameOver) {
-          if (this.assassinFound) {
-            this.logs.push('Unfortunately, the terrorists succeed.')
-          } else {
-            this.logs.push('Congratulations, you rescued everyone!')
+          if (this.gameOver) {
+            if (this.assassinFound) {
+              this.logs.push('Unfortunately, the terrorists succeed.')
+            } else {
+              this.logs.push('Congratulations, you rescued everyone!')
+            }
           }
-        }
 
-        if (playerTriggeringUpdate !== null && playerTriggeringUpdate !== this.username && this.isCurrentPlayerTurn) {
-          playSound(SIGNAL_TURN_MP3)
-        }
-      })
+          if (playerTriggeringUpdate !== null && playerTriggeringUpdate !== this.username && this.isCurrentPlayerTurn) {
+            playSound(SIGNAL_TURN_MP3)
+          }
+        })
     }
   }
 }

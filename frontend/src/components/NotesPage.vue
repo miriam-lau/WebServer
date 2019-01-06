@@ -58,7 +58,6 @@ import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
 import EditableDiv from './shared/EditableDiv'
-import axios from 'axios'
 import { getFullBackendUrlForPath } from '../common/utils'
 
 const GET_NOTES_PAGE_URL = getFullBackendUrlForPath('/get_notes_page')
@@ -216,8 +215,13 @@ export default {
         }
         noteIds.push(this.notes[indexToAdd]['id'])
       }
-      axios.post(REORDER_NOTES_URL, { note_ids: noteIds }).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        REORDER_NOTES_URL,
+        { note_ids: noteIds },
+        null,
+        'Failed to move note.',
+        (response) => {
           this.updateNotesPageDisplay()
         })
     },
@@ -236,14 +240,24 @@ export default {
         }
         noteIds.push(this.notes[indexToAdd]['id'])
       }
-      axios.post(REORDER_NOTES_URL, { note_ids: noteIds }).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        REORDER_NOTES_URL,
+        { note_ids: noteIds },
+        null,
+        'Failed to move note.',
+        (response) => {
           this.updateNotesPageDisplay()
         })
     },
     updateNotesPageDisplay () {
-      axios.post(GET_NOTES_PAGE_URL).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_NOTES_PAGE_URL,
+        {},
+        null,
+        'Failed to move note.',
+        (response) => {
           for (let index in response['data']) {
             response['data'][index]['saved'] = true
           }

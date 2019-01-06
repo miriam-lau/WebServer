@@ -55,7 +55,6 @@ import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
 import EditableDiv from './shared/EditableDiv'
-import axios from 'axios'
 import { getFullBackendUrlForPath } from '../common/utils'
 
 const GET_INVENTORY_PAGE_URL = getFullBackendUrlForPath('/get_inventory_page')
@@ -198,8 +197,13 @@ export default {
         })
     },
     updateInventoryPageDisplay () {
-      axios.post(GET_INVENTORY_PAGE_URL).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_INVENTORY_PAGE_URL,
+        {},
+        null,
+        'Failed to update inventory display.',
+        (response) => {
           for (let index in response['data']) {
             response['data'][index]['saved'] = true
           }

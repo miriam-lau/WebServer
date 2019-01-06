@@ -49,6 +49,11 @@ body {
 	color: #5e5b64;
 }
 
+#app {
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
 /*-------------------------
 	The menu
 --------------------------*/
@@ -90,7 +95,8 @@ nav.nav-restaurants-page .nav-restaurants-page,
 nav.nav-pantry-page .nav-pantry-page,
 nav.nav-notes-page .nav-notes-page,
 nav.nav-inventory-tracker .nav-inventory-tracker,
-nav.nav-dominion .nav-dominion {
+nav.nav-dominion .nav-dominion,
+nav.nav-dominion-game .nav-dominion-game {
 		background-color:#e35885;
 }
 

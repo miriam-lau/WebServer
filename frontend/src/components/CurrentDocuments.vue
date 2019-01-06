@@ -43,12 +43,11 @@
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { callAxiosAndSetButterBar, setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
-import axios from 'axios'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
@@ -98,8 +97,13 @@ export default {
       this.formModal_show = false
     },
     reloadCurrentDocumentsData () {
-      axios.post(GET_CURRENT_DOCUMENTS_URL, {username: this.username}).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_CURRENT_DOCUMENTS_URL,
+        { username: this.username },
+        null,
+        'Failed to reload documents.',
+        (response) => {
           this.currentDocuments = response['data']
         })
     },
@@ -158,8 +162,13 @@ export default {
         }
         documentIds.push(this.currentDocuments[indexToAdd]['id'])
       }
-      axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        REORDER_DOCUMENTS_URL,
+        { username: this.username, document_ids: documentIds },
+        null,
+        'Failed to move documents.',
+        (response) => {
           this.reloadCurrentDocumentsData()
         })
     },
@@ -178,8 +187,13 @@ export default {
         }
         documentIds.push(this.currentDocuments[indexToAdd]['id'])
       }
-      axios.post(REORDER_DOCUMENTS_URL, {username: this.username, document_ids: documentIds}).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        REORDER_DOCUMENTS_URL,
+        { username: this.username, document_ids: documentIds },
+        null,
+        'Failed to move documents.',
+        (response) => {
           this.reloadCurrentDocumentsData()
         })
     },

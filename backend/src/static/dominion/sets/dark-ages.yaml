@@ -208,6 +208,7 @@ cards:
     isVictory: false
     isTrashing: true
     isReaction: false
+    isLooter: true
 
   - name: Wandering Minstrel
     cost:
@@ -328,6 +329,7 @@ cards:
     isVictory: false
     isTrashing: false
     isReaction: false
+    isLooter: true
 
   - name: Rogue
     cost:
@@ -350,6 +352,7 @@ cards:
     isVictory: false
     isTrashing: false
     isReaction: false
+    isLooter: true
 
   - name: Band of Misfits
     cost:

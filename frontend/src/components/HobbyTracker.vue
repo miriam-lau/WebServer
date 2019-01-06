@@ -85,8 +85,6 @@ import { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar } from '..
 import FormModal from './shared/FormModal'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
-import axios from 'axios'
-
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 
@@ -141,8 +139,13 @@ export default {
       setButterBarMessage(this, 'Added ' + addedHobby['hobby'], ButterBarType.INFO)
     },
     updateHobbyDisplay () {
-      axios.post(GET_HOBBIES_URL, { username: this.username }).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_HOBBIES_URL,
+        { username: this.username },
+        null,
+        'Failed to update hobby display.',
+        (response) => {
           this.hobbies = response.data['hobbies']
           this.last_week_hobbies = response.data['last_week_hobbies']
         })

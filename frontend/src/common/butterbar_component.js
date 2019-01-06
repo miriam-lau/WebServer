@@ -18,6 +18,8 @@ let ButterBarType = {
 
 /**
  * Sets the butter bar message text on the component. It will automatically clear after ten seconds.
+ * @param {Vue Component} component the Vue component calling this function.
+ * @param {string} text the butter bar message.
  * @param {ButterBarType} type
  */
 function setButterBarMessage (component, text, type) {
@@ -25,7 +27,7 @@ function setButterBarMessage (component, text, type) {
     throw new Error('Invalid arguments')
   }
   component.butterBar_message = text
-  component.butterBar_css = getCssClassForButterBarType(type)
+  component.butterBar_css = _getCssClassForButterBarType(type)
   window.clearTimeout(component.butterBar_timeoutHandle)
   component.butterBar_timeoutHandle = setTimeout(
     function () {
@@ -37,7 +39,7 @@ function setButterBarMessage (component, text, type) {
 /**
  * @param {ButterBarType} type
  */
-function getCssClassForButterBarType (type) {
+function _getCssClassForButterBarType (type) {
   switch (type) {
     case ButterBarType.INFO:
       return 'butter-bar-info'
@@ -48,17 +50,26 @@ function getCssClassForButterBarType (type) {
 
 /**
  * Calls axios and sets the butter bar text on error.
- * @param {Function} successCallback
+ * @param {Vue Object} component the Vue component this is called from.
+ * @param {string} backendPath the path to call using Axios.
+ * @param {Data Object} params params to send to the backend.
+ * @param {string?} successMessage the message to set the butter bar to on success. If null, does not set it.
+ * @param {string?} errorMessage the message to set the butter bar to on error. If null, does not set it.
+ * @param {Function?} successCallback the callback function to call on success if one exists.
  */
 function callAxiosAndSetButterBar (component, backendPath, params, successMessage, errorMessage, successCallback) {
   callAxios(
     backendPath,
     params,
     function (response) {
-      successCallback(response)
-      setButterBarMessage(component, successMessage, ButterBarType.INFO)
+      if (successCallback) {
+        successCallback(response)
+      }
+      if (successMessage !== null) {
+        setButterBarMessage(component, successMessage, ButterBarType.INFO)
+      }
     },
-    function (response) {
+    function () {
       setButterBarMessage(component, errorMessage, ButterBarType.ERROR)
     })
 }

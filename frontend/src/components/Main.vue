@@ -22,6 +22,7 @@
         <a href="#" class="nav-restaurants-page" v-on:click="navigateTo('restaurantsPage')">Restaurants</a>
         <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
         <a href="#" class="nav-dominion" v-on:click="navigateTo('dominion')">Dominion</a>
+        <a href="#" class="nav-dominion-game" v-on:click="navigateTo('dominionGame')">Dominion Game</a>
       </nav>
     </div>
     <router-view/>
@@ -29,6 +30,11 @@
 </template>
 
 <script>
+// To add a new menu item, add it to:
+//   Main.vue
+//   router/index.js
+//   Add a new component.
+//   assets/style.css.
 import Codenames from './Codenames'
 import CurrentDocuments from './CurrentDocuments'
 import HobbyTracker from './HobbyTracker'
@@ -38,6 +44,7 @@ import RestaurantsPage from './RestaurantsPage'
 import PantryPage from './PantryPage'
 import NotesPage from './NotesPage'
 import Dominion from './Dominion'
+import DominionGame from './DominionGame'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -57,7 +64,7 @@ export default {
     }
   },
   components: {
-    CurrentDocuments, Codenames, Dominion, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
+    CurrentDocuments, Codenames, Dominion, DominionGame, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -88,6 +95,8 @@ export default {
           return 'nav-inventory-tracker'
         case 'dominion':
           return 'nav-dominion'
+        case 'dominion-game':
+          return 'nav-dominion-game'
       }
     }
   }

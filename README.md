@@ -3,35 +3,45 @@
 
 ## Build Setup
 
-git clone git@github.com:miriam-lau/WebServer.git
-python3 -m pip install --user virtualenv
-python3 -m virtualenv env
-pip3 install flask flask-socketio eventlet
+git clone git@github.com:miriam-lau/WebServer.git<br>
+install python<br>
+install npm<br>
+install postgres<br>
+in postgres, <br>
+create database webserver;<br>
+create user webserver with password <password>;<br>
+grant all privileges on database webserver to webserver;<br>
+
+<br>
+From WebServer/<br>
+python3 -m pip install --user virtualenv<br>
+python3 -m virtualenv env<br>
+pip3 install flask flask-socketio eventlet<br>
+pip3 install psycopg2<br>
+pip3 install -U flask-cors<br>
+pip3 install pyyaml<br><br>
+
 // navigate to "frontend" directory
-sudo apt install npm
-sudo npm install -g vue-cli
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
-// sudo ln -s /usr/bin/nodejs /usr/bin/node - Might not need to do this either.
-// vue init webpack frontend - Did this but don't need to anymore.
-sudo npm install vue-cookies --save
-sudo npm install vuex --save
-sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib
-sudo pip3 install psycopg2
-sudo npm install axios --save
-sudo pip3 install -U flask-cors
-sudo npm i --save @fortawesome/fontawesome-svg-core
-sudo  npm i --save @fortawesome/free-solid-svg-icons
-sudo  npm i --save @fortawesome/vue-fontawesome
-sudo npm install --save @fortawesome/vue-fontawesome
-sudo npm install vue-masonry --save
-sudo pip3 install pyyaml
+npm install -g vue-cli<br>
+npm install vue-cookies --save<br>
+npm install vuex --save<br>
+npm install axios --save<br>
+npm i --save @fortawesome/fontawesome-svg-core<br>
+npm i --save @fortawesome/free-solid-svg-icons<br>
+npm install --save @fortawesome/vue-fontawesome<br>
+npm install vue-masonry --save<br>
+<br>
+psql databasename < data_base_dump
+
+## Restoring the database in windows
+https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
 
 ## To run in dev mode:
-from backend/src: flask run --reload --debugger --host=0.0.0.0
-from frontend/: npm run dev -- --hot --host 0.0.0.0
+from backend/src:<br/>
+flask run --reload --debugger --host=0.0.0.0<br><br/>
+
+from frontend/:<br/>
+npm run dev -- --hot --host 0.0.0.0
 
 ## Database configuration
 
@@ -57,7 +67,6 @@ drop table dish_images cascade;
 drop table current_documents cascade;
 drop table hobby_tracker cascade;
 drop table hobby_completed_hours_timestamped cascade;
-drop table codenames_words cascade;
 drop table codenames_games cascade;
 drop table codenames_turns_to_hints cascade;
 drop table codenames_turns_to_guesses cascade;
@@ -67,6 +76,7 @@ drop table grocery_list cascade;
 drop table grocery_known_words cascade;
 drop table pantry cascade;
 drop table notes cascade;
+drop table dominion_games cascade;
 
 create table users (
   username varchar (50) primary key);
@@ -94,9 +104,6 @@ create table hobby_completed_hours_timestamped (
   timestamp timestamp default localtimestamp not null,
   completed_hours_for_week real not null
 );
-
-create table codenames_words (
-  word varchar (50) primary key);
 
 CREATE TYPE turn_type AS ENUM ('guess', 'give_hint');
 
@@ -127,7 +134,7 @@ create table codenames_turns_to_guesses (
   game_id integer references codenames_games not null,
   turn_number integer not null,
   player varchar(50) references users not null,
-  guessed_word varchar(50) references codenames_words not null,
+  guessed_word varchar(50) not null,
   guess_outcome guess_outcome not null
 );
 
@@ -136,7 +143,7 @@ CREATE TYPE word_status AS ENUM ('agent_found', 'player_1_hit_bystander', 'playe
 create table codenames_games_to_words (
   game_id integer references codenames_games,
   word_index integer,
-  word varchar(50) references codenames_words not null,
+  word varchar(50) not null,
   word_status word_status not null,
   primary key (game_id, word_index)
 );
@@ -273,4 +280,11 @@ create table inventory (
   id serial primary key,
   title varchar(150) not null,
   text text not null
+);
+
+create table dominion_games (
+id serial primary key,
+player1 varchar(50) references users not null,
+player2 varchar(50) references users not null,
+data jsonb
 );

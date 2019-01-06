@@ -24,6 +24,7 @@ class HobbyTracker:
             ret = cur.fetchone()
             self._database.commit()
             cur.close()
+            ret["completed_hours_for_week"] = 0
             return ret
         except psycopg2.Error:
             self._database.rollback()
@@ -81,7 +82,7 @@ class HobbyTracker:
 
     def edit_hobbies(self, hobbies):
         cur = self._database.get_cursor()
-#hobby object does not have "completed_hours_for_week" as a property anymore.
+        # hobby object does not have "completed_hours_for_week" as a property anymore.
         try:
             for hobby in hobbies:
                 cur.execute("UPDATE hobby_tracker SET hobby = %s, assigned_hours_per_week = %s where id = %s",

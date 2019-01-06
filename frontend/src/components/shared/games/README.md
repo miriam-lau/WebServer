@@ -1,0 +1,2 @@
+Components which utilize these components must have the following properties set:
+- games_currentCardSelection: An object with the keys: (array, index, exists) representing the currently selected card.

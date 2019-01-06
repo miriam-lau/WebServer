@@ -29,12 +29,11 @@
   </div>
 </template>
 <script>
-import { setButterBarMessage, ButterBarType } from '../common/butterbar_component'
+import { callAxiosAndSetButterBar, setButterBarMessage, ButterBarType } from '../common/butterbar_component'
 import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
 
 import RecipeRestaurantEntity from './shared/RecipeRestaurantEntity'
 import { getFullBackendUrlForPath, isEqual, getDisplayDate } from '../common/utils'
-import axios from 'axios'
 
 const GET_RESTAURANTS_PAGE_DATA_URL = getFullBackendUrlForPath('/get_restaurants_page_data')
 const EDIT_ENTITY_URL_PREFIX = getFullBackendUrlForPath('/edit/')
@@ -535,12 +534,16 @@ export default {
       this.childTableValues = []
     },
     getRestaurantsPageDataAndRender () {
-      axios.post(GET_RESTAURANTS_PAGE_DATA_URL).then(
-        response => {
+      callAxiosAndSetButterBar(
+        this,
+        GET_RESTAURANTS_PAGE_DATA_URL,
+        {},
+        null,
+        'Failed to render restaurants page.',
+        (response) => {
           this.restaurantsPageData = response.data
           this.renderPageFromProps()
-        }
-      )
+        })
     },
     renderPageFromProps () {
       if (!this.cityIdParam && !this.restaurantIdParam && !this.dishIdParam && !this.dishMealIdParam) {
