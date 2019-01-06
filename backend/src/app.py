@@ -13,6 +13,7 @@ from src.inventory_page.inventory_page import InventoryPage
 from src.dominion.dominion import Dominion
 import os
 import sys
+import socket
 
 import traceback
 
@@ -53,8 +54,8 @@ def initialize_app():
     notes_page = NotesPage(database)
     inventory_page = InventoryPage(database)
     dominion = Dominion(database)
-    if is_production():
-      should_run_app = query_yes_no('Running with production database. Continue?')
+    if is_production() and socket.gethostname() != "raspberrypi":
+      should_run_app = query_yes_no("Running with production database. Continue?")
       if not should_run_app:
         os._exit(0)
 

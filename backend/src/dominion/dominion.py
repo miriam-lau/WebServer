@@ -16,6 +16,8 @@ class Dominion:
     TRASH = "trash"
     PLAYER_1_DECK = "player_1_deck"
     PLAYER_2_DECK = "player_2_deck"
+    PLAYER_1_HAND = "player_1_hand"
+    PLAYER_2_HAND = "player_2_hand"
     BOONS = "boons"
     BANE = "bane"
     HEXES = "hexes"
@@ -312,6 +314,11 @@ class Dominion:
         Dominion.generate_player_cards(
             ret[Dominion.PLAYER_2_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
+        ret[Dominion.PLAYER_1_HAND] = []
+        ret[Dominion.PLAYER_2_HAND] = []
+        for i in range(5):
+          ret[Dominion.PLAYER_1_HAND].append(ret[Dominion.PLAYER_1_DECK].pop())
+          ret[Dominion.PLAYER_2_HAND].append(ret[Dominion.PLAYER_2_DECK].pop())
 
         for card in normal_cards:
             ret[Dominion.KINGDOM_CARDS].append(Dominion.generate_pile(card))
@@ -343,7 +350,7 @@ class Dominion:
                 for card in card_array:
                     card["pile_type"] = pile_type
                     card["pile_index"] = pile_index
-        for pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK]:
+        for pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK, Dominion.PLAYER_1_HAND, Dominion.PLAYER_2_HAND]:
             for card in card_map[pile_type]:
                 if card["name"] == "Copper":
                     card["pile_type"] = Dominion.TREASURE_CARDS
@@ -1037,7 +1044,7 @@ class Dominion:
             "durationArea": [],
             "playArea": [],
             "deck": game_data["player_1_deck"],
-            "hand": [],
+            "hand": game_data["player_1_hand"],
             "mats": [],
             "discard": [],
             "numActions": 1,
@@ -1055,7 +1062,7 @@ class Dominion:
             "durationArea": [],
             "playArea": [],
             "deck": game_data["player_2_deck"],
-            "hand": [],
+            "hand": game_data["player_2_hand"],
             "mats": [],
             "discard": [],
             "numActions": 1,
