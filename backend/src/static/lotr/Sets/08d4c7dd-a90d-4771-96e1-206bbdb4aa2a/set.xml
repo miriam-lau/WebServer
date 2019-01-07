@@ -1,0 +1,560 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Ringmaker - Nightmare" id="08d4c7dd-a90d-4771-96e1-206bbdb4aa2a" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="3.0.0">
+ <cards>
+  <card id="b42cd34e-7eb6-4163-8ef6-4a2f66f45439" name="The Dunland Trap">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Dunland Trap scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;4x Boar Clan Warrior&#10;4x Hithaeglir Stream&#10;1x Dunlending Ambush&#10;1x Frenzied Attack&#10;1x Low on Provisions&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Dunland Trap encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <property name="Shadow" value="The Dunland Trap"/>
+    <alternate name="The Dunland Trap" type="B">
+      <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode."/>
+    </alternate>
+  </card>
+  <card id="f5f06bf8-82ae-437f-95e9-1d67312a78f2" name="Boar Clan Ambusher" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland. Boar Clan."/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After Boar Clan Ambusher attacks and destroys a character, discard a random card from your hand."/>
+    <property name="Shadow" value="If this attack destroys a character, discard a random card from your hand."/>
+  </card>
+  <card id="354f9e8d-aa47-4493-a697-b59f0bd178ea" name="Boar Clan Skirmisher" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland. Boar Clan."/>
+    <property name="Engagement Cost" value="20"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After the engaged player draws any number of cards, he deals 1 damage to a hero he controls."/>
+    <property name="Shadow" value="Deal 1 damage to a hero you control (2 damage instead if undefended)."/>
+  </card>
+  <card id="efb4a7ca-6892-43e8-9de4-ab8d2ffc7cdc" name="Plains of Dunland" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Enedwaith. Plains."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Plains of Dunland is in the staging area, each Dunland enemy gets -20 engagement cost and cannot be optionally engaged.&#10;Travel: The first player engages the highest Û enemy in the staging area to travel here."/>
+  </card>
+  <card id="f2f7e1d5-9be6-4a8a-bb46-50ae4da2cb16" name="Munuv Dûv River" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Enedwaith. Hills. River."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Munuv Dûv River is in the staging area, it gains: &quot;Forced: After a player draws any number of cards, he deals 1 shadow card to an enemy engaged with him.&quot;"/>
+    <property name="Shadow" value="Raise your threat by 1 for each enemy engaged with you."/>
+  </card>
+  <card id="ffbf96c9-ee9f-4462-b1c5-1acf8609015a" name="Hithaeglir Woods" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Enedwaith. Forest. Hills."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Hithaeglir Woods is in the staging area, each Dunland enemy in the staging area cannot take damage. &#10;Travel: Deal each Dunland enemy a shadow card to travel here."/>
+  </card>
+  <card id="fea90493-29cd-4668-9e3b-eb3150cdc339" name="Boar Clan Assault" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each engaged enemy makes an immediate attack. If no attacks are made this way, Boar Clan Assault gains surge."/>
+    <property name="Shadow" value="Each enemy engaged with you gets +1 Û until the end of the phase."/>
+  </card>
+  <card id="81907a30-abb2-44de-b3be-eb44e43977d8" name="Stalked by Dunlendings" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Dunland Trap - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player draws 1 card. Until the end of the round, add X $ to the total $ in the staging area. X is the number of cards in the first player's hand."/>
+    <property name="Shadow" value="Put the topmost enemy in the discard pile into play engaged with you and deal it a shadow card."/>
+  </card>
+  <card id="f096ca9b-c50e-4897-b0c6-216c9c520bee" name="The Three Trials">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Three Trials scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;3x Spirit of the Wild&#10;3x Grim Foothills&#10;1x Tangled Woods&#10;3x Turned Around&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Three Trials encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="The Three Trials" type="B">
+      <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Each engaged Guardian enemy contributes its $ to the total $ in the staging area.&#10;While the Trial of Intuition is the current trial, each Guardian enemy cannot be damaged, and each Barrow location cannot be the active location and is immune to player card effects."/>
+    </alternate>
+  </card>
+  <card id="b644346d-3791-41f4-9d8a-0fd281e36b8b" name="Wolf Spirit" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Spirit. Wolf."/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="If Wolf's Guardian is in play or in the victory display, each Wolf enemy gets +1 Û.&#10;Forced&quot; At the beginning of the encounter phase, Wolf Spirit engages the player who controls Key of the Wolf or is engaged with Wolf's Gaurdian, if able."/>
+  </card>
+  <card id="bc629269-aa5b-4f5c-b071-c1413f85d24c" name="Boar Spirit" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Spirit. Boar."/>
+    <property name="Engagement Cost" value="20"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="If Boar's Guardian is in play or in the victory display, each Boar enemy gets +1 Ù.&#10;Forced: At the beginning of the encounter phase, Boar Spirit engages the player who controls Key of the Boar or is engaged with Boar's Guardian, if able."/>
+  </card>
+  <card id="c8a7cd39-10e0-4d50-a75b-e8a7ac24e32f" name="Raven Spirit" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Spirit. Raven."/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="If Raven's Guardian is in play or in the victory display, each Raven enemy gets +1 $.&#10;Forced: At the beginning of the encounter phase, Raven Spirit engages the player who controls Key of the Raven or is engaged with Raven's Guardian, if able."/>
+  </card>
+  <card id="f1dda3f9-e4cc-4c36-8167-a31dfdce2637" name="Sacred Forest" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Sacred Forest is in the staging area, each Guardian enemy gains: &quot;Forced: After any number of time counters are removed from this enemy, heal 2 damage on it for each time counter removed.&quot;&#10;Travel: Remove each time counter from an enemy in play to travel here."/>
+  </card>
+  <card id="4008f69c-fda2-4fe4-a8bd-373d38203c87" name="Haunted Pillars" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. Hills."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="When faced with the option to travek, players must travel to Haunted Pillars, if able.&#10;When Revealed: Either return the active location to the staging area, or Haunted Pillars gains surge."/>
+  </card>
+  <card id="a142205c-6aa0-4fed-be81-312c2dd33673" name="Cursed Burden" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach to a hero with a Key objective attached, if able. (Counts as a Condition attachment with the text: &quot;Limit 1 per hero. Attached hero cannot commit to the quest, and cannot attack or defend against enemies with a Trait shared by any of that hero's attached Key objectives.&quot;)"/>
+  </card>
+  <card id="4aacc507-dfaf-4193-98c5-09dbf879423d" name="Trial of Ancestors" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Three Trials - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Attach to the current quest. (Counts as a Condition attachment with the text: Each non-unique character gets -1 Ò and cannot attack enemies that share a Trait with the current trial's key objective.&quot;)"/>
+  </card>
+  <card id="9fb6747a-1dd1-4a38-8c55-9459fda296c1" name="Trouble in Tharbad">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Trouble in Tharbad scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;1x Orc Hunter&#10;2x Orc Skirmisher&#10;2x Tharbad Hideout&#10;2x Hidden Alleyway&#10;1x Decrepit Rooftops&#10;2x Orc Hunting Party&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Trouble in Tharbad encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin.&#10;Playing Tip: There are many effects in the nightmare version of Trouble in Tharbad that reduce the players' threat elimination level. It may be helpful to use a separate threat tracker or pen and paper to track the players' current threat elimination level."/>
+    <alternate name="Trouble in Tharbad" type="B">
+      <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare Mode.&#10;Setup: Raise each player's starting threat by 5.&#10;Progress cannot be placed on The Crossing at Tharbad while Bellach is in play."/>
+    </alternate>
+  </card>
+  <card id="2bc9f441-e922-4509-aef9-a27e485ed227" name="Bellach's Hunter" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Spy."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="While a player controls 5 or more allies, Bellach's Hunter gets –20 engagement cost.&#10;Forced: When Bellach's Hunter engages a player, that player must either remove all time counters from the current quest or deal 5 damage to a hero he controls."/>
+  </card>
+  <card id="715a7c96-17de-4e8d-8771-a8ae0e36e732" name="Orc Seeker" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Engagement Cost" value="20"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Either reduce each player's threat elimination level by 2, or Orc Seeker engages the first player and makes an immediate attack."/>
+    <property name="Shadow" value="Reduce each player's threat elimination level by 2 (5 instead if undefended)."/>
+  </card>
+  <card id="fa961100-1d40-4614-b405-faf9c00e2a83" name="Blood Hound" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature."/>
+    <property name="Engagement Cost" value="0"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: When Blood Hound engages you, raise your threat by 5."/>
+    <property name="Shadow" value="Either raise your threat by 10, or attacking enemy makes an additional attack against you after this one. "/>
+  </card>
+  <card id="99d7fe5f-dcb5-43e2-9b73-8d47e661e6be" name="City of Spies" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City. Ruins."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While City of Spies is in the staging area, it gains: &quot;Forced: When you commit a character to the quest, raise your threat by 1. This effect does not stack with other copies of City of Spies.&quot;"/>
+  </card>
+  <card id="be2d2c3f-db7a-43bc-b0e8-43587dfce5c9" name="Dark Pathway" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Dark Pathway is the active location, the first treachery card without the printed surge keyword revealed during the quest phase gains surge."/>
+    <property name="Shadow" value="Either remove 1 time counter from the current quest or treat this attack as undefended."/>
+  </card>
+  <card id="4b748920-83c0-473a-a2fd-0ec8a6b3f1b8" name="Waylaid by Agents" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: either remove 1 time counter from the quest or discard an ally he controls from play. Then, if any player's threat is 20 or less, Waylaid by Agents gained doomed 3."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û (+3 Û instead if your threat is 20 or less)."/>
+  </card>
+  <card id="68384cac-543c-4e62-9866-e066f2ad27f0" name="Tharbad Patrol">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Trouble in Tharbad - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach Tharbad Patrol to a non-unique location in the staging area without a copy of Tharbad Patrol attached. (Counts as a Condition attachment with the text: &quot;Forced: After the players travel to attached location, each player must discard the top 2 cards from the encounter deck and engage each enemy he discarded in this way.&quot;)"/>
+  </card>
+  <card id="30252ae6-2652-45b9-a245-41abd03d05d6" name="The Nîn-in-Eilph">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Nîn-in-Eilph scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;1x A Weary Passage (Stage 1B)&#10;1x Impassable Marshland (Stage 2B)&#10;3x Neekerbreekers&#10;1x Hidden Eyot&#10;3x Finger of Glanduin&#10;2x Off Track&#10;1x Low on Provisions&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Nîn-in-Eilph encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="The Nîn-in-Eilph" type="B">
+      <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Forced: When the players advance to stage 2A, add Ancient Marsh-dweller to the staging area (from out of play or engaged with a player)."/>
+    </alternate>
+  </card>
+  <card id="27393c24-6278-4202-91ef-ef3d708387e6" name="Deadly Marsh Adder" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature."/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After Deadly Marsh Adder engages you, discard a damaged character you control.&#10;Forced: After the players advance to a quest stage, return Deadly Marsh Adder to the staging area."/>
+  </card>
+  <card id="cbbc2de7-c8ab-4c7b-8b83-8d29debf1696" name="Swarms of Mosquitoes" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. Insect."/>
+    <property name="Engagement Cost" value="25"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="7"/>
+    <property name="Victory Points" value="1"/>
+    <property name="Text" value="Cannot have attachments.&#10;While Swarms of Mosquitoes is in the victory display, it gains: &quot;Forced: After the players advance to a quest stage, return Swarms of Mosquitoes to the staging area.&quot;"/>
+  </card>
+  <card id="1e2c314d-2673-41d5-9905-3d60b5f33d98" name="Desolate Meadow" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Marsh."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Desolate Meadow is in the staging area, it gains: &quot;Forced: After any number of time counters are removed from the current quest, heal 2 damage on each Creature enemy in play.&quot;"/>
+    <property name="Shadow" value="If this attack destroys a character, remove all progress from the current quest."/>
+  </card>
+  <card id="87025e60-afc4-410b-9b97-c5f527b524c8" name="Peat Bog" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Marsh."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Peat Bog is in the staging area, it gains: &quot;Forced: After the players advance to a quest stage, each player discards 1 random card from his hand.&quot;"/>
+  </card>
+  <card id="5f93b0c2-fa71-43e3-bfd6-c68c283e5328" name="Quicksand" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Either remove 1 time counter from the current quest or remove each character with 3 or more Ò from the quest."/>
+    <property name="Shadow" value="Defending character cannot ready until the end of the round."/>
+  </card>
+  <card id="5fd07c1e-b086-4618-aa6e-89ff34f85c28" name="Rotten Stench" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Return the topmost location in the encounter discard pile to the staging area. Until the end of the phase, each location in the staging area gets +1 $."/>
+    <property name="Shadow" value="Deal 1 damage to the defending character."/>
+  </card>
+  <card id="ec21ab35-cc55-4e35-9ed7-b143bd94f17e" name="Through the Marshes" size="QuestCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Quest"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Raise each player's threat by 1."/>
+    <alternate name="An Arduous Journey" type="B">
+      <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+      <property name="Type" value="Quest"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="13"/>
+      <property name="Text" value="Time 3. Forced: After the last time counter is removed from this stage, advance to a different stage 2A at random. Return this stage to the quest deck. &#10;Allies enter play exhausted.&#10;Forced: When the players defeat this stage, advance to a random stage 3A."/>
+    </alternate>
+  </card>
+  <card id="9ad3750c-5cb8-45c7-be04-b454f1d7de82" name="Lost in the Swanfleet" size="QuestCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+    <property name="Type" value="Quest"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Raise each player's threat by 1. Add Ancient Marsh-dweller to the staging area (from out of play or engaged with a player) and heal all damage from it."/>
+    <alternate name="Deadly Waters" type="B">
+      <property name="Encounter Set" value="The Nîn-in-Eilph - Nightmare"/>
+      <property name="Type" value="Quest"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="16"/>
+      <property name="Text" value="Time 3. Forced: After the last time counter is removed from this stage, advance to a different stage 3A at random. Return this stage to the quest deck. &#10;Treachery card effects cannot be canceled."/>
+    </alternate>
+  </card>
+  <card id="79b22351-0e03-4bb9-87cb-b0cbefbefb60" name="Celebrimbor's Secret">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Celebrimbor's Secret scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;1x Orc Skirmisher&#10;1x Orc Hunter&#10;3x Prowling Wolf&#10;1x Ruined Plaza&#10;1x City Remains&#10;1x Ancient Foundation&#10;3x Broken Lands&#10;1x Spies from Mordor&#10;2x Orc Hunting Party&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Celebrimbor's Secret encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="Celebrimbor's Secret" type="B">
+      <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare more.&#10;Forced: When any amount of progress would be placed on a location in the staging area, reduce that amount to 1.&#10;Scour Deal 1 damage to a location in play."/>
+    </alternate>
+  </card>
+  <card id="58615245-a21c-4f45-9636-9f76e2a7f19e" name="Bellach's Bodyguard" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Mordor. Orc."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Bellach cannot take damage.&#10;Scour: Heal all damage from Bellach's Bodyguard."/>
+    <property name="Shadow" value="Attacking enemy cannot take damage until the end of the phase."/>
+  </card>
+  <card id="0db0ef38-f9c4-47b1-a6a9-0aa5b9c1f538" name="Little Snuffler" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Snaga."/>
+    <property name="Engagement Cost" value="15"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="When Revealed: Trigger Little Snuffler's Scour effect.&#10;Scour: The first player discards a random card from his hand and assigns X damage among locations in the staging area. X is the discarded card's cost."/>
+  </card>
+  <card id="30ccffbd-b86a-4f6e-a286-8e8c753266ed" name="Bones of Hollin" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ost-in-Edhil. Ruins."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: After any amount of damage is placed on Bones of Hollin, raise each player's threat by that amount.&#10;Travel: Place 2 damage on an Ost-in-Edhil location in play to travel here."/>
+  </card>
+  <card id="d4afa945-f35f-4ae3-adb5-c90ed54f5e91" name="Dusty Labyrinth" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ost-in-Edhil. Ruins."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Dusty Labyrinth gets +1 $ for each damage on it.&#10;Scour: Deal 2 damage to Dusty Labyrinth.&#10;Travel: The first player must place a card from his hand facedown underneath The Orcs' Search to travel here."/>
+  </card>
+  <card id="6c9c2d37-2ca5-4753-8e1d-655fa5cd3ae7" name="Hateful Search" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Deal 1 damage to each location in the staging area. Until the end of the phase, each damaged location gets +1 $. If there are no locations in the staging area, Hateful Search gains surge."/>
+    <property name="Shadow" value="Defending player discards a non-objective attachment he controls."/>
+  </card>
+  <card id="730dcb7f-df08-450a-8e28-9b436e11bce8" name="Sauron's Agent" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Bellach makes an immediate attack against each player in turn order. Then, deal 1 damage to the active location for each character destroyed by this effect."/>
+    <property name="Shadow" value="Deal 1 damage to the defending character."/>
+  </card>
+  <card id="f0a7b02f-4d0f-49c6-8c27-1600af0022e7" name="Closing In" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Celebrimbor's Secret - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Place Closing In facedown underneath The Orcs' Search."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û for each card underneath The Orcs' Search."/>
+  </card>
+  <card id="ed458b9f-c913-4cb6-9f47-7760bba94c5b" name="The Antlered Crown">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Antlered Crown scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;1x Dunland Prowler&#10;1x Dunland Berserker&#10;2x Dunlending Bandit&#10;3x Raven Skirmisher&#10;3x Raven War-camp&#10;2x Driven Back&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Antlered Crown encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin.&#10;Note: Dunlending Horde has the &quot;Dunlending Warriors&quot; encounter set icon and should be shuffled into the Raven deck during setup."/>
+    <alternate name="The Antlered Crown" type="B">
+      <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Locations with time counters on them cannot be discarded from play by player card effect."/>
+    </alternate>
+  </card>
+  <card id="56243a40-0019-406a-b502-34dd17d8b6cf" name="Dunlending Horde" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland."/>
+    <property name="Engagement Cost" value="32"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments or take non-combat damage.&#10;Forced: After the engaged player draws any number of cards, heal all damage from Dunlending Horde."/>
+  </card>
+  <card id="381569ad-e2bf-4fb5-a045-a36b918deac4" name="Raven Clan Elite" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland. Raven Clan."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Either remove 1 time counter from a location in play, or Raven Clan Elite makes an immediate attack against the first player."/>
+  </card>
+  <card id="33a1b9de-6b17-49f8-8eb3-7dd98feaf1cb" name="Raven Clan Druid" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland. Raven Clan."/>
+    <property name="Engagement Cost" value="26"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After the engaged player draws any number of cards, remove 1 time counter from a location in play."/>
+    <property name="Shadow" value="Attacking enemy gets +X Û, where X is the Time X value on the active location."/>
+  </card>
+  <card id="5c525922-8f10-4793-b7c8-3fec9b3ce3f6" name="Raven Stronghold" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Dunland."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Time 3. Forced: After the last time counter is removed from this location, each player reveals the top card of the Raven deck and adds it to the staging area.&#10;Forced: When this location is explored, add the top card of the Raven deck to the staging area."/>
+  </card>
+  <card id="be9453b3-7576-4893-88d5-d62f0331411e" name="Highlands of Dunland" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Dunland."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Time 2. Forced: After the last time counter is removed from this location, return each enemy in play to the staging area."/>
+    <property name="Shadow" value="Either remove 1 time counter from a location in play, or return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="7f16112f-596c-43aa-b73e-3870f0325d66" name="Raven Talisman" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player draws 1 card. Until the end of the round, add 1 to the total $ in the staging area for each card in the first player's hand."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û. If this attack destroys a character, discard your hand and draw three cards."/>
+  </card>
+  <card id="12429164-0155-45e4-aa1c-e94292084bdf" name="Gathering Forces" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Antlered Crown - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Add the top 2 cards of the Raven Deck to the staging area. If any player has 5 or more cards in hand, this effect cannot be canceled."/>
+    <property name="Shadow" value="Put the top card of the Raven deck into play, engaged with you."/>
+  </card>
+ </cards>
+</set>

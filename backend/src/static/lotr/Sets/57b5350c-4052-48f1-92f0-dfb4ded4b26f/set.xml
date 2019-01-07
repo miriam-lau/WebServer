@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Treason of Saruman - Nightmare" id="57b5350c-4052-48f1-92f0-dfb4ded4b26f" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="3.0.0">
+ <cards>
+  <card id="94923076-b890-4a15-b576-5bba2e2ab2b4" name="The Uruk-hai">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Uruk-hai scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;3x The Uruk-hai Fighter&#10;1x Snaga&#10;2x Eastemnet&#10;2x Plains of Rohan&#10;3x The Wold&#10;2x Unseen Barrier&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Uruk-hai encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="The Uruk-hai" type="B">
+      <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Each captive is immune to player card effects.&#10;Setup: Set Mauhúr aside, out of play.&#10;Forced: When the players advance to stage 2A, add Mauhúr to the staging area."/>
+    </alternate>
+  </card>
+  <card id="36384b25-2c8d-4999-9c38-70a461a45518" name="Mauhúr" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 1. Archery 2."/>
+    <property name="Engagement Cost" value="24"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Victory Points" value="4"/>
+    <property name="Text" value="Forced: After Mauhúr attacks, increase the pursuit value by 1."/>
+  </card>
+  <card id="7595e0f2-391c-4c39-9147-888d53031784" name="Lugdush" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 2."/>
+    <property name="Engagement Cost" value="32"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Victory Points" value="3"/>
+    <property name="Text" value="While Lugdush is engaged with a player, each other enemy cannot take damage."/>
+    <property name="Shadow" value="If attacking enemy is unique, it cannot take damage until the end of the round."/>
+  </card>
+  <card id="5b883ef3-a7f1-4c88-870b-af254e9d2151" name="Orc of the White Hand" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 2."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: After Orc of the White Hand attacks and destroys a character, increase the pursuit value by 1."/>
+    <property name="Shadow" value="If this attack destroys a character, increase the pursuit value by 1."/>
+  </card>
+  <card id="a58a4337-b935-4b6c-b6fb-72e71e8bb9a8" name="Wold of Rohan" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Plains. Hills."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Action: Increase the pursuit value by 1 to place 1 progress on Wold of Rohan."/>
+    <property name="Shadow" value="Discard a non-objective attachment you control."/>
+  </card>
+  <card id="69b6719b-07f5-4514-b747-21fd0e2e9463" name="Enchanted Land" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Plains."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: After an encounter card effect is canceled, increase the pursuit value by 1."/>
+    <property name="Shadow" value="Either increase the pursuit value by 1, or attacking enemy cannot take damage until the end of the round."/>
+  </card>
+  <card id="196e8d0a-70c6-49f9-b26c-2ed2b7d3ac87" name="The Uruk's Trail" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Plains."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="While the Uruk's Trail is the active location, it gains: &quot;Response: After The Uruk's Trail is explored, reduce the pursuit value by 3.&quot;&#10;Travel: Search the encounter deck and discard pile for a non-unique Uruk-hai enemy and add it to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="bd44e9b4-5226-4fb5-a300-dffc9b35f6d4" name="Ugluk's Command" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril."/>
+    <property name="Text" value="When Revealed: Either increase the pursuit value by 4, or Uglúk makes an immediate attack against you."/>
+    <property name="Shadow" value="Attacking enemy gets +X Û, where X is the tens digit of the pursuit value."/>
+  </card>
+  <card id="ea7a8cd4-6e75-4ea7-85d1-9f89a66c9d19" name="Orc-draught" size="EncounterCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Uruk-hai - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril. Surge."/>
+    <property name="Text" value="When Revealed: Either discard an ally you control, or increase the pursuit value by 1."/>
+    <property name="Shadow" value="Exhaust a character you control."/>
+  </card>
+  <card id="687a4018-2f4f-4c37-a8ad-c293bb8f2f04" name="Helm's Deep">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Helm's Deep scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;1x Isengard Uruk&#10;3x Uruk-hai Fighter&#10;3x Wild Hillman&#10;3x The Hornburg&#10;1x Deeping Wall&#10;2x Postern Door&#10;2x Reckless Hate&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Helm's Deep encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="Helm's Deep" type="B">
+      <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode."/>
+    </alternate>
+  </card>
+  <card id="45f8c9d9-4911-484b-b203-a55a32977af5" name="Host of Isengard" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 2."/>
+    <property name="Engagement Cost" value="48"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="8"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments.&#10;While Host of Isengard is in the staging area, it gains: &quot;Forced: At the end of the round, place 1 progress on the current quest (bypassing any active location).&quot;"/>
+  </card>
+  <card id="14531c46-aad5-4090-bb7d-2edf9f78e5ff" name="Blooded Berserker" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dunland."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: When Bloodied Berserker is dealt a shadow card with no effect, either place 2 progress on the active location, or Blooded Berserker makes an additional attack against you."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û."/>
+  </card>
+  <card id="fae22b80-f5aa-43b3-81dd-6c24c8a44a0d" name="Helm's Dike" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Helm's Deep."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="While Helm's Dike is the active location, each enemy gets -10 engagement cost.&#10;Forced: When Helm's Dike is explored, shuffle the encounter discard pile into the encounter deck and discard cards from the top until an enemy is discarded. Add the discarded enemy to the staging area."/>
+  </card>
+  <card id="1b66485b-7d01-47b6-8504-7fee5c2f2729" name="Hornburg Wall" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Helm's Deep."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Each enemy gains Toughness 1.&#10;Forced: When Hornburg Wall is explored, exhaust each ally in play."/>
+    <property name="Shadow" value="Discard a non-objective attachment you control."/>
+  </card>
+  <card id="88a7e17c-4733-48c1-ad95-c2b01b8db5df" name="Glittering Caves" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Helm's Deep."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Victory Points" value="2"/>
+    <property name="Text" value="Immmune to player card effects.&#10;The players cannot travel here unless they are at stage 4B.&#10;While Glittering Caves is the active location, it gains: &quot;Skip the combat phase. Forced: At the end of the round, add Glittering Caves to the victory display and raise each player's threat by 2.&quot;"/>
+  </card>
+  <card id="5da26e76-9e95-4129-aea1-a3460f7b2132" name="Rain of Arrows" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Either remove 1 resource token from the Defense of Helm's Deep, or each location in the staging area gains archery 1 until the end of the round."/>
+    <property name="Shadow" value="Attacking enemy makes an additional attack against you after this one."/>
+  </card>
+  <card id="c828d0d2-0d82-49c2-b18d-7a819ee103b2" name="Crippling Weariness" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Helm's Deep - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Doomed 1."/>
+    <property name="Text" value="When Revealed: Each player exhausts a character he controls. Until the end of the round, characters cannot be readied by player card effects."/>
+    <property name="Shadow" value="Until the end of the round, defending character cannot ready."/>
+  </card>
+  <card id="5ab2daa0-b88d-47f2-8896-75bb6e76c350" name="The Road to Isengard">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the The Road to Isengard scenario.&#10;Remove the following cards, in the specified quantities, from the encounter deck:&#10;3x Snaga&#10;1x Ring-wall of Isengard&#10;2x Open Pit&#10;1x Machines of Isengard&#10;3x Blast of Sorcery&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Road to Isengard encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active through the game, which is now ready to begin."/>
+    <alternate name="The Road to Isengard" type="B">
+      <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Forced: When Ent of Fangorn leaves play, remove it from the game."/>
+    </alternate>
+  </card>
+  <card id="3467d57f-412b-482a-8176-3d396a3a44f1" name="Orthanc Archer" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Keywords" value="Peril. Archery 2."/>
+    <property name="Engagement Cost" value="38"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="When Revealed: Discard 1 random card from your hand and assign X damage among characters you control. X is the discarded card's printed cost."/>
+  </card>
+  <card id="b4bdb916-7538-461f-9aa5-141ff2809254" name="Half-orc of Isengard" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Isengard."/>
+    <property name="Engagement Cost" value="33"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: When Half-orc of Isengard attacks, either discard 1 random card from your hand, or Half-orc of Isengard gets +3 Û for this attack."/>
+    <property name="Shadow" value="If this attack destroys a character, discard 1 random card from your hand."/>
+  </card>
+  <card id="a39f7fcf-952c-4789-91a2-ef12bc6a8f43" name="Poisonous Shaft" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Isengard."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Poisonous Shaft is in the staging area, damaged characters cannot be readed by player card effects.&#10;Wizardry: Each player discards a damaged character he controls."/>
+  </card>
+  <card id="955203ad-c973-4bdb-ade7-2e4f0fd43e9c" name="Fortress of Isengard" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Isengard."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Fortress of Isengard is in the staging area, each Orc enemy gets +1 $, +1 Û and +1 Ú.&#10;Wizardry: Return the topmost enemy in the encounter discard pile to the staging area."/>
+  </card>
+  <card id="0acfc1ee-22f6-41d9-8cce-594830b42ba8" name="Fire and Foul Fumes" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player assigns X damage among questing characters he controls, where X is the $ of the active location. If there is no active location, Fire and Foul Fumes gains surge."/>
+    <property name="Shadow" value="Assign X damage among characters you control. X is the $ of the active location."/>
+  </card>
+  <card id="7b4b95f6-5b2d-47ff-b6cb-7bc6c9504b08" name="Traitor of Many Colors" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril. Surge."/>
+    <property name="Text" value="When Revealed: If Saruman is in play, he makes an immediate attack against you."/>
+    <property name="Shadow" value="Either discard 1 random card from your hand, or attacking enemy makes an additional attack against you after this one."/>
+  </card>
+  <card id="eb01e452-e7ed-4617-9f4d-913d82753886" name="Daunting Power" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Road to Isengard - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Until the end of the round, characters cannot be declared as attackers. If there are no engaged enemies, raise each player's threat by 4."/>
+    <property name="Shadow" value="Until the end of the round, defending character cannot ready."/>
+  </card>
+ </cards>
+</set>

@@ -1,0 +1,885 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Sands of Harad" id="1aabaa0e-b24c-47c1-afc4-99018c479438" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="053357f5-4192-4a35-bf2c-7f48d584f292" name="Gimli">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Dwarf. Noble. Warrior."/>
+    <property name="Keywords" value="Sentinel."/>
+    <property name="Cost" value="11"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Response: After Gimli is declared as a defender, spend 1 resource from Gimli’s resource pool to ready another hero. If that hero is Legolas, he gets +1 Û until the end of the phase. (Limit once per phase.)"/>
+  </card>
+  <card id="8124f5ac-6f03-4629-96f5-b8775ec8a7c4" name="Legolas">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Silvan. Noble. Scout."/>
+    <property name="Keywords" value="Ranged."/>
+    <property name="Cost" value="9"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Response: After Legolas commits to a quest, discard a card from your hand to ready another hero. If that hero is Gimli, he gets +1 Ò until the end of the phase. (Limit once per phase.)"/>
+  </card>
+  <card id="d30fd38a-65fe-464d-acac-47d0f02deb05" name="Greenwood Archer">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Silvan. "/>
+    <property name="Keywords" value="Ranged."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="1"/>
+    <property name="Text" value="Response: After Greenwood Archer enters play, ready a hero."/>
+  </card>
+  <card id="18d5f7fd-9d6e-44aa-9463-3530278f8c51" name="Erebor Guard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Dwarf. Warrior."/>
+    <property name="Keywords" value="Sentinel."/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: When you play Erebor Guard from your hand, discard the top 2 cards of your deck to reduce its cost by 2."/>
+  </card>
+  <card id="aa7cd6b1-910c-49cb-9606-771889d1dc77" name="Halfling Bounder">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Hobbit. Scout."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="While there is a side quest in the victory display, Halfling Bounder gains: “Response: Discard Halfling Bounder to cancel the ‘when revealed’ effects of an encounter card that was just revealed from the encounter deck.”"/>
+  </card>
+  <card id="b8f063e3-9278-4e55-a237-26bf3a79689c" name="Vigilant Dunadan">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Dunedain. Ranger."/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="While there is a side quest in the victory display, Vigilant Dunadan does not exhaust to defend."/>
+  </card>
+  <card id="8b5a0dda-9a9c-431b-9363-be586969d493" name="Unlikely Friendship">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Play only if you control a unique character with the Silvan trait and another unique character with the Dwarf trait.Action: Draw 1 card and add 1 resource to the resource pool of a hero you control."/>
+  </card>
+  <card id="2c5991ac-1f8d-4b5d-a7dc-91ea664102d1" name="Well Warned">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Play only if you control a unique character with the Noble trait and another unique character with the Scout trait.Response: After a player engages an enemy, he reduces his threat by X, where X is the just engaged enemy’s printed $."/>
+  </card>
+  <card id="0da6ffc3-cbf5-427f-af9a-60f4f6bd1fb9" name="Dour-handed">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Action: Deal X damage to an enemy engaged with you. X is the number of side quests in the victory display."/>
+  </card>
+  <card id="9ccbe47b-b30f-468a-a867-60314e3b5d61" name="Dwarven Shield">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Item. Armor."/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Attach to a Dwarf hero. Restricted.Attached hero gets +1 Ú.Response: After attached hero takes any amount of damage from an enemy attack, exhaust Dwarven Shield to add 1 resource to attached hero’s pool."/>
+  </card>
+  <card id="565ab52d-0390-4f39-8e6d-7809444b53af" name="Mirkwood Long-knife">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Item. Weapon."/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Attach to a Silvan hero. Restricted.Attached hero gets +1 Ò and +1 Û."/>
+  </card>
+  <card id="0b229535-c078-4f47-b781-7e84de1f0eb5" name="The Road Goes Ever On">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Song."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Attach to a quest card in play. Response: When attached quest is defeated, the first player chooses a player. That players searches his deck for a side quest, adds it to his hand, and shuffles his deck."/>
+  </card>
+  <card id="458b755e-1d93-4586-bbca-bab905f895c0" name="The Storm Comes" size="PlayerQuestCard">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Cost" value="0"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Victory Points" value="1"/>
+    <property name="Text" value="Limit 1 copy of The Storm Comes in the victory display.&#10;While this quest is in the victory display, the first ally played by each player each round does not require a resource match. "/>
+  </card>
+  <card id="42621898-ffe0-435a-a0c2-34ed4383eadb" name="“Seize them!”" size="EncounterCard">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Objective"/>
+    <property name="Text" value="Forced: After an enemy attacks and destroys a character, remove X progress from the main quest. X is the attacking enemy’s $.At the end of the the round, if the main quest has been in play the entire round and there are no progress tokens on it, the players lose the game."/>
+  </card>
+  <card id="321abaed-0b0c-465b-9f2a-bb9796e6b8c5" name="Narrow Alleyway" size="EncounterCard">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="Response: After the player travel here, choose a non-unique enemy engaged with a player and place it faceup under this location. While an enemy is under this location, that enemy is considered to be out of play.Forced: After Narrow Alleyway leaves play, put each enemy under it into play, engaged with the first player."/>
+  </card>
+  <card id="a34ffb4e-c821-42aa-8dab-2914d274b3b1" name="Umbar Sentry" size="EncounterCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="5"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Keywords" value="Surge. Archery 1."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: When Umbar Sentry attacks, either remove 1 progress token from the main quest, or it gets +2 Û for this attack."/>
+  </card>
+  <card id="b4543d6e-168b-4ac6-ae65-022e13ce4098" name="Umbar Street" size="EncounterCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Street of Umbar is the active location, each enemy gets -1 engagement cost for each progress token on the main quest."/>
+    <property name="Shadow" value="Shadow: Discard an attachment you control."/>
+  </card>
+  <card id="1dab3395-7a34-4b66-aa7f-7834045a7eba" name="Umbar Square" size="EncounterCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Umbar Square is the active location, it gains: “Response: After an enemy is defeated, place 1 progress on the main quest, bypassing the active location.” Travel: Reveal the top card of the encounter deck to travel here."/>
+  </card>
+  <card id="0e58ae5a-0670-4c00-836a-3bef017bf279" name="Port of Harad" size="EncounterCard">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="X is the number of engaged enemies.Travel: Assign X damage among characters in play to travel here."/>
+  </card>
+  <card id="7a5671ee-27e0-4d04-95e3-77fe26a8a88b" name="Haradrim Estate" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="1"/>
+    <property name="Text" value="While Haradrim Estate is in the staging area, progress cannot be placed here.Travel: Search the encounter deck and discard pile for a Harad enemy and put it into play engaged with the first player. Then, place 1 progress on the main quest, bypassing the active location. Shuffle the encounter deck."/>
+  </card>
+  <card id="35787b76-d4d5-4bff-bc05-a270b6e4d98e" name="Enemy Pursuit" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Either remove all progress from the main quest, or assign X damage among characters in play. X is the number of progress tokens on the main quest."/>
+    <property name="Shadow" value="Shadow: Attacking enemy makes an additional attack against you after this one."/>
+  </card>
+  <card id="cd974fa4-7f3a-4b46-b2d0-b99d086fe98a" name="Seek Shade" size="EncounterCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Quest"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Quest Points" value="6"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Forced: At the end of the round, remove X progress from the main quest. X is the tens digit of the temperature.&#10;Response: When Seek Shade is defeated, reduce the temperature by 10. "/>
+  </card>
+  <card id="11cb3eda-b7fa-493f-a9fd-cd31e5ae41f2" name="Were-worm" size="EncounterCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. "/>
+    <property name="Engagement Cost" value="22"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="X"/>
+    <property name="Defense" value="X"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="X is the tens digit of the temperature.Forced: After Were-worm engages you, it makes an immediate attack. (Do not deal it a shadow card.)"/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if the temperature is 40 or higher)."/>
+  </card>
+  <card id="8b083bb8-0ada-484a-9f83-6c8f431170b5" name="Carrion Bird" size="EncounterCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. "/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Carrion Bird gets -1 engagement cost for each damaged character in play.Forced: After Carrion Bird engages you, discard a damaged character you control."/>
+  </card>
+  <card id="81de0a94-a871-42af-8497-d66b900c9620" name="Burnt Sands" size="EncounterCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While the temperature is 40 or higher, Burnt Sands gets +2 $.Forced: After Burnt Sands becomes the active location, increase the temperature by 2."/>
+  </card>
+  <card id="df908f24-8927-42cf-a6dd-9dfc41de74c1" name="Scorched Hamada" size="EncounterCard">
+    <property name="Card Number" value="26"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. "/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="X is the tens digit of the temperature.Forced: After Scorched Hamada becomes the active location, assign X damage among characters in play."/>
+    <property name="Shadow" value="Shadow: Raise your threat by X, where X is the tens digit of the temperature."/>
+  </card>
+  <card id="f5ba58db-76fc-497e-b0d7-0382c0b9c0c0" name="Parched Wadi" size="EncounterCard">
+    <property name="Card Number" value="27"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Parched Wadi is in the staging area, each Creature enemy gets +1 $ and +1 Û.Forced: After Parched Wadi becomes the active location, shuffle the encounter discard pile into the encounter deck and discard cards from the top until a Creature enemy is discarded. Add that enemy to the staging area."/>
+  </card>
+  <card id="2c1f75cf-a6b5-4aa6-abbd-e1beb803e2e2" name="Mirage" size="EncounterCard">
+    <property name="Card Number" value="28"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="When Revealed: Discard a the active location. Shuffle the encounter discard pile into the encounter deck and discard cards from the top until a location is discarded. Make that location the active location."/>
+  </card>
+  <card id="365efac0-2631-483c-91ce-19da7585bd1a" name="Unbearable Heat" size="EncounterCard">
+    <property name="Card Number" value="29"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="When Revealed: Each player assigns X damage among characters he controls, where X is the tens digit of the temperature."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +X Û, where X is the tens digit of the temperature."/>
+  </card>
+  <card id="e8d205e0-5951-403b-b36e-f992e1b9de7e" name="Scorching Sun" size="EncounterCard">
+    <property name="Card Number" value="30"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather. "/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Increase the temperature by 4."/>
+    <property name="Shadow" value="Shadow: Either raise the temperature by 2, or return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="a0e1e091-fbbb-459e-9cb7-2cc63bd85711" name="Kahliel" size="EncounterCard">
+    <property name="Card Number" value="31"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Harad. Noble. "/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: At the beginning of the planning phase, add 1 resource to a hero’s resource pool. &#10;If Kahliel leaves play, you are eliminated from the game. "/>
+  </card>
+  <card id="b546c9b7-7721-4275-ba8b-ba28364aeb95" name="Firyal" size="EncounterCard">
+    <property name="Card Number" value="32"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Harad. Scout. "/>
+    <property name="Willpower" value="3"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: After Firyal commits to a quest, look at the top card of the encounter deck. Then, you may discard that card.&#10;If Firyal leaves play, you are eliminated from the game. "/>
+  </card>
+  <card id="278a52c1-d52e-4084-b985-dbf24eb35901" name="Yazan" size="EncounterCard">
+    <property name="Card Number" value="33"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Harad. Ranger. "/>
+    <property name="Keywords" value="Ranged."/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: After Yazan is declared as an attacker, deal 1 damage to a non-unique enemy in play. (Limit once per phase.)&#10;If Yazan leaves play, you are eliminated from the game. "/>
+  </card>
+  <card id="a0417d08-1905-46f9-bd65-067c1c59f0a3" name="Jubayr" size="EncounterCard">
+    <property name="Card Number" value="34"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Harad. Warrior. "/>
+    <property name="Keywords" value="Sentinel."/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: After Jubayr is declared as a defender, discard 1 facedown shadow card from a non-unique enemy. (Limit once per phase.)&#10;If Jubayr leaves play, you are eliminated from the game. "/>
+  </card>
+  <card id="c459cbdb-9831-4803-91b0-e791e349ace8" name="Sauron’s Enforcers" size="EncounterCard">
+    <property name="Card Number" value="35"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk."/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="X"/>
+    <property name="Attack" value="X"/>
+    <property name="Defense" value="X"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="X is the sequence number on the main quest.Forced: At the end of the round, assign X damage among characters in play."/>
+  </card>
+  <card id="ec97b3a4-4904-42ac-beb0-9d4d935241fb" name="Southron Boma" size="EncounterCard">
+    <property name="Card Number" value="36"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. Village."/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="X is the stage number of the main quest.Travel: Each player spends 1 resource to travel here."/>
+    <property name="Shadow" value="Shadow: If the defending character is an objective-hero, ready it and cancel all damage from this attack."/>
+  </card>
+  <card id="c179ea26-838b-449c-b0a0-f2049e20b01f" name="Village Hut" size="EncounterCard">
+    <property name="Card Number" value="37"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. Village."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="Response: After the players travel to Village Hut, the first player discards the top card of his deck. If that card is an ally, he puts it into play under his control, exhausted.Travel: Discard the top card of the encounter deck. If that card is an enemy, add it to the staging area."/>
+  </card>
+  <card id="dd7ca673-fc3c-4caf-859a-ca32722e68dc" name="Savage Attack" size="EncounterCard">
+    <property name="Card Number" value="38"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: either discard the highest cost ally you control, or reveal an encounter card."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, reveal the top card of the encounter deck."/>
+  </card>
+  <card id="4ae7d13b-4b73-477b-ab71-5bd6bfc7b912" name="Overrun by Orcs" size="EncounterCard">
+    <property name="Card Number" value="39"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Until the end of the phase, increase the total $ in the staging area by X, where X is twice the stage number of the main quest."/>
+    <property name="Shadow" value="Shadow: Assign X damage among characters you control, where X is the stage number of the main quest."/>
+  </card>
+  <card id="47b1cd0f-5d56-483c-956c-7851eb4b0a9a" name="Southron Champion" size="QuestCard">
+    <property name="Card Number" value="40"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Harad Soldiers"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="When Revealed: Discard cards from the encounter deck until a Harad enemy is discarded. Add that enemy to the staging area and place a resource token on it. That enemy is “the Champion.” While this stage is in play, the Champion gets +2 $, +2 Û, +2 Ú and gains: “Immune to player card effects. The main quest stage cannot be defeated while the Champion is in play.”&#10;The champion cannot take damage unless there are at least 4 progress tokens here. This stage cannot be defeated while the champion is in play. "/>
+  </card>
+  <card id="486f9475-98e1-42d9-ac90-e6190545a5b9" name="Southron Captain" size="EncounterCard">
+    <property name="Card Number" value="41"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Harad Soldiers"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="While Southron Captain is in the staging area, each other Harad enemy gets +1 $.While Southron Captain is engaged with you, each other Harad enemy engaged with you gets +1 Û."/>
+  </card>
+  <card id="6cfc4fa5-bbcc-4c99-82b7-bb6359d24750" name="Southron Soldier" size="EncounterCard">
+    <property name="Card Number" value="42"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Harad Soldiers"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Engagement Cost" value="32"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After Southron Soldier engages you, either remove 2 progress tokens from the main quest, or Southron Soldier makes an immediate attack."/>
+    <property name="Shadow" value="Shadow: Choose an enemy in the staging area. Engage it and deal it a shadow card."/>
+  </card>
+  <card id="04a23a2e-a14f-4c54-b54f-eeef36d3a92b" name="Southron Archer" size="EncounterCard">
+    <property name="Card Number" value="43"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Harad Soldiers"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Keywords" value="Archery 2."/>
+    <property name="Engagement Cost" value="36"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After Southron Archer engages you, either remove 2 progress tokens from the main quest, or discard an ally you control."/>
+  </card>
+  <card id="37f205e5-5144-4987-8764-46909460797b" name="Nowhere to Hide" size="EncounterCard">
+    <property name="Card Number" value="44"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Harad Soldiers"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: The first player discards cards from the top of the encounter deck until an enemy is discarded, and puts that enemy into play engaged with him."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if it was engaged this round)."/>
+  </card>
+  <card id="24772594-75f3-4789-aeec-41526d845e11" name="In Hostile Territory" size="QuestCard">
+    <property name="Card Number" value="45"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Harad Territory"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Quest Points" value="8"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Each player cannot have more than 5 cards in his hand. (If you have more than 5, immediately choose and discard cards from hand until you have only 5.)&#10;Response: When this stage is defeated, each player draws a card. "/>
+  </card>
+  <card id="2b81f105-3712-4326-ac9f-ed7aa18aace1" name="Injured Companion" size="EncounterCard">
+    <property name="Card Number" value="46"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Harad Territory"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: either raise your threat by 1 for each character you control, or discard a character you control."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, raise each player’s threat by 1."/>
+  </card>
+  <card id="cf6094fe-6a58-4784-8e41-1ad546f8b6aa" name="Enfeebled" size="EncounterCard">
+    <property name="Card Number" value="47"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Harad Territory"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player exhausts a character he controls. Until the end of the combat phase, exhausted characters cannot ready."/>
+    <property name="Shadow" value="Shadow: Until the end of the round, defending character cannot ready."/>
+  </card>
+  <card id="84877af6-0720-4ef8-802b-69b792c32e15" name="Find Water" size="QuestCard">
+    <property name="Card Number" value="48"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Sands"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Characters cannot be readied by player card effects.&#10;Response: When this stage is defeated, each player readies 1 hero he controls. "/>
+  </card>
+  <card id="3d9db37c-4b51-4da8-be2b-25cd2d48e28b" name="Towering Dunes" size="EncounterCard">
+    <property name="Card Number" value="49"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Desert Sands"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Towering Dunes is in the staging area, progress cannot be placed on locations in the staging area not named Towering Dunes.Forced: After Towering Dunes becomes the active location, reveal the top card of the encounter deck."/>
+  </card>
+  <card id="19bcc176-d952-485b-9d28-12188c5a0bc1" name="Desert Oasis" size="EncounterCard">
+    <property name="Card Number" value="50"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Sands"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="While Desert Oasis is the active location, it gains: “Response: When Desert Oasis is explored, heal 4 damage from among characters in play.”Forced: After Desert Oasis becomes the active location, each player exhausts a character he controls."/>
+  </card>
+  <card id="6def55a1-ee80-4570-831b-d591e6effc11" name="Sandstorm" size="EncounterCard">
+    <property name="Card Number" value="51"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Sands"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather. "/>
+    <property name="Text" value="When Revealed: Each player either discards his hand, or assigns X damage among characters he controls. X is the number of cards in his hand."/>
+    <property name="Shadow" value="Shadow: Either discard the highest cost attachment you control, or assign X damage among characters you control where X is the number of attachments you control."/>
+  </card>
+  <card id="6d2cbe18-4504-46df-821c-d3ce588bcb3f" name="Heat Exhaustion" size="EncounterCard">
+    <property name="Card Number" value="52"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Sands"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player exhausts a character he controls and deals 1 damage to that character."/>
+    <property name="Shadow" value="Shadow: Exhaust a character you control."/>
+  </card>
+  <card id="55d8f78d-2dd7-4b44-80db-fb539ff05f00" name="Craft Remedy" size="QuestCard">
+    <property name="Card Number" value="53"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Creatures"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Treat the printed text box of each damaged character as if it were blank (except for Traits).&#10;Response: When this is defeated, heal 1 damage from each character in play. "/>
+  </card>
+  <card id="b2ff9ad8-c9c6-42bb-a5cd-cb2af0b006a0" name="Sand Viper" size="EncounterCard">
+    <property name="Card Number" value="54"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Desert Creatures"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. "/>
+    <property name="Engagement Cost" value="44"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Players cannot declare defenders against Sand Viper.Forced: After the players travel to a location, Sand Viper engages the first player."/>
+  </card>
+  <card id="5ddb243e-ee43-45fd-b4c2-2b197fdf70a9" name="Giant Scorpion" size="EncounterCard">
+    <property name="Card Number" value="55"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Desert Creatures"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. "/>
+    <property name="Engagement Cost" value="33"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After Giant Scorpion damages a character, that character cannot ready until the end of the round."/>
+    <property name="Shadow" value="Shadow: If this attack deals damage, the defending character cannot ready until the end of the round."/>
+  </card>
+  <card id="e7413cb0-3443-40d4-88f4-06d7cfa1ab1d" name="Jungle Trail" size="EncounterCard">
+    <property name="Card Number" value="56"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Jungle Forest"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Jungle Trail is the active location, each location in the staging area gets -1 $.Travel: Reveal the top card of the encounter deck to travel here."/>
+  </card>
+  <card id="36e1a766-7b31-4bb4-be01-4995a9f9c2f3" name="Forest Clearing" size="EncounterCard">
+    <property name="Card Number" value="57"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Jungle Forest"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="Forced: When Forest Clearing is explored, discard the top card of the encounter deck. If that card is an enemy, add that enemy to the staging area."/>
+    <property name="Shadow" value="Shadow: Discard an attachment you control."/>
+  </card>
+  <card id="bb5d1d76-663f-4261-94ec-7a9bfc025acf" name="Dense Jungle" size="EncounterCard">
+    <property name="Card Number" value="58"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Jungle Forest"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Forced: When Dense Jungle is explored, discard the top card of the encounter deck. If that card is a location, add that location to the staging area."/>
+    <property name="Shadow" value="Shadow: Discard a random card from your hand."/>
+  </card>
+  <card id="01a43351-0e36-4175-9a94-693ff91404ad" name="Overgrown" size="EncounterCard">
+    <property name="Card Number" value="59"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Jungle Forest"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach to the highest $ location in the staging area without a copy of Overgrown attached. (Counts as a Condition attachment with the text: “Attached location gets +1 $ and gains ‘Immune to player card effects.’”)"/>
+  </card>
+  <card id="8a0a834b-d10c-43b1-a43c-75b459c18374" name="Uruks of the Eye" size="QuestCard">
+    <property name="Card Number" value="60"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Quest Points" value="5"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Each Orc enemy in the staging area gets -5 engagement cost.&#10;Each Orc enemy engaged with a player gets +1 $. "/>
+  </card>
+  <card id="27748abf-80e8-4928-b506-53d7c23d76c6" name="Uruk Chieftain" size="EncounterCard">
+    <property name="Card Number" value="61"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="6"/>
+    <property name="Victory Points" value="3"/>
+    <property name="Text" value="Cannot have player card attachments or be optionally engaged.While the engaged player is engaged with another Orc enemy, Uruk Chieftain cannot take damage.Forced: At the end of the encounter phase, Uruk Chieftain engages the player engaged with the most non-unique Orc enemies."/>
+  </card>
+  <card id="ad251ffd-8653-4a45-b88e-def2ffecc2dc" name="Uruk of Mordor" size="EncounterCard">
+    <property name="Card Number" value="62"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk."/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Each ally with less Ò than Uruk of Mordor’s $ cannot defend against Uruk of Mordor."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if its $ is greater than the defending character’s Ò)."/>
+  </card>
+  <card id="f63cbcf5-e846-476f-abc6-a9e86e89a2fd" name="Uruk Warg-Rider" size="EncounterCard">
+    <property name="Card Number" value="63"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk."/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Uruk Warg-Rider gets +X Û while attacking a character with less Ò than Uruk Warg-rider’s $. X is the difference."/>
+    <property name="Shadow" value="Shadow: Return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="27d6c3df-c7dc-4ea0-941f-dcad65b3f1eb" name="Mordor Warg" size="EncounterCard">
+    <property name="Card Number" value="64"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. "/>
+    <property name="Engagement Cost" value="20"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="When Revealed: Attach to an Orc enemy and return that enemy to the staging area. Limit 1 per enemy. (Counts as a Mount attachment with the text: “Attached enemy gets +2 $, +2 Û, +2 Ú and +2 hit points. Forced: When attached enemy leaves play, add Mordor Warg to the staging area.”)"/>
+  </card>
+  <card id="cfcee6c8-9eee-4623-afd1-a49ea77e2322" name="Fear of Mordor" size="EncounterCard">
+    <property name="Card Number" value="65"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Mordor Orcs"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each ally in play gets -1 Ò, -1 Û, and -1 Ú until the end of the round."/>
+    <property name="Shadow" value="Shadow: If attacking enemy’s $ is greater than the defending character’s Ò, it makes an additional attack after this one."/>
+  </card>
+  <card id="63b0498f-9180-4e62-83c1-b9aa29f24712" name="Stranded in Umbar" size="QuestCard">
+    <property name="Card Number" value="66"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Add “Seize them!” to the staging area. Each player adds 1 different location to the staging area and puts 1 copy of Umbar Sentry into play engaged with him. Shuffle the encounter deck."/>
+    <property name="Setup" value="sssssssss"/>
+    <alternate name="Stranded in Umbar" type="B">
+      <property name="Encounter Set" value="Escape from Umbar"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="15"/>
+      <property name="Text" value="Alarm bells ring from high watchtowers and the city guard shouts for you to lay down your arms and surrender. You must run or be captured!This stage cannot have more than 15 progress tokens on it.While at least 1 player is engaged with an enemy, the players cannot defeat this stage."/>
+    </alternate>
+  </card>
+  <card id="44d3c25c-e3ef-4ff0-a16a-8a75937bfffe" name="Flee the City" size="QuestCard">
+    <property name="Card Number" value="67"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: End the current phase. Shuffle the encounter discard pile into the encounter deck. Starting with the first player, each player discards cards from the top of the encounter deck until he discards an enemy, and puts that enemy into play engaged with him."/>
+    <alternate name="Flee the City" type="B">
+      <property name="Encounter Set" value="Escape from Umbar"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="15"/>
+      <property name="Text" value="This stage cannot have more than 15 progress tokens on it.Forced: At the beginning of the quest phase, if any player is not engaged with an enemy, discard cards from the top of the encounter deck until an enemy is discarded and add it to the staging area.While at least 1 player is engaged with an enemy, the players cannot defeat this stage. If the players defeat this stage, they win the game."/>
+    </alternate>
+  </card>
+  <card id="b3ab2d77-ada8-42cb-9a87-dfac20d3a9f8" name="The Desert of Harad" size="QuestCard">
+    <property name="Card Number" value="68"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Each player searches the encounter deck for a copy of Burnt Sands and adds it to the staging area. Shuffle the encounter deck. Place the heat tracker next to the quest deck and set the temperature to 10."/>
+    <alternate name="The Desert of Harad" type="B">
+      <property name="Encounter Set" value="Desert Crossing"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="8"/>
+      <property name="Text" value="As the sun climbs into the sky, you can feel the rising heat begin to take its toll on you...Forced: After an ally enters play, either exhaust it, or deal 1 damage to it.Forced: At the end of the round, increase the temperature by 4. If the temperature is 60 or higher, the players lose the game."/>
+    </alternate>
+  </card>
+  <card id="36905f8f-3807-432b-bd0f-892c97504afd" name="Under the Merciless Sun" size="QuestCard">
+    <property name="Card Number" value="69"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Increase the temperature by 2. Shuffle the encounter discard pile into the encounter deck and reveal 1 encounter card per player."/>
+    <alternate name="Under the Merciless Sun" type="B">
+      <property name="Encounter Set" value="Desert Crossing"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="14"/>
+      <property name="Text" value="If you cannot make it across the desert soon, you are certain to die of thrist...Forced: At the end of the round, increase the temperature by 4. Then, each player assigns X damage among characters he controls, where X is the tens digit of the temperature.If the temperature is 60 or higher, the players lose the game."/>
+    </alternate>
+  </card>
+  <card id="6cb224c2-d164-484e-b20d-fede3dd640d5" name="Beasts of Legend" size="QuestCard">
+    <property name="Card Number" value="70"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Increase the temperature by 2. Each player searches the encounter deck, discard pile, and victory display for a Were-worm and adds it to the staging area, if able. Shuffle the encounter deck."/>
+    <alternate name="Beasts of Legend" type="B">
+      <property name="Encounter Set" value="Desert Crossing"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="16"/>
+      <property name="Text" value="During the quest phase, add X $ to the total $ in the staging area, where X is the tens digit of the temperature.Forced: At the end of the round, increase the temperature by 4. While at least 1 Were-worm is in play, the players cannot defeat this stage. If the players defeat this stage, they win the game. If the temperature is 60 or higher, the players lose the game."/>
+    </alternate>
+  </card>
+  <card id="5d991933-f49d-4ece-a288-7484ebc75d14" name="Surprise Attack" size="QuestCard">
+    <property name="Card Number" value="71"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Set Uruk Chieftain aside, out of play. Each player adds 1 copy of Sauron’s Enforcers to the staging area. Move each hero to the staging area. Each player takes control of an objective-hero and adds 2 resources to its resource pool. Remove each remaining objective-hero from the game. For the remainder of the game, heroes in the staging area are in play but under no player’s control, immune to player card effects, and their text boxes are considered to be blank."/>
+    <property name="Setup" value="ttttsssst"/>
+    <alternate name="Surprise Attack" type="B">
+      <property name="Encounter Set" value="The Long Arm of Mordor"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="Damage from undefended attacks must be dealt to a hero in the staging area, if able.The first card each player plays each phase does not require a resource match.Forced: After placing progress from questing successfully, each player chooses a hero he owns in the staging area and, takes control of that hero, and exhausts it. Advance to stage 2A."/>
+    </alternate>
+  </card>
+  <card id="947f8b80-5d96-43eb-89ac-95b7738f2d55" name="Find the Others" size="QuestCard">
+    <property name="Card Number" value="72"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <alternate name="Find the Others" type="B">
+      <property name="Encounter Set" value="The Long Arm of Mordor"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="5"/>
+      <property name="Text" value="Damage from undefended attacks must be dealt to a hero in the staging area, if able.The first card each player plays each phase does not require a resource match. Forced: When this stage is defeated, each player chooses a hero he owns in the staging area, takes control of that hero, and exhausts it."/>
+    </alternate>
+  </card>
+  <card id="98cc592d-6e3e-494a-bddf-ef5e0908c279" name="Free the Captives" size="QuestCard">
+    <property name="Card Number" value="73"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Each player searches the encounter deck and discard pile for an Orc enemy and adds it to the staging area. Shuffle the encounter deck. Attach each hero in the staging area to a different Orc enemy in the staging area. Each hero attached to an enemy is guarded by that enemy. Guarded heroes are under no player’s control, immune to player card effects, and their text boxes are considered to be blank."/>
+    <alternate name="Free the Captives" type="B">
+      <property name="Encounter Set" value="The Long Arm of Mordor"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="10"/>
+      <property name="Text" value="While an enemy is guarding a hero it gets +1 $, +1 Û, +1 Ú and is immune to player card effects.Forced: When the enemy guarding a hero is defeated, that hero’s owner takes control of that hero and exhausts it.This stage cannot be defeated while an enemy is guarding a hero."/>
+    </alternate>
+  </card>
+  <card id="0bb77cd5-0340-4411-9e1f-997b1d6cb35a" name="Escape into the Jungle" size="QuestCard">
+    <property name="Card Number" value="74"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="4"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Add Uruk Chieftain to the staging area. Shuffle the encounter discard pile into the encounter deck and reveal 1 encounter card per player."/>
+    <alternate name="Escape into the Jungle" type="B">
+      <property name="Encounter Set" value="The Long Arm of Mordor"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="4"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="15"/>
+      <property name="Text" value="Uruk Chieftain cannot take non-combat damage.Each non-unique Orc enemy gets -10 engagement cost.Forced: After Uruk Chieftain engages a player, it makes an immediate attack.The players cannot defeat this stage while Uruk Chieftain is in play. If the players defeat this stage, they win the game."/>
+    </alternate>
+  </card>
+  <card id="aed476de-1dc2-4116-9b53-a01e7b86537e" name="Escape from Umbar">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Escape from Umbar"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+  </card>
+  <card id="668faef5-929f-46d6-90cd-1812edc5d436" name="Desert Crossing">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Desert Crossing"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+  </card>
+  <card id="c8b7732f-8513-4797-a5a3-c579e5d353da" name="The Long Arm of Mordor">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="The Long Arm of Mordor"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+  </card>
+ </cards>
+</set>

@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Murder at the Prancing Pony" id="d4303020-4280-4c67-b59a-1ae40bf3800f" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="576f96a4-fb04-43d6-9786-a0884668a08f" name="Investigating the Crime" size="QuestCard">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Setup" value="ttt"/>
+    <alternate name="Investigating the Crime" type="B">
+      <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="12"/>
+    </alternate>
+  </card>
+  <card id="0c320479-0992-4d16-9ce1-3aeeca8be57c" name="Running out of Time" size="QuestCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Setup" value="ttt"/>
+    <alternate name="Running out of Time" type="B">
+      <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="-"/>
+    </alternate>
+  </card>
+  <card id="f2319b29-4236-4a66-87dd-36a4ed8e2880" name="Apprehending the Killer" size="QuestCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Setup" value="ttt"/>
+    <alternate name="Apprehending the Killer" type="B">
+      <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="-"/>
+    </alternate>
+  </card>
+  <card id="e679dcf1-ac02-46f1-b07f-b66e540df9d5" name="Bill Ferny's House" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hideout."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. While Bill Ferny's House is in the victory display, each Suspect, and each shadow card dealt to a Suspect, is immune to player card effects. Travel: Search the encounter deck, discard pile and victory display for Bill Ferny and add him to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="11e8544f-fe65-4365-8f51-10a3ef267dc8" name="Staddle Hiding Hole" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hideout."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. While Staddle Hiding Hole is in the victory display, each player not engaged with a Suspect cannot declare attackers against that Suspect. Travel: Search the encounter deck and discard pile for a Greenway Footpad, reveal it, and add it to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="e7f523e1-c898-42f8-93c2-889038de230f" name="Combe Storehouse" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hideout."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. While Combe Storehouse is in the victory display, each Suspect gains: 'Forced: After this enemy engages a player, it makes an immediate attack.' Travel: Search the encounter deck and discard pile for a Lawless Ruffian and add it to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="d51db5d2-cd6d-4e28-9c46-c5f0a1c242d9" name="Archet Trading Post" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hideout."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. While Archet Trading Post is in the victory display, each Suspect cannot take more than 5 damage each round. Travel: Search the encounter deck and discard pile for a Bree-land Informant and add it to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="8103129a-77e7-47a2-a039-b0eddf305184" name="Chetwood Campsite" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hideout."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. While Chetwood Campsite is in the victory display, each Suspect gets +1 $, +1 Û, and +1 Ú. Travel: Search the encounter deck and discard pile for a Chetwood Outlaw and add it to the staging area. Shuffle the encounter deck."/>
+  </card>
+  <card id="054189b9-c165-4561-9b62-f0384145da97" name="Todd the Troll" size="EncounterCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Suspect. Brigand."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="7"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="10"/>
+    <property name="Text" value="Cannot have attachments. Excess combat damage dealt by Todd the Troll (damage dealt beyond the remaining hit points of the character damaged by this attack) must be assigned as an increase to your threat."/>
+  </card>
+  <card id="1c028523-9f37-4e16-83cf-c9ea1cfbc9d3" name="Susie the Spider" size="EncounterCard">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Suspect. Brigand."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="X"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments. X is the number of Brigand enemies in play. While at least 1 other Brigand is in play, Susie the Spider cannot take damage."/>
+  </card>
+  <card id="518f546e-a3ce-4af8-b89d-2e1a6b765857" name="Wolf-pelt Jake" size="EncounterCard">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Suspect. Brigand."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="7"/>
+    <property name="Text" value="Cannot have attachments. Forced: After Wolf-pelt Jake attacks and destroys an ally, return him to the staging area."/>
+  </card>
+  <card id="e70dc756-86c4-460a-97cd-1d2c65b1e874" name="Johnny Goblin-fingers" size="EncounterCard">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Suspect. Brigand."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Cannot have attachments. Forced: When Johnny Goblin-finders attacks, the defending player discards 1 random card from his hand and raises his threat by X, where X is the printed cost of the discarded card."/>
+  </card>
+  <card id="847e6b9c-f795-4625-86d3-4ab6460ccdfe" name="Old Orc-eyes" size="EncounterCard">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Suspect. Brigand."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="9"/>
+    <property name="Text" value="Cannot have attachments. Forced: After an attack resolves in which Old Orc-eyes was dealt a shadow card with no shadow effect, he makes an additional attack against you. Do not deal Old Orc-eyes a shadow cad for this attack."/>
+  </card>
+  <card id="8304616a-8990-4d45-855e-3c106e5c76a7" name="Taken by Surprise" size="EncounterCard">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="Forced: When a player looks at any number of cards from the Investigation deck, if Taken by Surprise is among the looked at cards, shuffle the encounter discard pile into the encounter deck and discard cards until an enemy is discarded. Put the discarded enemy into play engaged with the first player. Then remove Taken by Surprise from the game."/>
+  </card>
+  <card id="60de774d-eafb-4faa-851e-c28ce6d62f9f" name="The Prancing Pony" size="EncounterCard">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Text" value="Forced: When the Prancing Pony is explored, the first player must choose: either look at the top 2 cards of the Investigation deck, or each player draws 2 cards."/>
+  </card>
+  <card id="54c734a4-b6a9-4c51-a69d-aaa0b7fc2147" name="Ramshackle Manor" size="EncounterCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Keywords" value="Investigate 2."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="When a player card effect reduces a player's threat by any amount, reducd that amount to 1. Travel: Raise each player's threat by 1 to travel here."/>
+  </card>
+  <card id="80af82a2-4377-4049-bb9d-2d79ad66d1db" name="Dark Alley" size="EncounterCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Keywords" value="Investigate 3."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Enemies in the staging area cannot take damage. Travel: Shuffle the encounter discard pile into the encounter deck and discard cards until an enemy is discarded. Add the discarded enemy to the staging area."/>
+  </card>
+  <card id="abcc9a29-c485-4f0b-ac1e-c3fb452e0478" name="Market Square" size="EncounterCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Keywords" value="Investigate 2."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: After a player places any amount of progress on a location in the staging area, he raises his threat by 1. Travel: Each player spends 1 resource to travel here."/>
+  </card>
+  <card id="79a32e57-7973-43bb-92d2-a0da9c13c5c6" name="Old Warehouse" size="EncounterCard">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Keywords" value="Investigate 1."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: When triggering the Investigate keyword on Old Warehouse, the first player must choose: either look at 2 additional card, or reduce each player's threat by 3. Travel: Reveal the top card of the encounter deck to travel here."/>
+  </card>
+  <card id="8534990f-7384-4667-b7fc-c22dcfdd6bba" name="Village Stable" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Keywords" value="Investigate 1."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Response: After triggering the Investigate keyword on Village Stable, if the looked at card is a Suspect or a Hideout, add Village Stable to the victory display to add that card to the staging area. Travel: Each player discards 1 random card from his hand to travel here."/>
+  </card>
+  <card id="3574e1dd-d730-485e-8c2b-16fb7d52f78b" name="Bill Ferny" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Engagement Cost" value="42"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Cannot be optionally engaged. The first treachery revealed each round gains doomed 1 and its effects cannot be canceled."/>
+    <property name="Shadow" value="Shadow: Either raise your threat by 4, or this attack is considered undefended."/>
+  </card>
+  <card id="e3219c93-d920-43a5-ae8f-743745c3b949" name="Bree-land Informant" size="EncounterCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: After Bree-land Information makes an attack against you, if it was dealt a shadow card with no shadow effect, raise your threat by 1 and spend 1 resource to look at the bottom card of the Investigation deck. Then, discard Bree-land Informant."/>
+  </card>
+  <card id="2608ba25-8375-4093-9d93-3c8cfa7b697c" name="Lawless Ruffian" size="EncounterCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Brigand."/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="While engaged with a player with threat 35 or higher, Lawless Ruffian gets +2 Û."/>
+    <property name="Shadow" value="Shadow: Attacking enemy makes an additional attack against you after this one."/>
+  </card>
+  <card id="63284aea-d814-4ceb-bb8e-57f402edc54d" name="Greenway Footpad" size="EncounterCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Brigand."/>
+    <property name="Engagement Cost" value="25"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Either raise each player's threat by 2 or Greenway Footpad makes an immediate attack against the first player."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if your threat is 35 or higher)."/>
+  </card>
+  <card id="1de51c4f-659d-465f-bf45-4d6c00c6bdf1" name="Chetwood Outlaw" size="EncounterCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Brigand."/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After you optionally engaged Chetwood Outlaw, raise your threat by 4."/>
+    <property name="Shadow" value="Shadow: Either raise your threat by 2, or return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="0f201650-6d15-4909-9d06-0a87ab94f327" name="Hired Muscle" size="EncounterCard">
+    <property name="Card Number" value="26"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach to a Brigand enemy without a copy of Hired Muscle attacked and return that enemy to the staging area. (Counts as a Condition attachment with the text: 'Attached enemy gets +1 $, +1 Û, and +1 Ú and gains: 'Forced: When attached enemy is defeated, look at the bottom of the Investigation deck.)'"/>
+  </card>
+  <card id="ea6e8450-215c-4a7c-86a3-fe1b8da3791e" name="Smoke and Mirrors" size="EncounterCard">
+    <property name="Card Number" value="27"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Discard the top X cards of the encounter deck, where X is 1 more than the Investigate value of the active location. Until the end of the phase, add the Threat of each card discarded by this effect to the total Threat in the staging area."/>
+    <property name="Shadow" value="Shadow: Discard an attachment you control."/>
+  </card>
+  <card id="7e99e1de-9c4f-4dec-9703-359426ba6463" name="Rising Body Count" size="EncounterCard">
+    <property name="Card Number" value="28"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Either raise each player's threat by 2, or shuffle Rising Body Count into the Investigation deck."/>
+    <property name="Shadow" value="Shadow: If this attack destroys a character, either raise your threat by 2, or shuffle Rising Body Count into the Investigation deck."/>
+  </card>
+  <card id="f60662b4-ebfe-4b89-9d1e-124976e6c5b7" name="Deadly Accusations" size="EncounterCard">
+    <property name="Card Number" value="29"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Raise each player's threat by X, where X is 1 more than the Investigate value of the active location."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +X Û, where X is the Investigate value of the active location."/>
+  </card>
+  <card id="526faef8-5db5-48ab-ab22-109916e9fda7" name="Murder at the Prancing Pony">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <alternate name="Murder at the Prancing Pony" type="B">
+      <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+  <card id="ba3a1d31-578e-49ee-a309-e16fa5f18df8" name="Murder at the Prancing Pony">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 3"/>
+    <alternate name="Murder at the Prancing Pony" type="B">
+      <property name="Encounter Set" value="Murder at the Prancing Pony"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 4"/>
+    </alternate>
+  </card>
+ </cards>
+</set>

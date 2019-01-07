@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Road Darkens - Nightmare" id="8caaff04-6c69-4d26-8b5a-b5566d8595a8" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="3.0.0">
+ <cards>
+  <card id="8db8a9b7-402f-40fe-943e-8a3e58662b38" name="The Ring Goes South">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard and encounter deck for The Ring Goes South scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;4x Uruk-hai Archer&#10;2x River Anduin&#10;1x Slopes of Amon Hen&#10;2x Black Feathered Arrows&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Ring Goes South encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="The Ring Goes South" type="B">
+      <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Setup: Set each copy of Pale-green Tentacle aside, out of play.&#10;Forced: When the players advance to stage 4B, each player puts 1 copy of Pale-green Tentacle into play engaged with him. Shuffle any remaining copies, and the encounter discard pile, into the encounter deck."/>
+    </alternate>
+  </card>
+  <card id="34e81b70-82c4-4fb4-8e6b-e3df7f587181" name="Pale-Green Tentacle" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Tentacle."/>
+    <property name="Engagement Cost" value="22"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="5"/>
+    <property name="Victory Points" value="3"/>
+    <property name="Text" value="Cannot have attachments.&#10;Watcher in the Water Cannot take damage.&#10;Forced: After Pale-green Tentacle attacks and destroys a character, return Pale-green Tentacle to the staging area."/>
+  </card>
+  <card id="73867364-ecad-451c-b75f-3da7ea1f1b48" name="Hunting Hawk" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature."/>
+    <property name="Engagement Cost" value="44"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Cannot have attachments or be optionally engaged,&#10;While Hunting Hawk is in the staging area it gains, &quot;Forced&quot; AFter a player plays an ally, he must either exhaust it, or place 1 damage on an active location.&quot;"/>
+  </card>
+  <card id="6c01519b-bb2c-4c8b-b5d3-4951d2a32d13" name="Misty Mountain Warg" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. Warg."/>
+    <property name="Engagement Cost" value="33"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Misty Mountain Warg makes an immediate attack against you. If it destroys a character, place 2 damage on each active location."/>
+    <property name="Shadow" value="Shadow: If this attack destroys a character, place 1 damage on an active location."/>
+  </card>
+  <card id="fd9a5cdb-071c-4a2c-aa1e-b25d22d06a10" name="Expanse of Hollin" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hills."/>
+    <property name="Threat" value="X"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="X is 1 more than the number of enemies in play.&#10;Forced: When Expanse of Hollin is explored, shuffle the encounter discard pile into the encounter deck. Then, discard the top card of the encounter deck for each damage here. Add each enemy discarded by this effect to the staging area."/>
+  </card>
+  <card id="958e2ca4-208c-4235-be56-afc463e9eb2f" name="Slopes of Hithaeglir" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hills."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Forced: After a &quot;when revealed' effect is cancelled, place 1 damage on each active location.&#10;Forced: When Slopes of Hithaeglir is explored, each player raises his threat by 1 for each damage here."/>
+  </card>
+  <card id="89a39894-f5d2-42a5-9927-fb057db778f4" name="Hunted in Hollin" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril."/>
+    <property name="Text" value="When Revealed: Either raise your threat by 6, or engage the lowest engagement cost enemy in the staging area and reveal an encounter card."/>
+  </card>
+  <card id="c1b934af-a47f-4886-846f-c319b2efeca0" name="Shelterless Land" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Ring Goes South - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge. Doomed 1."/>
+    <property name="Text" value="When Revealed: Until the end of the phase, add 1 to the total $ in the staging area for each damage on each active location."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û for each damage on each active location."/>
+  </card>
+  <card id="d3a5ad2f-39b9-4ec8-b1f2-da2049c470b4" name="Journey in the Dark">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard and encounter deck for the Journey in the Dark scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;3x Moria Archer&#10;4x Mines of Moria&#10;1x We Cannot Get Out&#10;3x Deep Fissure&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Journey in the Dark encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="Journey in the Dark" type="B">
+      <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Each hero in each player's discard pile cannot leave the discard pile.&#10;The players cannot defeat stage 3B unless The Balrog is in the victory display."/>
+    </alternate>
+  </card>
+  <card id="86fb45b5-6fd4-44ce-98d7-ab8a7fe3b611" name="Slab-bearer" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Troll."/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Cannot have attachments.&#10;Forced: When Slab-bearer is destroyed, discard the top card of the encounter deck. If the discarded card is an enemy, add it to the staging area."/>
+  </card>
+  <card id="e4660d9f-4779-4103-ad48-36337065931b" name="Zirakzigil Archer" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Keywords" value="Peril. Archery 2."/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Discard a random card from your hand. Assign X damage among characters you control, where X is the cost of the discarded card."/>
+  </card>
+  <card id="c3b3a3e0-1575-4094-a6b3-853b569f8046" name="Glowing Fissure" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground."/>
+    <property name="Threat" value="X"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="X is 1 more than the number of damaged characters.&#10;Forced: After a player commits characters to the quest, he deals 1 damage to a character he controls."/>
+  </card>
+  <card id="35a5ec34-97ea-4b9e-9fdc-6a00c39c504d" name="Darkened Mine" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Darkened Mine is in the staging area, progress cannot be placed on locations in the staging area."/>
+    <property name="Shadow" value="Shadow: Discard 1 random card from your hand."/>
+  </card>
+  <card id="dc2da597-7d44-4654-a3f4-860e3f7117d6" name="Fiery Whip" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Attach to the Balrog (even if out of play) as a Weapon attachment with the text: &quot;Attached enemy gets +1 Ú and gains Archery 4.&quot;"/>
+    <property name="Shadow" value="Shadow: If attacking enemy is the Balrog, attach Fiery Whip to it."/>
+  </card>
+  <card id="c7c7761f-a4dd-4f09-ac10-f0483d0c931d" name="Flaming Sword" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Attach to the Balrog (even if out of play) as a Weapon attachment with the text: &quot;Attached enemy gets +1 Û and gains Regenerate 4. (At the end of the refresh phase, remove 4 damage from the attached enemy.)&quot;"/>
+    <property name="Shadow" value="Shadow: If attacking enemy is the Balrog, attach Flaming Sword to it."/>
+  </card>
+  <card id="0d3586ef-3159-4066-8417-aba5c379739a" name="Very Weary" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player deals 1 damage to a questing character he controls. Until the end of the phase, each damaged character gets -2 Ò."/>
+  </card>
+  <card id="7e9a0e02-59cd-46de-83a8-4b8fe49c7021" name="Cut Off" size="EncounterCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Journey in the Dark - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril."/>
+    <property name="Text" value="When Revealed: If this attack destroys a character, remove all progress from the quest."/>
+  </card>
+  <card id="dda5488d-b1c3-40bf-b6c1-2c34b8c14cdd" name="Breaking of the Fellowship">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard and encounter deck for the Breaking of the Fellowship scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;4x Uruk-hai Archer&#10;2x River Anduin&#10;1x Slopes of Amon Hen&#10;2x Black Feathered Arrows&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Breaking of the Fellowship encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="Breaking of the Fellowship" type="B">
+      <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode."/>
+    </alternate>
+  </card>
+  <card id="ea09c696-81a1-4e2f-95ec-3b8c6d9b8d0b" name="Isengard Archer" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 1. Archer 2."/>
+    <property name="Engagement Cost" value="44"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After Isengard Archer enters the staging area, each player at this stage deals 2 damage to a character he controls."/>
+    <property name="Shadow" value="Shadow: Deal 2 damage to an ally you control."/>
+  </card>
+  <card id="ffd14d9f-b3e4-46c4-b7b1-f7fcba350ba0" name="Isengard Tracker" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Uruk-hai."/>
+    <property name="Keywords" value="Toughness 2. Archery 1."/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: After Isengard Tracker destroys a character, move it to the first player's staging area."/>
+    <property name="Shadow" value="Shadow: After this attack, move attacking enemy to the first player's staging area."/>
+  </card>
+  <card id="f310684a-aa58-46f5-aa43-a6289e7c7b66" name="Langflood River" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="River. Forest."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Langflood River is in the staging area, no more than 4 progress can be placed on this quest stage each round.&#10;Forced: When Langflood River leaves play as an explored location, add it to the staging area to the left, if able."/>
+  </card>
+  <card id="a3f162a7-847d-47ed-8a05-4e930806765b" name="Western Emyn Muil" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Forest. Hills."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Western Emyn Muil is in the staging area, each Uruk-hai enemy at this stage gains Toughness 1.&#10;Travel: A player at this stage must engage the highest toughness enemy in the staging area to travel here."/>
+  </card>
+  <card id="aa7977bd-06af-4a8f-bc94-7162250eff7a" name="Arrows in the Night" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Peril."/>
+    <property name="Text" value="When Revealed: Until the end of the round, add 6 to the archery total at this stage. You may discard X cards from hand to reduce the archery total at this stage by X until the end of the round."/>
+    <property name="Shadow" value="Shadow: Discard 1 random card from your hand."/>
+  </card>
+  <card id="c857d5a3-2b1f-4ef9-a5c7-2368ec28d15c" name="Hunting the Ring" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach to the current quest. (Counts as a Condition attachment with the text: &quot;Forced: At the end of the round, each player at this stage raises his threat by 1 for each enemy in the staging area. Then, discard Hunting the Ring and move each enemy in this staging area to the first player's staging area.&quot;)"/>
+  </card>
+  <card id="3b803986-90bc-441c-aec0-932d661eb8eb" name="Discord and Distrust" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Breaking of the Fellowship - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Doomed 2."/>
+    <property name="Text" value="When Revealed: Until the end of the round, players cannot trigger Action or Response effects."/>
+    <property name="Shadow" value="Shadow: Until the end of the round defending character cannot ready."/>
+  </card>
+ </cards>
+</set>

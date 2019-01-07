@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Black Serpent" id="4ce33205-d863-4f24-a0c1-c03104cf1091" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="d87344c3-d234-44c8-89b1-249f5c88bfab" name="Fastred">
+    <property name="Card Number" value="81"/>
+    <property name="Quantity" value="1"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Rohan. Warrior."/>
+    <property name="Cost" value="9"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Response: After Fastred defends an enemy attack, return that enemy to the staging area to reduce your threat by 2. (Limit once per phase.)"/>
+  </card>
+  <card id="69a257ff-3223-4511-a20f-81cb08655081" name="Song of Hope">
+    <property name="Card Number" value="82"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Song."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Attach to a hero. Limit 1 per hero. Action: Spend 1 resource from attached hero’s pool to give attached hero +1 Ò until the end of the phase. (Limit 3 times per phase.)"/>
+  </card>
+  <card id="a73ea798-1d91-4bda-86d9-1085739d9cb4" name="Burst into Song">
+    <property name="Card Number" value="83"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Action: Ready each hero with a Song attachment."/>
+  </card>
+  <card id="0238e687-61a4-4e2f-a858-70251cc88552" name="Defender of Cair Andros">
+    <property name="Card Number" value="84"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Gondor. Warrior."/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Defender of Cair Andros gets +X Ú, where X is the tens digit of your threat. (Limit +4 Ú.) Valour Response: After Defender of Cair Andros is declared as a defender, deal 1 damage to the attacking enemy."/>
+  </card>
+  <card id="ae807a4c-d656-42a1-bf2c-024eaffc9fc6" name="Oath of Eorl">
+    <property name="Card Number" value="85"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="3"/>
+    <property name="Text" value="Play only if you control a unique character with the Rohan trait and another unique character with the Gondor trait. Response: At the beginning of the combat phase, you resolve the step in which you attack enemies before resolving enemy attacks this phase. (Each other player resolves the combat phase as normal after you resolve your attacks.)"/>
+  </card>
+  <card id="168c62d8-bb38-4258-9d2b-6b46aef6c700" name="Fearless Scout">
+    <property name="Card Number" value="86"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Skill."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attach to a hero. Limit 1 per hero. Attached hero gains the Scout trait. Response: After you play Fearless Scout from your hand, draw a card."/>
+  </card>
+  <card id="97d09901-724d-4932-ac51-59df1ef1dbec" name="Rally the West" size="PlayerQuestCard">
+    <property name="Card Number" value="87"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Cost" value="1"/>
+    <property name="Victory Points" value="1"/>
+    <property name="Text" value="“Foes and fire are before you, and your homes far behind. Yet, though you fight upon an alien field, the glory that you reap there shall be your own forever.” -Theoden, The Return of the King Limit 1 copy of Rally the West in the victory display. While this side quest is in the victory display, each hero gets +1 Ò."/>
+  </card>
+  <card id="00c52eae-b536-4458-abed-5b69e9283b11" name="Dúnedain Pipe">
+    <property name="Card Number" value="88"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Item. Pipe."/>
+    <property name="Cost" value="1"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="Attach to a Dúnedain character. Limit 1 per character. Action: Exhaust Dúnedain Pipe and place a card from your hand on the bottom of your deck to draw a card."/>
+  </card>
+  <card id="c7c503b9-a804-4e37-8554-927d0095e7b1" name="Old Toby">
+    <property name="Card Number" value="89"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Pipeweed."/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Action: Draw 1 card for each Pipe you control. Heal 1 damage from each hero with a Pipe attachment."/>
+  </card>
+  <card id="2872a8fb-53e6-4e0d-855d-4e1f32cdcfa0" name="Southron Refugee">
+    <property name="Card Number" value="90"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Action: Exhaust Southron Refugee to reduce the cost of the next Harad ally you play this phase by 1."/>
+  </card>
+  <card id="d6d4ea3a-402c-413b-9732-a07a21dd15b0" name="Banner of the Serpent" size="EncounterCard">
+    <property name="Card Number" value="91"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Item. Harad."/>
+    <property name="Text" value="Guarded (enemy or location). While Banner of the Serpent is attached to an encounter card, each Harad enemy gets +1 Û. Action: Exhaust Banner of the Serpent and raise your threat by 1 to give each Harad enemy engaged with you -1 Û until the end of the phase."/>
+  </card>
+  <card id="50e62ade-1958-439d-9314-383d8621ecf5" name="The Serpent’s Garb" size="EncounterCard">
+    <property name="Card Number" value="92"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Item. Harad."/>
+    <property name="Text" value="Guarded (enemy). Attached encounter card gets +2 $ and is immune to player card effects. Action: Exhaust The Serpent’s Garb and raise your threat by 1 to give a Harad enemy in the staging area -2 $ until the end of the phase."/>
+  </card>
+  <card id="8174f1b9-6fd0-4eeb-971d-98b2d7a4eaf4" name="Summons from Mordor" size="EncounterCard">
+    <property name="Card Number" value="93"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Item. Harad."/>
+    <property name="Text" value="Guarded (location). While Summons from Mordor is attached to an encounter card, each player’s threat cannot be reduced. Action: Exhaust Summons from Mordor and raise your threat by 1 to add 1 resource to attached hero’s pool."/>
+  </card>
+  <card id="9511bcf2-9c06-413e-bf09-3bc076eb76d4" name="The Black Serpent" size="EncounterCard">
+    <property name="Card Number" value="94"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot leave the staging area or take damage. X is the stage number of the main quest. The Black Serpent gets +X $, +X Û and +X Ú. Forced: At the end of the encounter phase, either remove X progress from the main quest, or The Black Serpent makes an immediate attack against the first player."/>
+  </card>
+  <card id="97f3e5c2-8ba8-44f9-a3e3-3bad40fd67e8" name="Serpent Guard" size="EncounterCard">
+    <property name="Card Number" value="95"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After The Serpent’s Guard engages you, either remove 2 progress from the main quest, or enemies engaged with you cannot take damage until the end of the round."/>
+    <property name="Shadow" value="Shadow: Either remove 2 progress from main quest, or attacking enemy cannot take damage this round."/>
+  </card>
+  <card id="7ac077eb-0879-4230-8e27-97549f46eb4b" name="The Serpent’s Redoubt" size="EncounterCard">
+    <property name="Card Number" value="96"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. Ruins."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While The Serpent’s Redoubt is in the staging area, it gains: “Forced: After a player plays an ally from his hand, either remove 1 progress from the main quest, or exhaust that ally.” Travel: The first player searches the encounter deck and discard pile for an enemy and puts it into play engaged with him. Shuffle the encounter deck."/>
+  </card>
+  <card id="c9b1ad84-a3ea-4ab5-9db1-4addb4ae383d" name="Roofless Tower" size="EncounterCard">
+    <property name="Card Number" value="97"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. Ruins."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Roofless Tower is in the staging area, it gains: “Forced: When a player plays an event, either remove 1 progress from the main quest, or cancel the effects of that event.” Travel: Exhaust a hero to travel here."/>
+  </card>
+  <card id="e8c78f25-00d0-4b3b-8cac-03e533edfe41" name="Desert Bastion" size="EncounterCard">
+    <property name="Card Number" value="98"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. Ruins."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Desert Bastion gets +1 $ for each Harad objective attached to a hero."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û for each Harad objective the players control."/>
+  </card>
+  <card id="5855e76e-e807-4a8c-9035-de7b9cb4366e" name="Southron Camp" size="EncounterCard">
+    <property name="Card Number" value="99"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. Ruins."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Southron Camp is in the staging area, it gains: “Forced: At the end of the round, remove all progress from each location in play.” Travel: Raise each player’s threat by 1 to travel here."/>
+  </card>
+  <card id="a53e4587-03e4-4120-8aa5-9601a7069edd" name="Broken Courtyard" size="EncounterCard">
+    <property name="Card Number" value="100"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Desert. Ruins."/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Broken Courtyard is in the staging area, the main quest cannot have progress tokens beyond its printed quest points value."/>
+    <property name="Shadow" value="Shadow: Either remove 2 progress from main quest, or return attacking enemy to staging area after this attack."/>
+  </card>
+  <card id="1a3d3725-9451-4c97-a8c7-5d2fa8e35c4c" name="Bold and Grim" size="EncounterCard">
+    <property name="Card Number" value="101"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Surge. Doomed 1."/>
+    <property name="Text" value="When Revealed: Deal 1 damage to each hero with an objective attached."/>
+    <property name="Shadow" value="Shadow: If attacking enemy is non-unique, either attach a Harad objective you control to attacking enemy, or it makes an additional attack after this one."/>
+  </card>
+  <card id="49e857d2-b78f-4b5f-8c07-604af73fd616" name="No Quarter" size="EncounterCard">
+    <property name="Card Number" value="102"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Either reveal 2 encounter cards, or detach a Harad objective from a hero, reveal it, and add it to the staging area."/>
+    <property name="Shadow" value="Shadow: If this attack destroys a character, attach a Harad objective you control to a non-unique encounter card in the staging area."/>
+  </card>
+  <card id="3ef57050-0209-46de-8815-0c4d52b1aaf7" name="Chaos in the Night" size="EncounterCard">
+    <property name="Card Number" value="103"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: The first player must choose: either raise each player’s threat by 3, or progress cannot be placed on quest cards until the end of the round."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, remove all progress from the main quest."/>
+  </card>
+  <card id="8275a439-ebcd-4cc3-907b-1e217d222806" name="Don’t let them escape!" size="QuestCard">
+    <property name="Card Number" value="104"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Forced: At the end of the round, discard all progress from the main quest. Forced: After this quest is chosen as the current quest, reveal an encounter card."/>
+  </card>
+  <card id="c3f9965f-711d-4c51-b9aa-a0b5d5953b49" name="The Crossroad’s Fort" size="QuestCard">
+    <property name="Card Number" value="106"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Set each Harad objective aside, out of play. Add The Black Serpent to the staging area. Shuffle the encounter deck. The first player randomly selects 1 set aside Harad objective, reveals it, and adds it to the staging area."/>
+    <alternate name="The Crossroad’s Fort" type="B">
+      <property name="Encounter Set" value="The Black Serpent"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="If a Harad objective is not attached, the first player claims it and attaches it to a hero he controls.&#10;&#10;This stage cannot be defeated unless each Harad objective in play is attached to a hero. "/>
+    </alternate>
+  </card>
+  <card id="e3bc9212-fbc0-48e0-b1c5-42b80ee58b5e" name="Battle in the Camp" size="QuestCard">
+    <property name="Card Number" value="107"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Shuffle the encounter discard pile into the encounter deck. The first player randomly selects 1 set aside Harad objective, reveals it, and adds it to the staging area."/>
+    <alternate name="Battle in the Camp" type="B">
+      <property name="Encounter Set" value="The Black Serpent"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="If a Harad objective is not attached, the first player claims it and attaches it to a hero he controls.&#10;&#10;The Black Serpent is considered to be engaged with each player who controls a Harad objective.&#10;&#10;This stage cannot be defeated unless each Harad objective in play is attached to a hero. "/>
+    </alternate>
+  </card>
+  <card id="9d451960-2db3-43df-9cd8-d525ef58cf55" name="Defeat the Serpent" size="QuestCard">
+    <property name="Card Number" value="108"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Randomly select 1 set aside Harad objective and attach it to The Black Serpent. Shuffle the encounter discard pile into the encounter deck and reveal 1 encounter card per player."/>
+    <alternate name="Defeat the Serpent" type="B">
+      <property name="Encounter Set" value="The Black Serpent"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="If a Harad objective is not attached, the first player claims it and attaches it to a hero he controls.&#10;&#10;While there are at least 6 progress tokens on this stage, the Black Serpent loses the text: “Cannot leave the staging area or take damage.”&#10;&#10;This stage cannot be defeated unless each Harad objective in play is attached to a hero. If the players defeat this stage, they win the game. "/>
+    </alternate>
+  </card>
+  <card id="6bfd4958-3d16-444d-9fce-d95ed07990b4" name="The Black Serpent">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="The Black Serpent"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+  </card>
+ </cards>
+</set>

@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Lost Realm - Nightmare" id="b40c16ca-879b-4c25-81cc-d375696b22e7" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="3.0.0">
+ <cards>
+  <card id="8231bc2d-f52d-429c-b969-a77a7e5aca52" name="Intruders in Chetwood">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Intruders in Chetwood scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;1x Angmar Orc&#10;3x Angmar Marauder&#10;2x Chetwood Forest&#10;1x Outlying Homestead&#10;2x Borders of Bree-land&#10;1x Rugged Country&#10;1x Shrouded Hills&#10;3x Surprising Speed&#10;2x Sudden Assault&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Intruders in Chetwood encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="Intruders in Chetwood" type="B">
+      <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode."/>
+    </alternate>
+  </card>
+  <card id="1384425f-206b-47ab-96ed-c322e7295a75" name="Orc Abductor" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: At the end of the round, if Orc Abductor is in the staging area, search the encounter, discard pile and victory display for Rescue Iârion, and reveal it. Shuffle the encounter deck."/>
+    <property name="Shadow" value="Shadow: Deal 1 damage to the defending character."/>
+  </card>
+  <card id="fe5ce9b0-2dd0-49f7-b3d3-6df03d367b33" name="Soldier of Angmar" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After Soldier of Angmar attacks and destroys an ally, search the encounter deck, discard pile and victory display for Orc Ambush and reveal it. Shuffle the encounter deck."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +2 Û."/>
+  </card>
+  <card id="3748b1e3-625d-4752-831d-4d52b2366359" name="Northern Chetwood" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Arnor. Forest."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="Forced: After progress is placed on Northern Chetwood (and it is still in play), search the encounter deck, discard pile and victory display for Lost in the Wilderness, and reveal it."/>
+    <property name="Shadow" value="Shadow: Discard 1 card at random from your hand for each point of damage dealt by this attack."/>
+  </card>
+  <card id="d43b2298-a255-4afa-a95b-f7f1c8420757" name="Outskirts of Archet" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Arnor."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Travel: Search the encounter deck, discard pile and victory display for Protect the Breelanders, and reveal it."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, raise your threat by 3."/>
+  </card>
+  <card id="6259c002-16d5-4499-baa8-f0e9b8b2ffda" name="Greenway Path" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Arnor."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Forced: At the end of the round, if Greenway Path is in the staging area, search the encounter deck, discard pile and victory display for Shadow the War Party, and reveal it."/>
+    <property name="Shadow" value="Shadow: Return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="5211f81c-288a-4243-889d-6e294fbc3b8c" name="A Great Host" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player returns each enemy engaged with him to the staging area. Either search the encounter deck, discard pile and victory display for Orc Rearguard and reveal it, or each player must deal 4 damage to a character he controls. Shuffle the encounter deck."/>
+  </card>
+  <card id="e7995075-7f11-4f8f-ab16-e7455b67afc2" name="Kill Them!" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Search the encounter deck, discard pile and victory display for a copy of Orc War Party and add it to the staging area. Shuffle the encounter deck. Either remove all progress from the main quest, or each Orc War Party in the staging area makes an immediate attack against the player with the highest threat."/>
+  </card>
+  <card id="bfd46195-4981-47f4-95c1-84f9ec2cadc2" name="Shadow the War Party" size="QuestCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="8"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="You're close to the war party but you don't want to rush in. You quietly shadow the Orcs to determine how many there are before you attack.&#10;Each copy of Orc War Party cannot be engaged, cannot be dealt damage, and gets +2 $.&#10;When Revealed: Return each engaged Orc War Party to the staging area."/>
+  </card>
+  <card id="0569374c-0f0d-461e-8047-cf467393c38f" name="Protect the Bree-landers" size="QuestCard">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Intruders in Chetwood - Nightmare"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="10"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Every step brings the Orcs closer to Bree-land. If you can't find some way to delay the enemy, the war party will reach the village before you can stop them.&#10;Surge.&#10;Forced: At the end of the quest phase, if no progress was placed on Protect the Bree-landers, place 1 resource on it. Then, raise each player's threat by the number of resources on Protect the Bree-landers.&#10;"/>
+  </card>
+  <card id="4ee09875-c105-4532-ba68-3701f3327696" name="The Weather Hills">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Weather Hills scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;3x Cornered Orc&#10;2x Sheltered Valley&#10;1x Concealed Orc-camp&#10;2x Angmar Marauder&#10;2x Angmar Orc&#10;3x Ruins of Arnor&#10;2x Tragic Discovery&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Weather Hills encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="The Weather Hills" type="B">
+      <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Setup: Shuffle each copy of Captive Villager and Rearguard Ambusher into the Orc deck.&#10;The players cannot win the game while a Captive Villager is guarded by an encounter card. If a Captive Villager leaves play, the players lose the game."/>
+    </alternate>
+  </card>
+  <card id="90f60cd2-e787-4b40-8b3a-35be274d0e9b" name="Captive Villager">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Objective Ally"/>
+    <property name="Traits" value="Bree."/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="0"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Forced: After Captive Villager enters play, reveal the top card of the Orc deck and attach it to Captive Villager, guarding it.&#10;While Captive Villager is free of encounters, the first player gains control of it and is considered to have +5 threat while making engagement checks."/>
+  </card>
+  <card id="cf123545-659f-41b9-8051-8ed29302ca2c" name="Rearguard Ambusher" size="EncounterCard">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Engagement Cost" value="17"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Cannot be optionally engaged.&#10;Forced: After Rearguard Ambusher engages you, exhaust each damaged character you control."/>
+  </card>
+  <card id="0b6022c0-c46c-411f-90b3-b6ad267ebb8e" name="Angmar Raider" size="EncounterCard">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc."/>
+    <property name="Engagement Cost" value="44"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After a character the engaged player controls is healed, Angmar Raider makes an immediate attack."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +2 Ú until the end of the phase."/>
+  </card>
+  <card id="7c01b52d-35ed-449a-83d1-5879f608ef42" name="Weather-torn Valley" size="EncounterCard">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Arnor. Hills."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Progress cannot be placed on Weather-torn Valley while it is the staging area.&#10;While Weather torn Valley is the active location, Weather cards cannot be canceled."/>
+  </card>
+  <card id="e62b817f-7806-40ad-95e3-a7c3e805e95d" name="Ruined Watch-tower" size="EncounterCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Arnor. Ruins."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Ruined Watch-tower is in the staging area, it gains: &quot;Forced: When an Orc enemy is revealed, each player must deal 1 damage to a character he controls.&quot;&#10;While Ruined Watch -tower is the active location, each enemy gets +3 Ú."/>
+  </card>
+  <card id="db7a5fb4-f390-49c2-b555-d963350cd8ff" name="Rain-washed Tracks" size="EncounterCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="When Revealed: Either remove 1 resource token from the Mission objective, or add 8 to the total $ in the staging area this phase."/>
+    <property name="Shadow" value="Shadow: Either remove 1 resource token from the Mission objective, or attacking enemy gets +3 Û."/>
+  </card>
+  <card id="74c7150c-c65d-480b-8673-cd2509fc992b" name="Track the Orcs" size="QuestCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Weather Hills - Nightmare"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="8"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="The weather makes the Orcs difficult to track. It requires all of your skill to read the signs in the rough terrain.&#10;Each enemy gets +10 engagement cost and cannot be optionally engaged.&#10;When Revealed: Reveal the top card of the Orc deck (reveal the top 2 cards instead if there are 3 or more players in the game)."/>
+  </card>
+  <card id="9d460d1a-45d9-4828-a40e-2dbddc51c086" name="Deadman's Dike">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Deadmen's Dike scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;2x Fornost Square&#10;3x Broken Battlements&#10;2x Norbury Tombs&#10;2x Restless Evil&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Deadman's Dike encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="Deadman's Dike" type="B">
+      <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Each player's deck cannot include more than 50 total cards.&#10;Setup: Each player searches the encounter deck for a copy of Cursed Dead and places it in the encounter discard pile. Shuffle the encounter deck."/>
+    </alternate>
+  </card>
+  <card id="68ddf4d3-6336-40ed-862c-c68ae97ffb28" name="Undead Horde" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="34"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments.&#10;Fore each excess point of combat damage dealt by Undead Horde (damage that is dealt beyond the remaining hit points of the character damaged by its attack) you must discard 1 card from the top of your deck."/>
+  </card>
+  <card id="a9d496bb-46b8-4660-8ae8-430a4cafb997" name="Cursed Dead" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="27"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="When Revealed: Put each copy of Cursed Dead in the discard pile into play in the staging area."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if there is a copy of the defending character in its owner's discard pile)."/>
+  </card>
+  <card id="7ddffdc0-bb6f-4ab3-a6df-c2df039062e8" name="Palace Ruins" size="EncounterCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Fornost. Ruins."/>
+    <property name="Threat" value="9"/>
+    <property name="Quest Points" value="9"/>
+    <property name="Text" value="Discard the top X cards of your deck to reduce Palace Ruins $ by X until the end of the phase. Any player may trigger this action. (Limit once per phase.)"/>
+    <property name="Shadow" value="Shadow: Discard 1 card from the top of your deck for each Undead enemy engaged with you."/>
+  </card>
+  <card id="d1cc7784-d659-4b87-8ce5-ffea723ee715" name="Fornost Street" size="EncounterCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Fornost. Ruins."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="While Fornost Street is in the staging area, each other Fornost location gets +1 $.&#10;Travel: Return the topmost enemy in the encounter discard pile to the staging area."/>
+    <property name="Shadow" value="Shadow: Each Undead enemy engaged with you gets +1 Û and +1 Ú until the end of the phase."/>
+  </card>
+  <card id="d413aeaa-974a-478f-8a06-bd12d4ab661f" name="Decrepit City" size="EncounterCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Fornost. Ruins."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Decrepit City is the active location, 'when revealed' effects cannot be canceled."/>
+    <property name="Shadow" value="Shadow: Either discard 3 cards from the top of your deck, or this attack is considered undefended."/>
+  </card>
+  <card id="3dd092db-4bb4-4f56-b3cd-447328ac97ac" name="Paralyzing Fear" size="EncounterCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Sorcery."/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Attach to a hero and exhaust that hero. (Counts as a Condition attachment with the text: &quot;Forced: When attached hero would ready, it does not ready unless attached hero's controller discards a card from the top of his deck.&quot;)"/>
+  </card>
+  <card id="55dd30df-7b57-4cc9-b778-f8a4bfe72431" name="Curse of Angmar" size="EncounterCard">
+    <property name="Card Number" value="26"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Sorcery."/>
+    <property name="Keywords" value="Doomed 1."/>
+    <property name="Text" value="When Revealed: Each player discards each card in his hand that has the same title as a card in his discard pile. If no cards are discarded by this effect, Curse of Angmar gains surge."/>
+  </card>
+  <card id="66fc0634-c88c-4af2-a009-8ade84806f98" name="Gather Your Courage" size="QuestCard">
+    <property name="Card Number" value="27"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Deadman's Dike - Nightmare"/>
+    <property name="Type" value="Side Quest"/>
+    <property name="Quest Points" value="8"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="Battling the dead drains your spirit as well as your body.&#10;Surge.&#10;When Revealed: Each player places the top 8 cards of his deck facedown under this quest.&#10;Forced: When this quest is defeated, shuffle each card under this quest into its owner's deck."/>
+  </card>
+ </cards>
+</set>

@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Flight of the Stormcaller" id="9218a37c-6709-4862-9757-e6fe8bb496ac" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="4a76ad60-35d1-4657-ab4a-2f7f15cc7ab7" name="Denethor">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Gondor. Noble. Steward."/>
+    <property name="Keywords" value="Setup: Add 2 resources to Denethor's resource pool."/>
+    <property name="Cost" value="8"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Action: Move 1 resource from Denethor’s resource pool to another Gondor hero’s resource pool. (Limit once per round.)"/>
+  </card>
+  <card id="3d3ced53-71af-46de-b7e7-1892a9c49747" name="Rod of the Steward">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Item."/>
+    <property name="Keywords" value="Attach to a Gondor hero."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Action: Spend 2 resources from attached hero’s resource pool to draw 1 card."/>
+  </card>
+  <card id="2e944d64-3612-4b5f-8fed-50cae0471fd5" name="In Service of the Steward">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Title."/>
+    <property name="Keywords" value="Attach to a character."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attached character gains the Gondor trait."/>
+  </card>
+  <card id="27843323-c7d0-4f9e-a67e-4494f8926203" name="Azain Silverbeard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Dwarf. Warrior."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Response: After Azain Silverbeard participates in an attack that destroys an enemy, spend 1 Ï resource to deal 2 damage to another enemy that shares a Trait with the destroyed enemy. Any player may trigger this response."/>
+  </card>
+  <card id="1eaee222-8d0d-4fcd-b630-4e349347ed85" name="Last Stand">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Response: After a Warrior character is destroyed while defending against an enemy attack, deal damage to the attacking enemy equal to that character’s printed Û."/>
+  </card>
+  <card id="7309efbd-ea6a-45d5-bfec-2a4e0fc8d3b7" name="Glorfindel">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Noldor. Noble. Warrior."/>
+    <property name="Keywords" value="Glorfindel can be played from your discard pile."/>
+    <property name="Cost" value="5"/>
+    <property name="Willpower" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Action: Discard a card from your hand to ready Glorfindel. (Limit once per phase.)"/>
+  </card>
+  <card id="ea80a2db-6a72-41c1-a26e-73929197506f" name="Tides of Fate">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Response: When a shadow card increases an enemy’s Û by any amount, increase the defending character's Ú by 3 for that attack. Then, the players as a group may spend 2 Ïresources to ready the defending character and give it +3 Û for its next attack this phase."/>
+  </card>
+  <card id="f4ec0320-6977-4cec-af29-1037e18f4dca" name="Imladris Caregiver">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Noldor. Healer."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="0"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Action: Discard a card from your hand to heal 1 damage on any 1 character. (Limit twice per round)."/>
+  </card>
+  <card id="371e29be-17a9-4535-a9e0-bc13126522bb" name="Heed the Dream">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Action: Choose a player. That player searches the top 5 cards of his deck for a card, adds it to his hand, and shuffles his deck. Then, players as a group may spend 3 Ì resources to have that player search his deck for another card, add it to his hand, and shuffle his deck."/>
+  </card>
+  <card id="bcfbcf8a-9df0-4fd4-92a4-9cdd8c9def53" name="Guardian of Rivendell">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Traits" value="Noldor. Warrior."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="As an additional cost to play Guardian of Rivendell from your hand, you must discard 2 cards from your hand."/>
+  </card>
+  <card id="95375f6e-942c-4609-9ebd-8a86ce3ab8af" name="Vanish from Sight">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Keywords" value="Play only if you control 2 or fewer heroes."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Action: Until the end of the phase, if your threat is higher than 20, treat your threat as if it is 20."/>
+  </card>
+  <card id="4489214b-775c-4e63-b8ec-c504526e478f" name="Swift Departure" size="QuestCard">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Prepare the Corsair deck. Players prepare their fleet. Prepare the Stormcaller’s area with a second quest deck consisting of only stages 2C, 3C, and 4C, as well as the Stormcaller (see insert). Search the encounter deck for 1 copy of Rolling Seas, and add it to the staging area (2 copies instead if there are 3 or more players in the game). Shuffle the encounter deck. "/>
+    <property name="Setup" value="sstttttttt"/>
+    <alternate name="Swift Departure" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Keywords" value="Sailing."/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="8"/>
+      <property name="Text" value="Forced: At the end of the quest phase, if you are off-course (¼, ½, or ¾), move 2 progress from Swift Departure to the Stormcaller's quest stage. "/>
+    </alternate>
+  </card>
+  <card id="315ddd38-e50f-4db0-8e5c-8030998e4f7f" name="Full Sail Ahead!" size="QuestCard">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Search the encounter deck and discard pile for 1 copy of Swift Raider and add it to the staging area. Shuffle the encounter deck. "/>
+    <alternate name="Full Sail Ahead!" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Keywords" value="Sailing."/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="12"/>
+      <property name="Text" value="No more than 8 progress can be placed here each round. If you are off-course (¼, ½, or ¾), no more than 4 progress can be placed here each round instead. &#10;&#10;When you defeat this stage, if the Stormcaller is at stage 2, you have caught up to the Stormcaller and win the game. Otherwise, advance to the next stage. "/>
+    </alternate>
+  </card>
+  <card id="0700c66d-3fe6-4619-9512-edb0241e6203" name="The Weather Turns Foul" size="QuestCard">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <alternate name="The Weather Turns Foul" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Keywords" value="Sailing."/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="18"/>
+      <property name="Text" value="Forced: At the end of the staging step, if you are off-course (¼, ½, or ¾), reveal an additional encounter card from the top of the encounter deck. &#10;&#10;When you defeat this stage, if the Stormcaller is still at stage 3, you have caught up to the Stormcaller and win the game. Otherwise, advance to the next stage. "/>
+    </alternate>
+  </card>
+  <card id="4576db5c-fdc2-45f2-ac8b-d1edb8150678" name="The Cape of Andrast" size="QuestCard">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="4"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Discard cards from the top of the encounter deck until a Weather treachery is discarded. Resolve that card’s “when revealed” effect. That effect cannot be canceled. "/>
+    <alternate name="The Cape of Andrast" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Keywords" value="Sailing."/>
+      <property name="Cost" value="4"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="24"/>
+      <property name="Text" value="Forced: After a Weather treachery is revealed, deal 1 damage to each Ship objective and Ship enemy at this stage. &#10;&#10;If you defeat this stage, you have caught up to the Stormcaller and win the game."/>
+    </alternate>
+  </card>
+  <card id="39df5c92-f79e-4d39-b8a3-f93631e183db" name="Full Sail Ahead!" size="QuestCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="C"/>
+    <alternate name="Full Sail Ahead!" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="D"/>
+      <property name="Quest Points" value="12"/>
+      <property name="Text" value="If the players are off-course (¼, ½, or ¾), the Stormcaller gets +2 $.&#10;No more than 4 damage may be placed on the Stormcaller each round. &#10;Forced: At the end of the round, discard the top card of the encounter deck. the Stormcaller places progress on this stage equal to its $ plus the $ of the discarded card."/>
+    </alternate>
+  </card>
+  <card id="c7bcb6fc-dde8-4df0-bd0e-3791b0fef4d0" name="The Weather Turns Foul" size="QuestCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="C"/>
+    <property name="Text" value="When Revealed: Search the encounter deck and discard pile for 1 copy of Sahír's Escort and add it to the Stormcaller's area. Shuffle the encounter deck. "/>
+    <alternate name="The Weather Turns Foul" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="D"/>
+      <property name="Quest Points" value="18"/>
+      <property name="Text" value="If the players are off-course (Cloudy, Rainy, or Stormy), the Stormcaller gets +2 $.&#10;No more than 8 damage may be placed on the Stormcaller each round. &#10;Forced: At the end of the round, discard the top card of the encounter deck. the Stormcaller places progress on this stage equal to its $ plus the $ of the discarded card. "/>
+    </alternate>
+  </card>
+  <card id="076e69c7-156b-46ef-8d11-d6a659da68b2" name="The Cape of Andrast" size="QuestCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="4"/>
+    <property name="Engagement Cost" value="C"/>
+    <alternate name="The Cape of Andrast" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="4"/>
+      <property name="Engagement Cost" value="D"/>
+      <property name="Quest Points" value="24"/>
+      <property name="Text" value="Forced: At the end of the round, discard the top card of the encounter deck. the Stormcaller places progress on this stage equal to its $ plus the $ of the discarded card. &#10;&#10;If the Stormcaller defeats this stage, Captain Sahír has gotten away with the key, and the players lose the game."/>
+    </alternate>
+  </card>
+  <card id="3065a397-5346-4148-8e0a-47009fe9b87d" name="The Stormcaller" size="EncounterCard">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 2.&#10;Cannot have attachments."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="6"/>
+    <property name="Health" value="18"/>
+    <property name="Victory Points" value="10"/>
+    <property name="Text" value="When the Stormcaller advances to the next quest stage, return it to the Stormcaller's area. &#10;&#10;If the Stormcaller leaves play, the players win the game."/>
+  </card>
+  <card id="3de80480-6316-4c43-824c-44d3ad424a7b" name="Sahír’s Escort" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 1.&#10;Cannot have attachments."/>
+    <property name="Engagement Cost" value="46"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="While Sahír's Escort is in the Stormcaller’s area, it contributes its $ to the amount of progress the Stormcaller places on its quest stage each round. &#10;When Revealed: Add Sahír’s Escort to the Stormcaller’s area, instead of the players’ staging area. "/>
+  </card>
+  <card id="c084e998-a5c8-4efd-a6ed-441f9f912c99" name="Swift Raider" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 2.&#10;Cannot have attachments."/>
+    <property name="Engagement Cost" value="38"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="While Swift Raider is in the staging area, it gains: “Forced: After a player commits 4 or more characters to a Sailing test or to the quest, Swift Raider engages that player.”"/>
+  </card>
+  <card id="47afd15f-ffe3-4a90-9128-f2a79ba3b070" name="Corsair Skiff" size="EncounterCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Surge.&#10;Cannot have attachments."/>
+    <property name="Engagement Cost" value="24"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Victory Points" value="¹"/>
+    <property name="Text" value="Forced: When Corsair Skiff engages you from the staging area, either raise your threat by 3 or it gains Boarding 1. "/>
+  </card>
+  <card id="cac948bb-b3dc-423d-8082-340e2596d623" name="Corsair Seafarer" size="EncounterCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Raider."/>
+    <property name="Engagement Cost" value="26"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Corsair Seafarer gets +1 Attack for each resource on it. Forced: After the engaged player commits a hero to a Sailing test or to a quest, move 1 resource from that hero's resource pool to Corsair Seafarer."/>
+  </card>
+  <card id="3309e01a-db7f-4754-bd41-21a0b4316415" name="Serpent's Blade" size="EncounterCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair."/>
+    <property name="Engagement Cost" value="10"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: When the Stormcaller advances to the next quest stage, Serpent's Blade makes an immediate attack against the engaged player."/>
+  </card>
+  <card id="72b4cfd3-457b-4574-b638-c0fcce49dd68" name="Jagged Reef" size="EncounterCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: At the beginning of the travel phase, if you are on-course (º), place 2 progress on Jagged Reef. If you are off-course (¼, ½, or ¾), deal 2 damage to each Ship objective instead."/>
+  </card>
+  <card id="595c34f1-60e3-401a-bd65-df6dda627896" name="Hidden Cove" size="EncounterCard">
+    <property name="Card Number" value="26"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Travel: Move 2 progress from the main quest to the Stormcaller's quest stage. &#10;&#10;Response: After Hidden Cove becomes the active location, heal 4 damage from each Ship objective. "/>
+  </card>
+  <card id="cf070c26-dd32-4ee8-bd6c-ffe9c011bd64" name="Vast Coastland" size="EncounterCard">
+    <property name="Card Number" value="27"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="6"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Victory Points" value="¹"/>
+    <property name="Text" value="When Revealed: Add Vast Coastland to the Stormcaller’s area. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +2 Û if you are at the same stage as the Stormcaller."/>
+  </card>
+  <card id="962991f0-44af-47ba-9ff0-0f7ed302a543" name="Man Overboard!" size="EncounterCard">
+    <property name="Card Number" value="28"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player contributing at least 8 Ò to the quest must discard a questing character. If your heading is at the worst setting (¾), this effect cannot be canceled."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +X Û, where X is The Stormcaller's current quest stage."/>
+  </card>
+  <card id="076b47e8-6bbe-41b3-9af8-edeca28e2c0c" name="Raging Squall" size="EncounterCard">
+    <property name="Card Number" value="29"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Doomed 2."/>
+    <property name="Text" value="When Revealed: Attach Raging Squall to the current quest. (Counts as a Condition attachment with the text: “Forced: After an ally is committed to the quest, deal 1 damage to that ally if you are off-course.”) "/>
+  </card>
+  <card id="5484e07e-b5a2-470a-84ba-be78062a61f2" name="Flight of the Stormcaller">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card Side 1"/>
+    <alternate name="Flight of the Stormcaller" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+ </cards>
+</set>

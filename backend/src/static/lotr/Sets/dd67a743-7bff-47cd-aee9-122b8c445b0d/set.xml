@@ -1,0 +1,352 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Temple of the Deceived" id="dd67a743-7bff-47cd-aee9-122b8c445b0d" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="14820d35-cb36-499b-80ec-da6442548f7b" name="Elfhelm">
+    <property name="Card Number" value="57"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Rohan. Warrior. Scout."/>
+    <property name="Cost" value="10"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Each Ê hero with an attached Mount gets +1 Ò.&#10;Each Ï hero with an attached Mount gets +1 Û.&#10;Each Ì hero with an attached Mount gets +1 Ú."/>
+  </card>
+  <card id="7e1db97c-f6dc-43e1-a6f3-7ab600845e93" name="Ceorl">
+    <property name="Card Number" value="58"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Rohan. Scout."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Action: Spend 1 Ê resource to ready Ceorl. Then, you may give control of Ceorl to another player. Any player may trigger this action. (Limit once per phase)."/>
+  </card>
+  <card id="a55bc730-259b-4d52-8c98-648d43840738" name="Armored Destrier">
+    <property name="Card Number" value="59"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Mount."/>
+    <property name="Keywords" value="Attach to a Ì or sentinel hero. Restricted."/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Response: After attached hero defends against an attack, exhaust Armored Destrier to ready attached hero. Then, discard a shadow card from another enemy engaged with the defending player."/>
+  </card>
+  <card id="1987caf1-aedd-4fe0-bbe9-41539c2a7910" name="Déorwine">
+    <property name="Card Number" value="60"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Rohan. Warrior."/>
+    <property name="Keywords" value="Sentinel."/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Action: While Déorwine is defending, spend 1 Ì resource to cancel a shadow effect dealt to the attacking enemy. Any player may trigger this action."/>
+  </card>
+  <card id="94727856-c487-4cf8-b8d5-8c18a3bca3d8" name="Revealed in Wrath">
+    <property name="Card Number" value="61"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Keywords" value="Play only if you control a Noldor hero."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Action: Choose a non-unique enemy. Until the end of the phase, treat the chosen enemy’s printed text box as if it were blank (except for Traits)."/>
+  </card>
+  <card id="2c1b7d82-e14e-4e2d-9270-86b59f95e0a9" name="Rhovanion Outrider">
+    <property name="Card Number" value="62"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Dale. Scout."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Response: After Rhovanion Outrider commits to the quest, place 1 progress on a location in the staging area. If that location is not explored by this effect, give Rhovanion Outrider +1 Ò until the end of the phase.&#10;"/>
+  </card>
+  <card id="21c68054-6070-49cd-be5f-7d432842a879" name="Scouting Party">
+    <property name="Card Number" value="63"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Keywords" value="Play only after the staging step."/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Response: After you commit characters to the quest, if each character you have committed to the quest is a Scout, each of those characters gets +2 Ò until the end of the phase."/>
+  </card>
+  <card id="44b36766-fbb5-464d-bf9c-6a9cb9f48fad" name="Entangling Nets">
+    <property name="Card Number" value="64"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Trap."/>
+    <property name="Keywords" value="Play Entangling Nets into the staging area unattached."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="If unattached, attach Entangling Nets to the next eligible enemy that enters the staging area.&#10;Attached enemy gets –2 Û and –2 Ú."/>
+  </card>
+  <card id="f07ea741-4991-46c9-9c6a-439dc186cec6" name="Arrows from the Trees">
+    <property name="Card Number" value="65"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Keywords" value="Play only after making engagement checks."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Encounter Action: If no enemies were engaged this phase, deal 1 damage to each enemy in the staging area. Then, the players as a group may spend 3 Ï resources to deal 2 additional damage to each enemy in the staging area."/>
+  </card>
+  <card id="c2c8d69a-6639-49af-89ed-86f2ffc8c096" name="Ered Luin Miner">
+    <property name="Card Number" value="66"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Traits" value="Dwarf."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Response: After Ered Luin Miner is discarded from the top of your deck, put it into play under your control."/>
+  </card>
+  <card id="fb7d55c5-7198-45c5-97d7-be4c6a26fa68" name="Searching the Island" size="QuestCard">
+    <property name="Card Number" value="67"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Prepare the Island Map (see insert). Flip over the top-left and bottom-left locations of the Island Map (without resolving their Forced effects, if any), and choose one as the players’ starting active location, using a resource token to represent which location is active. The first player takes control of Captain Sahír, and the last player takes control of Na’asiyah (objective-ally sides faceup). Add Temple Guardian to the staging area and attach Gate Key to it, guarded. Shuffle the encounter deck."/>
+    <property name="Setup" value="ttssss"/>
+    <alternate name="Searching the Island" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="-"/>
+      <property name="Text" value="Exploration.&#10;For each progress that would be placed on Searching the Island, you may place it on a location in the staging area, instead."/>
+    </alternate>
+  </card>
+  <card id="f3bc3759-1f94-4983-bebb-66c7d9e3e0b3" name="Temple of the Deceived" size="EncounterCard">
+    <property name="Card Number" value="68"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Location"/>
+    <property name="Keywords" value="Uncharted. Immune to player card effects."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Travel: Exhaust the Gate Key to travel here.&#10;Forced: After Temple of the Deceived becomes the active location, flip it over."/>
+    <alternate name="The Grotto’s Entrance" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Unique" value="‰"/>
+      <property name="Type" value="Location"/>
+      <property name="Traits" value="Ruins."/>
+      <property name="Keywords" value="Immune to player card effects."/>
+      <property name="Threat" value="2"/>
+      <property name="Quest Points" value="8"/>
+      <property name="Text" value="Forced: When The Grotto’s Entrance is flipped over while active, put Temple Guardian into play from the victory display, engaged with the player with the highest threat.&#10;When the 8th progress is placed on The Grotto’s Entrance, the players have found the sunken ruins and win the game."/>
+    </alternate>
+  </card>
+  <card id="3371c102-4aab-4b15-a738-a4b3483a6004" name="Temple of the Deceived" size="EncounterCard">
+    <property name="Card Number" value="69"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Location"/>
+    <property name="Keywords" value="Uncharted. Immune to player card effects."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Travel: Exhaust the Gate Key to travel here.&#10;Forced: After Temple of the Deceived becomes the active location, flip it over."/>
+    <alternate name="Temple Halls" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Location"/>
+      <property name="Traits" value="Ruins."/>
+      <property name="Threat" value="5"/>
+      <property name="Quest Points" value="5"/>
+      <property name="Text" value="While Temple Halls is the active location, each character gets –1 Û and –1 Ú.&#10;Forced: When Temple Halls is flipped over while active, put Temple Guardian into play from the victory display, engaged with the player with the highest threat."/>
+    </alternate>
+  </card>
+  <card id="e4f6c61b-afb1-4f12-81d5-4edd14a90d32" name="Temple Guardian" size="EncounterCard">
+    <property name="Card Number" value="70"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Keywords" value="X is the number of players in the game.&#10;Immune to player card effects. Cannot be optionally engaged."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="10"/>
+    <property name="Victory Points" value="4"/>
+    <property name="Text" value="Temple Guardian gets –50 engagement cost while Cursed Temple is the active location."/>
+  </card>
+  <card id="447dd08d-693c-407f-8155-87164f212351" name="Gate Key" size="EncounterCard">
+    <property name="Card Number" value="71"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Item. Artifact."/>
+    <property name="Text" value="If unattached, return Gate Key to the staging area and it gains: “Action: Exhaust a hero to claim Gate Key and attach it to that hero.”&#10;Action: Exhaust Gate Key and attached hero and spend 3 resources from attached hero’s resource pool to look at the facedown side of a Temple of the Deceived."/>
+  </card>
+  <card id="1877b069-7015-4172-b5df-bbfd235b976f" name="Lost Island" size="EncounterCard">
+    <property name="Card Number" value="72"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Location"/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Lost Island becomes the active location, flip it over. Action: Remove 4 progress from Lost Island to look at its facedown side."/>
+    <alternate name="Jagged Cliffs" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Location"/>
+      <property name="Traits" value="Mountain."/>
+      <property name="Threat" value="4"/>
+      <property name="Quest Points" value="4"/>
+      <property name="Text" value="While Jagged Cliffs is the active location, the location to its right is not considered to be in the staging area.&#10;Forced: When Jagged Cliffs is flipped over while active, look at the facedown side of each adjacent copy of Lost Island."/>
+    </alternate>
+  </card>
+  <card id="4c7d7a31-250d-4e48-a97a-2aebb3b2b47d" name="Lost Island" size="EncounterCard">
+    <property name="Card Number" value="73"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Location"/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Lost Island becomes the active location, flip it over. Action: Remove 4 progress from Lost Island to look at its facedown side."/>
+    <alternate name="Winding Caverns" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Location"/>
+      <property name="Traits" value="Underground."/>
+      <property name="Threat" value="2"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="While Winding Caverns is the active location, each enemy gets +10 engagement cost.&#10;When you would travel from Winding Caverns to another location, you may travel to a location up to 3 locations away. (You must still pay that location’s Travel cost in order to travel there.)"/>
+    </alternate>
+  </card>
+  <card id="dc8f31b6-73af-4aec-be26-8d297909d14d" name="Lost Island" size="EncounterCard">
+    <property name="Card Number" value="74"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Location"/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Lost Island becomes the active location, flip it over. Action: Remove 4 progress from Lost Island to look at its facedown side."/>
+    <alternate name="Jungle Path" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Location"/>
+      <property name="Traits" value="Forest."/>
+      <property name="Threat" value="3"/>
+      <property name="Quest Points" value="3"/>
+      <property name="Text" value="While Jungle Path is the active location, the locations immediately above and below it are not considered to be in the staging area.&#10;Forced: When Jungle Path is flipped over while active, each player must exhaust a character with at least 2 Û."/>
+    </alternate>
+  </card>
+  <card id="617ce2f8-f33e-4898-9fa4-38787ee9c2b6" name="Faithless Desecrator" size="EncounterCard">
+    <property name="Card Number" value="75"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="25"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="While engaged with a player, Faithless Desecrator contributes its $ to the total $ in the staging area."/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead of the active location is a Ruins location)."/>
+  </card>
+  <card id="90b5e33a-3708-40ab-8d20-5a997237e536" name="Island Watcher" size="EncounterCard">
+    <property name="Card Number" value="76"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Keywords" value="Island Watcher cannot be optionally engaged."/>
+    <property name="Engagement Cost" value="46"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="While Island Watcher is in the staging area, it gains: “Forced: At the beginning of the encounter phase, if the active location has the Ruins trait, Island Watcher engages the player with the highest threat. Then, deal it 2 shadow cards.”"/>
+  </card>
+  <card id="00e25526-9804-4b05-89d6-557d9ef7ad77" name="Profane Dead" size="EncounterCard">
+    <property name="Card Number" value="77"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: When you travel to the right, Profane Dead makes an immediate attack against the engaged player."/>
+  </card>
+  <card id="c8decb35-cb3e-4dc9-ad15-d0cc80c157cb" name="Deeper into the Ruins" size="EncounterCard">
+    <property name="Card Number" value="78"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Until the end of the phase, add X $ to the total $ in the staging area. X is the total $ of all locations to the left of the active location (in its row). If X is 0, Deeper into the Ruins gains Doomed 1."/>
+  </card>
+  <card id="4fc6111a-93c3-4407-b067-1b82396b802f" name="Furious Rainstorm" size="EncounterCard">
+    <property name="Card Number" value="79"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: raise his threat by the number of his characters committed to the quest, or deal 1 damage to each of his characters committed to the quest."/>
+    <property name="Shadow" value="Shadow: If this attack destroys a character, raise your threat by the attacking enemy’s $."/>
+  </card>
+  <card id="3e8eaee9-6fdb-4207-864f-151f0f98807b" name="Dwindling Supplies" size="EncounterCard">
+    <property name="Card Number" value="80"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must randomly discard cards from his hand until he has no more than 3 cards in his hand. If no cards were discarded by this effect, Dwindling Supplies gains doomed 2."/>
+    <property name="Shadow" value="Shadow: Defending character gets -2 Ú for this attack."/>
+  </card>
+  <card id="441a78e5-078f-433d-b092-5d94d1101aa1" name="Sunken Ruins" size="EncounterCard">
+    <property name="Card Number" value="81"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Doomed 1."/>
+    <property name="Text" value="When Revealed: Each Uncharted location in the staging area gets +1 $ until the end of the phase. If the active location has the Ruins trait, discard 1 resource from each hero and objective ally in play."/>
+  </card>
+  <card id="4fcbffac-5e31-4c8f-bf94-d8ad96927e2e" name="Temple of the Deceived">
+    <property name="Card Number" value="998"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <alternate name="Temple of the Deceived" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+  <card id="7217415c-c4c1-4e03-8a62-90611f5d6ecf" name="Temple of the Deceived">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="Temple of the Deceived"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 3"/>
+    <alternate name="Temple of the Deceived" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 4"/>
+    </alternate>
+  </card>
+ </cards>
+</set>

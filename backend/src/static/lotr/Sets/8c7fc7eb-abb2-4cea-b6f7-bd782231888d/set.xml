@@ -1,0 +1,1016 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Flame of the West" id="8c7fc7eb-abb2-4cea-b6f7-bd782231888d" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="2e778689-9e3f-4da8-a473-781c777f6473" name="Aragorn">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Fellowship"/>
+    <property name="Traits" value="Dunedain. Ranger. Noble. "/>
+    <property name="Cost" value="0"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="The first player gains control of Aragorn. If Aragorn leaves play, the players lose the game. While Aragorn has an Artifact attached to him, he gains sentinel and does not exhaust to quest. "/>
+  </card>
+  <card id="6dc19efc-af54-4eff-b9ee-ee45e9fd4072" name="Éowyn">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Rohan. Noble. "/>
+    <property name="Cost" value="9"/>
+    <property name="Willpower" value="4"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Setup: Reduce your threat by 3. Action: Raise your threat by 3 to ready Éowyn. She gets +9 Û until the end of the phase. (Limit once per game for the group.) "/>
+  </card>
+  <card id="da4c926c-7917-4b6d-a1be-cc90fbdce597" name="Beregond">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Gondor. Warrior. "/>
+    <property name="Keywords" value="Sentinel. "/>
+    <property name="Cost" value="10"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Response: After Beregond defends an attack and takes no damage, reduce the defending player’s threat by 1. (Limit once per round.) "/>
+  </card>
+  <card id="825dfbbb-6ba7-44ad-8327-d06ff46830eb" name="Grimbold">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Rohan. Warrior. "/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Combat Action: Discard Grimbold to choose an enemy engaged with a player. That enemy cannot attack that player this phase. "/>
+  </card>
+  <card id="6238c12d-b4c0-478f-bd7e-b59ef9b4e86f" name="Prince Imrahil">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Gondor. Noble. "/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="While there is a hero card in your discard pile, Prince Imrahil loses the ally card type and gains the hero card type. "/>
+  </card>
+  <card id="66bcd2b8-fcc7-402b-94b2-a45a6c469981" name="Halbarad">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Dunedain. Ranger. "/>
+    <property name="Cost" value="4"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Reduce the cost to play Halbarad by 1 for each enemy engaged with you. Each enemy engaged with you gets +10 engagement cost. "/>
+  </card>
+  <card id="76951dec-233c-41aa-83d2-36497e89e7be" name="Ghân-buri-Ghân">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Wose. "/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="X is the $ of the active location. Travel Action: Discard Ghân-buri-Ghân to travel to a location without resolving its Travel cost. "/>
+  </card>
+  <card id="1f71a208-836b-4bf9-8cdb-a3f9bfa05667" name="Sterner than Steel">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Response: Exhaust a Weapon or Armor card attached to the defending character to cancel a shadow effect just triggered in combat. "/>
+  </card>
+  <card id="478bc3aa-c148-4f20-8b4b-6b2a477a64b6" name="Desperate Defense">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Response: After a sentinel character is declared as a defender, it gets +2 Ú for this attack. If this attack deals no damage, ready the defending character. "/>
+  </card>
+  <card id="a87da7c6-14fe-4213-b66f-43836531e213" name="Golden Shield">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Item. Armor. "/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attach to a Rohan hero. Restricted. Response: After attached hero is declared as a defender, exhaust Golden Shield to add attached hero’s Ò to its Ú for this attack. "/>
+  </card>
+  <card id="6fa385cc-3430-44ce-9761-d0558e2b569d" name="Livery of the Tower">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Item. Armor. "/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Attach to a Gondor hero. Limit 1 per hero. Response: Spend X resource from attached hero’s pool to cancel X damage just dealt to attached hero. "/>
+  </card>
+  <card id="83febe3a-95e8-4c38-8de7-4c1b1d43c917" name="Roheryn">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Mount. "/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Attach to a Dunedain hero. If attached hero is Aragorn, he gains the Ï icon. Response: After you optionally engage an enemy, exhaust Roheryn and attached hero to declare that hero as an attacker (and resolve its attack) against that enemy. "/>
+  </card>
+  <card id="fcf56ddf-cbff-4441-95f4-951cc5ae82c2" name="Banner of Elendil">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Fellowship"/>
+    <property name="Traits" value="Artifact. Item. "/>
+    <property name="Cost" value="3"/>
+    <property name="Text" value="Attach to Aragorn. While Aragorn is questing, each other questing character you control gets +1 Ò. While Aragorn is attacking, each other attacking character you control gets +1 Û. "/>
+  </card>
+  <card id="9eb45361-6325-4e39-9029-9a8401d0d294" name="Esquire of Rohan">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Boon"/>
+    <property name="Traits" value="Title.  "/>
+    <property name="Keywords" value="Permanent. "/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Setup: Attach to a hero. Attached hero gains the Rohan trait. Attached hero gets +1 Û while attacking with another Rohan character. "/>
+  </card>
+  <card id="b2df0294-f962-4e05-998a-d824d88cc13c" name="Esquire of Gondor">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Boon"/>
+    <property name="Traits" value="Title.  "/>
+    <property name="Keywords" value="Permanent. "/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Setup: Attach to a hero. Attached hero gains the Gondor trait. Attached hero gets +1 Ò while committed to the quest with another Gondor character. "/>
+  </card>
+  <card id="926d92fd-b7b8-4f13-8018-3f632c84a3d7" name="Overcome by Fear" size="EncounterCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Fear.  "/>
+    <property name="Text" value="Setup: Attach to your threat dial. Limit 1 per threat dial.  Your threat cannot be reduced. Forced: At the end of the round, raise your threat by 1. Then, you may spend 1 ☺ resource to detach Overcome by Fear and set it aside, out of play. "/>
+  </card>
+  <card id="4d904ec3-1c74-4091-861d-c543412b5443" name="The Stone of Erech" size="EncounterCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Hill. "/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Immune to player card effects. Forced: After The Stone of Erech becomes the active location, each player searches the encounter deck and discard pile for an Oathbreaker enemy and adds it to the staging area. Shuffle the encounter deck. Travel: Remove 5 progress from stage 3B to travel here. "/>
+  </card>
+  <card id="d4e4ab9d-d5ea-4d33-89f1-d8d24d166002" name="Dark Door" size="EncounterCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground. "/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Dark Door is in the staging area, progress cannot be placed on locations in the staging area. Travel: The first player reveals an encounter card to travel here. "/>
+  </card>
+  <card id="87ca18e7-934a-4da9-bbb0-3a66f3d1b4c3" name="Trysting Place" size="EncounterCard">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Trysting Place is in the staging area, each enemy in the staging area cannot take damage. Travel: The first player searches the encounter deck and discard pile for an Oathbreaker enemy and puts it into play engaged with him. Shuffle the encounter deck. "/>
+  </card>
+  <card id="70fc56ec-dca4-485a-8c5e-7d0cf4e17038" name="Deadly Road" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Deadly Road is in the staging area, it gains: “Forced: After a ‘when revealed’ effect is canceled, raise each player’s threat by 1.” Travel: Spend 1 ☺ resource to travel here. "/>
+  </card>
+  <card id="46e10da4-a188-4502-b53f-6644495a1319" name="Haunted Path" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Underground. "/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Haunted Path gets +1 $ for each player with threat 35 or higher. Travel: Raise each player’s threat by 1 to travel here.  "/>
+    <property name="Shadow" value="Shadow: Either raise your threat by 2, or return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="78520dc7-5891-47f3-8782-ca930c434374" name="Dead Man of Dunharrow" size="EncounterCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Oathbreaker. "/>
+    <property name="Keywords" value="Phantom. "/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Forced: After Dead Man of Dunharrow engages you, either attach a set aside Overcome by Fear to your threat dial, or raise your threat by 2. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û."/>
+  </card>
+  <card id="abfe3930-7bca-4ce8-9594-038ad4846205" name="Faithless Dead" size="EncounterCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Oathbreaker. "/>
+    <property name="Keywords" value="Peril. Phantom.  "/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Either raise each player’s threat by 2, or reveal an additional encounter card. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û and loses the Phantom keyword for this attack."/>
+  </card>
+  <card id="28b27afb-c966-4960-a4e7-5e5364e45c05" name="Ghosts of Men" size="EncounterCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Oathbreaker. "/>
+    <property name="Keywords" value="Peril. Phantom. "/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="When Revealed: Either attach a set aside Overcome by Fear to your threat dial, or Ghosts of Men makes an immediate attack against you. "/>
+  </card>
+  <card id="8a5f4d2e-9558-413f-9913-376ec6a0c184" name="Shadow Host" size="EncounterCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Oathbreaker. "/>
+    <property name="Keywords" value="Phantom. "/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Forced: After Shadow Host engages you, either attach a set aside Overcome by Fear to your threat dial, or it makes an immediate attack. "/>
+  </card>
+  <card id="7cf91fea-06b4-43f3-ae5d-96f00884fd71" name="Blood Runs Chill" size="EncounterCard">
+    <property name="Card Number" value="26"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Doomed 1. "/>
+    <property name="Text" value="When Revealed: Each player with threat 35 or higher deals 1 damage to each exhausted character he controls. "/>
+    <property name="Shadow" value="Shadow: If your threat is 35 or higher, defending character cannot ready until the end of the round."/>
+  </card>
+  <card id="faacffc1-0c11-42ea-aca9-96982cc80e7a" name="The Way is Shut" size="EncounterCard">
+    <property name="Card Number" value="27"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Peril. Surge. "/>
+    <property name="Text" value="When Revealed: Either attach a set aside Overcome by Fear to your threat dial, or progress cannot be placed on the current quest until the end of the round. "/>
+  </card>
+  <card id="474616b8-11f2-44fe-bad3-a9d3e2bdd208" name="Whispers in the Dark" size="EncounterCard">
+    <property name="Card Number" value="28"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Peril.  "/>
+    <property name="Text" value="When Revealed: Either attach a set aside Overcome by Fear to your threat dial, or each character you control gets -1 Ò, -1 Û, and -1 Ú until the end of the round. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if undefended)."/>
+  </card>
+  <card id="06ff6757-f80c-499b-8450-1e85e793d02c" name="No Turning Back" size="EncounterCard">
+    <property name="Card Number" value="29"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: either attach a set aside Overcome by Fear to your threat dial, or discard an ally you control. "/>
+    <property name="Shadow" value="Shadow: Either attach a set aside Overcome by Fear to your threat dial, or attacking enemy makes an additional attack after this one."/>
+  </card>
+  <card id="83dd1a59-118c-468d-a47e-e472b066ff3e" name="Great Corsair Ship" size="EncounterCard">
+    <property name="Card Number" value="30"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ship. "/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Victory Points" value="5"/>
+    <property name="Text" value="X is the number of resources on The Corsiar Fleet. The players cannot travel here unless there are at least 3 Ship locations in the victory display. Travel: Each player searches the encounter deck and discard pile for a Corsair enemy and adds it to the staging area. One of those enemies must be Corsair Captain, if able. "/>
+  </card>
+  <card id="f3ffbb95-5024-41d4-b783-d5fbff5bfa32" name="Umbar War Galley" size="EncounterCard">
+    <property name="Card Number" value="31"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ship. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Victory Points" value="3"/>
+    <property name="Text" value="While Umbar War Galley is the active location, each Corsair enemy gets -10 engagement cost. Travel: Shuffle the encounter discard pile into the encounter deck and discard cards from the top until a Corsair enemy is discarded. Add the discarded enemy to the staging area.  "/>
+  </card>
+  <card id="9c6c003c-b9c7-4240-9e59-414d31b4be3c" name="Corsair Dromon" size="EncounterCard">
+    <property name="Card Number" value="32"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ship. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="2"/>
+    <property name="Victory Points" value="2"/>
+    <property name="Text" value="While Corsair Dromon is the active location, each Corsair enemy gains Archery 1. Travel: Shuffle the encounter discard pile into the encounter deck and discard cards from the top until a Corsair enemy is discarded. Add the discarded enemy to the staging area. "/>
+  </card>
+  <card id="688d04e8-80d8-4ea8-9274-0712f26fac9b" name="Port of Pelargir" size="EncounterCard">
+    <property name="Card Number" value="33"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City.  "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Port of Pelargir is in the staging area, no more than 1 damage can be healed from each character each round. "/>
+    <property name="Shadow" value="Shadow: If this attack damages a character, that character cannot ready until the end of the round."/>
+  </card>
+  <card id="2251670c-c03c-4fd7-9621-c179c9ce79f8" name="Pelargir Quays" size="EncounterCard">
+    <property name="Card Number" value="34"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="City.  "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Forced: At the end of the round, place 1 damage token here. Then, if there are 4 damage tokens here, discard Pelargir Quays and assign 4 damage among characters in play. "/>
+  </card>
+  <card id="87464aa2-e890-4151-8a93-55c2be3e44b2" name="Corsair Captain" size="EncounterCard">
+    <property name="Card Number" value="35"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. "/>
+    <property name="Engagement Cost" value="49"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Cannot be optionally engaged. If the active location is a Ship, Corsair Captain gets -30 engagement cost and gains: “Forced: When Corsair Captain engages you, it makes an immediate attack.” "/>
+  </card>
+  <card id="22c55625-210c-4843-81ee-d8d6430885b0" name="Corsair of Umbar" size="EncounterCard">
+    <property name="Card Number" value="36"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. "/>
+    <property name="Engagement Cost" value="29"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="If the active location is a Ship, Corsair of Umbar gets +2 Û and +2 Ú. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if the active location is a Ship)."/>
+  </card>
+  <card id="8d3c19e0-28f2-4a3d-91b2-8e9911ac4c91" name="Umbar Pirate Crew" size="EncounterCard">
+    <property name="Card Number" value="37"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. "/>
+    <property name="Engagement Cost" value="39"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments. Forced: When Umbar Pirate Crew engages you, exhaust a character you control. "/>
+    <property name="Shadow" value="Shadow: If the active location is a Ship, return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="2c3f8a11-c7a5-4709-ab8d-7435763f558b" name="Haradrim Pirate" size="EncounterCard">
+    <property name="Card Number" value="38"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. "/>
+    <property name="Engagement Cost" value="34"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: When Haradrim Pirate engages you, deal 1 damage to a character you control (2 damage instead if the active location is a Ship). "/>
+    <property name="Shadow" value="Shadow: Defending character gets -1 Ú for each damage on it."/>
+  </card>
+  <card id="a7ac2b78-52a7-4bd9-b37f-3d424876c7d8" name="Fell Folk of Umbar" size="EncounterCard">
+    <property name="Card Number" value="39"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Peril. "/>
+    <property name="Text" value="When Revealed: Either return each Corsair enemy engaged with you to the staging area, or discard cards from the top of the encounter deck until a Corsair enemy is discarded and put that enemy into play engaged with you. "/>
+  </card>
+  <card id="1600dd03-7b19-4dd2-924c-30c30b09cb9d" name="Black Sails" size="EncounterCard">
+    <property name="Card Number" value="40"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Doomed 1. "/>
+    <property name="Text" value="When Revealed: Each Ship location in the staging area gets +1 $. If there are no non-unique Ship locations in the staging area, search the encounter deck and discard pile for a Ship location and add it to the staging area. Shuffle the encounter deck. "/>
+  </card>
+  <card id="a7a8a783-8a22-49fd-a1b7-42e92a44f78c" name="Raiding the Coasts" size="EncounterCard">
+    <property name="Card Number" value="41"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player must choose: either add 3 to the total $ in the staging area until the end of the phase, or discard the highest cost attachment you control. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, discard an attachment you control."/>
+  </card>
+  <card id="1db13c26-879b-49cd-9f94-8ba1a0c4f5a4" name="Driven to the Brink" size="EncounterCard">
+    <property name="Card Number" value="42"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Peril. "/>
+    <property name="Text" value="When Revealed: Either immediately end the quest phase (without resolving the quest), or assign X damage among questing characters you control. X is the number of resources on The Corsair Fleet. "/>
+    <property name="Shadow" value="Shadow: Exhaust a character you control."/>
+  </card>
+  <card id="47360b1a-2428-4795-aec5-30f0a8805d76" name="Minas Tirith" size="EncounterCard">
+    <property name="Card Number" value="43"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Text" value="Gondor. City Minas Tirith has 30 hit points plus 10 for each player. Forced: At the end of the round, deal 1 damage to Minas Tirith for each enemy in the staging area. Then, if Minas Tirith has no hit points remaining, the players lose the game. "/>
+  </card>
+  <card id="09b27f8f-60ab-4764-8c78-52fb09597921" name="Grond" size="EncounterCard">
+    <property name="Card Number" value="44"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Siege.  "/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Victory Points" value="4"/>
+    <property name="Text" value="Immune to player card effects.  X is the number of resources here. Forced: At the beginning of the quest phase, place 1 resource on Grond. Then, deal X damage to Minas Tirith. Travel: The Witch-king makes an immediate attack against each player, in turn order. "/>
+  </card>
+  <card id="0002f646-cdaf-40cf-9993-faccb260c583" name="Gate of Gondor" size="EncounterCard">
+    <property name="Card Number" value="45"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Minas Tirith. "/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Victory Points" value="5"/>
+    <property name="Text" value="Immune to player card effects.  While Gate of Gondor is the active location, each enemy in play gets -30 engagement cost. Forced: When Gate of Gondor is explored, return each engaged enemy to the staging area. "/>
+  </card>
+  <card id="7c069b32-99b8-42b7-a310-893d925c8ca7" name="City Wall" size="EncounterCard">
+    <property name="Card Number" value="46"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Minas Tirith. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While City Wall is the active location, damage that would be placed on Minas Tirith must be placed here first. Forced: When City Wall has damage equal to its quest points, discard it. Then, each player raises his threat by 3. "/>
+  </card>
+  <card id="3612e715-a474-4911-a247-58c76f2ef277" name="Pelennor Field" size="EncounterCard">
+    <property name="Card Number" value="47"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Pelennor. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While at least 1 enemy is in the staging area, progress cannot be placed on locations in the staging area. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if it has the Harad trait)."/>
+  </card>
+  <card id="bf56e98f-1aa5-4e79-a116-d99bf2408e07" name="Fire-filled Trench" size="EncounterCard">
+    <property name="Card Number" value="48"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Pelennor. Siege. "/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Forced: When a player plays an event that would cancel the effects of a treachery card just revealed from the encounter deck, cancel the effects of that event. Then, discard Fire-filled Trench. "/>
+  </card>
+  <card id="b5afe22c-f57f-4e26-993f-ef40fba8e105" name="Siege Tower" size="EncounterCard">
+    <property name="Card Number" value="49"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Siege. "/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Siege Tower is in the staging area, it gains Archery 3. Forced: After Siege Tower becomes the active location, shuffle the encounter discard pile into the encounter deck and discard cards from the top until an enemy is discarded. Add the discarded enemy to the staging area. "/>
+  </card>
+  <card id="9be86dec-0c44-4468-ac29-260dedaca54b" name="The Black Serpent" size="EncounterCard">
+    <property name="Card Number" value="50"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad. "/>
+    <property name="Engagement Cost" value="38"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="5"/>
+    <property name="Victory Points" value="4"/>
+    <property name="Text" value="Cannot have attachments or be attacked by more than 1 character at a time. When Revealed: The Black Serpent makes an immediate attack against the first player. "/>
+  </card>
+  <card id="ae16b39f-ed64-4aa9-b6b8-1fbfbda70e6f" name="War Mumak" size="EncounterCard">
+    <property name="Card Number" value="51"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad. Creature. "/>
+    <property name="Keywords" value="Archery 2. "/>
+    <property name="Engagement Cost" value="46"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="9"/>
+    <property name="Victory Points" value="4"/>
+    <property name="Text" value="Cannot have attachments or take more than 3 damage each round. Forced: When War Mumak is defeated, reduce each player’s threat by 4. "/>
+  </card>
+  <card id="097b7d54-bfa9-4b13-a1b8-337b03cac21d" name="Southron Champion" size="EncounterCard">
+    <property name="Card Number" value="52"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Harad. "/>
+    <property name="Engagement Cost" value="34"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Forced: After Southron Champion is dealt a shadow card with no shadow effect, either deal 3 damage to Minas Tirith, or it makes an additional attack after this one. "/>
+    <property name="Shadow" value="Shadow: Deal 1 damage to Minas Tirith."/>
+  </card>
+  <card id="b8d832c5-e9f8-4690-a60c-07c09980ea27" name="Morgul Captain" size="EncounterCard">
+    <property name="Card Number" value="53"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Mordor. "/>
+    <property name="Keywords" value="Peril. "/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="When Revealed: Put the topmost Orc enemy in the discard pile into play engaged with you. "/>
+    <property name="Shadow" value="Shadow: If this attack destroys a character, return attacking enemy to the staging area."/>
+  </card>
+  <card id="83d7214f-d8ae-47f8-bd0a-c48f9a187568" name="Orc of the Eye" size="EncounterCard">
+    <property name="Card Number" value="54"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Mordor. "/>
+    <property name="Keywords" value="Peril. Archery 1. "/>
+    <property name="Engagement Cost" value="40"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="When Revealed: Either deal 2 damage to a hero you control, or deal 2 damage to Minas Tirith. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if it is an Orc)."/>
+  </card>
+  <card id="d7a51190-1d0e-4363-b71d-6bb44a133e1b" name="Mordor Orc" size="EncounterCard">
+    <property name="Card Number" value="55"/>
+    <property name="Quantity" value="5"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Orc. Mordor. "/>
+    <property name="Keywords" value="Surge.  "/>
+    <property name="Engagement Cost" value="30"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="While Minas Tirith is in play, undefended damage dealt by Mordor Orc must be assigned to Minas Tirith. "/>
+    <property name="Shadow" value="Shadow: If Minas Tirith is in play, engage Mordor Orc and deal it a shadow card."/>
+  </card>
+  <card id="a531dc43-7feb-4e63-96ad-a33cdb3b717a" name="The Rammas is Breached" size="EncounterCard">
+    <property name="Card Number" value="56"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Each player searches the encounter deck and discard pile for an enemy and puts it into play engaged with him. "/>
+    <property name="Shadow" value="Shadow: Either deal 3 damage to Minas Tirith, or attacking enemy makes an additional attack after this one."/>
+  </card>
+  <card id="6e85113d-a2a6-44a7-895c-ca5115f7b7d2" name="Fell Beast" size="EncounterCard">
+    <property name="Card Number" value="57"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Morgul. "/>
+    <property name="Keywords" value="Surge. "/>
+    <property name="Text" value="When Revealed: Attach to a Nazgul enemy. Limit 1 per enemy. (Counts as a Mount attachment with the text: “Attached enemy gets +1 $, +1 Û, +1 Ú and -10 engagement cost. Forced: At the end of the round, return attached enemy to the staging area.”) "/>
+  </card>
+  <card id="9f1f5ce8-2fa6-40e3-ba7c-34fb94db014b" name="Black Dart" size="EncounterCard">
+    <property name="Card Number" value="58"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Morgul. "/>
+    <property name="Keywords" value="Peril. "/>
+    <property name="Text" value="When Revealed: Remove a hero you control from the quest and attach Black Dark to that hero. Limit 1 per hero. (Counts as a Condition attachment with the text: “Forced: At the end of the round, deal 1 damage to attached hero.”) "/>
+    <property name="Shadow" value="Shadow: If this attack damages a hero, attach Black Dart to that hero."/>
+  </card>
+  <card id="503d55b2-1f02-46d2-b672-230912c8563e" name="Spells of Ruin" size="EncounterCard">
+    <property name="Card Number" value="59"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Sorcery. "/>
+    <property name="Text" value="When Revealed: Either deal 1 damage to each exhausted character, or deal 5 damage to Minas Tirith. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û. If this attack destroys a character, deal 2 damage to Minas Tirith."/>
+  </card>
+  <card id="4a6539aa-2404-430f-94ab-0f674d965adc" name="Dread and Despair" size="EncounterCard">
+    <property name="Card Number" value="60"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Sorcery. "/>
+    <property name="Keywords" value="Peril. Doomed 1. "/>
+    <property name="Text" value="When Revealed: Discard an ally you control. Until the end of the phase, add 1 to the total $ in the staging area for each ally in your discard pile. "/>
+    <property name="Shadow" value="Shadow: Discard a non-objective attachment you control."/>
+  </card>
+  <card id="70e85866-2f0a-4f4b-b39d-34d36adfc7ab" name="Shadow of Mordor" size="EncounterCard">
+    <property name="Card Number" value="61"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Sorcery. "/>
+    <property name="Keywords" value="Doomed 1. "/>
+    <property name="Text" value="When Revealed: Each player deals 1 damage to a hero he controls. Until the end of the round, treat the printed text box of each damaged character as if it were blank, except for Traits. "/>
+  </card>
+  <card id="0c030b4b-1012-4b80-a942-0177e3923903" name="Wraith on Wings" size="EncounterCard">
+    <property name="Card Number" value="62"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Nazgul. Mordor. "/>
+    <property name="Engagement Cost" value="45"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="12"/>
+    <property name="Victory Points" value="5"/>
+    <property name="Text" value="Setup: Add Wraith on Wings to the staging area. Cannot have non-Morgul attachments. Wraith on Wings gets +1 $ and -1 engagement cost for each resource on it. (Limit 5.) Forced: At the beginning of the quest phase, place 1 resource on Wraith on Wings. "/>
+  </card>
+  <card id="2878bd63-b20b-419a-85a2-dff419864e08" name="The Forbidden Door" size="QuestCard">
+    <property name="Card Number" value="63"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Set The Stone of Erech and Army of the Dead aside, out of play. Each player attaches a copy of Overcome by Fear to his threat dial. Remove each unattached copy of Overcome by Fear from the game. "/>
+    <property name="Setup" value="tttttttt"/>
+    <alternate name="The Forbidden Door" type="B">
+      <property name="Encounter Set" value="The Passing of the Grey Company"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="When Revealed: Each player may add 1 resource to the resource pool of each hero he controls. Each player who does so must raise his threat by 3. Forced: At the end of the planning phase, discard all cards in each player’s hand and advance to stage 2A. "/>
+    </alternate>
+  </card>
+  <card id="820e2015-fc9c-4547-8e93-d4eb7cd79691" name="The Paths of the Dead" size="QuestCard">
+    <property name="Card Number" value="64"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Each player searches the encounter deck for a different location and adds it to the staging area. Shuffle the encounter deck. "/>
+    <property name="Setup" value="--------"/>
+    <alternate name="The Paths of the Dead" type="B">
+      <property name="Encounter Set" value="The Passing of the Grey Company"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="X is the threat of the player with the highest threat. Each player cannot reduce his threat below his initial threat level. Forced: At the beginning of the planning phase each player must choose: either raise your threat by 1, or you cannot play cards this phase. "/>
+    </alternate>
+  </card>
+  <card id="90203b8d-a359-4f18-8314-12815090a9d0" name="The Dead are Following" size="QuestCard">
+    <property name="Card Number" value="65"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Add The Stone of Erech and Army of the Dead (enemy side faceup) to the staging area. Each player may raise his threat by 3 to detach Overcome by Fear from his threat dial and set it aside, out of play.  "/>
+    <alternate name="The Dead are Following" type="B">
+      <property name="Encounter Set" value="The Passing of the Grey Company"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="5"/>
+      <property name="Text" value="While Stone of Erech is the active location, each Oathbreaker enemy loses the Phantom keyword and gets -20 engagement cost. When The Stone of Erech leaves play as an explored location, the players win the game. "/>
+    </alternate>
+  </card>
+  <card id="c444788b-73ea-4729-a07a-593220479639" name="The Passing of the Grey Company">
+    <property name="Card Number" value="66"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Campaign"/>
+    <property name="Traits" value="The Lord of the Rings Part 13"/>
+    <property name="Text" value="Setup: Each player may change heroes without incurring the +1 threat penalty. The first player may raise each player's threat by 1 to search his deck for Andúril and add it to his hand. Remove each burden with the following burden set icons from the encounter deck:"/>
+    <alternate name="The Passing of the Grey Company" type="B">
+      <property name="Encounter Set" value="The Passing of the Grey Company"/>
+      <property name="Type" value="Campaign"/>
+      <property name="Text" value="Resolution: Add each copy of Overcome by Fear attached to a player's threat dial to the campaign pool and record the name of each player it was attached to. If Army of the Dead is in the victory display, add the Army of the Dead boon to the campaign pool. The players have earned each card added to the campaign pool."/>
+    </alternate>
+  </card>
+  <card id="a25b4139-f1d0-4466-83f2-f06fa3e0c30b" name="Army of the Dead" size="EncounterCard">
+    <property name="Card Number" value="67"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead. Oathbreaker. "/>
+    <property name="Keywords" value="Phantom."/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="8"/>
+    <property name="Victory Points" value="6"/>
+    <property name="Text" value="Immune to player card effects. X is twice the number of players in the game. Forced: When Army of the Dead attacks, you must either attach a set aside Overcome by Fear to your threat dial, or discard an ally you control. "/>
+  </card>
+  <card id="ca60c111-b903-4859-9825-0958cfd7b7a5" name="Army of the Dead" size="EncounterCard">
+    <property name="Card Number" value="68"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Sphere" value="Boon"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Willpower" value="4"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Immune to player card effects. The first player gains control of Army of the Dead. If Army of the Dead leaves play, remove it from the game."/>
+  </card>
+  <card id="7ea102d6-77de-431f-9475-c9be874a5195" name="Attack on Pelargir" size="QuestCard">
+    <property name="Card Number" value="69"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Add The Corsair Fleet (Corsair side faceup) and Great Corsair Ship to the staging area. Each player searches the encounter deck for a Ship location and adds it to the staging area. Shuffle the encounter deck.  "/>
+    <property name="Setup" value="ssst"/>
+    <alternate name="Attack on Pelargir" type="B">
+      <property name="Encounter Set" value="The Siege of Gondor"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="20"/>
+      <property name="Text" value="Each Ship location in the staging area is immune to player card effects. The players cannot defeat this stage while Great Corsair Ship is in play. When this stage is defeated, the players win the game. "/>
+    </alternate>
+  </card>
+  <card id="949e2607-cbb5-4ae3-af26-f9d7e00e09d2" name="The Siege of Gondor">
+    <property name="Card Number" value="70"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Campaign"/>
+    <property name="Traits" value="The Lord of the Rings Part 14"/>
+    <property name="Text" value="Setup: The first player may raise each player's threat by 1 to search his deck for Anduril and add it to his hand. Remove each burden with the following burden set icons from the encounter deck:"/>
+    <property name="Setup" value="----"/>
+    <alternate name="The Siege of Gondor" type="B">
+      <property name="Encounter Set" value="The Siege of Gondor"/>
+      <property name="Type" value="Campaign"/>
+      <property name="Text" value="Resolution: Count the number of resources on The Corsair Fleet and record that number in the notes section of the quest log. Remove Army of the Dead from the campaign pool."/>
+    </alternate>
+  </card>
+  <card id="0140d146-771e-4f19-9de8-d7cf0b4d8268" name="The Corsair Fleet" size="EncounterCard">
+    <property name="Card Number" value="71"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Corsair. "/>
+    <property name="Text" value="Forced: At the beginning of the staging step, place 1 resource on this objective. Then, each player must choose: either reveal an encounter card, or assign X damage among characters he controls. X is the number of resources on this objective. ...ships of great draught with many oars, and with black sails bellying in the breeze. -The Return of the King "/>
+  </card>
+  <card id="b002c7a6-f827-4a7d-8432-c3f2f995089e" name="The Corsair Fleet" size="EncounterCard">
+    <property name="Card Number" value="72"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Gondor."/>
+    <property name="Text" value="Forced: At the beginning of the quest phase, remove 1 resource from The Corsair Fleet. Then, if there are no resources here, the first player takes control of Aragorn and adds The Corsair Fleet to the victory display."/>
+  </card>
+  <card id="77a7f095-bd59-45a1-a866-d58e17e3bd6d" name="The Garrison of Gondor" size="QuestCard">
+    <property name="Card Number" value="73"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Set Minas Tirith, Grond, The Witch-king, and each copy of Wraith on Wings aside, out of play. Search the encounter deck for a copy of Pelennor Field and make it the active location. Shuffle the encounter deck. The players may attach Esquire of Rohan and Esquire of Gondor to different heroes. "/>
+    <property name="Setup" value="ttttttttlttt"/>
+    <alternate name="The Garrison of Gondor" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="2"/>
+      <property name="Text" value="Skip the quest phase and combat phase. Forced: At the end of the planning phase, place 1 progress here. "/>
+    </alternate>
+  </card>
+  <card id="58616050-8a7f-4a9b-a8dc-e0d09e383741" name="Retreat from Osgiliath" size="QuestCard">
+    <property name="Card Number" value="74"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Each player adds 1 set aside Wraith on Wings to the staging area and reveals an encounter card. Starting with the first player, each player discards cards from the top of his deck until he discards an ally that is not in play. Put the discarded ally into play in the staging area and treat its text box as if it were blank until the end of the phase.  "/>
+    <alternate name="Retreat from Osgiliath" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="X is the total cost of each ally in the staging area.  Allies in the staging area are treated as if their text box is blank, are immune to player card effects, and are under no player’s control. Forced: At the end of the round, assign damage among allies in the staging area equal to the number of enemies in the staging area. "/>
+    </alternate>
+  </card>
+  <card id="98a48eec-841f-48da-83e7-fa148a03de8b" name="The White City Besieged" size="QuestCard">
+    <property name="Card Number" value="75"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Each player takes control of each ally he owns in the staging area and exhausts it. The first player adds Minas Tirith, Grond, and The Witch-king (Captain side faceup) to the staging area. Each other player searches the encounter deck and discard pile for a different enemy and adds it to the staging area.  "/>
+    <alternate name="The White City Besieged" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="4"/>
+      <property name="Text" value="Assault.  The White City Besieged gets +4 quest points for each player.  The players cannot travel to Pelennor locations. Forced: When an enemy is destroyed, place progress on this stage equal to its total $ (progress must be placed on any active location first). "/>
+    </alternate>
+  </card>
+  <card id="0507932f-0030-4763-8478-29bb407103d4" name="Rohan has Come!" size="QuestCard">
+    <property name="Card Number" value="76"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="4"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Set The Witch-king aside, out of play. Each player searches the top 10 cards of his deck for an ally that matches the sphere of a hero he controls and puts it into play under his control. Each player shuffles his deck. "/>
+    <alternate name="Rohan has Come!" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="4"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="Progress that would be placed on this stage by questing successfully is instead assigned as damage among enemies in play. (Progress must be placed on the active location first.) Forced: At the end of the quest phase, advance to stage 5A. "/>
+    </alternate>
+  </card>
+  <card id="7367d16a-2b23-4a95-9050-266e93d8ab50" name="Fighting in the Fields" size="QuestCard">
+    <property name="Card Number" value="77"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="5"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: The first player adds The Witch-king to the staging area (Sorcerer side faceup). Then, he searches the encounter deck and discard pile for a Fell Beast and attaches it to The Witch-king, if able. Each other player reveals an encounter card. "/>
+    <alternate name="Fighting in the Fields" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="5"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Quest Points" value="20"/>
+      <property name="Text" value=" The Witch-king and encounter cards dealt to The Witch-king are immune to player card effects. Forced: When an enemy attacks and destroys a character, deal 1 damage to Minas Tirith. The players cannot defeat this stage unless Aragorn is in play and The Witch-king is in the victory display. If the players defeat this stage, they win the game. "/>
+    </alternate>
+  </card>
+  <card id="10557685-71b2-4f2e-b831-4b19d023ee46" name="The Battle of the Pelennor Fields">
+    <property name="Card Number" value="78"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Campaign"/>
+    <property name="Traits" value="The Lord of the Rings Part 15"/>
+    <property name="Text" value="Setup: Set each Harad enemy recorded in the campaign log aside, out of play. The first player attaches Andúril and Banner of Elendil to Aragorn and sets him aside, out of play. Add The Corsair Fleet to the staging area (Gondor side faceup) and place X resources on it, where X is the number recorded in the campaign log. Remove each burden with the following burden set icons from the encounter deck, then flip this card over:"/>
+    <property name="Setup" value="-----------ttttttttttttttttts"/>
+    <alternate name="The Battle of the Pelennor Fields" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Campaign"/>
+      <property name="Text" value="Forced: When the players advance to stage 5B, add each set aside Harad enemy to the staging area.&#10;Resolution: Add 1 copy, per player, of Wraith on Wings to the campaign pool. The players have earned those burdens. If Esquire of Gondor, or Esquire of Rohan, is attached to a hero, that hero's controller has earned that boon."/>
+    </alternate>
+  </card>
+  <card id="15734584-04cf-41b7-8a86-d1a435d6f8dc" name="The Witch-king" size="EncounterCard">
+    <property name="Card Number" value="79"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Nazgûl. Captain. "/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="6"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="6"/>
+    <property name="Health" value="14"/>
+    <property name="Victory Points" value="6"/>
+    <property name="Text" value="Immune to player card effects.  Cannot be optionally engaged or take damage. Forced: At the beginning of the quest phase, discard cards from the encounter deck until an enemy is discarded. Add the discarded enemy to the staging area. "/>
+    <alternate name="The Witch-king" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Unique" value="‰"/>
+      <property name="Type" value="Enemy"/>
+      <property name="Traits" value="Nazgûl. Sorcerer."/>
+      <property name="Engagement Cost" value="50"/>
+      <property name="Threat" value="6"/>
+      <property name="Attack" value="6"/>
+      <property name="Defense" value="6"/>
+      <property name="Health" value="14"/>
+      <property name="Text" value="Only the engaged player can declare attackers against The Witch-king.&#10;&#10;Forced: At the beginning of the envounter phase, The Witch-king engages the first player. Then, it makes an immediate attack."/>
+    </alternate>
+  </card>
+  <card id="c7ef7b6e-4346-4b4c-a9fa-2b42e3c2ab5c" name="The Passing of the Grey Company">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="The Passing of the Grey Company"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <property name="Text" value="Phantom: During the &quot;determine combat damage&quot; step of an attack made by an enemy with Phantom, if any damage would be dealt by the attack, it is cancelled and the defending player raises his threat by an equal amount instead."/>
+    <alternate name="The Passing of the Grey Company" type="B">
+      <property name="Encounter Set" value="The Passing of the Grey Company"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+  <card id="6f9211cc-a523-4a0f-9d44-c757e2f9947b" name="The Siege of Gondor">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="The Siege of Gondor"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <alternate name="The Siege of Gondor" type="B">
+      <property name="Encounter Set" value="The Siege of Gondor"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+  <card id="3820df8d-531b-4c37-815d-536f645bb289" name="The Battle of the Pelennor Fields">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <property name="Text" value="Assault: Progress cannot be placed on the quest stage by player card effects or by questing successfully. However, progress can still be placed on the active location as normal.&#10;When the players quest unsuccessfully, each player does not raise his threat. Instead, the players must deal X damage to Minas Tirith. X is the amount by which the total threat in the staging area was greater than the total willpower of each character committed to the quest."/>
+    <alternate name="The Battle of the Pelennor Fields" type="B">
+      <property name="Encounter Set" value="The Battle of the Pelennor Fields"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+ </cards>
+</set>

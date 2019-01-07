@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="A Storm on Cobas Haven" id="b438c6f4-a0ad-4879-a473-71d3f34c92cb" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="5205f00e-c538-4b5e-976c-5db99d33bc4e" name="Na’asiyah">
+    <property name="Card Number" value="109"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Corsair. Warrior."/>
+    <property name="Cost" value="8"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Resources in Na’asiyah’s resource pool cannot be used to pay for allies. Action: While Na’asiyah is attacking or defending, spend 1 resource from her resource pool to give her +2 Û or +2 Ú for this attack."/>
+  </card>
+  <card id="5c6b9d23-79fe-482c-8122-66b185cd476e" name="Rune-master">
+    <property name="Card Number" value="110"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Title."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attach to a Ranger or Ì hero. Response: After a Signal attachment is attached to a hero, exhaust Rune-master to add 1 resource to that hero’s resource pool."/>
+  </card>
+  <card id="b09288fe-e0a4-4395-8345-4505530fbe4c" name="Terrible to Behold">
+    <property name="Card Number" value="111"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Response: After you declare a Noble character as a defender against an attack made by an engaged enemy, return that enemy to the staging area. Then, cancel the attack."/>
+  </card>
+  <card id="3b736ea1-aaeb-4ad9-815c-d91488a82896" name="Veteran Sword-elf">
+    <property name="Card Number" value="112"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Noldor. Warrior."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Veteran Sword-elf gains +1 Û and +1 Ú for each copy of Veteran Sword-elf in your discard pile."/>
+  </card>
+  <card id="9128a94e-546a-4b89-8bec-6c2739af0c6e" name="Vigilant Guard">
+    <property name="Card Number" value="113"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Skill. "/>
+    <property name="Cost" value="3"/>
+    <property name="Text" value="Attach to a Warrior character. Limit 1 per character. Attached character gets +2 hit points. Response: When another character would be assigned any amount of damage, place 1 of that damage on attached character instead."/>
+  </card>
+  <card id="28fcf3a8-febd-46bb-9a80-89dfe762f03f" name="Knife-work">
+    <property name="Card Number" value="114"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Action: Choose a player. Each enemy engaged with that player gets –1 Ú until the end of the phase. Then, the players as a group may spend 2 Î resources to have the chosen player draw 1 card each time he attacks and destroys an enemy this phase."/>
+  </card>
+  <card id="9cafb8f6-1718-4f7f-a37f-9209ed68a92a" name="Linhir Sea-captain">
+    <property name="Card Number" value="115"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Gondor."/>
+    <property name="Cost" value="3"/>
+    <property name="Willpower" value="2"/>
+    <property name="Attack" value="0"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Response: After you play Linhir Sea-captain from your hand, if you paid all of its resource cost from a single hero’s resource pool, both that hero and Linhir Sea-captain do not exhaust to quest this round."/>
+  </card>
+  <card id="778cf45f-cc72-424d-a7b3-09373328dd1b" name="Windfola">
+    <property name="Card Number" value="116"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Mount."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attach to a Ê hero, or to Éowyn. Restricted. Attached character gets +1 Ò. Response: After attached character is removed from the quest, exhaust Windfola to commit attached hero to the quest."/>
+  </card>
+  <card id="fc6e412d-eeca-432e-bd91-378c1ae72c9f" name="Ioreth">
+    <property name="Card Number" value="117"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Gondor. Healer."/>
+    <property name="Cost" value="0"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="0"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="1"/>
+    <property name="Text" value="Cannot attack or defend. Action: Spend 1 Î resource to exhaust Ioreth. Then, heal 3 points of damage on a character. Any player may trigger this action."/>
+  </card>
+  <card id="16381c8d-c437-4bde-b7da-284c5216bcb6" name="The Houses of Healing">
+    <property name="Card Number" value="118"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Cost" value="5"/>
+    <property name="Text" value="You may exhaust any number of Healer characters you control as part of this card’s cost. Reduce the cost to play this card by 1 for each Healer character you exhaust in this way. Refresh Action: Choose a hero in any player's discard pile. Put that hero into play under its owner's control, with 1 damage token on it."/>
+  </card>
+  <card id="2843c312-f8c7-4b07-ba60-2372a3c658c4" name="Justice Shall Be Done">
+    <property name="Card Number" value="119"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Cost" value="0"/>
+    <property name="Victory Points" value="1"/>
+    <property name="Text" value="Limit 1 per deck. Planning Action: Add Justice Shall Be Done to the victory display to draw 3 cards and add 3 resources to the resource pool of each hero you control. At the end of the round, you are eliminated from the game."/>
+  </card>
+  <card id="d0bf9c82-d626-4602-a383-4a5660a08c5f" name="Outmaneuver the Enemy" size="QuestCard">
+    <property name="Card Number" value="120"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="Setup: Prepare the Corsair deck. Players prepare their fleet. Set each copy of Dol Amroth Warship aside, out of play. Search the encounter deck for Raider Flagship and 1 copy of Scouting Ship, and add them to the staging area. Search the encounter deck for a Dol Amroth objective of your choice and add it to the staging area. Then, shuffle the encounter deck and resolve the Guarded keyword on that objective."/>
+    <property name="Setup" value="ttsstttttsssst"/>
+    <alternate name="Outmaneuver the Enemy" type="B">
+      <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+      <property name="Type" value="Quest"/>
+      <property name="Quest Points" value="10"/>
+      <property name="Text" value="Sailing. Forced: When a Ship enemy engages you, if you are off-course (¼, ½, or ¾), deal 2 damage to a Ship objective you control. If you are on-course (º), deal 2 damage to that Ship enemy instead. If your current heading is at the worst setting (¾), Raider Flagship gets –50 engagement cost."/>
+    </alternate>
+  </card>
+  <card id="e3adad02-fa99-4905-bb20-d414ba76f75f" name="Battle in the Bay" size="QuestCard">
+    <property name="Card Number" value="121"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: Search the encounter deck and discard pile for a Ship enemy and add it to the staging area (2 Ship enemies instead if there are 3 or more players in the game). Shuffle the encounter deck. For each unguarded objective in the staging area, attach a non-unique Ship enemy in the staging area to that objective, guarding it."/>
+    <alternate name="Battle in the Bay" type="B">
+      <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+      <property name="Type" value="Quest"/>
+      <property name="Quest Points" value="16"/>
+      <property name="Text" value="Sailing. If your current heading is at the worst setting (¾), Raider Flagship gets –50 engagement cost. You cannot advance while at least 1 objective is guarded by an encounter."/>
+    </alternate>
+  </card>
+  <card id="233a2687-04a8-4c18-90cc-e90b9574b282" name="Break Through the Fleet!" size="QuestCard">
+    <property name="Card Number" value="122"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="When Revealed: The players make engagement checks against each enemy in the staging area. Raider Flagship gets –50 engagement cost during these engagement checks."/>
+    <alternate name="Break Through the Fleet!" type="B">
+      <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+      <property name="Type" value="Quest"/>
+      <property name="Quest Points" value="5"/>
+      <property name="Text" value="Sailing. Raider Flagship gets –50 engagement cost. Break Through the Fleet! has +5 quest points for each Ship enemy in play. If this stage is defeated, or if Raider Flagship is in the victory display, the players have broken through the Corsair fleet and win the game!"/>
+    </alternate>
+  </card>
+  <card id="b585f28e-7612-4f07-83f7-0fed8d391e3d" name="Dol Amroth Warship" size="EncounterCard">
+    <property name="Card Number" value="123"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Gondor. Ship."/>
+    <property name="Text" value="Immune to player card effects.  If you are on-course (º),  Dol Amroth Warship gets +2 Ò, +2 Û, and +2 Ú.&#10;Forced: When Dol Amroth Warship is destroyed, set it aside, out of play."/>
+  </card>
+  <card id="276e1411-be34-44fa-af2b-ebe9b36541f0" name="Raider Flagship" size="EncounterCard">
+    <property name="Card Number" value="124"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 1. "/>
+    <property name="Engagement Cost" value="50"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="18"/>
+    <property name="Victory Points" value="20"/>
+    <property name="Text" value="Immune to player card effects. Only Ship objectives can be declared as attackers against Raider Flagship. Forced: At the beginning of the encounter phase, the engaged player reveals the top card of the Corsair deck and engages it."/>
+  </card>
+  <card id="026a36ed-0979-4422-a581-a4decdc3c102" name="Corsair Skirmisher" size="EncounterCard">
+    <property name="Card Number" value="125"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 1."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Immune to player card effects. Response: After Corsair Skirmisher is destroyed as an enemy, the engaged player may discard allies he controls with a total of at least 3 Ò to take control of Corsair Skirmisher as a Ship-Objective with Ò equal to its $. (It loses the Ship-Enemy card type and gains the Ship-Objective card type)."/>
+  </card>
+  <card id="96f8534a-2683-4c8f-981d-daa470b792b7" name="Siege Ship" size="EncounterCard">
+    <property name="Card Number" value="126"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Archery 2. "/>
+    <property name="Engagement Cost" value="46"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="5"/>
+    <property name="Health" value="7"/>
+    <property name="Text" value="Cannot have attachments. While Siege Ship is in the staging area, it gains: “Forced: At the end of the quest phase, if Siege Ship is not guarding an objective and there is an unguarded objective in the staging area, attach Siege Ship to that objective, guarding it.”"/>
+  </card>
+  <card id="0d74f863-83c9-4342-ac98-5bbaae0a573f" name="Heavy Cruiser" size="EncounterCard">
+    <property name="Card Number" value="127"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Keywords" value="Boarding 2. "/>
+    <property name="Engagement Cost" value="42"/>
+    <property name="Threat" value="5"/>
+    <property name="Attack" value="7"/>
+    <property name="Defense" value="5"/>
+    <property name="Health" value="8"/>
+    <property name="Text" value="Cannot have attachments. When Revealed: Search the encounter deck and discard pile for a Dol Amroth objective and add it to the staging area. Then, attach Heavy Cruiser to that objective, guarding it. Shuffle the encounter deck."/>
+  </card>
+  <card id="a2b6cb8b-dacf-4c82-9097-2206610192ac" name="Coast of Anfalas" size="EncounterCard">
+    <property name="Card Number" value="128"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="If you are off-course (¼, ½, or ¾), Coast of Anfalas gets +2 $. Travel: Exhaust a Ship objective to travel here. "/>
+    <property name="Shadow" value="Shadow: If you are off-course (¼, ½, or ¾), attacking enemy gets +2 Û."/>
+  </card>
+  <card id="d9bde488-6391-492f-b3df-6dd6dbe4f9e9" name="Belfalas Islet" size="EncounterCard">
+    <property name="Card Number" value="129"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Victory Points" value="1"/>
+    <property name="Text" value="You cannot travel to Belfalas Islet if you are off-course (¼, ½, or ¾). Response: After you travel to Belfalas Islet, choose a Ship enemy that is not guarding an objective. While Belfalas Islet is the active location, the chosen enemy is considered to be out of play."/>
+  </card>
+  <card id="c46688bb-24ac-4ee9-a23e-2bd481e8e56c" name="Cobas Haven" size="EncounterCard">
+    <property name="Card Number" value="130"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Cobas Haven is the active location, reduce the Boarding X value on each Ship enemy by 1."/>
+    <property name="Shadow" value="Shadow: If you are off-course, attacking enemy gets +2 Û."/>
+  </card>
+  <card id="aba39503-0700-40c9-9c06-729e82bf67fe" name="Ramming Speed!" size="EncounterCard">
+    <property name="Card Number" value="131"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: If you are off-course (¼, ½, or ¾), the engaged Ship enemy with the highest Û makes an immediate attack. Until the end of the phase, add 1 to the total $ in the staging area for each damage dealt by this attack. If no attack is made as a result of this effect, Ramming Speed! gains doomed 2."/>
+  </card>
+  <card id="783ecb94-e005-4ff7-8bc3-76196bba9249" name="Taking on Water" size="EncounterCard">
+    <property name="Card Number" value="132"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Attach to a Ship objective. (Counts as a Condition attachment with the text: “Forced: When attached objective exhausts, deal 2 damage to it. Action: Exhaust 3 characters you control to discard Taking on Water.”)"/>
+    <property name="Shadow" value="Shadow: If defending character is a Ship, attach Taking on Water to it."/>
+  </card>
+  <card id="4d31f077-9f08-435b-ad3c-95d5b7967fa4" name="The Raiders’ Assault" size="EncounterCard">
+    <property name="Card Number" value="133"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Choose a Ship enemy that is not currently guarding an objective. Attach that enemy to an unguarded objective in the staging area, guarding it (return that enemy to the staging area if it is engaged). If no Ship enemy is returned to the staging area by this effect, The Raiders’ Assault gains surge.󲂐"/>
+  </card>
+  <card id="434cf78e-2e8e-4d79-9662-eb50e33bc3f9" name="Sea-ward Tower" size="EncounterCard">
+    <property name="Card Number" value="134"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Dol Amroth."/>
+    <property name="Keywords" value="Guarded."/>
+    <property name="Text" value="If Sea-ward Tower is free of encounters, add it to the staging area, controlled by the players. While the players control Sea-ward Tower, look at 2 additional cards from the top of the encounter deck during each Sailing test."/>
+  </card>
+  <card id="d198aa74-21ec-462a-ac1a-f9c2fcf526cb" name="Tower of the Gull" size="EncounterCard">
+    <property name="Card Number" value="135"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Dol Amroth."/>
+    <property name="Keywords" value="Guarded."/>
+    <property name="Text" value="If Tower of the Gull is free of encounters, add it to the staging area, controlled by the players. Combat Action: If the players control Tower of the Gull, exhaust it to deal 2 damage to a non-unique Ship enemy. Any player may trigger this action."/>
+  </card>
+  <card id="f410480c-ac41-431a-8db1-693746a7570e" name="The Beacon" size="EncounterCard">
+    <property name="Card Number" value="136"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Dol Amroth."/>
+    <property name="Keywords" value="Guarded."/>
+    <property name="Text" value="If The Beacon is free of encounters, add it to the staging area, controlled by the players. Planning Action: If the players control The Beacon, exhaust it and spend 5 resources to take control of 1 set aside copy of Dol Amroth Warship. Any player may trigger this action."/>
+  </card>
+  <card id="52b5e077-36f2-4c13-89fb-4f7b3d73463b" name="Tower of the Heron" size="EncounterCard">
+    <property name="Card Number" value="137"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Dol Amroth."/>
+    <property name="Keywords" value="Guarded."/>
+    <property name="Text" value="If Tower of the Heron is free of encounters, add it to the staging area, controlled by the players. While Tower of the Heron is controlled by the players, reduce the archery total by 4."/>
+  </card>
+  <card id="8ed3dcd6-b234-4ab2-b6c4-1eae855d5835" name="A Storm on Cobas Haven">
+    <property name="Card Number" value="999"/>
+    <property name="Quantity" value="0"/>
+    <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+    <property name="Type" value="Rules"/>
+    <property name="Keywords" value="Rulesheet Card 1"/>
+    <alternate name="A Storm on Cobas Haven" type="B">
+      <property name="Encounter Set" value="A Storm on Cobas Haven"/>
+      <property name="Type" value="Rules"/>
+      <property name="Keywords" value="Rulesheet Card 2"/>
+    </alternate>
+  </card>
+ </cards>
+</set>

@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="The Withered Heath" id="4d29e026-621a-4774-8a68-cbfe40987d7b" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="1.0.0">
+ <cards>
+  <card id="a8709b3e-8ea0-45bd-9ccd-b48797c7012b" name="Grimbeorn the Old">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Hero"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Beorning. Warrior."/>
+    <property name="Keywords" value="Sentinel."/>
+    <property name="Cost" value="11"/>
+    <property name="Willpower" value="0"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Response: After Grimbeorn the Old defends an enemy attack, spend 1 resource from his pool to declare him as an attacker against that enemy (and resolve his attack). That enemy gets -2 Ú for this attack. "/>
+  </card>
+  <card id="9ea49df7-4c1f-432a-ba95-c0576fc62e89" name="Guardian of Esgaroth">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Dale."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="1"/>
+    <property name="Text" value="Guardian of Esgaroth gets +1 Ò, +1 Û, +1 Ú and +1 hit point for each different player card attachment it has. (Limit +3 to each.) "/>
+  </card>
+  <card id="8a0391d0-33c2-4881-82b6-1d9d824c3536" name="Squire’s Helm">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Leadership"/>
+    <property name="Traits" value="Item. Armor."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Attach to an ally. Restricted. Limit 1 per ally. Attached ally gets +2 hit points. "/>
+  </card>
+  <card id="8a13bd41-a0e4-4adf-a983-9b83c7805c33" name="Woodman’s Clearing">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Traits" value="Condition."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Attach to a location. Limit 1 per location. Response: When attached location leaves play as an explored location, the first player reduces his threat by 3. "/>
+  </card>
+  <card id="24e988d6-f8af-4bd0-80ab-5e959463a22a" name="The Hidden Way">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Lore"/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Response: At the beginning of the quest phase, search the top 5 cards of the encounter deck for a location and make it the active location, returning any previous active location to the staging area. Then, reveal 1 less encounter card this phase (to a minimum of 0). Shuffle the encounter deck. "/>
+  </card>
+  <card id="c4061868-f717-4735-9884-253385437f3b" name="Beorning Skin-changer">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Traits" value="Beorning."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Combat Action: Choose a Beorning ally with printed cost 3 or more in your hand or discard pile. Discard Beorning Skin-changer to put that ally into play. "/>
+  </card>
+  <card id="db0f9443-91be-4a49-a23e-a4d2982c6070" name="Beorn’s Rage">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Event"/>
+    <property name="Sphere" value="Tactics"/>
+    <property name="Cost" value="2"/>
+    <property name="Text" value="Response: After a Beorning character is declared as an attacker or defender against an enemy, that enemy gets -2 Û and -2 Ú. "/>
+  </card>
+  <card id="27c06f1e-7be0-417e-9029-f5a71c93e3c5" name="Long Lake Fisherman">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Ally"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Dale."/>
+    <property name="Cost" value="2"/>
+    <property name="Willpower" value="1"/>
+    <property name="Attack" value="1"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="2"/>
+    <property name="Text" value="Response: After Long Lake Fisherman enters play, name a number. Then, search the top 5 cards of your deck for a card whose printed cost is equal to that number and add it to your hand. Shuffle your deck. "/>
+  </card>
+  <card id="408b4577-894a-4270-b246-01776780dc69" name="Grey Cloak">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="3"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Spirit"/>
+    <property name="Traits" value="Item."/>
+    <property name="Cost" value="0"/>
+    <property name="Text" value="Attach to a Ê or Scout character. Limit 1 per character. Encounter Action: Exhaust attached character and discard Grey Cloak to choose a non-unique enemy in the staging area. That enemy does not make engagement checks against you this phase. "/>
+  </card>
+  <card id="7ab0122f-ede8-45fa-b803-619c28dfe0ce" name="The Arkenstone">
+    <property name="Card Number" value="10"/>
+    <property name="Quantity" value="3"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Attachment"/>
+    <property name="Sphere" value="Neutral"/>
+    <property name="Traits" value="Artifact. Item."/>
+    <property name="Cost" value="1"/>
+    <property name="Text" value="Guarded (enemy or locaiton). Attach to a hero. Each unique character you control gets +1 Ò. Action: Reduce your threat by 2 to attach The Arkenstone to a hero controlled by another player and raise that player’s threat by 2. (Limit once per round.) "/>
+  </card>
+  <card id="e9217231-de12-48ef-9351-f7d992643c2f" name="Cold-Drake" size="EncounterCard">
+    <property name="Card Number" value="11"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dragon."/>
+    <property name="Engagement Cost" value="10"/>
+    <property name="Threat" value="1"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="18"/>
+    <property name="Victory Points" value="6"/>
+    <property name="Text" value="Cannot have attachments or take non-combat damage. Cold-Drake gets +1 $ and +1 Ú for each Dragon Sign in the victory display. Forced: After Cold-Drake is dealt a shadow card with no shadow effect, the defending character cannot ready until the end of the round. "/>
+  </card>
+  <card id="b922eedf-eea0-471d-bc52-90becc2a0769" name="Dragon Sign" size="EncounterCard">
+    <property name="Card Number" value="12"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Objective"/>
+    <property name="Traits" value="Clue."/>
+    <property name="Text" value="Guarded (enemy).. Attached enemy or location is immune to player card effects. When Dragon Sign is free of encounters, add it to the victory display. "/>
+  </card>
+  <card id="ebde9bba-fd89-4098-ad60-9d1d4e746d23" name="Snow-troll" size="EncounterCard">
+    <property name="Card Number" value="13"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Troll."/>
+    <property name="Engagement Cost" value="35"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="5"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="9"/>
+    <property name="Text" value="Cannot have player card attachments. Forced: After Snow-troll attacks and destroys a character, return it to the staging area. "/>
+    <property name="Shadow" value="Shadow: Attacking makes an additional attack against you after this one. "/>
+  </card>
+  <card id="beedf6c6-6214-47d8-bd82-81280543b141" name="Dragon Hatchling" size="EncounterCard">
+    <property name="Card Number" value="14"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Dragon."/>
+    <property name="Engagement Cost" value="20"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="2"/>
+    <property name="Defense" value="0"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="Dragon Hatchling gets +1 Û and +1 Ú for each Dragon Sign in the victory display. "/>
+    <property name="Shadow" value="Shadow: Until the end of the phase, attacking enemy gets +1 Û and +1 Ú for each Dragon Sign in the victory display. "/>
+  </card>
+  <card id="351afed2-188b-42d4-9b3a-bccb510ae7d2" name="Mountain Pass" size="EncounterCard">
+    <property name="Card Number" value="15"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Mountain."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="While Mountain Pass is in the staging area, the ‘when revealed’ effects of Weather treachery cards cannot be canceled. "/>
+  </card>
+  <card id="ef4ae3ca-ce48-4cad-88ee-23917e9dcdcc" name="Dwarven Door" size="EncounterCard">
+    <property name="Card Number" value="16"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Mountain."/>
+    <property name="Keywords" value="Deep."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="Progress cannot be placed on Dwarven Door while it is in the staging area. "/>
+  </card>
+  <card id="15ebc613-43fc-4c9b-ac71-91840d853e60" name="Cave Entrance" size="EncounterCard">
+    <property name="Card Number" value="17"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Mountain."/>
+    <property name="Keywords" value="Deep."/>
+    <property name="Threat" value="1"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="Cave Entrance gets +1 $ for each Dragon Sign in the victory display. Travel: Raise each player’s threat by 1. "/>
+  </card>
+  <card id="80764232-a3c9-47f1-9034-9c9ac82002e4" name="Creature Den" size="EncounterCard">
+    <property name="Card Number" value="18"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Mountain. Dark."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="4"/>
+    <property name="Text" value="Response: After the players travel to Creature Den, search the Caves deck for a Dragon Sign and attach it to Creature Den as a guarded objective. Shuffle the Caves deck. Travel: Shuffle the encounter discard pile into the encounter deck and discard cards from the top until an enemy is discarded. Add that enemy to the staging area. "/>
+  </card>
+  <card id="2b158c89-59d6-40a2-af56-6db21dc62e73" name="High Falls" size="EncounterCard">
+    <property name="Card Number" value="19"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Mountain."/>
+    <property name="Keywords" value="Deep."/>
+    <property name="Threat" value="0"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="X is the number of locations in the staging area. Travel: Assign X damage among characters in play. "/>
+  </card>
+  <card id="572ba251-0abb-4a81-b38b-d695123b7219" name="Heavy Snow" size="EncounterCard">
+    <property name="Card Number" value="20"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="Doomed 1. When Revealed: Exhaust a character. Until the end of the round, characters cannot be readied by player card effects. "/>
+    <property name="Shadow" value="Shadow: Exhaust a character you control. "/>
+  </card>
+  <card id="cb64fac2-c5ea-4233-86ed-90e30181a520" name="Deadly Cold" size="EncounterCard">
+    <property name="Card Number" value="21"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="When Revealed: For each ready character a player controls, he must choose: either exhaust that character, or deal 1 damage to it. "/>
+    <property name="Shadow" value="Shadow: Attacking enemy gets +1 Û (+2 Û instead if defending character is damaged). "/>
+  </card>
+  <card id="21786f6e-9f9c-4850-9277-9ee77b6e0912" name="Searching for Dragon Sign" size="QuestCard">
+    <property name="Card Number" value="22"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="1"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="You have journeyed to the Withered Heath in search of a giant Dragon. There you discover tracks that lead you to the cold heights of the Grey Mountains. Setup: Set Cold-Drake and all four copies of Dragon Sign aside, out of play. Create the Caves deck (see insert) and set it next to the quest deck. Shuffle 2 set aside Dragon Sign objectives into the Caves deck. Shuffle the encounter deck and discard cards from the top until X locations are discarded, where X is the number of players. Add each discarded location to the staging area."/>
+    <alternate name="Searching for Dragon Sign" type="B">
+      <property name="Encounter Set" value="The Withered Heath"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="1"/>
+      <property name="Engagement Cost" value="A"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="Forced: After the active location is explored, look at the top 3 cards of the encounter deck. Reveal 1 of those cards and discard the rest.&#10;The players cannot defeat this stage unless at least 1 Dragon Sign is in the victory display. "/>
+    </alternate>
+  </card>
+  <card id="60ba0781-d051-46f0-97b1-e02fb637b94e" name="The Cold-Drake Attacks!" size="QuestCard">
+    <property name="Card Number" value="23"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="2"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="You’ve followed the Dragon tracks high up the Ered Mithrin mountain range to a sheltered hollow where you find the beast waiting for you. It lets out a roar that shakes the mountain, and rocks tumble down as it charges toward you in a rage! When Revealed: Add the set-aside Cold-Drake to the staging area."/>
+    <alternate name="The Cold-Drake Attacks!" type="B">
+      <property name="Encounter Set" value="The Withered Heath"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="2"/>
+      <property name="Engagement Cost" value="A"/>
+      <property name="Quest Points" value="3"/>
+      <property name="Text" value="Ignore the Deep keyword.&#10;Cold-Drake cannot leave the staging area (even if it has damage equal to its quest points), but it is considered to be engaged with each player.&#10;No more than 6 damage can be placed on the Cold-drake each round and it cannot have more than 18 damage.&#10;This stage cannot be defeated while Ice Drake has any hit points remaining. "/>
+    </alternate>
+  </card>
+  <card id="e70fa96c-f4c7-4d6c-ab14-41831a6eb8c8" name="Hunting the Beast" size="QuestCard">
+    <property name="Card Number" value="24"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="3"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="The injured drake retreats among the rising slopes of the Ered Mithrin and you chase after it, carefully searching each potential hiding place. When Revealed: Shuffle 2 set-aside Dragon Sign objectives into the Caves deck. Set Cold-Drake aside, out of play. (Do not remove damage tokens from it.) Shuffle the encounter discard pile into the encounter deck and discard cards from the top until X locations are discarded, where X is the number of players. Add each discarded location to the staging area."/>
+    <alternate name="Hunting the Beast" type="B">
+      <property name="Encounter Set" value="The Withered Heath"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="3"/>
+      <property name="Engagement Cost" value="A"/>
+      <property name="Quest Points" value="9"/>
+      <property name="Text" value="Forced: After the active location is explored, look at the top 3 cards of the encounter deck. Reveal 1 of those cards and discard the rest.&#10;Forced: At the end of the round, remove 3 damage tokens from the set-aside Cold-Drake.&#10;The players cannot defeat this stage unless at least 3 Dragon Signs are in the victory display. "/>
+    </alternate>
+  </card>
+  <card id="9656a1c9-dd90-4096-b2ba-eb2491d08403" name="A Cornered Dragon" size="QuestCard">
+    <property name="Card Number" value="25"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Withered Heath"/>
+    <property name="Type" value="Quest"/>
+    <property name="Cost" value="4"/>
+    <property name="Engagement Cost" value="A"/>
+    <property name="Text" value="At last you have cornered the injured Dragon. But with nowhere left to run, it attacks you with desperate fury. The men of Dale will make songs of this battle, if you survive to tell the story... When Revealed: Add Cold-Drake to the staging area. It makes an immediate attack against each player in turn order. (Deal and resolve a shadow card for each attack.)"/>
+    <alternate name="A Cornered Dragon" type="B">
+      <property name="Encounter Set" value="The Withered Heath"/>
+      <property name="Type" value="Quest"/>
+      <property name="Cost" value="4"/>
+      <property name="Engagement Cost" value="A"/>
+      <property name="Quest Points" value="0"/>
+      <property name="Text" value="Cold-Drake cannot take more than X damage each round, where X is the number of Dragon Signs in the victory display. &#10;Forced: At the beginning of the quest phase, return Cold-Drake to the staging area. It makes an immediate attack against each player in turn order.&#10;This stage cannot be defeated while Cold-Drake is in play. When Cold-Drake is defeated, the players win the game. "/>
+    </alternate>
+  </card>
+ </cards>
+</set>

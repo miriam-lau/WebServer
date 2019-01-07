@@ -1,0 +1,306 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Dreamchaser - Nightmare" id="4e5e5757-8ad2-4feb-8362-b6787c37ebb0" gameId="a21af4e8-be4b-4cda-a6b6-534f9717391f" gameVersion="2.3.6.0" version="3.0.0">
+ <cards>
+  <card id="00724f28-cae7-4d45-95b4-076d91bd2a86" name="Flight of the Stormcaller">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Text" value="Begin with the standard deck quest and encounter deck for the Flight of the Stormcaller scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;2x Calm Waters&#10;2x Corsair Skiff&#10;2x Southron Sailor&#10;2x Serpent's Blade&#10;1x Hidden Cove&#10;2x Jagged Reef&#10;Then, suffle the encounter cards in this Nightmare Deck into the remainder of the standard Flight of the Stormcaller encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin.&#10;¹*: Some cards in the Flight of the Stormcaller Nightmare Deck have Sailing success symbols (¹) with an asterisk (*) next to them. This indicates that the card has a Forced effect which will trigger when the card is discarded during a sailing test."/>
+    <alternate name="Flight of the Stormcaller" type="B">
+      <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing nightmare mode.&#10;While you are at the same stage as the Stormcaller, the main quest gets +X quest points, where X is the Stormcaller's remaining hit points."/>
+    </alternate>
+  </card>
+  <card id="a3ac80dc-be8b-4d45-a9c4-f611183eb4be" name="Raider of the Storm" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="4"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="While Raider of the Storm is engaged with you, each Ship enemy engaged with you gets +1 $, +1 Û, +1 Ú, and contributes its $ to the total $ in the staging area."/>
+  </card>
+  <card id="dd13a7d6-b58e-41ce-a73c-c86a45996607" name="Tide-Runner">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Ship-Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Engagement Cost" value="44"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="2"/>
+    <property name="Health" value="9"/>
+    <property name="Text" value="Boarding 1. Cannot have attachments.&#10;While you are off-course (¼,½,or ¾), Tide-runner is considered to be in the Stormcaller's area and the staging area, regardless of its current location.&#10;When Revealed: Either choose a player to engage Tide-runner, or add Tide-runner to the Stormcaller's area and it gains surge."/>
+  </card>
+  <card id="51c3083f-3a95-44aa-bb34-4b28c9189c05" name="Venom's Bite">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Ship-Enemy"/>
+    <property name="Traits" value="Corsair. Ship."/>
+    <property name="Engagement Cost" value="34"/>
+    <property name="Threat" value="5"/>
+    <property name="Attack" value="8"/>
+    <property name="Defense" value="5"/>
+    <property name="Health" value="14"/>
+    <property name="Victory Points" value="5"/>
+    <property name="Text" value="Boarding 2. Cannot have attachments.&#10;*Forced: After this Sailing test ends, if you are off-course (¼,½,or ¾), put the Venom's Bite into play in the staging area. If you are on-course (º), put it into play in the Stormcaller's area instead.&#10;"/>
+  </card>
+  <card id="35524392-598c-4980-93ea-91d7702242ab" name="Sharp Jetties" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="2"/>
+    <property name="Quest Points" value="6"/>
+    <property name="Text" value="When Revealed: If your heading is off-course (¼,½,or ¾), make Sharp Jetties the active location, returning any current active location to the staging area.&#10;Forced: When any amount of progress is placed on Sharp Jetties, either remove an equal amount of progress from the current quest, or deal an equal amount of damage to each Ship objective."/>
+  </card>
+  <card id="c81aa8c4-969d-46f6-b0a6-a53e59e75db9" name="Cliffside Inlet" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Coastland. Ocean."/>
+    <property name="Threat" value="4"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Cliffside Inlet is in the staging area, the main quest gets +2 quest points.&#10;Travel: Discard cards from the top of the encounter deck until a Ship enemy is discarded. Put that enemy into play in the Stormcaller's area."/>
+  </card>
+  <card id="6d34a654-ec8f-41b5-8fa9-a86a15cdf5e6" name="Dark and Stormy" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Keywords" value="Surge."/>
+    <property name="Text" value="When Revealed: Deal 1 shadow card to each Ship enemy in play. Until the end of the round, shadow effects cannot be canceled."/>
+    <property name="Shadow" value="Attacking enemy makes an additional attack after this one."/>
+  </card>
+  <card id="17516d4f-8ce4-491e-8b2d-8dc9fe841934" name="Sahir's Getting Away!" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Flight of the Stormcaller - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: For each Ship enemy in the Stormcaller's area, place 1 progress on the Stormcaller's quest stage. Then, either shift your heading off-course or add 8 $ to the staging area until the end of the phase."/>
+    <property name="Shadow" value="If this attack damages a Ship objective, place 1 progress on the Stormcaller's quest stage."/>
+  </card>
+  <card id="a08d5b97-8055-40ea-8e98-20a7a608216b" name="The Thing in the Depths">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for The Thing in the Depths scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;2x Corsair Infiltrator&#10;1x Crew Quarters&#10;1x Crushing Arm&#10;1x Grasping Arm&#10;1x Giant Arm&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard The Thing in the Depths encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="The Thing in the Depths" type="B">
+      <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Engagement Cost" value="B"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Forced: After The Thing in the Depths enemy enters play, it attacks each player in turn order from the staging area (deal and resolve a shadow card for each attack).&#10;Stage 3B gains: &quot;Forced: At the beginning of the quest phase, if there are fewer locations in play than the number of players, discard cards until a location is discarded. Reveal that location.&#10;Forced: At the end of the refresh phase, resolve the grapple keyword on each Tentacle enemy in play.&quot;"/>
+    </alternate>
+  </card>
+  <card id="5fa05845-7cdd-46da-9862-4f3f10525ef1" name="Captain's Quarters" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Unique" value="‰"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ship."/>
+    <property name="Threat" value="5"/>
+    <property name="Quest Points" value="5"/>
+    <property name="Text" value="While Captain's quarters is grappled, Raider characters are considered to have no resources.&#10;Travel: Add 2 resources to Captain Sahír (even if he is out of play) and 1 resource to each other Raider card in play."/>
+  </card>
+  <card id="671e838c-630c-4bd7-91d8-20ec6c144f9f" name="Aft Cabin" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ship. Deck."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="3"/>
+    <property name="Text" value="While Aft Cabin is in the staging area, each enemy grappled with each Deck location adds 3 $ instead of 2 $.&#10;Forced: After an enemy is detached from Aft Cabin, that enemy gets +3 Ú until the end of the round."/>
+  </card>
+  <card id="26cf3d89-9cfe-45a9-8deb-c2840193ba0f" name="Tumultuous Waters" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Traits" value="Weather."/>
+    <property name="Text" value="When Revealed: Exhaust each character with 1 or less Ò. Remove all resources from each ready hero and objective-ally."/>
+    <property name="Shadow" value="If the defending character has 1 or less Ò, treat this attack as undefended."/>
+  </card>
+  <card id="e5b4ba4a-99dc-4f01-9216-21406aa05bd0" name="Corsair Duelist" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Corsair. Raider."/>
+    <property name="Engagement Cost" value="36"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="3"/>
+    <property name="Text" value="Corsair Duelist enters play with 2 resources on it.&#10;Forced: When Corsair Duelist would be defeated, remove 1 resource and all damage from it instead."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û for each resource on it."/>
+  </card>
+  <card id="5e1bbe70-dae7-404a-a420-93e393538fa3" name="Slithering Arm" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. Tentacle."/>
+    <property name="Keywords" value="Surge. Grapple (most enemies grappled)."/>
+    <property name="Engagement Cost" value="0"/>
+    <property name="Threat" value="0"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="5"/>
+    <property name="Text" value="Forced: After Slithering Arm engages a player, it makes an immediate attack against that player."/>
+    <property name="Shadow" value="Either resolve Slithering Arm's grapple keyword, or treat this attack as undefended."/>
+  </card>
+  <card id="a926afdc-c770-4315-b4eb-6b417e765c55" name="Crashing Arm" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Creature. Tentacle."/>
+    <property name="Keywords" value="Grapple (fewest enemies grappled)."/>
+    <property name="Engagement Cost" value="27"/>
+    <property name="Threat" value="2"/>
+    <property name="Attack" value="6"/>
+    <property name="Defense" value="1"/>
+    <property name="Health" value="7"/>
+    <property name="Text" value="Forced: After Crashing Arm is detached from a location, deal it 3 shadow cards."/>
+    <property name="Shadow" value="Attacking enemy makes an additional attack after this one."/>
+  </card>
+  <card id="58f19ebb-2e0f-4ff9-9ec1-1984e9faca02" name="Deep Maelstrom" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="The Things in the Depth - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: For each location in play that is not grappled, reveal the top card of the encounter deck. If no cards are revealed by this effect, Deep Maelstrom gains Doomed 5. Cannot be canceled."/>
+    <property name="Shadow" value="Attacking enemy gets +1 Û for each enemy grappled with a location."/>
+  </card>
+  <card id="9e9e209e-9629-449e-9cc4-d345f68892b8" name="Temple of the Deceived">
+    <property name="Card Number" value="1"/>
+    <property name="Quantity" value="1"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Nightmare"/>
+    <property name="Text" value="Begin with the standard quest deck and encounter deck for the Temple of the Deceived scenario.&#10;Remove the following cards, in the specified quantities, from the standard encounter deck:&#10;1x Jungle Path&#10;2x Cursed Temple&#10;1x Deeper into the Ruins&#10;3x Sunken Ruins&#10;2x Aimless Wandering&#10;2x Curse of the Downfallen&#10;1x Dwindling Supplies&#10;3x Faithless Desecrator&#10;Then, shuffle the encounter cards in this Nightmare Deck into the remainder of the standard Temple of the Deceived encounter deck.&#10;Finally, flip this setup card over and place it next to the quest deck. Its effect remains active throughout the game, which is now ready to begin."/>
+    <alternate name="Temple of the Deceived" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+      <property name="Type" value="Nightmare"/>
+      <property name="Text" value="You are playing Nightmare mode.&#10;Forced: When preparing the Island Map, instead of the normal map placement, create the first three leftmost columns using the nine &quot;Lost Island&quot; cards, then create two middle columns using the six new &quot;Edge of the Temple&quot; cards, and finally one rightmost column using the three &quot;Temple of the Deceived&quot; cards.&#10;Forced: After the active location is explored, discard all player cards attached to that location."/>
+    </alternate>
+  </card>
+  <card id="717d63f2-2674-4f20-af8f-2251bc4617f0" name="Edge of the Temple" size="EncounterCard">
+    <property name="Card Number" value="2"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ruins."/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Edge of the Temple becomes the active location, flip it over.&#10;Action: Remove 8 progress from Edge of the Temple to look at its facedown side."/>
+    <alternate name="Desecrated Ruins" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+      <property name="Type" value="Location"/>
+      <property name="Quest Points" value="6"/>
+      <property name="Text" value="Forced: When Desecrated Ruins is flipped over while active, remove all resources from each hero and objective-ally."/>
+    </alternate>
+  </card>
+  <card id="8a6687f9-25d5-47c2-8ceb-0fd9a37bd308" name="Edge of the Temple" size="EncounterCard">
+    <property name="Card Number" value="3"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ruins."/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Edge of the Temple becomes the active location, flip it over.&#10;Action: Remove 8 progress from Edge of the Temple to look at its facedown side."/>
+    <alternate name="Temple Foothills" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+      <property name="Type" value="Location"/>
+      <property name="Quest Points" value="5"/>
+      <property name="Text" value="While Temple Foothills is the active location, the players, as a group, cannot play more than 1 card each round."/>
+    </alternate>
+  </card>
+  <card id="6a071291-7135-4137-b57a-20c97d242444" name="Edge of the Temple" size="EncounterCard">
+    <property name="Card Number" value="4"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Location"/>
+    <property name="Traits" value="Ruins."/>
+    <property name="Keywords" value="Uncharted. Cannot have player card attachments."/>
+    <property name="Threat" value="3"/>
+    <property name="Quest Points" value="-"/>
+    <property name="Text" value="Forced: After Edge of the Temple becomes the active location, flip it over.&#10;Action: Remove 8 progress from Edge of the Temple to look at its facedown side."/>
+    <alternate name="Cursed Temple" type="B">
+      <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+      <property name="Type" value="Location"/>
+      <property name="Quest Points" value="4"/>
+      <property name="Text" value="Forced: When Cursed Temple is flipped over while active, discard 3 cards at random from each player's hand.&#10;While Cursed Temple is the active location, each player cannot draw cards by card effects."/>
+    </alternate>
+  </card>
+  <card id="56eebf01-713c-470e-beb1-cc141b8be928" name="King's Knight" size="EncounterCard">
+    <property name="Card Number" value="5"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="23"/>
+    <property name="Threat" value="4"/>
+    <property name="Attack" value="4"/>
+    <property name="Defense" value="4"/>
+    <property name="Health" value="6"/>
+    <property name="Text" value="Forced: After King's Knight attacks, if no damage was dealt by its attack, return it to the staging area."/>
+    <property name="Shadow" value="If no damage is dealt by this attack, return attacking enemy to the staging area after this attack."/>
+  </card>
+  <card id="bc3a69cf-4bf8-4473-aeb1-afeb233815d9" name="Cursed Soldier" size="EncounterCard">
+    <property name="Card Number" value="6"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Enemy"/>
+    <property name="Traits" value="Undead."/>
+    <property name="Engagement Cost" value="28"/>
+    <property name="Threat" value="3"/>
+    <property name="Attack" value="3"/>
+    <property name="Defense" value="3"/>
+    <property name="Health" value="4"/>
+    <property name="Text" value="While the active location is in the top row, Cursed Soldier gets +3 $.&#10;While the active location is in the middle row, Cursed Soldier gets +3 Û.&#10;While the active location is in the bottom row, Cursed Soldier gets +3 Ú."/>
+  </card>
+  <card id="3579da3e-dd28-41a3-b21b-e6dc49e417d7" name="Deceitful Island" size="EncounterCard">
+    <property name="Card Number" value="7"/>
+    <property name="Quantity" value="2"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Keywords" value="Doomed 3."/>
+    <property name="Text" value="When Revealed: Switch the placement of the active location with the location above or below it, or to its left (the active location does not change). Then, flip each adjacent location to its &quot;Lost Island&quot; or &quot;Edge of the Temple&quot; side."/>
+  </card>
+  <card id="b3e97670-b41b-45a7-9c47-7fb885fc1f04" name="Call of the Curse" size="EncounterCard">
+    <property name="Card Number" value="8"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Until the end of the round, each Undead enemy gets +X Û and +X Ú. X is the number of locations to the left of the active location (in its row). If X is 0 or 1, Call of the Curse gains surge."/>
+    <property name="Shadow" value="Resolve the 'when revealed' effect of Call of the Curse."/>
+  </card>
+  <card id="724f33d4-1305-4ea1-a6ee-d4e6c8de01b3" name="Sudden Precipice" size="EncounterCard">
+    <property name="Card Number" value="9"/>
+    <property name="Quantity" value="3"/>
+    <property name="Encounter Set" value="Temple of the Deceived - Nightmare"/>
+    <property name="Type" value="Treachery"/>
+    <property name="Text" value="When Revealed: Attach to the active location. (Counts as a Condition attachment with the text: &quot;Forced: After you travel from attached location to the right, deal 2 damage to each exhausted character.&quot;)"/>
+    <property name="Shadow" value="Attacking enemy makes an additional attack after this one."/>
+  </card>
+ </cards>
+</set>
