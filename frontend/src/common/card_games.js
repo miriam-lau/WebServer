@@ -4,7 +4,7 @@ import { emptyArray, transferContents } from './utils'
  */
 
 /**
- *
+ * Returns the moved card.
  * @param {Vue Object} component
  * @param {array} destinationPile
  * @param {array?} reshufflePile
@@ -13,8 +13,8 @@ function moveCurrentCardSelection (component, destinationPile, reshufflePile) {
   if (!component.games_currentCardSelection.exists) {
     return
   }
-  let success = component.moveCard(component.games_currentCardSelection['array'], component.games_currentCardSelection['index'], destinationPile, reshufflePile)
-  if (!success) {
+  let card = component.moveCard(component.games_currentCardSelection['array'], component.games_currentCardSelection['index'], destinationPile, reshufflePile)
+  if (!card) {
     return
   }
   if (component.games_currentCardSelection.index !== undefined) {
@@ -24,10 +24,11 @@ function moveCurrentCardSelection (component, destinationPile, reshufflePile) {
       clearCurrentCardSelection(component)
     }
   }
+  return card
 }
 
 /**
- *
+ * Returns the moved card
  * @param {array} originalPile
  * @param {number} cardIndex
  * @param {array} destinationPile
@@ -36,7 +37,7 @@ function moveCurrentCardSelection (component, destinationPile, reshufflePile) {
  */
 function moveCard (originalPile, cardIndex, destinationPile, reshufflePile) {
   if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= originalPile.length)) {
-    return false
+    return null
   }
   if (cardIndex === undefined) {
     if (originalPile.length === 0 && reshufflePile && reshufflePile.length !== 0) {
@@ -46,12 +47,12 @@ function moveCard (originalPile, cardIndex, destinationPile, reshufflePile) {
     cardIndex = originalPile.length - 1
   }
   if (cardIndex < 0 || cardIndex >= originalPile.length) {
-    return false
+    return null
   }
   let card = originalPile[cardIndex]
   destinationPile.push(card)
   originalPile.splice(cardIndex, 1)
-  return true
+  return card
 }
 
 function moveAllCards (originalPile, destinationPile) {

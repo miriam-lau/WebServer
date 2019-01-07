@@ -251,6 +251,8 @@ class Dominion:
         for card in sideways_cards:
             if card["name"] == "Ritual":
                 has_curses = True
+            if card["name"] == "Defiled Shrine":
+                has_curses = True
 
         if has_boons:
             has_will_o_wisp = True
@@ -1037,10 +1039,9 @@ class Dominion:
         data["playerOrder"] = [player1, player2]
         data["currentPlayerTurn"] = 0
         data["revealArea"] = []
-        data["isInGame"] = True
+        data["gameLog"] = []
         data["players"] = [{
             "name": player1,
-            "notes": '',
             "durationArea": [],
             "playArea": [],
             "deck": game_data["player_1_deck"],
@@ -1054,11 +1055,9 @@ class Dominion:
             "numCoffers": 0,
             "numVillagers": 0,
             "numDebt": 0,
-            "shownPage": "kingdom",
             "displayedPlayer": 0
         }, {
             "name": player2,
-            "notes": '',
             "durationArea": [],
             "playArea": [],
             "deck": game_data["player_2_deck"],
@@ -1072,7 +1071,6 @@ class Dominion:
             "numCoffers": 0,
             "numVillagers": 0,
             "numDebt": 0,
-            "shownPage": "kingdom",
             "displayedPlayer": 1
         }]
         data["boonsDiscard"] = []

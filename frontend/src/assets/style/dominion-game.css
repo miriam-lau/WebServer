@@ -114,6 +114,22 @@
   margin-top: var(--standard-margin);
 }
 
+.game-log {
+  display:flex;
+  flex-direction:column-reverse;
+  float: right;
+  margin-top: var(--standard-margin);
+  height: 26vw;
+  width: 16vw;
+  overflow: auto;
+}
+
+.player-area {
+  float: left;
+  margin-top: var(--standard-margin);
+  width: calc(100% - 16vw);
+}
+
 .stat-item {
   margin-right: 1.2vw;
 }
@@ -126,7 +142,6 @@
 .single-pile {
   float: left;
   width: var(--card-width-with-margin);
-  text-align: center;
 }
 
 ::-webkit-scrollbar {

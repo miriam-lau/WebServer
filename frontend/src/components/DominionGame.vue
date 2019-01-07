@@ -10,36 +10,39 @@
           <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
-      <button @click="player.shownPage = 'kingdom'">Kingdom</button>
-      <button v-if="game.nonSupplyCards.length > 0" @click="player.shownPage = 'nonSupply'">Non Supply</button>
-      <button v-if="game.hasBane" @click="player.shownPage = 'bane'">Bane</button>
-      <button v-if="game.hasBoons" @click="player.shownPage = 'boons'">Boons</button>
-      <button v-if="game.hasHexes" @click="player.shownPage = 'hexes'">Hexes</button>
-      <button v-if="player.mats.length > 0" @click="player.shownPage = 'yourMats'">Your Mats</button>
-      <button @click="player.shownPage = 'discard'">Your Discard</button>
-      <button v-if="opponent.mats.length > 0" @click="player.shownPage = 'opponentMats'">Opponent Mats</button>
-      <button v-if="game.revealArea.length > 0" @click="player.shownPage = 'reveal'"><u>R</u>evealed</button>
-      <button @click="player.shownPage = 'trash'"><u>T</u>rash</button>
-      <button @click="player.shownPage = 'notes'">Notes</button>
-      <button @click="player.shownPage = 'allYourCards'">All your cards</button>
-      <button @click="player.shownPage = 'shortcuts'">Shortcuts</button>
-      <div v-if="player.shownPage === 'kingdom'">
+      <button @click="shownPage = 'kingdom'">Kingdom</button>
+      <button v-if="game.nonSupplyCards.length > 0" @click="shownPage = 'nonSupply'">Non Supply</button>
+      <button v-if="game.hasBane" @click="shownPage = 'bane'">Bane</button>
+      <button v-if="game.hasBoons" @click="shownPage = 'boons'">Boons</button>
+      <button v-if="game.hasHexes" @click="shownPage = 'hexes'">Hexes</button>
+      <button v-if="player.mats.length > 0" @click="shownPage = 'yourMats'">Your Mats</button>
+      <button @click="shownPage = 'discard'">Your Discard</button>
+      <button v-if="opponent.mats.length > 0" @click="shownPage = 'opponentMats'">Opponent Mats</button>
+      <button v-if="game.revealArea.length > 0" @click="shownPage = 'reveal'"><u>R</u>evealed</button>
+      <button @click="shownPage = 'trash'"><u>T</u>rash</button>
+      <button @click="shownPage = 'notes'">Notes</button>
+      <button @click="shownPage = 'allYourCards'">All your cards</button>
+      <button @click="shownPage = 'shortcuts'">Shortcuts</button>
+      <div v-if="shownPage === 'kingdom'">
         <div class="vp-treasure">
           <CardStack
             :key="'treasure' + index" v-for="(cardArray, index) in game.treasureCards"
             :defaultMoveArray="player.discard"
-            :cardArray="cardArray"/>
+            :cardArray="cardArray"
+            :callback="addGainToLog"/>
           <div class="c"></div>
           <CardStack
             :key="'vp' + index" v-for="(cardArray, index) in game.vpCards"
             :defaultMoveArray="player.discard"
-            :cardArray="cardArray"/>
+            :cardArray="cardArray"
+            :callback="addGainToLog"/>
         </div>
         <div class="kingdom">
           <CardStack
             :key="'vp' + index" v-for="(cardArray, index) in game.kingdomCards"
             :defaultMoveArray="player.discard"
-            :cardArray="cardArray"/>
+            :cardArray="cardArray"
+            :callback="addGainToLog"/>
         </div>
         <div class="events">
           <img
@@ -49,22 +52,24 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'nonSupply'">
+      <div v-else-if="shownPage === 'nonSupply'">
         <div class="non-supply">
           <CardStack
             :key="index" v-for="(cardArray, index) in game.nonSupplyCards"
             :defaultMoveArray="player.discard"
-            :cardArray="cardArray"/>
+            :cardArray="cardArray"
+            :callback="addGainToLog"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'bane'">
+      <div v-else-if="shownPage === 'bane'">
         <div class="bane">
           <CardStack
             :defaultMoveArray="player.discard"
-            :cardArray="game.bane"/>
+            :cardArray="cardArray"
+            :callback="addGainToLog"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'boons'">
+      <div v-else-if="shownPage === 'boons'">
         <div class="boons-deck-and-discard">
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.boonsDeck.length}}</div>
@@ -89,7 +94,7 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'hexes'">
+      <div v-else-if="shownPage === 'hexes'">
         <div class="hexes-deck-and-discard">
           <div class="sideways-card-container">
             <div class="card-counter-container">{{game.hexesDeck.length}}</div>
@@ -114,14 +119,14 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'yourMats'">
+      <div v-else-if="shownPage === 'yourMats'">
         <div class="your-mats">
           <CardList
               :cardArray="player.mats"
               :defaultMoveArray="player.discard"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'opponentMats'">
+      <div v-else-if="shownPage === 'opponentMats'">
         <div class="opponent-mats">
           <img
               v-for="(card, index) in opponent.mats"
@@ -130,22 +135,22 @@
               :src="getImageForCard(card)"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'trash'">
+      <div v-else-if="shownPage === 'trash'">
         <div class="trash">
           <CardList :cardArray="game.trash"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'reveal'">
+      <div v-else-if="shownPage === 'reveal'">
         <div class="reveal-area">
           <CardList :cardArray="game.revealArea"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'notes'">
+      <div v-else-if="shownPage === 'notes'">
         <div class="notes">
-          <textarea class="note" v-model="player.notes"></textarea>
+          <textarea class="note" v-model="notes"></textarea>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'shortcuts'">
+      <div v-else-if="shownPage === 'shortcuts'">
         <div class="shortcuts">
           a (A) - Increment num actions (Decrement num actions)<br/>
           b (B) - Increment num buys (Decrement num buys)<br/>
@@ -167,12 +172,12 @@
           v - Reveal the card in the revealed area.<br/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'discard'">
+      <div v-else-if="shownPage === 'discard'">
         <div class="discard-area">
           <CardList :cardArray="player.discard"/>
         </div>
       </div>
-      <div v-else-if="player.shownPage === 'allYourCards'">
+      <div v-else-if="shownPage === 'allYourCards'">
         <div class="all-your-cards">
           <img
               v-for="(card, index) in [].concat(player.deck, player.discard, player.playArea, player.hand, player.mats)"
@@ -192,99 +197,113 @@
       </span>
       <button @click="toggledisplayedPlayer">Toggle Display</button>
       <br/>
-      <div class="play-area">
-        <div class="play-cards">
-          <div v-if="player.displayedPlayer === playerIndex">
-            <CardList
-                :cardArray="player.playArea"
-                :defaultMoveArray="player.discard"/>
-          </div>
-          <div v-else>
-            <CardList :cardArray="opponent.playArea"/>
+      <div class="game-log">
+        <div class="game-log-inner">
+          <div :key="index" v-for="(gameLogLine, index) in game.gameLog">
+            {{gameLogLine}}<br/>
           </div>
         </div>
-        <u>P</u>layed Cards
       </div>
-      <div class="duration-area">
-        <div class="duration-cards">
-          <div v-if="player.displayedPlayer === playerIndex">
-            <CardList
-                :cardArray="player.durationArea"
-                :defaultMoveArray="player.discard"/>
-          </div>
-          <div v-else>
-            <CardList :cardArray="opponent.durationArea"/>
-          </div>
-        </div>
-        D<u>u</u>ration
-      </div>
-      <div class="c">
-      </div>
-      <div class="stats">
-        <div v-if="player.displayedPlayer === playerIndex">
-          <span class="stat-item"><u>A</u>ctions: <button @click="decrementNumActions">-</button><input class="counter" v-model="player.numActions"/><button @click="incrementNumActions">+</button></span>
-          <span class="stat-item"><u>B</u>uys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="player.numBuys"/><button @click="incrementNumBuys">+</button></span>
-          <span class="stat-item"><u>C</u>oins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="player.numCoins"/><button @click="incrementNumCoins">+</button></span>
-          <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="player.numVP"/><button @click="incrementNumVP">+</button></span>
-          <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="player.numCoffers"/><button @click="incrementNumCoffers">+</button></span>
-          <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="player.numVillagers"/><button @click="incrementNumVillagers">+</button></span>
-          <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="player.numDebt"/><button @click="incrementNumDebt">+</button></span>
-          <button @click="endPlayerTurn" v-if="game.currentPlayerTurn === playerIndex">End Turn</button>
-          <span>Your turn</span>
-        </div>
-        <div v-else>
-          <span class="stat-item">Actions: {{opponent.numActions}}</span>
-          <span class="stat-item">Buys: {{opponent.numBuys}}</span>
-          <span class="stat-item">Coins: {{opponent.numCoins}}</span>
-          <span class="stat-item">VP: {{opponent.numVP}}</span>
-          <span class="stat-item">Coffers: {{opponent.numCoffers}}</span>
-          <span class="stat-item">Villagers: {{opponent.numVillagers}}</span>
-          <span class="stat-item">Debt: {{opponent.numDebt}}</span>
-          <span>{{opponent.name}}'s turn</span>
-        </div>
-      </div>
-      <div class="deck-and-hand">
-        <div class="single-pile">
-          <div class="single-pile-cards">
+      <div class="player-area">
+        <div class="play-area">
+          <div class="play-cards">
             <div v-if="player.displayedPlayer === playerIndex">
-              <CardStack
-                :reshufflePileArray="player.discard"
-                :defaultMoveArray="player.hand"
-                :cardArray="player.deck"/>
+              <CardList
+                  :cardArray="player.playArea"
+                  :defaultMoveArray="player.discard"/>
             </div>
             <div v-else>
-              <CardStack
-                :cardArray="opponent.deck"/>
+              <CardList :cardArray="opponent.playArea"/>
             </div>
           </div>
-          Dec<u>k</u><br/>
+          <u>P</u>layed Cards
         </div>
-        <div class="single-pile">
-          <div class="single-pile-cards">
+        <div class="duration-area">
+          <div class="duration-cards">
             <div v-if="player.displayedPlayer === playerIndex">
-              <CardStack
-                :cardArray="player.discard"/>
+              <CardList
+                  :cardArray="player.durationArea"
+                  :defaultMoveArray="player.discard"/>
             </div>
             <div v-else>
-              <CardStack
-                :cardArray="opponent.discard"/>
+              <CardList :cardArray="opponent.durationArea"/>
             </div>
           </div>
-          <u>D</u>iscard<br/>
+          D<u>u</u>ration
         </div>
-        <div class="hand">
-          <div class="hand-cards">
-            <div v-if="player.displayedPlayer === playerIndex">
+        <div class="c">
+        </div>
+        <div class="stats">
+          <div v-if="player.displayedPlayer === playerIndex">
+            <span class="stat-item"><u>A</u>ctions: <button @click="decrementNumActions">-</button><input class="counter" v-model="player.numActions"/><button @click="incrementNumActions">+</button></span>
+            <span class="stat-item"><u>B</u>uys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="player.numBuys"/><button @click="incrementNumBuys">+</button></span>
+            <span class="stat-item"><u>C</u>oins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="player.numCoins"/><button @click="incrementNumCoins">+</button></span>
+            <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="player.numVP"/><button @click="incrementNumVP">+</button></span>
+            <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="player.numCoffers"/><button @click="incrementNumCoffers">+</button></span>
+            <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="player.numVillagers"/><button @click="incrementNumVillagers">+</button></span>
+            <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="player.numDebt"/><button @click="incrementNumDebt">+</button></span>
+            <button @click="endPlayerTurn" v-if="game.currentPlayerTurn === playerIndex">End Turn</button>
+            <span>Your turn</span>
+          </div>
+          <div v-else>
+            <span class="stat-item">Actions: {{opponent.numActions}}</span>
+            <span class="stat-item">Buys: {{opponent.numBuys}}</span>
+            <span class="stat-item">Coins: {{opponent.numCoins}}</span>
+            <span class="stat-item">VP: {{opponent.numVP}}</span>
+            <span class="stat-item">Coffers: {{opponent.numCoffers}}</span>
+            <span class="stat-item">Villagers: {{opponent.numVillagers}}</span>
+            <span class="stat-item">Debt: {{opponent.numDebt}}</span>
+            <span>{{opponent.name}}'s turn</span>
+          </div>
+        </div>
+        <div class="deck-and-hand">
+          <div class="single-pile">
+            <div class="single-pile-cards">
+              <div v-if="player.displayedPlayer === playerIndex">
+                <CardStack
+                  :reshufflePileArray="player.discard"
+                  :defaultMoveArray="player.hand"
+                  :cardArray="player.deck"/>
+              </div>
+              <div v-else>
+                <CardStack
+                  :cardArray="opponent.deck"/>
+              </div>
+            </div>
+            <span v-if="player.displayedPlayer === playerIndex">
+            Dec<u>k</u><br/>
+            </span>
+            <span v-else>
+            {{game.players[player.displayedPlayer].name}}'s deck
+            </span>
+
+          </div>
+          <div class="single-pile">
+            <div class="single-pile-cards">
+              <div v-if="player.displayedPlayer === playerIndex">
+                <CardStack
+                  :cardArray="player.discard"/>
+              </div>
+              <div v-else>
+                <CardStack
+                  :cardArray="opponent.discard"/>
+              </div>
+            </div>
+            <span v-if="player.displayedPlayer === playerIndex">
+            <u>D</u>iscard<br/>
+            </span>
+            <span v-else>
+            {{game.players[player.displayedPlayer].name}}'s discard
+            </span>
+          </div>
+          <div class="hand">
+            <div class="hand-cards">
               <CardList
                   :defaultMoveArray="player.playArea"
                   :cardArray="player.hand"/>
             </div>
-            <div v-else>
-              <CardList
-                  :cardArray="opponent.hand"/>
-            </div>
+            Your <u>H</u>and
           </div>
-          <u>H</u>and
         </div>
       </div>
     </div>
@@ -320,8 +339,11 @@ export default {
       isInGame: false,
       player: {},
       opponent: {},
+      shownPage: 'kingdom',
+      notes: '',
       game: {
         playerOrder: [],
+        gameLog: [],
         currentPlayerTurn: 0,
         nonSupplyCards: [],
         kingdomCards: [],
@@ -332,7 +354,6 @@ export default {
         revealArea: [],
         players: [{
           name: '',
-          notes: '',
           durationArea: [],
           playArea: [],
           deck: [],
@@ -346,11 +367,9 @@ export default {
           numCoffers: 0,
           numVillagers: 0,
           numDebt: 0,
-          shownPage: 'kingdom',
           displayedPlayer: 0
         }, {
           name: '',
-          notes: '',
           durationArea: [],
           playArea: [],
           deck: [],
@@ -364,7 +383,6 @@ export default {
           numCoffers: 0,
           numVillagers: 0,
           numDebt: 0,
-          shownPage: 'kingdom',
           displayedPlayer: 1
         }],
         boonsDeck: [],
@@ -633,6 +651,9 @@ export default {
     },
     toggledisplayedPlayer () {
       this.player.displayedPlayer = 1 - this.player.displayedPlayer
+    },
+    addGainToLog (card) {
+      this.game.gameLog.push(this.player.name + ': +' + card.name)
     },
     handleKeyPress (event) {
       if (!this.isInGame) {

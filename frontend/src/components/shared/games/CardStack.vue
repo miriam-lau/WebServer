@@ -26,14 +26,21 @@ export default {
      * Nullable. Where to move the top card of the card stack to on left click.
      */
     defaultMoveArray: Array,
-    cardArray: Array
+    cardArray: Array,
+    /**
+     * Nullable. If present, this is called with the current card which is moved.
+     */
+    callback: Function
   },
   methods: {
     setCurrentCardSelection: setCurrentCardSelection,
     clearCurrentCardSelection: clearCurrentCardSelection,
     handleClick () {
       if (this.defaultMoveArray) {
-        moveCurrentCardSelection(this.$parent, this.defaultMoveArray, this.reshufflePileArray)
+        let card = moveCurrentCardSelection(this.$parent, this.defaultMoveArray, this.reshufflePileArray)
+        if (card && this.callback) {
+          this.callback(card)
+        }
       }
     }
   }
