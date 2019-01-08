@@ -77,6 +77,7 @@ drop table grocery_known_words cascade;
 drop table pantry cascade;
 drop table notes cascade;
 drop table dominion_games cascade;
+drop table lotr_games cascade;
 
 create table users (
   username varchar (50) primary key);
@@ -283,8 +284,15 @@ create table inventory (
 );
 
 create table dominion_games (
-id serial primary key,
-player1 varchar(50) references users not null,
-player2 varchar(50) references users not null,
-data jsonb
+  id serial primary key,
+  player1 varchar(50) references users not null,
+  player2 varchar(50) references users not null,
+  data jsonb
+);
+
+create table lotr_games (
+  id serial primary key,
+  player1 varchar(50) references users not null,
+  player2 varchar(50) references users not null,
+  data jsonb
 );
