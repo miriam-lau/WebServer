@@ -11,6 +11,7 @@ import NotesPage from '@/components/NotesPage'
 import NotFound from '@/components/NotFound'
 import Dominion from '@/components/Dominion'
 import DominionGame from '@/components/DominionGame'
+import LotrGame from '@/components/LotrGame'
 
 Vue.use(Router)
 
@@ -77,6 +78,11 @@ export default new Router({
       path: '/dominion-game',
       name: 'dominionGame',
       component: DominionGame
+    },
+    {
+      path: '/lotr-game',
+      name: 'lotrGame',
+      component: LotrGame
     },
     {
       path: '*',

@@ -8,7 +8,7 @@
     <marker id="53f20b83-6292-4017-abd0-511efdaf710d" name="AttackToken" />
     <marker id="6987d1a6-55ab-4ced-bbec-4e5b3490a40e" name="DefenseToken" />
     <marker id="39df75f2-141d-425f-b651-d572b4885004" name="ThreatToken" />
-	<marker id="31627422-f546-4a69-86df-ca0a028f3138" name="TimeToken" />
+	  <marker id="31627422-f546-4a69-86df-ca0a028f3138" name="TimeToken" />
     <marker id="04d7b7bb-13ee-499c-97c0-c1b96a897560" name="Lock" />
     <marker id="e0a54bea-6e30-409d-82cd-44a944e591dc" name="Turn" />
   </markers>

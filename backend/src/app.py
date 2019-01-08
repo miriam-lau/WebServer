@@ -11,6 +11,7 @@ from src.pantry_page.pantry_page import PantryPage
 from src.notes_page.notes_page import NotesPage
 from src.inventory_page.inventory_page import InventoryPage
 from src.dominion.dominion import Dominion
+from src.lotr.lotr import Lotr
 import os
 import sys
 import socket
@@ -30,7 +31,7 @@ pantry_page = None
 notes_page = None
 inventory_page = None
 dominion = None
-
+lotr = None
 
 # Initialize app ----------------------------------------------------------------------------------------------
 def initialize_app():
@@ -44,6 +45,7 @@ def initialize_app():
     global notes_page
     global inventory_page
     global dominion
+    global lotr
     database = Database(is_production())
     current_documents = CurrentDocuments(database)
     codenames = Codenames(database)
@@ -54,6 +56,7 @@ def initialize_app():
     notes_page = NotesPage(database)
     inventory_page = InventoryPage(database)
     dominion = Dominion(database)
+    lotr = Lotr(database)
     if is_production() and socket.gethostname() != "raspberrypi":
       should_run_app = query_yes_no("Running with production database. Continue?")
       if not should_run_app:
@@ -156,6 +159,15 @@ def _dominion_send_socketio_refresh(game_data, player_triggering_update):
     players = game_data["playerOrder"]
     socketio.emit("refresh_dominion",
                   {"players": players,
+                   "player_triggering_update": player_triggering_update,
+                   "gameData": game_data}, broadcast=True)
+
+# This is sent to all players in the current game to tell Vue to refresh the client.
+def _lotr_send_socketio_refresh(game_data, player_triggering_update):
+    players = game_data["players"]
+    playerNames = [player["name"] for player in players]
+    socketio.emit("refresh_lotr",
+                  {"players": playerNames,
                    "player_triggering_update": player_triggering_update,
                    "gameData": game_data}, broadcast=True)
 
@@ -466,6 +478,34 @@ def dominion_save_game():
     game_data = request.json["gameData"]
     dominion.update_game(game_id, game_data)
     _dominion_send_socketio_refresh(game_data, username)
+    return ""
+
+# Lotr ----------------------------------------------------------------------------------------------------
+
+@app.route("/create_lotr_game", methods=["POST"])
+def create_lotr_game():
+    player1 = request.json["player1"]
+    player2 = request.json["player2"]
+    player1_deck = request.json["player1Deck"]
+    player2_deck = request.json["player2Deck"]
+    scenario_name = request.json["scenario"]
+    username = request.json["username"]
+    game_data = lotr.create_game(scenario_name, player1, player2, player1_deck, player2_deck)
+    _lotr_send_socketio_refresh(game_data, username)
+    return jsonify(game_data)
+
+@app.route("/lotr_get_latest_game", methods=["POST"])
+def lotr_get_latest_game():
+    username = request.json["username"]
+    return jsonify(lotr.get_latest_game(username))
+
+@app.route("/save_lotr_game", methods=["POST"])
+def lotr_save_game():
+    username = request.json["username"]
+    game_id = request.json["gameId"]
+    game_data = request.json["gameData"]
+    lotr.update_game(game_id, game_data)
+    _lotr_send_socketio_refresh(game_data, username)
     return ""
 
 # Error handling ----------------------------------------------------------------------------------------------

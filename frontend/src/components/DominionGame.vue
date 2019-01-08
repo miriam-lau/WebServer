@@ -341,62 +341,7 @@ export default {
       opponent: {},
       shownPage: 'kingdom',
       notes: '',
-      game: {
-        playerOrder: [],
-        gameLog: [],
-        currentPlayerTurn: 0,
-        nonSupplyCards: [],
-        kingdomCards: [],
-        vpCards: [],
-        treasureCards: [],
-        sidewaysCards: [],
-        trash: [],
-        revealArea: [],
-        players: [{
-          name: '',
-          durationArea: [],
-          playArea: [],
-          deck: [],
-          mats: [],
-          hand: [],
-          discard: [],
-          numActions: 1,
-          numBuys: 1,
-          numCoins: 0,
-          numVP: 0,
-          numCoffers: 0,
-          numVillagers: 0,
-          numDebt: 0,
-          displayedPlayer: 0
-        }, {
-          name: '',
-          durationArea: [],
-          playArea: [],
-          deck: [],
-          hand: [],
-          mats: [],
-          discard: [],
-          numActions: 1,
-          numBuys: 1,
-          numCoins: 0,
-          numVP: 0,
-          numCoffers: 0,
-          numVillagers: 0,
-          numDebt: 0,
-          displayedPlayer: 1
-        }],
-        boonsDeck: [],
-        boonsReveal: [],
-        boonsDiscard: [],
-        bane: [],
-        hexes: [],
-        hexesDeck: [],
-        hexesReveal: [],
-        hexesDiscard: [],
-        hasBane: false,
-        hasBoons: false,
-        hasHexes: false
-      }
+      game: {}
     }
   },
   components: {
@@ -523,7 +468,8 @@ export default {
       if (!this.games_currentCardSelection.exists) {
         return
       }
-      if (this.games_currentCardSelection.array === this.game.players.deck) {
+      if (this.games_currentCardSelection.array === this.player.deck ||
+          this.games_currentCardSelection.array === this.opponent.deck) {
         return '/static/dominion/card_images/backside_blue.jpg'
       }
       let index = this.games_currentCardSelection.index

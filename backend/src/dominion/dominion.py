@@ -1016,22 +1016,6 @@ class Dominion:
                 return True
         return False
 
-    # Returns both players in the game as a list with the order: [player1, player2].
-    def get_players_in_game(self, game_id) -> List[str]:
-        cur = self._dominion_database.get_cursor()
-
-        try:
-            game = DominionDatabase.get_game(cur, game_id)
-            cur.close()
-        except psycopg2.Error:
-            self._dominion_database.rollback()
-            cur.close()
-            raise
-
-        if game is None:
-            return None
-        return [game[DominionDatabase.DOMINION_GAMES_PLAYER1], game[DominionDatabase.DOMINION_GAMES_PLAYER2]]
-
     def create_game(self, player1, player2) -> int:
         game_data = self.generate_random_kingdom_for_online_game()
 
@@ -1071,7 +1055,7 @@ class Dominion:
             "numCoffers": 0,
             "numVillagers": 0,
             "numDebt": 0,
-            "displayedPlayer": 1
+            "displayedPlayer": 0
         }]
         data["boonsDiscard"] = []
         data["hexesDiscard"] = []

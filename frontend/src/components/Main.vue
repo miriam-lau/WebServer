@@ -23,6 +23,7 @@
         <a href="#" class="nav-codenames" v-on:click="navigateTo('codenames')">Codenames</a>
         <a href="#" class="nav-dominion" v-on:click="navigateTo('dominion')">Dominion</a>
         <a href="#" class="nav-dominion-game" v-on:click="navigateTo('dominionGame')">Dominion Game</a>
+        <a href="#" class="nav-lotr-game" v-on:click="navigateTo('lotrGame')">Lotr Game</a>
       </nav>
     </div>
     <router-view/>
@@ -45,6 +46,7 @@ import PantryPage from './PantryPage'
 import NotesPage from './NotesPage'
 import Dominion from './Dominion'
 import DominionGame from './DominionGame'
+import LotrGame from './LotrGame'
 import { mapMutations } from 'vuex'
 
 export default {
@@ -64,7 +66,7 @@ export default {
     }
   },
   components: {
-    CurrentDocuments, Codenames, Dominion, DominionGame, HobbyTracker, InventoryTracker, RecipesPage, RestaurantsPage, PantryPage, NotesPage
+    CurrentDocuments, Codenames, Dominion, DominionGame, HobbyTracker, InventoryTracker, LotrGame, RecipesPage, RestaurantsPage, PantryPage, NotesPage
   },
   methods: {
     ...mapMutations(['setUsername']),
@@ -97,6 +99,8 @@ export default {
           return 'nav-dominion'
         case 'dominion-game':
           return 'nav-dominion-game'
+        case 'lotr-game':
+          return 'nav-lotr-game'
       }
     }
   }
