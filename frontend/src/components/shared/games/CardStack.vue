@@ -5,7 +5,7 @@
           v-on:click="handleClick"
           v-on:mouseover="setCurrentCardSelection($parent, cardArray)"
           v-on:mouseout="clearCurrentCardSelection($parent)"
-          class="card card-in-container"
+          :class="cardClass + ' card-in-container'"
           :src="$parent.getImageForCardArrayOrBlank(cardArray)"/>
   </div>
 </template>
@@ -19,6 +19,10 @@ export default {
   name: 'CardStack',
   props: {
     /**
+     * Nullable. Represents the css class of the card to render. If none is specified, defaults to "card"
+     */
+    className: String,
+    /**
      * Nullable. The pile to refresh the cardArray with when a card is moved.
      */
     reshufflePileArray: Array,
@@ -31,6 +35,14 @@ export default {
      * Nullable. If present, this is called with the current card which is moved.
      */
     callback: Function
+  },
+  computed: {
+    cardClass () {
+      if (this.className) {
+        return this.className
+      }
+      return 'card'
+    }
   },
   methods: {
     setCurrentCardSelection: setCurrentCardSelection,

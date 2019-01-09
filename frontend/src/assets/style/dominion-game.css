@@ -11,6 +11,10 @@
   --scrollbar-width: 7px;
 }
 
+.dominion-game {
+  background-image: url('/static/dominion-background.jpg')
+}
+
 .new-game {
   margin-bottom: 3vw;
 }

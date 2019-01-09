@@ -7,6 +7,7 @@ import psycopg2
 import os
 import xml.etree.ElementTree as ET
 from src.common.xml import Xml
+import yaml
 
 class Lotr:
   def __init__(self, database):
@@ -18,6 +19,7 @@ class Lotr:
     #           "Engagement Cost", "Cost", "Sphere", "Willpower", "Unique", "Setup", "SetId", "SetName", "Id", "Name",
     #           "Size"
     #       value: A string representing the corresponding value for the key.
+    self._image_name_to_url = {}
     self._card_data = {}
     # A map of scenario name to scenario objects.
     #   key: The scenario property name.
@@ -26,9 +28,19 @@ class Lotr:
     #            Encounter, Active Setup.
     #       value: An array of card objects in the deck.
     self._scenario_data = {}
+    self._populate_image_name_to_url("static/lotr/image-name-to-url.yaml")
     self._load_card_data("static/lotr/Sets/")
     self._load_scenario_data("static/lotr/Decks/")
     self._lotr_database = LotrDatabase(database)
+
+  def _populate_image_name_to_url(self, filename):
+    with open(filename, 'r') as stream:
+      try:
+        root = yaml.load(stream)
+        for name in root:
+          self._image_name_to_url[name] = root[name]
+      except yaml.YAMLError as exc:
+        print(exc)
 
   # Populates the _scenario_data map with the following data using files in the given directory. See _scenario_data for
   # mroe info.
@@ -40,6 +52,7 @@ class Lotr:
         tree = ET.parse(directory + "/" + scenario_folder + "/" + scenario_name)
         card_deck_xml = tree.getroot()
         Xml.verify_tag(card_deck_xml, ["deck"])
+        all_cards_in_scenario_exist = True
         for section_xml in list(card_deck_xml):
           scenario_property_name = None
           if section_xml.tag == "notes":
@@ -62,8 +75,12 @@ class Lotr:
           if scenario_property_name not in scenario:
             scenario[scenario_property_name] = []
 
-          self._add_cards_to_array(scenario[scenario_property_name], cards_xml)
-        self._scenario_data[scenario_name] = scenario
+          success = self._add_cards_to_array(scenario[scenario_property_name], cards_xml)
+          if not success:
+            all_cards_in_scenario_exist = False
+            break
+        if all_cards_in_scenario_exist:
+          self._scenario_data[scenario_name] = scenario
 
   # Populates the _card_data map with the following data using files in the given directory. See _card_data for more
   # info.
@@ -85,6 +102,11 @@ class Lotr:
           card["SetId"] = set_id
           card["SetName"] = set_name
           card["Id"] = card_xml.get("id")
+          # TODO: Figure out which cards are missing images and populate them. For now we just remove
+          # cards that don't have images.
+          if card["Id"] not in self._image_name_to_url:
+            continue
+          card["Image"] = self._image_name_to_url[card["Id"]]
           card["Name"] = card_xml.get("name")
           card["Size"] = card_xml.get("size")
           for property_or_alternate_xml in list(card_xml):
@@ -102,15 +124,17 @@ class Lotr:
           self._card_data[card["Id"]] = card
 
   # Read {@code cards_xml}, an array of Xml card objects, and append them to {@code arr}.
+  # Returns success if all cards could be added.
   def _add_cards_to_array(self, arr, cards_xml):
     for card_xml in list(cards_xml):
       qty = int(card_xml.get("qty"))
       card_id = card_xml.get("id")
       if card_id not in self._card_data:
-        raise Exception("Could not find card with id %s and name %s" % (card_id, card_xml.text))
+        return False
       for i in range(qty):
         card = self._card_data[card_id]
         arr.append(card)
+    return True
 
   # Draws an initial Lotr hand from the deck.
   @staticmethod
@@ -237,6 +261,11 @@ class Lotr:
       raise
 
     return game
+
+  def get_scenario_names(self) -> Optional[Dict]:
+    scenario_names = list(self._scenario_data.keys()).copy()
+    scenario_names.sort()
+    return scenario_names
 
   def update_game(self, game_id, data) -> int:
     cur = self._lotr_database.get_cursor()

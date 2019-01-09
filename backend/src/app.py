@@ -499,6 +499,10 @@ def lotr_get_latest_game():
     username = request.json["username"]
     return jsonify(lotr.get_latest_game(username))
 
+@app.route("/lotr_get_scenario_names", methods=["POST"])
+def lotr_get_scenario_names():
+    return jsonify(lotr.get_scenario_names())
+
 @app.route("/save_lotr_game", methods=["POST"])
 def lotr_save_game():
     username = request.json["username"]

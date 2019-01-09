@@ -1,51 +1,54 @@
 <template>
-  <div>
+  <div class="lotr-game">
     <ButterBar
       :message="butterBar_message"
       :css="butterBar_css"
     />
     <div class="new-game">
       Invite: <input v-model="playerToInvite" class="lotr-player-to-invite"/>
-      Scenario: <input v-model="scenarioName"/>
+      Scenario: <select v-model="scenarioName">
+                  <option v-for="scenario in scenarioList" :key="scenario">
+                    {{ scenario }}
+                  </option>
+                </select>
       Your deck: <textarea v-model="player1DeckXml"/>
       Partner's deck: <textarea v-model="player2DeckXml"/>
       <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
       <button @click="shownPage = 'main'">Kingdom</button>
-      <button @click="shownPage = 'discard'">Your Discard</button>
-      <button @click="shownPage = 'trash'"><u>T</u>rash</button>
-      <button @click="shownPage = 'notes'">Notes</button>
-      <button @click="shownPage = 'allYourCards'">All your cards</button>
-      <button @click="shownPage = 'shortcuts'">Shortcuts</button>
+      <button @click="shownPage = 'revealArea'">Revealed</button>
       <button @click="shownPage = 'quest'">Quest</button>
       <button @click="shownPage = 'secondQuest'">Second Quest</button>
       <button @click="shownPage = 'encounter'">Encounter</button>
       <button @click="shownPage = 'victory'">Victory</button>
       <button @click="shownPage = 'special'">Special</button>
       <button @click="shownPage = 'secondSpecial'">Second Special</button>
-      <button @click="shownPage = 'secondDeck'">Your Second Deck</button>
-      <img class="preview" v-if="games_currentCardSelection.exists" :src="getImageForGames_CurrentCardSelection()"/>
+      <button @click="shownPage = 'discard'">Your Discard</button>
+      <img v-if="games_currentCardSelection.exists" :class="games_currentCardSelection.array === game.questDeck ? 'quest-preview' : 'preview'" :src="getImageForGames_CurrentCardSelection()"/>
       <div v-if="shownPage === 'main'">
-        <div class="staging-area">
-          <CardList
-              :cardArray="game.stagingArea"
-              :defaultMoveArray="game.encounterDiscard"/>
-        </div>
-        <div class="active-location">
-          <CardList
-              :cardArray="game.activeLocation"
-              :defaultMoveArray="game.encounterDiscard"/>
-        </div>
-        <div class="quest">
-          <CardStack
-            :defaultMoveArray="game.questDiscard"
-            :cardArray="game.questDeck"/>
-        </div>
-        <div class="encounter">
-          <CardStack
-            :defaultMoveArray="game.encounterDiscard"
-            :cardArray="game.encounterDeck"/>
+        <div class="topArea">
+          <div class="staging-area">
+            <CardList
+                :cardArray="game.stagingArea"
+                :defaultMoveArray="game.encounterDiscard"/>
+          </div>
+          <div class="active-location">
+            <CardList
+                :cardArray="game.activeLocation"
+                :defaultMoveArray="game.encounterDiscard"/>
+          </div>
+          <div class="quest">
+            <CardStack
+              className="sideways-card"
+              :defaultMoveArray="game.questDiscard"
+              :cardArray="game.questDeck"/>
+          </div>
+          <div class="encounter">
+            <CardStack
+              :defaultMoveArray="game.stagingArea"
+              :cardArray="game.encounterDeck"/>
+          </div>
         </div>
         <div class="c"/>
         <div class="player-play-area">
@@ -55,7 +58,7 @@
                 :defaultMoveArray="game.encounterDiscard"/>
           </div>
           <div class="characters">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="player.characters"
                 :defaultMoveArray="player.discard"/>
           </div>
@@ -111,6 +114,7 @@
         </div>
       </div>
     </div>
+    <div class="c"/>
   </div>
 </template>
 <style>
@@ -122,6 +126,7 @@
 import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
+import CardWithAttachmentsList from './shared/games/CardWithAttachmentsList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
@@ -130,6 +135,7 @@ import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCa
 
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
+const LOTR_GET_SCENARIO_NAMES_URL = getFullBackendUrlForPath('/lotr_get_scenario_names')
 const SAVE_LOTR_GAME_URL = getFullBackendUrlForPath('/save_lotr_game')
 
 export default {
@@ -138,6 +144,7 @@ export default {
     return {
       games_currentCardSelection: {}, // Object with keys 'array', and 'index', and 'exists'
       shouldSaveChanges: false,
+      scenarioList: [],
       scenarioName: '',
       playerToInvite: '',
       player1DeckXml: '',
@@ -153,9 +160,10 @@ export default {
     }
   },
   components: {
-    ButterBar, CardStack, CardList
+    ButterBar, CardStack, CardList, CardWithAttachmentsList
   },
   created () {
+    this.updateLotrScenarios()
     this.updateLotrDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
     this.playerToInvite = this.defaultPlayerToInvite()
@@ -256,6 +264,20 @@ export default {
           this.updateLotrDisplayWithGameData(response.data.data)
         })
     },
+    updateLotrScenarios () {
+      callAxiosAndSetButterBar(
+        this,
+        LOTR_GET_SCENARIO_NAMES_URL,
+        {},
+        null,
+        'Failed to get scenarios.',
+        (response) => {
+          if (response.data === null) {
+            return
+          }
+          this.scenarioList = response.data
+        })
+    },
     updateLotrDisplayWithGameData (gameData) {
       let currentCardSelectionArrayPath
       if (this.games_currentCardSelection.exists) {
@@ -266,7 +288,7 @@ export default {
       this.game = gameData
       this.playerIndex = gameData.players[0].name === this.username ? 0 : 1
       this.player = this.game.players[this.playerIndex]
-      this.opponent = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
+      this.partner = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
 
       if (currentCardSelectionArrayPath) {
         setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
@@ -278,25 +300,35 @@ export default {
       }
       if (this.games_currentCardSelection.array === this.player.deck ||
           this.games_currentCardSelection.array === this.partner.deck) {
-        return '/static/dominion/card_images/backside_blue.jpg'
+        return '/static/lotr/cards/card.jpg'
+      } else if (this.games_currentCardSelection.array === this.game.encounterDeck) {
+        return '/static/lotr/cards/encounter.jpg'
       }
       let index = this.games_currentCardSelection.index
       if (index === undefined) {
         index = this.games_currentCardSelection.array.length - 1
       }
       if (index < 0) {
-        return '/static/dominion/card_images/_blank.jpg'
+        return '/static/blank-card.jpg'
       } else if (this.games_currentCardSelection.array.length <= index) {
         return ''
       } else {
-        return '/static/dominion/card_images/_blank.jpg' // TODO: Fix this.
+        return this.getImageForCard(this.games_currentCardSelection.array[index])
       }
     },
     getImageForCardArrayOrBlank (cardArray) {
-      return '/static/dominion/card_images/_blank.jpg'
+      if (cardArray.length === 0) {
+        return '/static/blank-card.jpg'
+      } else if (cardArray === this.player.deck || cardArray === this.partner.deck) {
+        return '/static/lotr/cards/card.jpg'
+      } else if (cardArray === this.game.encounterDeck) {
+        return '/static/lotr/cards/encounter.jpg'
+      } else {
+        return this.getImageForCard(cardArray[cardArray.length - 1])
+      }
     },
     getImageForCard (card) {
-      return '/static/dominion/card_images/_blank.jpg'
+      return card['Image']
     },
     getGames_CurrentCardSelectionCard () {
       let cardIndex = this.games_currentCardSelection.index
@@ -328,8 +360,8 @@ export default {
         return
       }
       switch (event.key) {
-        case 'a': this.incrementThreat(); break
-        case 'A': this.decrementThreat(); break
+        case 't': this.incrementThreat(); break
+        case 'T': this.decrementThreat(); break
         case 'w': this.singleCardFromDeckToHand(); return
       }
       if (!this.games_currentCardSelection.exists) {
@@ -338,6 +370,10 @@ export default {
       let destinationArray = null
       let reshufflePile = null
       switch (event.key) {
+        case 'c': destinationArray = this.player.characters; break
+        case 'e': destinationArray = this.player.engagedEnemies; break
+        case 'l': destinationArray = this.game.activeLocation; break
+        case 'p': destinationArray = this.partner.characters; break
         case 'd': destinationArray = this.player.discard; break
         case 'h': destinationArray = this.player.hand; break
         case 'k': destinationArray = this.player.deck; break

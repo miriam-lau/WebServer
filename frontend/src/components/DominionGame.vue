@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="dominion-game">
     <ButterBar
       :message="butterBar_message"
       :css="butterBar_css"
@@ -307,6 +307,7 @@
         </div>
       </div>
     </div>
+    <div class="c"/>
   </div>
 </template>
 <style>
@@ -477,7 +478,7 @@ export default {
         index = this.games_currentCardSelection.array.length - 1
       }
       if (index < 0) {
-        return '/static/dominion/card_images/_blank.jpg'
+        return '/static/blank-card.jpg'
       } else if (this.games_currentCardSelection.array.length <= index) {
         return ''
       } else {
@@ -486,7 +487,7 @@ export default {
     },
     getImageForCardArrayOrBlank (cardArray) {
       if (cardArray.length === 0) {
-        return '/static/dominion/card_images/_blank.jpg'
+        return '/static/blank-card.jpg'
       } else if (cardArray === this.player.deck || cardArray === this.opponent.deck) {
         return '/static/dominion/card_images/backside_blue.jpg'
       } else if (cardArray === this.game.boonsDeck) {
