@@ -30,6 +30,7 @@ class Dominion:
         # the set it comes from,
         # Cards includes all cards to select the randomized kingdom from.
         #     It includes events and landmarks and does not include cards dependent on others like potion.
+        self._image_name_to_url = {}
         self._cards = []
         self._boons = []
         self._hexes = []
@@ -86,6 +87,7 @@ class Dominion:
         self._lucky_coin = {}
         self._shelters = []
         self._ruins = []
+        self._populate_image_name_to_url("static/dominion/image-name-to-url.yaml")
         self._add_cards_from_file("static/dominion/sets/adventures.yaml")
         self._add_cards_from_file("static/dominion/sets/alchemy.yaml")
         self._add_cards_from_file("static/dominion/sets/base-set-2.yaml")
@@ -104,41 +106,45 @@ class Dominion:
         self.remove_banned_cards_from_kingdom()
         self._dominion_database = DominionDatabase(database)
 
+    def _populate_image_name_to_url(self, filename):
+        with open(filename, 'r') as stream:
+            try:
+                root = yaml.load(stream)
+                for name in root:
+                  self._image_name_to_url[name] = root[name]
+            except yaml.YAMLError as exc:
+                print(exc)
+
     # Adds the fields "type", and "iamge" to {@code card}.
     # card: Object
     # type: string
     # return: The modified card object.
-    @staticmethod
-    def _add_additional_card_info(card, type):
+    def _add_additional_card_info(self, card, type):
         card["type"] = type
-        Dominion._add_image_to_card(card)
+        self._add_image_to_card(card)
         return card
 
     # Adds the field "image" to {@code card}.
     # card: Object
     # return: The modified card object.
-    @staticmethod
-    def _add_image_to_card(card):
-        card["image"] = Dominion._get_image_for_card(card)
+    def _add_image_to_card(self, card):
+        card["image"] = self._get_image_for_card(card)
         return card
 
     # Adds the field "image" to {@code cards}.
     # card: Array<Object>
     # return: The modified card object.
-    @staticmethod
-    def _add_images_to_cards(cards):
+    def _add_images_to_cards(self, cards):
         for card in cards:
-            Dominion._add_image_to_card(card)
+            self._add_image_to_card(card)
         return cards
 
     # Returns a string with a link to the image for the given {@code card}
-    @staticmethod
-    def _get_image_for_card(card):
+    def _get_image_for_card(self, card):
         image_name = card["name"]
         image_name = re.sub(" / ", "", image_name)
         image_name = re.sub("[ ]", "_", image_name)
-        image_name = "/static/dominion/card_images/" + image_name + "Digital.jpg"
-        return image_name
+        return self._image_name_to_url[image_name]
 
     def _add_cards_from_file(self, filename):
         with open(filename, 'r') as stream:
@@ -146,27 +152,27 @@ class Dominion:
                 set = yaml.load(stream)
                 if "cards" in set:
                     for card in set["cards"]:
-                        Dominion._add_additional_card_info(card, "card")
+                        self._add_additional_card_info(card, "card")
                         self._cards.append(card)
                 if "events" in set:
                     for card in set["events"]:
-                        Dominion._add_additional_card_info(card, "event")
+                        self._add_additional_card_info(card, "event")
                         self._cards.append(card)
                 if "landmarks" in set:
                     for card in set["landmarks"]:
-                        Dominion._add_additional_card_info(card, "landmark")
+                        self._add_additional_card_info(card, "landmark")
                         self._cards.append(card)
                 if "projects" in set:
                     for card in set["projects"]:
-                        Dominion._add_additional_card_info(card, "project")
+                        self._add_additional_card_info(card, "project")
                         self._cards.append(card)
                 if "boons" in set:
                     for card in set["boons"]:
-                        Dominion._add_additional_card_info(card, "boon")
+                        self._add_additional_card_info(card, "boon")
                         self._boons.append(card)
                 if "hexes" in set:
                     for card in set["hexes"]:
-                        Dominion._add_additional_card_info(card, "hexes")
+                        self._add_additional_card_info(card, "hexes")
                         self._hexes.append(card)
             except yaml.YAMLError as exc:
                 print(exc)
@@ -175,59 +181,59 @@ class Dominion:
         with open(filename, 'r') as stream:
             try:
                 cards = yaml.load(stream)
-                self._potion = Dominion._add_image_to_card(cards["potion"][0])
-                self._shelters_card = Dominion._add_image_to_card(cards["shelters_card"][0])
-                self._colonies_platinums = Dominion._add_image_to_card(cards["colonies_platinums"][0])
-                self._platinum = Dominion._add_image_to_card(cards["platinum"][0])
-                self._gold = Dominion._add_image_to_card(cards["gold"][0])
-                self._silver = Dominion._add_image_to_card(cards["silver"][0])
-                self._copper = Dominion._add_image_to_card(cards["copper"][0])
-                self._colony = Dominion._add_image_to_card(cards["colony"][0])
-                self._province = Dominion._add_image_to_card(cards["province"][0])
-                self._duchy = Dominion._add_image_to_card(cards["duchy"][0])
-                self._estate = Dominion._add_image_to_card(cards["estate"][0])
-                self._plunder = Dominion._add_image_to_card(cards["plunder"][0])
-                self._encampment = Dominion._add_image_to_card(cards["encampment"][0])
-                self._patrician = Dominion._add_image_to_card(cards["patrician"][0])
-                self._emporium = Dominion._add_image_to_card(cards["emporium"][0])
-                self._settlers = Dominion._add_image_to_card(cards["settlers"][0])
-                self._bustling_village = Dominion._add_image_to_card(cards["bustling_village"][0])
-                self._catapult = Dominion._add_image_to_card(cards["catapult"][0])
-                self._rocks = Dominion._add_image_to_card(cards["rocks"][0])
-                self._gladiator = Dominion._add_image_to_card(cards["gladiator"][0])
-                self._fortune = Dominion._add_image_to_card(cards["fortune"][0])
-                self._sauna = Dominion._add_image_to_card(cards["sauna"][0])
-                self._avanto = Dominion._add_image_to_card(cards["avanto"][0])
-                self._treasure_hunter = Dominion._add_image_to_card(cards["treasure_hunter"][0])
-                self._warrior = Dominion._add_image_to_card(cards["warrior"][0])
-                self._hero = Dominion._add_image_to_card(cards["hero"][0])
-                self._champion = Dominion._add_image_to_card(cards["champion"][0])
-                self._soldier = Dominion._add_image_to_card(cards["soldier"][0])
-                self._fugitive = Dominion._add_image_to_card(cards["fugitive"][0])
-                self._disciple = Dominion._add_image_to_card(cards["disciple"][0])
-                self._teacher = Dominion._add_image_to_card(cards["teacher"][0])
-                self._madman = Dominion._add_image_to_card(cards["madman"][0])
-                self._mercenary = Dominion._add_image_to_card(cards["mercenary"][0])
-                self._bat = Dominion._add_image_to_card(cards["bat"][0])
-                self._spoils = Dominion._add_image_to_card(cards["spoils"][0])
-                self._curse = Dominion._add_image_to_card(cards["curse"][0])
-                self._will_o_wisp = Dominion._add_image_to_card(cards["will_o_wisp"][0])
-                self._imp = Dominion._add_image_to_card(cards["imp"][0])
-                self._ghost = Dominion._add_image_to_card(cards["ghost"][0])
-                self._wish = Dominion._add_image_to_card(cards["wish"][0])
-                self._magic_lamp = Dominion._add_image_to_card(cards["magic_lamp"][0])
-                self._haunted_mirror = Dominion._add_image_to_card(cards["haunted_mirror"][0])
-                self._goat = Dominion._add_image_to_card(cards["goat"][0])
-                self._pasture = Dominion._add_image_to_card(cards["pasture"][0])
-                self._pouch = Dominion._add_image_to_card(cards["pouch"][0])
-                self._cursed_gold = Dominion._add_image_to_card(cards["cursed_gold"][0])
-                self._lucky_coin = Dominion._add_image_to_card(cards["lucky_coin"][0])
-                self._knights = Dominion._add_images_to_cards(cards["knights"])
-                self._castles = Dominion._add_images_to_cards(cards["castles"])
-                self._prizes = Dominion._add_images_to_cards(cards["prizes"])
-                self._zombies = Dominion._add_images_to_cards(cards["zombies"])
-                self._shelters = Dominion._add_images_to_cards(cards["shelters"])
-                self._ruins = Dominion._add_images_to_cards(cards["ruins"])
+                self._potion = self._add_image_to_card(cards["potion"][0])
+                self._shelters_card = self._add_image_to_card(cards["shelters_card"][0])
+                self._colonies_platinums = self._add_image_to_card(cards["colonies_platinums"][0])
+                self._platinum = self._add_image_to_card(cards["platinum"][0])
+                self._gold = self._add_image_to_card(cards["gold"][0])
+                self._silver = self._add_image_to_card(cards["silver"][0])
+                self._copper = self._add_image_to_card(cards["copper"][0])
+                self._colony = self._add_image_to_card(cards["colony"][0])
+                self._province = self._add_image_to_card(cards["province"][0])
+                self._duchy = self._add_image_to_card(cards["duchy"][0])
+                self._estate = self._add_image_to_card(cards["estate"][0])
+                self._plunder = self._add_image_to_card(cards["plunder"][0])
+                self._encampment = self._add_image_to_card(cards["encampment"][0])
+                self._patrician = self._add_image_to_card(cards["patrician"][0])
+                self._emporium = self._add_image_to_card(cards["emporium"][0])
+                self._settlers = self._add_image_to_card(cards["settlers"][0])
+                self._bustling_village = self._add_image_to_card(cards["bustling_village"][0])
+                self._catapult = self._add_image_to_card(cards["catapult"][0])
+                self._rocks = self._add_image_to_card(cards["rocks"][0])
+                self._gladiator = self._add_image_to_card(cards["gladiator"][0])
+                self._fortune = self._add_image_to_card(cards["fortune"][0])
+                self._sauna = self._add_image_to_card(cards["sauna"][0])
+                self._avanto = self._add_image_to_card(cards["avanto"][0])
+                self._treasure_hunter = self._add_image_to_card(cards["treasure_hunter"][0])
+                self._warrior = self._add_image_to_card(cards["warrior"][0])
+                self._hero = self._add_image_to_card(cards["hero"][0])
+                self._champion = self._add_image_to_card(cards["champion"][0])
+                self._soldier = self._add_image_to_card(cards["soldier"][0])
+                self._fugitive = self._add_image_to_card(cards["fugitive"][0])
+                self._disciple = self._add_image_to_card(cards["disciple"][0])
+                self._teacher = self._add_image_to_card(cards["teacher"][0])
+                self._madman = self._add_image_to_card(cards["madman"][0])
+                self._mercenary = self._add_image_to_card(cards["mercenary"][0])
+                self._bat = self._add_image_to_card(cards["bat"][0])
+                self._spoils = self._add_image_to_card(cards["spoils"][0])
+                self._curse = self._add_image_to_card(cards["curse"][0])
+                self._will_o_wisp = self._add_image_to_card(cards["will_o_wisp"][0])
+                self._imp = self._add_image_to_card(cards["imp"][0])
+                self._ghost = self._add_image_to_card(cards["ghost"][0])
+                self._wish = self._add_image_to_card(cards["wish"][0])
+                self._magic_lamp = self._add_image_to_card(cards["magic_lamp"][0])
+                self._haunted_mirror = self._add_image_to_card(cards["haunted_mirror"][0])
+                self._goat = self._add_image_to_card(cards["goat"][0])
+                self._pasture = self._add_image_to_card(cards["pasture"][0])
+                self._pouch = self._add_image_to_card(cards["pouch"][0])
+                self._cursed_gold = self._add_image_to_card(cards["cursed_gold"][0])
+                self._lucky_coin = self._add_image_to_card(cards["lucky_coin"][0])
+                self._knights = self._add_images_to_cards(cards["knights"])
+                self._castles = self._add_images_to_cards(cards["castles"])
+                self._prizes = self._add_images_to_cards(cards["prizes"])
+                self._zombies = self._add_images_to_cards(cards["zombies"])
+                self._shelters = self._add_images_to_cards(cards["shelters"])
+                self._ruins = self._add_images_to_cards(cards["ruins"])
             except yaml.YAMLError as exc:
                 print(exc)
 

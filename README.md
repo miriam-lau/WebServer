@@ -19,7 +19,8 @@ python3 -m virtualenv env<br>
 pip3 install flask flask-socketio eventlet<br>
 pip3 install psycopg2<br>
 pip3 install -U flask-cors<br>
-pip3 install pyyaml<br><br>
+pip3 install pyyaml<br>
+pip3 install beautifulsoup4<br><br>
 
 // navigate to "frontend" directory
 npm install -g vue-cli<br>
