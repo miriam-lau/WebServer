@@ -4,8 +4,11 @@ import pprint
 from src.dominion.dominion_database import DominionDatabase
 from typing import List, Optional, Dict
 import psycopg2
+import re
 
 # Static files taken from DominionRandomizer/DominionWiki.
+
+
 class Dominion:
     NON_SUPPLY_CARDS = "non_supply_cards"
     KINGDOM_CARDS = "kingdom_cards"
@@ -23,11 +26,66 @@ class Dominion:
     HEXES = "hexes"
 
     def __init__(self, database):
-        # Cards includes all cards to select the randomized kingdom from. It includes events and
-        # landmarks and does not include cards dependent on others like potion.
+        # All the cards initialized below will have data specified in their corresponding yaml field as well as
+        # the set it comes from,
+        # Cards includes all cards to select the randomized kingdom from.
+        #     It includes events and landmarks and does not include cards dependent on others like potion.
         self._cards = []
         self._boons = []
         self._hexes = []
+        self._potion = {}
+        self._shelters_card = {}
+        self._colonies_platinums = {}
+        self._platinum = {}
+        self._gold = {}
+        self._silver = {}
+        self._copper = {}
+        self._colony = {}
+        self._province = {}
+        self._duchy = {}
+        self._estate = {}
+        self._plunder = {}
+        self._encampment = {}
+        self._patrician = {}
+        self._emporium = {}
+        self._settlers = {}
+        self._bustling_village = {}
+        self._catapult = {}
+        self._rocks = {}
+        self._gladiator = {}
+        self._fortune = {}
+        self._sauna = {}
+        self._avanto = {}
+        self._knights = []
+        self._castles = []
+        self._treasure_hunter = {}
+        self._warrior = {}
+        self._hero = {}
+        self._champion = {}
+        self._soldier = {}
+        self._fugitive = {}
+        self._disciple = {}
+        self._teacher = {}
+        self._madman = {}
+        self._mercenary = {}
+        self._prizes = []
+        self._bat = {}
+        self._zombies = []
+        self._spoils = {}
+        self._curse = {}
+        self._will_o_wisp = {}
+        self._imp = {}
+        self._ghost = {}
+        self._wish = {}
+        self._magic_lamp = {}
+        self._haunted_mirror = {}
+        self._goat = {}
+        self._pasture = {}
+        self._pouch = {}
+        self._cursed_gold = {}
+        self._lucky_coin = {}
+        self._shelters = []
+        self._ruins = []
         self._add_cards_from_file("static/dominion/sets/adventures.yaml")
         self._add_cards_from_file("static/dominion/sets/alchemy.yaml")
         self._add_cards_from_file("static/dominion/sets/base-set-2.yaml")
@@ -41,9 +99,46 @@ class Dominion:
         self._add_cards_from_file("static/dominion/sets/promos.yaml")
         self._add_cards_from_file("static/dominion/sets/prosperity.yaml")
         self._add_cards_from_file("static/dominion/sets/renaissance.yaml")
-        self._add_cards_from_file("static/dominion/sets/seaside.yaml")
+        self._process_supplementary_cards(
+            "static/dominion/sets/supplementary.yaml")
         self.remove_banned_cards_from_kingdom()
         self._dominion_database = DominionDatabase(database)
+
+    # Adds the fields "type", and "iamge" to {@code card}.
+    # card: Object
+    # type: string
+    # return: The modified card object.
+    @staticmethod
+    def _add_additional_card_info(card, type):
+        card["type"] = type
+        Dominion._add_image_to_card(card)
+        return card
+
+    # Adds the field "image" to {@code card}.
+    # card: Object
+    # return: The modified card object.
+    @staticmethod
+    def _add_image_to_card(card):
+        card["image"] = Dominion._get_image_for_card(card)
+        return card
+
+    # Adds the field "image" to {@code cards}.
+    # card: Array<Object>
+    # return: The modified card object.
+    @staticmethod
+    def _add_images_to_cards(cards):
+        for card in cards:
+            Dominion._add_image_to_card(card)
+        return cards
+
+    # Returns a string with a link to the image for the given {@code card}
+    @staticmethod
+    def _get_image_for_card(card):
+        image_name = card["name"]
+        image_name = re.sub(" / ", "", image_name)
+        image_name = re.sub("[ ]", "_", image_name)
+        image_name = "/static/dominion/card_images/" + image_name + "Digital.jpg"
+        return image_name
 
     def _add_cards_from_file(self, filename):
         with open(filename, 'r') as stream:
@@ -51,40 +146,96 @@ class Dominion:
                 set = yaml.load(stream)
                 if "cards" in set:
                     for card in set["cards"]:
-                        card["set"] = set["name"]
-                        card["type"] = "card"
+                        Dominion._add_additional_card_info(card, "card")
                         self._cards.append(card)
                 if "events" in set:
                     for card in set["events"]:
-                        card["set"] = set["name"]
-                        card["type"] = "event"
+                        Dominion._add_additional_card_info(card, "event")
                         self._cards.append(card)
                 if "landmarks" in set:
                     for card in set["landmarks"]:
-                        card["set"] = set["name"]
-                        card["type"] = "landmark"
+                        Dominion._add_additional_card_info(card, "landmark")
                         self._cards.append(card)
                 if "projects" in set:
                     for card in set["projects"]:
-                        card["set"] = set["name"]
-                        card["type"] = "project"
+                        Dominion._add_additional_card_info(card, "project")
                         self._cards.append(card)
                 if "boons" in set:
                     for card in set["boons"]:
-                        card["set"] = set["name"]
-                        card["type"] = "boon"
+                        Dominion._add_additional_card_info(card, "boon")
                         self._boons.append(card)
                 if "hexes" in set:
                     for card in set["hexes"]:
-                        card["set"] = set["name"]
-                        card["type"] = "hexes"
+                        Dominion._add_additional_card_info(card, "hexes")
                         self._hexes.append(card)
             except yaml.YAMLError as exc:
                 print(exc)
 
+    def _process_supplementary_cards(self, filename):
+        with open(filename, 'r') as stream:
+            try:
+                cards = yaml.load(stream)
+                self._potion = Dominion._add_image_to_card(cards["potion"][0])
+                self._shelters_card = Dominion._add_image_to_card(cards["shelters_card"][0])
+                self._colonies_platinums = Dominion._add_image_to_card(cards["colonies_platinums"][0])
+                self._platinum = Dominion._add_image_to_card(cards["platinum"][0])
+                self._gold = Dominion._add_image_to_card(cards["gold"][0])
+                self._silver = Dominion._add_image_to_card(cards["silver"][0])
+                self._copper = Dominion._add_image_to_card(cards["copper"][0])
+                self._colony = Dominion._add_image_to_card(cards["colony"][0])
+                self._province = Dominion._add_image_to_card(cards["province"][0])
+                self._duchy = Dominion._add_image_to_card(cards["duchy"][0])
+                self._estate = Dominion._add_image_to_card(cards["estate"][0])
+                self._plunder = Dominion._add_image_to_card(cards["plunder"][0])
+                self._encampment = Dominion._add_image_to_card(cards["encampment"][0])
+                self._patrician = Dominion._add_image_to_card(cards["patrician"][0])
+                self._emporium = Dominion._add_image_to_card(cards["emporium"][0])
+                self._settlers = Dominion._add_image_to_card(cards["settlers"][0])
+                self._bustling_village = Dominion._add_image_to_card(cards["bustling_village"][0])
+                self._catapult = Dominion._add_image_to_card(cards["catapult"][0])
+                self._rocks = Dominion._add_image_to_card(cards["rocks"][0])
+                self._gladiator = Dominion._add_image_to_card(cards["gladiator"][0])
+                self._fortune = Dominion._add_image_to_card(cards["fortune"][0])
+                self._sauna = Dominion._add_image_to_card(cards["sauna"][0])
+                self._avanto = Dominion._add_image_to_card(cards["avanto"][0])
+                self._treasure_hunter = Dominion._add_image_to_card(cards["treasure_hunter"][0])
+                self._warrior = Dominion._add_image_to_card(cards["warrior"][0])
+                self._hero = Dominion._add_image_to_card(cards["hero"][0])
+                self._champion = Dominion._add_image_to_card(cards["champion"][0])
+                self._soldier = Dominion._add_image_to_card(cards["soldier"][0])
+                self._fugitive = Dominion._add_image_to_card(cards["fugitive"][0])
+                self._disciple = Dominion._add_image_to_card(cards["disciple"][0])
+                self._teacher = Dominion._add_image_to_card(cards["teacher"][0])
+                self._madman = Dominion._add_image_to_card(cards["madman"][0])
+                self._mercenary = Dominion._add_image_to_card(cards["mercenary"][0])
+                self._bat = Dominion._add_image_to_card(cards["bat"][0])
+                self._spoils = Dominion._add_image_to_card(cards["spoils"][0])
+                self._curse = Dominion._add_image_to_card(cards["curse"][0])
+                self._will_o_wisp = Dominion._add_image_to_card(cards["will_o_wisp"][0])
+                self._imp = Dominion._add_image_to_card(cards["imp"][0])
+                self._ghost = Dominion._add_image_to_card(cards["ghost"][0])
+                self._wish = Dominion._add_image_to_card(cards["wish"][0])
+                self._magic_lamp = Dominion._add_image_to_card(cards["magic_lamp"][0])
+                self._haunted_mirror = Dominion._add_image_to_card(cards["haunted_mirror"][0])
+                self._goat = Dominion._add_image_to_card(cards["goat"][0])
+                self._pasture = Dominion._add_image_to_card(cards["pasture"][0])
+                self._pouch = Dominion._add_image_to_card(cards["pouch"][0])
+                self._cursed_gold = Dominion._add_image_to_card(cards["cursed_gold"][0])
+                self._lucky_coin = Dominion._add_image_to_card(cards["lucky_coin"][0])
+                self._knights = Dominion._add_images_to_cards(cards["knights"])
+                self._castles = Dominion._add_images_to_cards(cards["castles"])
+                self._prizes = Dominion._add_images_to_cards(cards["prizes"])
+                self._zombies = Dominion._add_images_to_cards(cards["zombies"])
+                self._shelters = Dominion._add_images_to_cards(cards["shelters"])
+                self._ruins = Dominion._add_images_to_cards(cards["ruins"])
+            except yaml.YAMLError as exc:
+                print(exc)
+
     def remove_banned_cards_from_kingdom(self):
-        self._cards = [card for card in self._cards if card["name"] != "Black Market"]
-        self._cards = [card for card in self._cards if card["name"] != "Possession"]
+        self._cards = [
+            card for card in self._cards if card["name"] != "Black Market"]
+        self._cards = [
+            card for card in self._cards if card["name"] != "Possession"]
 
     # Generates a random dominion kingdom. It has the following keys:
     # normal_cards: The normal set of 10 kingdom cards.
@@ -94,6 +245,8 @@ class Dominion:
     # should_include_platinum_and_colony: Whether or not to include platinum and colony.
     # should_include_shelters: Whether or not to use shelters instead of estates.
     # boons: If Druid is in the game, these are the boons to use for it.
+    # supplementary_cards: Redundant with the should_include_* lines. Contains the cards to include
+    #     if those are selected.
     # TODO: Skips Stash, Pearl Diver, and Secret Passage because they're unimplemented in the front end.
     def generate_random_kingdom(self):
         normal_cards = []
@@ -102,7 +255,7 @@ class Dominion:
 
         boons = random.sample(self._boons, len(self._boons))[:3]
 
-        shuffled_kingdom_cards = random.sample( self._cards, len(self._cards))
+        shuffled_kingdom_cards = random.sample(self._cards, len(self._cards))
         for card in shuffled_kingdom_cards:
             if card["name"] in ["Stash", "Secret Passage", "Pearl Diver"]:
                 continue
@@ -130,19 +283,26 @@ class Dominion:
             bane = None
         ret["bane"] = bane
         ret["should_include_potion"] = Dominion.should_add_potion(normal_cards)
-        ret["should_include_platinum_and_colony"] = Dominion.should_add_platinum_and_colony(normal_cards)
-        ret["should_include_shelters"] = Dominion.should_add_shelters(normal_cards)
+        ret["should_include_platinum_and_colony"] = Dominion.should_add_platinum_and_colony(
+            normal_cards)
+        ret["should_include_shelters"] = Dominion.should_add_shelters(
+            normal_cards)
         if not Dominion.should_include_boons(normal_cards):
             boons = []
         ret["boons"] = boons
+        ret["supplementary_cards"] = []
+        if ret["should_include_potion"]:
+            ret["supplementary_cards"].append(self._potion)
+        if ret["should_include_platinum_and_colony"]:
+            ret["supplementary_cards"].append(self._colonies_platinums)
+        if ret["should_include_shelters"]:
+            ret["supplementary_cards"].append(self._shelters_card)
         return ret
 
     def generate_random_kingdom_for_online_game(self):
         random_cards = self.generate_random_kingdom()
         normal_cards = random_cards["normal_cards"].copy()
         normal_cards.sort(key=lambda card: card["cost"]["treasure"])
-        if len(normal_cards) != 10:
-            raise Exception("Expected 10 normal cards per kingdom")
 
         sideways_cards = random_cards["sideways_cards"].copy()
         sideways_cards.sort(key=lambda card: card["cost"]["treasure"])
@@ -153,8 +313,8 @@ class Dominion:
             bane = random_cards["bane"]
 
         ret = {}
-        ret[Dominion.KINGDOM_CARDS] = [] # A nested array
-        ret[Dominion.NON_SUPPLY_CARDS] = [] # A nested array
+        ret[Dominion.KINGDOM_CARDS] = []  # A nested array
+        ret[Dominion.NON_SUPPLY_CARDS] = []  # A nested array
         ret[Dominion.SIDEWAYS_CARDS] = sideways_cards
         ret[Dominion.BANE] = []
         ret[Dominion.TRASH] = []
@@ -218,10 +378,10 @@ class Dominion:
             if card_name in ["Bandit Camp", "Marauder", "Pillage"]:
                 has_spoils = True
             if card_name in ["Witch", "Sea Hag", "Familiar", "Mountebank", "Young Witch",
-                "Ill-Gotten Gains", "Soothsayer", "Old Witch", "Swindler", "Replace",
-                "Torturer", "Ambassador", "Tournament", "Giant", "Swamg Hag", "Embargo",
-                "Hideout", "Leprechaun", "Skulk", "Cursed Village", "Tormentor", "Vampire",
-                "Werewolf", "Pooka"]:
+                             "Ill-Gotten Gains", "Soothsayer", "Old Witch", "Swindler", "Replace",
+                             "Torturer", "Ambassador", "Tournament", "Giant", "Swamg Hag", "Embargo",
+                             "Hideout", "Leprechaun", "Skulk", "Cursed Village", "Tormentor", "Vampire",
+                             "Werewolf", "Pooka"]:
                 has_curses = True
             if card_name in ["Devil's Workshop", "Tormentor"]:
                 has_imp = True
@@ -229,13 +389,13 @@ class Dominion:
                 has_will_o_wisp = True
                 has_imp = True
                 has_ghost = True
-            if card_name == "Cemetary":
+            if card_name == "Cemetery":
                 has_ghost = True
             if card_name in ["Secret Cave", "Leprechaun"]:
                 has_wishes = True
             if card_name == "Secret Cave":
                 has_magic_lamp = True
-            if card_name == "Cemetary":
+            if card_name == "Cemetery":
                 has_haunted_mirror = True
             if card_name == "Pixie":
                 has_goat = True
@@ -258,25 +418,25 @@ class Dominion:
             has_will_o_wisp = True
 
         if has_page_line:
-            Dominion.add_page_line(ret)
+            self.add_page_line(ret)
 
         if has_peasant_line:
-            Dominion.add_peasant_line(ret)
+            self.add_peasant_line(ret)
 
         if has_madman:
-            Dominion.add_madman(ret)
+            self.add_madman(ret)
 
         if has_prizes:
-            Dominion.add_prizes(ret)
+            self.add_prizes(ret)
 
         if has_mercenary:
-            Dominion.add_mercenary(ret)
+            self.add_mercenary(ret)
 
         if has_bat:
-            Dominion.add_bat(ret)
+            self.add_bat(ret)
 
         if has_zombies:
-            Dominion.add_zombies(ret)
+            self.add_zombies(ret)
 
         if has_boons:
             self.add_boons(ret)
@@ -285,48 +445,50 @@ class Dominion:
             self.add_hexes(ret)
 
         if has_spoils:
-            Dominion.add_spoils(ret)
+            self.add_spoils(ret)
 
         if has_curses:
-            Dominion.add_curses(ret)
+            self.add_curses(ret)
 
         if has_imp:
-            Dominion.add_imp(ret)
+            self.add_imp(ret)
 
         if has_will_o_wisp:
-            Dominion.add_will_o_wisp(ret)
+            self.add_will_o_wisp(ret)
 
         if has_ghost:
-            Dominion.add_ghost(ret)
+            self.add_ghost(ret)
 
         if has_wishes:
-            Dominion.add_wishes(ret)
+            self.add_wishes(ret)
 
         if has_ruins:
-            Dominion.add_ruins(ret)
+            self.add_ruins(ret)
 
         if has_potion:
-            Dominion.add_potion(ret)
+            self.add_potion(ret)
 
-        Dominion.add_vp_cards(ret, has_platinum_and_colony)
-        Dominion.add_treasure_cards(ret, has_platinum_and_colony)
-        Dominion.generate_player_cards(
+        self.add_vp_cards(ret, has_platinum_and_colony)
+        self.add_treasure_cards(ret, has_platinum_and_colony)
+        self.generate_player_cards(
             ret[Dominion.PLAYER_1_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
-        Dominion.generate_player_cards(
+        self.generate_player_cards(
             ret[Dominion.PLAYER_2_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
             has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
         ret[Dominion.PLAYER_1_HAND] = []
         ret[Dominion.PLAYER_2_HAND] = []
         for i in range(5):
-          ret[Dominion.PLAYER_1_HAND].append(ret[Dominion.PLAYER_1_DECK].pop())
-          ret[Dominion.PLAYER_2_HAND].append(ret[Dominion.PLAYER_2_DECK].pop())
+            ret[Dominion.PLAYER_1_HAND].append(
+                ret[Dominion.PLAYER_1_DECK].pop())
+            ret[Dominion.PLAYER_2_HAND].append(
+                ret[Dominion.PLAYER_2_DECK].pop())
 
         for card in normal_cards:
-            ret[Dominion.KINGDOM_CARDS].append(Dominion.generate_pile(card))
+            ret[Dominion.KINGDOM_CARDS].append(self.generate_pile(card))
 
         if bane:
-            ret[Dominion.BANE] = Dominion.generate_pile(bane)
+            ret[Dominion.BANE] = self.generate_pile(bane)
 
         Dominion.annotate_card_piles(ret)
         return ret
@@ -361,262 +523,54 @@ class Dominion:
                     card["pile_type"] = Dominion.VP_CARDS
                     card["pile_index"] = estate_pile_index
 
-    @staticmethod
-    def add_treasure_cards(card_map, has_platinum_and_colony):
+    def add_treasure_cards(self, card_map, has_platinum_and_colony):
         if has_platinum_and_colony:
-            card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies({
-                "name": "Platinum",
-                "cost": { "treasure": 9 },
-                "set": "Prosperity",
-                "type": "card"
-            }, 12))
-        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies({
-            "name": "Gold",
-            "cost": { "treasure": 6 },
-            "set": "Common",
-            "type": "card"
-        }, 30))
-        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies({
-            "name": "Silver",
-            "cost": { "treasure": 3 },
-            "set": "Common",
-            "type": "card"
-        }, 40))
-        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies({
-            "name": "Copper",
-            "cost": { "treasure": 0 },
-            "set": "Common",
-            "type": "card"
-        }, 46))
+            card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies(self._platinum, 12))
+        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies(self._gold, 30))
+        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies(self._silver, 40))
+        card_map[Dominion.TREASURE_CARDS].append(Dominion.create_n_copies(self._copper, 46))
 
-    @staticmethod
-    def add_vp_cards(card_map, has_platinum_and_colony):
+    def add_vp_cards(self, card_map, has_platinum_and_colony):
         if has_platinum_and_colony:
-            card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies({
-                "name": "Colony",
-                "cost": { "treasure": 11 },
-                "set": "Prosperity",
-                "type": "card"
-            }, 8))
-        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies({
-            "name": "Province",
-            "cost": { "treasure": 8 },
-            "set": "Common",
-            "type": "card"
-        }, 8))
-        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies({
-            "name": "Duchy",
-            "cost": { "treasure": 5 },
-            "set": "Common",
-            "type": "card"
-        }, 8))
-        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies({
-            "name": "Estate",
-            "cost": { "treasure": 2 },
-            "set": "Common",
-            "type": "card"
-        }, 8))
+            card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies(self._colony, 8))
+        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies(self._province, 8))
+        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies(self._duchy, 8))
+        card_map[Dominion.VP_CARDS].append(Dominion.create_n_copies(self._estate, 8))
 
-    @staticmethod
-    def generate_pile(card):
+    def generate_pile(self, card):
         card_name = card["name"]
 
         ret = []
         if card_name == "Encampment / Plunder":
-            ret += Dominion.create_n_copies({
-                "name": "Plunder",
-                "cost": { "treasure": 5 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Encampment",
-                "cost": { "treasure": 2 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._plunder, 5)
+            ret += Dominion.create_n_copies(self._encampment, 5)
             return ret
         if card_name == "Patrician / Emporium":
-            ret += Dominion.create_n_copies({
-                "name": "Emporium",
-                "cost": { "treasure": 5 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Patrician",
-                "cost": { "treasure": 2 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._emporium, 5)
+            ret += Dominion.create_n_copies(self._patrician, 5)
             return ret
         if card_name == "Settlers / Bustling Village":
-            ret += Dominion.create_n_copies({
-                "name": "Bustling Village",
-                "cost": { "treasure": 5 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Settlers",
-                "cost": { "treasure": 2 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._bustling_village, 5)
+            ret += Dominion.create_n_copies(self._settlers, 5)
             return ret
         if card_name == "Catapult / Rocks":
-            ret += Dominion.create_n_copies({
-                "name": "Rocks",
-                "cost": { "treasure": 4 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Catapult",
-                "cost": { "treasure": 3 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._rocks, 5)
+            ret += Dominion.create_n_copies(self._catapult, 5)
             return ret
         if card_name == "Gladiator / Fortune":
-            ret += Dominion.create_n_copies({
-                "name": "Fortune",
-                "cost": { "treasure": 8 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Gladiator",
-                "cost": { "treasure": 3 },
-                "set": "Empires",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._fortune, 5)
+            ret += Dominion.create_n_copies(self._gladiator, 5)
             return ret
         if card_name == "Sauna / Avanto":
-            ret += Dominion.create_n_copies({
-                "name": "Avanto",
-                "cost": { "treasure": 5 },
-                "set": "Promos",
-                "type": "card"
-            }, 5)
-            ret += Dominion.create_n_copies({
-                "name": "Sauna",
-                "cost": { "treasure": 4 },
-                "set": "Promos",
-                "type": "card"
-            }, 5)
+            ret += Dominion.create_n_copies(self._avanto, 5)
+            ret += Dominion.create_n_copies(self._sauna, 5)
             return ret
         if card_name == "Knights":
-            ret.append({
-                "name": "Dame Anna",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Dame Josephine",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Dame Molly",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Dame Natalie",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Dame Sylvia",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sir Bailey",
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sir Destry",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sir Martin",
-                "cost": { "treasure": 4 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sir Michael",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sir Vander",
-                "cost": { "treasure": 5 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
+            ret = self._knights.copy()
             random.shuffle(ret)
             return ret
         if card_name == "Castles":
-            ret.append({
-                "name": "King's Castle",
-                "cost": { "treasure": 10 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Grand Castle",
-                "cost": { "treasure": 9 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Sprawling Castle",
-                "cost": { "treasure": 8 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Opulent Castle",
-                "cost": { "treasure": 7 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Haunted Castle",
-                "cost": { "treasure": 6 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Small Castle",
-                "cost": { "treasure": 5 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Crumbling Castle",
-                "cost": { "treasure": 4 },
-                "set": "Empires",
-                "type": "card"
-            })
-            ret.append({
-                "name": "Humble Castle",
-                "cost": { "treasure": 3 },
-                "set": "Empires",
-                "type": "card"
-            })
+            ret = self._castles.copy()
             return ret
 
         num_cards = 10
@@ -629,353 +583,111 @@ class Dominion:
         ret += Dominion.create_n_copies(card, num_cards)
         return ret
 
-    @staticmethod
-    def add_page_line(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Treasure Hunter",
-            "cost": { "treasure": 3 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Warrior",
-            "cost": { "treasure": 4 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Hero",
-            "cost": { "treasure": 5 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Champion",
-            "cost": { "treasure": 6 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
+    def add_page_line(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._treasure_hunter, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._warrior, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._hero, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._champion, 5))
 
-    @staticmethod
-    def add_peasant_line(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Soldier",
-            "cost": { "treasure": 3 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Fugitive",
-            "cost": { "treasure": 4 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Disciple",
-            "cost": { "treasure": 5 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Teacher",
-            "cost": { "treasure": 6 },
-            "set": "Adventures",
-            "type": "card"
-        }, 5))
+    def add_peasant_line(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._soldier, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._fugitive, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._disciple, 5))
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._teacher, 5))
 
-    @staticmethod
-    def add_madman(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Madman",
-            "cost": { "treasure": 0 },
-            "set": "Adventures",
-            "type": "card"
-        }, 10))
+    def add_madman(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._madman, 10))
 
-    @staticmethod
-    def add_prizes(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Trusty Steed",
-            "cost": { "treasure": 0 },
-            "set": "Cornucopia",
-            "type": "card"
-        }, 1))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Followers",
-            "cost": { "treasure": 0 },
-            "set": "Cornucopia",
-            "type": "card"
-        }, 1))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Diadem",
-            "cost": { "treasure": 0 },
-            "set": "Cornucopia",
-            "type": "card"
-        }, 1))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Princess",
-            "cost": { "treasure": 0 },
-            "set": "Cornucopia",
-            "type": "card"
-        }, 1))
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Bag of Gold",
-            "cost": { "treasure": 0 },
-            "set": "Cornucopia",
-            "type": "card"
-        }, 1))
+    def add_prizes(self, card_map):
+        for prize in self._prizes:
+          card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(prize, 1))
 
-    @staticmethod
-    def add_mercenary(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Mercenary",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10))
+    def add_mercenary(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._mercenary, 10))
 
-    @staticmethod
-    def add_potion(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Potion",
-            "cost": { "treasure": 4 },
-            "set": "Alchemy",
-            "type": "card"
-        }, 16))
+    def add_potion(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._potion, 16))
 
-    @staticmethod
-    def add_bat(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Bat",
-            "cost": { "treasure": 2 },
-            "set": "Nocturne",
-            "type": "card"
-        }, 10))
+    def add_bat(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._bat, 10))
 
-    @staticmethod
-    def add_zombies(card_map):
-        card_map[Dominion.TRASH].append({
-            "name": "Zombie Apprentice",
-            "cost": { "treasure": 3 },
-            "set": "Nocturne",
-            "type": "card"
-        })
-        card_map[Dominion.TRASH].append({
-            "name": "Zombie Spy",
-            "cost": { "treasure": 3 },
-            "set": "Nocturne",
-            "type": "card"
-        })
-        card_map[Dominion.TRASH].append({
-            "name": "Zombie Mason",
-            "cost": { "treasure": 3 },
-            "set": "Nocturne",
-            "type": "card"
-        })
+    def add_zombies(self, card_map):
+        for zombie in self._zombies:
+            card_map[Dominion.TRASH].append(zombie)
 
     def add_boons(self, card_map):
-        card_map[Dominion.BOONS] = random.sample( self._boons, len(self._boons))
+        card_map[Dominion.BOONS] = random.sample(self._boons, len(self._boons))
 
     def add_hexes(self, card_map):
-        card_map[Dominion.HEXES] = random.sample( self._hexes, len(self._hexes))
+        card_map[Dominion.HEXES] = random.sample(self._hexes, len(self._hexes))
 
-    @staticmethod
-    def add_spoils(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Spoils",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 15))
+    def add_spoils(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._spoils, 15))
 
-    @staticmethod
-    def add_curses(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Curse",
-            "cost": { "treasure": 0 },
-            "set": "Common",
-            "type": "card"
-        }, 10))
+    def add_curses(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._curse, 10))
 
-    @staticmethod
-    def add_imp(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Imp",
-            "cost": { "treasure": 2 },
-            "set": "Nocturne",
-            "type": "card"
-        }, 13))
+    def add_imp(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._imp, 13))
 
-    @staticmethod
-    def add_will_o_wisp(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Will-o'-Wisp",
-            "cost": { "treasure": 0 },
-            "set": "Nocturne",
-            "type": "card"
-        }, 12))
+    def add_will_o_wisp(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._will_o_wisp, 12))
 
-    @staticmethod
-    def add_ghost(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Ghost",
-            "cost": { "treasure": 4 },
-            "set": "Nocturne",
-            "type": "card"
-        }, 6))
+    def add_ghost(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._ghost, 6))
 
-    @staticmethod
-    def add_wishes(card_map):
-        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies({
-            "name": "Wish",
-            "cost": { "treasure": 0 },
-            "set": "Nocturne",
-            "type": "card"
-        }, 12))
+    def add_wishes(self, card_map):
+        card_map[Dominion.NON_SUPPLY_CARDS].append(Dominion.create_n_copies(self._wish, 12))
 
-    @staticmethod
-    def generate_player_cards(player_deck, has_magic_lamp, has_haunted_mirror, has_goat,
-            has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters):
-        copper = {
-            "name": "Copper",
-            "cost": { "treasure": 0 },
-            "set": "Common",
-            "type": "card"
-        }
+    def generate_player_cards(self, player_deck, has_magic_lamp, has_haunted_mirror, has_goat,
+                              has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters):
         if has_magic_lamp:
-            player_deck.append({
-                "name": "Magic Lamp",
-                "cost": { "treasure": 0 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._magic_lamp)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_haunted_mirror:
-            player_deck.append({
-                "name": "Haunted Mirror",
-                "cost": { "treasure": 0 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._haunted_mirror)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_goat:
-            player_deck.append({
-                "name": "Goat",
-                "cost": { "treasure": 2 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._goat)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_pasture:
-            player_deck.append({
-                "name": "Pasture",
-                "cost": { "treasure": 2 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._pasture)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_pouch:
-            player_deck.append({
-                "name": "Pouch",
-                "cost": { "treasure": 2 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._pouch)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_cursed_gold:
-            player_deck.append({
-                "name": "Cursed Gold",
-                "cost": { "treasure": 4 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._cursed_gold)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_lucky_coin:
-            player_deck.append({
-                "name": "Lucky Coin",
-                "cost": { "treasure": 4 },
-                "set": "Nocturne",
-                "type": "card"
-            })
+            player_deck.append(self._lucky_coin)
         else:
-            player_deck.append(copper)
+            player_deck.append(self._copper)
 
         if has_shelters:
-            player_deck.append({
-                "name": "Necropolis",
-                "cost": { "treasure": 1 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            player_deck.append({
-                "name": "Overgrown Estate",
-                "cost": { "treasure": 1 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
-            player_deck.append({
-                "name": "Hovel",
-                "cost": { "treasure": 1 },
-                "set": "Dark Ages",
-                "type": "card"
-            })
+            player_deck += self._shelters
         else:
-            estate = {
-                "name": "Estate",
-                "cost": { "treasure": 2 },
-                "set": "Common",
-                "type": "card"
-            }
-            player_deck.append(estate)
-            player_deck.append(estate)
-            player_deck.append(estate)
+            player_deck.append(self._estate)
+            player_deck.append(self._estate)
+            player_deck.append(self._estate)
         random.shuffle(player_deck)
 
-    @staticmethod
-    def add_ruins(card_map):
+    def add_ruins(self, card_map):
         ruins = []
-        ruins += Dominion.create_n_copies({
-            "name": "Abandoned Mine",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10)
-        ruins += Dominion.create_n_copies({
-            "name": "Ruined Library",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10)
-        ruins += Dominion.create_n_copies({
-            "name": "Ruined Market",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10)
-        ruins += Dominion.create_n_copies({
-            "name": "Ruined Village",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10)
-        ruins += Dominion.create_n_copies({
-            "name": "Survivors",
-            "cost": { "treasure": 0 },
-            "set": "Dark Ages",
-            "type": "card"
-        }, 10)
+        for i in range(10):
+          ruins += self._ruins
         card_map[Dominion.NON_SUPPLY_CARDS].append(random.sample(ruins, 10))
 
     @staticmethod
@@ -998,16 +710,11 @@ class Dominion:
 
     @staticmethod
     def should_add_platinum_and_colony(cards):
-        first_set = cards[0]["set"]
-        if first_set == "Prosperity" or first_set == "Empires" or first_set == "Cornucopia":
-            return True
-        return False
+        return random.random() < 0.2
 
     @staticmethod
     def should_add_shelters(cards):
-        if cards[1]["set"] == "Dark Ages":
-            return True
-        return False
+        return random.random() < 0.1
 
     @staticmethod
     def should_include_boons(cards):

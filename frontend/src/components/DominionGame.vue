@@ -498,29 +498,7 @@ export default {
       }
     },
     getImageForCard (card) {
-      if (card.set === 'Renaissance') {
-        return this.getOldImageForCard(card)
-      } else {
-        return this.getDigitalImageForCard(card)
-      }
-    },
-    getOldImageForCard (card) {
-      let imageName = card.set + '_'
-      if (card.type !== 'card') {
-        imageName += card.type + '_'
-      }
-      imageName += card.name
-      imageName = imageName.toLowerCase()
-      imageName = imageName.replace(/[-' /]/g, '')
-      imageName = imageName.replace(/\(2nd\)/g, '2')
-      imageName = '/static/dominion/card_images/' + imageName + '.jpg'
-      return imageName
-    },
-    getDigitalImageForCard (card) {
-      let imageName = card.name
-      imageName = imageName.replace(/ /g, '_')
-      imageName = '/static/dominion/card_images/' + imageName + 'Digital.jpg'
-      return imageName
+      return card['image']
     },
     getDisplayForCardArray (cardArray) {
       if (cardArray.length === 0) {
