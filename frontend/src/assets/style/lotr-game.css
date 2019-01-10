@@ -1,7 +1,7 @@
 :root {
   --extra-height-fix-for-scrollbars: 4px;
   --card-margin: 0.14vw;
-  --card-width: 6.6vw;
+  --card-width: 7vw;
   --card-height: calc(var(--card-width) * 1.4);
   --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
   --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin) + var(--extra-height-fix-for-scrollbars));
@@ -12,7 +12,7 @@
 }
 
 .lotr-game {
-  background-image: url('/static/lotr/background/background.jpg')
+  background-image: url('/static/lotr/background/background.jpg');
 }
 
 .new-game {
@@ -28,8 +28,8 @@
   position: fixed;
   right: 0;
   top: 0;
-  height: calc(3 * var(--card-height-with-margin) - 10px);
-  width: calc(3 * var(--card-height-with-margin) / 1.4);
+  height: calc(2.5 * var(--card-height-with-margin) - 10px);
+  width: calc(2.5 * var(--card-height-with-margin) / 1.4);
   border-radius: 0.48vw;
   pointer-events: none;
 }
@@ -39,15 +39,15 @@
   position: fixed;
   right: 0;
   top: 0;
-  height: calc(3 * var(--card-height-with-margin) - 10px);
-  width: calc(3 * var(--card-height-with-margin) * 1.41);
+  height: calc(2.5 * var(--card-height-with-margin) - 10px);
+  width: calc(2.5 * var(--card-height-with-margin) * 1.41);
   border-radius: 0.48vw;
   pointer-events: none;
 }
 
 .staging-area {
   float: left;
-  width: calc(var(--card-width-with-margin) * 7);
+  width: calc(var(--card-width-with-margin) * 7 + var(--scrollbar-width));
   height: var(--card-height-with-margin);
   overflow: auto;
 }
@@ -82,7 +82,8 @@
 }
 
 .characters {
-  height: var(--card-height-with-margin);
+  position: relative;
+  height: calc(var(--card-height-with-margin) * 2);
   overflow: auto;
 }
 
@@ -90,7 +91,7 @@
   float: left;
   margin-top: var(--standard-margin);
   width: var(--card-width-with-margin);
-  height: calc(var(--card-height-with-margin) * 2);
+  height: calc(var(--card-height-with-margin) * 3);
   overflow: auto;
 }
 
@@ -174,6 +175,23 @@
   text-align: center;
 }
 
+.card-with-attachments-token {
+  left: calc(var(--card-width-with-margin)/2 - 0.45vw);
+  position: absolute;
+  z-index: 900;
+  background-color: rgba(255,0,0,.9);
+  box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
+  font-family: Monospaced;
+  border-radius: 0.18vw;
+  transform-origin: 0 0;
+  height: 0.9vw;
+  width: 0.9vw;
+  font-size: 0.78vw;
+  line-height: 0.9vw;
+  color: #fff;
+  text-align: center;
+}
+
 .card-container {
   position: relative;
   float: left;
@@ -199,11 +217,18 @@
   border-radius: 0.24vw;
 }
 
+.outer-card-with-attachments {
+  float: left;
+  width: var(--card-width);
+  margin: var(--card-margin);
+}
+
 .card-with-attachments {
   height: var(--card-height);
   width: var(--card-width);
   margin: var(--card-margin);
   border-radius: 0.24vw;
+  position: absolute;
 }
 
 .card-attachment {
@@ -211,13 +236,9 @@
   width: var(--card-width);
   margin: var(--card-margin);
   border-radius: 0.24vw;
-}
-
-.card-with-attachment {
-  height: var(--card-height);
-  width: var(--card-width);
-  margin: var(--card-margin);
-  border-radius: 0.24vw;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .card-in-container {

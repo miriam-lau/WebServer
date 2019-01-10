@@ -297,3 +297,8 @@ create table lotr_games (
   player2 varchar(50) references users not null,
   data jsonb
 );
+
+create table lotr_most_recent_deck (
+  player varchar(50) references users primary key,
+  xml text
+);

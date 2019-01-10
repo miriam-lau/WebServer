@@ -1,12 +1,12 @@
 <template>
   <div class="card-container">
     <div class="card-counter-container">{{cardArray.length}}</div>
-      <img
-          v-on:click="handleClick"
-          v-on:mouseover="setCurrentCardSelection($parent, cardArray)"
-          v-on:mouseout="clearCurrentCardSelection($parent)"
-          :class="cardClass + ' card-in-container'"
-          :src="$parent.getImageForCardArrayOrBlank(cardArray)"/>
+    <img
+        v-on:click="handleClick"
+        v-on:mouseover="setCurrentCardSelection($parent, cardArray)"
+        v-on:mouseout="clearCurrentCardSelection($parent)"
+        :class="cardClass + ' card-in-container'"
+        :src="$parent.getImageForCardArrayOrBlank(cardArray)"/>
   </div>
 </template>
 <script>

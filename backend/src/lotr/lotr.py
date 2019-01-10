@@ -121,6 +121,13 @@ class Lotr:
                 name = property_xml.get("name")
                 value = property_xml.get("value")
                 card["Alternate"][name] = value
+              card["Alternate"]["Image"] = self._image_name_to_url[card["Id"] + ".B"]
+              card["flipped"] = False
+              card["isFlippable"] = True
+          card["attachments"] = []
+          card["resources"] = 0
+          card["damage"] = 0
+          card["progress"] = 0
           self._card_data[card["Id"]] = card
 
   # Read {@code cards_xml}, an array of Xml card objects, and append them to {@code arr}.
@@ -158,6 +165,7 @@ class Lotr:
         raise Exception("Unexpected cards.")
       if section_name == "Hero":
         self._add_cards_to_array(hero_cards, cards_xml)
+        continue
       if section_name not in ["Hero", "Attachment", "Event", "Side Quest"]:
         continue
 
@@ -172,7 +180,7 @@ class Lotr:
 
     return {
       "name": player_name,
-      "characters": [],
+      "characters": hero_cards,
       "deck": deck,
       "hand": hand,
       "discard": [],
@@ -183,9 +191,16 @@ class Lotr:
     }
 
   def create_game(self, scenario_name, player1_name, player2_name, player1_deck_xml, player2_deck_xml) -> int:
+    if not player1_deck_xml:
+      player1_deck_xml = self.get_latest_deck(player1_name)
+    if not player2_deck_xml:
+      player2_deck_xml = self.get_latest_deck(player2_name)
+    if not player1_deck_xml or not player2_deck_xml:
+      raise Exception("No deck available.")
+    print(player1_deck_xml)
     player1 = self._parse_player_xml(player1_name, player1_deck_xml)
     player2 = self._parse_player_xml(player2_name, player2_deck_xml)
-    scenario = self._scenario_data[scenario_name]
+    scenario = self._scenario_data[scenario_name].copy()
 
     data = {
       "revealArea": [],
@@ -210,15 +225,18 @@ class Lotr:
     if "Setup" in scenario:
       data["setupArea"] = scenario.pop("Setup")
     if "Special" in scenario:
-      data["specialDeck"] = scenario.pop("Special")
+      data["specialDeck"] = list(reversed(scenario.pop("Special")))
+      random.shuffle(data["specialDeck"])
     if "Second Special" in scenario:
-      data["secondSpecialDeck"] = scenario.pop("Second Special")
+      data["secondSpecialDeck"] = list(reversed(scenario.pop("Second Special")))
+      random.shuffle(data["secondSpecialDeck"])
     if "Quest" in scenario:
-      data["questDeck"] = scenario.pop("Quest")
+      data["questDeck"] = list(reversed(scenario.pop("Quest")))
     if "Second Quest" in scenario:
-      data["secondQuestDeck"] = scenario.pop("Second Quest")
+      data["secondQuestDeck"] = list(reversed(scenario.pop("Second Quest")))
     if "Encounter" in scenario:
       data["encounterDeck"] = scenario.pop("Encounter")
+      random.shuffle(data["encounterDeck"])
     if "Active Setup" in scenario:
       locations = scenario.pop("Active Setup")
       if len(locations) != 1:
@@ -233,7 +251,7 @@ class Lotr:
     cur = self._lotr_database.get_cursor()
 
     try:
-      game_id = LotrDatabase.add_game(cur, player1_name, player2_name, {})
+      game_id = LotrDatabase.add_game(cur, player1_name, player2_name, {}, player1_deck_xml, player2_deck_xml)
       data["gameId"] = game_id
       LotrDatabase.update_game(cur, game_id, data)
 
@@ -245,6 +263,22 @@ class Lotr:
       raise
 
     return data
+
+  # Returns the latest player deck represented as xml.
+  def get_latest_deck(self, player):
+    cur = self._lotr_database.get_cursor()
+
+    try:
+      deck = LotrDatabase.get_latest_deck(cur, player)
+      cur.close()
+      if deck is None:
+        return None
+    except psycopg2.Error:
+      self._lotr_database.rollback()
+      cur.close()
+      raise
+
+    return deck
 
   # Returns the game as a dict.
   def get_latest_game(self, player) -> Optional[Dict]:

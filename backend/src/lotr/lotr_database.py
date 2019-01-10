@@ -27,7 +27,13 @@ class LotrDatabase:
     return cur.fetchone()
 
   @staticmethod
-  def add_game(cur, player1, player2, data) -> int:
+  def add_game(cur, player1, player2, data, player1_deck_xml, player2_deck_xml) -> int:
+      cur.execute(
+        "INSERT INTO lotr_most_recent_deck (player, xml) VALUES(%s, %s) ON CONFLICT(player) DO UPDATE" +
+        " SET xml = %s", (player1, player1_deck_xml, player1_deck_xml))
+      cur.execute(
+        "INSERT INTO lotr_most_recent_deck (player, xml) VALUES(%s, %s) ON CONFLICT(player) DO UPDATE" +
+        " SET xml = %s", (player2, player2_deck_xml, player2_deck_xml))
       cur.execute(
           "INSERT INTO lotr_games(player1, player2, data) VALUES(%s, %s, %s) RETURNING id",
           (player1, player2, psycopg2.extras.Json(data)))
@@ -41,6 +47,16 @@ class LotrDatabase:
         "SELECT * from lotr_games where player1 = %s or player2 = %s ORDER BY id DESC LIMIT 1",
         (player, player))
     return cur.fetchone()
+
+  @staticmethod
+  def get_latest_deck(cur, player):
+    cur.execute(
+        "SELECT xml from lotr_most_recent_deck where player = %s LIMIT 1",
+        (player,))
+    result = cur.fetchone()
+    if result is None:
+      return None
+    return result["xml"]
 
   @staticmethod
   def update_game(cur, game_id, data) -> int:

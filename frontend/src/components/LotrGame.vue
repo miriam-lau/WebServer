@@ -29,12 +29,12 @@
       <div v-if="shownPage === 'main'">
         <div class="topArea">
           <div class="staging-area">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="game.stagingArea"
                 :defaultMoveArray="game.encounterDiscard"/>
           </div>
           <div class="active-location">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="game.activeLocation"
                 :defaultMoveArray="game.encounterDiscard"/>
           </div>
@@ -53,7 +53,7 @@
         <div class="c"/>
         <div class="player-play-area">
           <div class="engaged-enemies">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="player.engagedEnemies"
                 :defaultMoveArray="game.encounterDiscard"/>
           </div>
@@ -64,18 +64,18 @@
           </div>
         </div>
         <div class="played">
-          <CardList
+            <CardWithAttachmentsList
               :cardArray="game.playedCards"
               :defaultMoveArray="player.discard"/>
         </div>
         <div class="player-play-area">
           <div class="engaged-enemies">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="partner.engagedEnemies"
                 :defaultMoveArray="game.encounterDiscard"/>
           </div>
           <div class="characters">
-            <CardList
+            <CardWithAttachmentsList
                 :cardArray="partner.characters"/>
           </div>
         </div>
@@ -85,6 +85,7 @@
       <div class="player-area">
         <div class="stats">
           <span class="stat-item">Threat Points: <button @click="decrementThreat">-</button><input class="counter" v-model="player.threat"/><button @click="incrementThreat">+</button></span>
+          <span class="stat-item">Partner Threat Points: {{partner.threat}}</span>
         </div>
         <div class="deck-and-hand">
           <div class="single-pile">
@@ -276,6 +277,7 @@ export default {
             return
           }
           this.scenarioList = response.data
+          this.scenarioName = this.scenarioList[0]
         })
     },
     updateLotrDisplayWithGameData (gameData) {
@@ -328,6 +330,9 @@ export default {
       }
     },
     getImageForCard (card) {
+      if (card.flipped) {
+        return card['Alternate']['Image']
+      }
       return card['Image']
     },
     getGames_CurrentCardSelectionCard () {
@@ -353,6 +358,38 @@ export default {
     nextRound () {
       // TODO: Implement.
     },
+    addResourcesToCurrentCard () {
+      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['resources']++
+    },
+    addProgressToCurrentCard () {
+      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['progress']++
+    },
+    addDamageToCurrentCard () {
+      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['damage']++
+    },
+    getCurrentCard () {
+      if (!this.games_currentCardSelection.exists || !this.games_currentCardSelection.array) {
+        return null
+      }
+      let index = this.games_currentCardSelection.index
+      if (index === undefined) {
+        if (this.games_currentCardSelection.array.length === 0) {
+          return null
+        }
+        index = this.games_currentCardSelection.array.length - 1
+      }
+      return this.games_currentCardSelection.array[index]
+    },
+    flipCurrentCard () {
+      let card = this.getCurrentCard()
+      if (!card) {
+        return
+      }
+      if (!card.isFlippable) {
+        return
+      }
+      card.flipped = !card.flipped
+    },
     incrementThreat () { this.player.threat++ },
     decrementThreat () { this.player.threat-- },
     handleKeyPress (event) {
@@ -370,11 +407,20 @@ export default {
       let destinationArray = null
       let reshufflePile = null
       switch (event.key) {
+        case 'r': this.addResourcesToCurrentCard(); return
+        case 'd': this.addDamageToCurrentCard(); return
+        case 'f': this.flipCurrentCard(); return
+        case 'p': this.addProgressToCurrentCard(); return
+        case '1': destinationArray = this.player.characters[0]['attachments']; break
+        case '2': destinationArray = this.player.characters[1]['attachments']; break
+        case '3': destinationArray = this.player.characters[2]['attachments']; break
+        case '4': destinationArray = this.player.characters[3]['attachments']; break
+        case '5': destinationArray = this.player.characters[4]['attachments']; break
         case 'c': destinationArray = this.player.characters; break
         case 'e': destinationArray = this.player.engagedEnemies; break
         case 'l': destinationArray = this.game.activeLocation; break
-        case 'p': destinationArray = this.partner.characters; break
-        case 'd': destinationArray = this.player.discard; break
+        case 'o': destinationArray = this.partner.characters; break
+        case 'i': destinationArray = this.player.discard; break
         case 'h': destinationArray = this.player.hand; break
         case 'k': destinationArray = this.player.deck; break
         case 's': this.shuffleDeck(); return
