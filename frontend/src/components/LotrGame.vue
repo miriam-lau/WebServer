@@ -33,7 +33,7 @@
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
-          :src="getImageForGames_CurrentCardSelection()"/>
+          :src="getImageForGamesCurrentCardSelectionLotr()"/>
       <div class="lotr-cards-area-above-hand">
         <div v-if="shownPage === 'main'">
           <div class="lotr-staging-area">
@@ -81,7 +81,7 @@
                 :cardHeight="cardHeight"
                 :cardWidth="cardWidth"
                 :cardMargin="cardMargin"
-                :getImageForCardArray="getImageForCardArray" />
+                :getImageForCardArray="getImageForCardArrayLotr" />
             </div>
           </div>
           <div class="clearfix"/>
@@ -157,13 +157,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
             <CardStack
               :cardArray="game['questDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <CardList
               :cardArray="game['questReveal']"
@@ -181,13 +181,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
             <CardStack
               :cardArray="game['secondQuestDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <CardList
               :cardArray="game['secondQuestReveal']"
@@ -205,13 +205,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
             <CardStack
               :cardArray="game['secondDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <CardList
               :cardArray="game['secondReveal']"
@@ -257,13 +257,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
             <CardStack
               :cardArray="game['specialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <CardList
               :cardArray="game['specialReveal']"
@@ -281,13 +281,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
             <CardStack
               :cardArray="game['secondSpecialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <CardList
               :cardArray="game['secondSpecialReveal']"
@@ -349,7 +349,7 @@
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
-                  :getImageForCardArray="getImageForCardArray" />
+                  :getImageForCardArray="getImageForCardArrayLotr" />
             </div>
           </div>
           <div class="lotr-single-pile">
@@ -360,7 +360,7 @@
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
-                  :getImageForCardArray="getImageForCardArray" />
+                  :getImageForCardArray="getImageForCardArrayLotr" />
             </div>
           </div>
           <div class="lotr-hand-area">
@@ -397,7 +397,9 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, defaultPlayerToInvite } from '../common/card_games'
+import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection,
+  defaultPlayerToInvite, getImageForCard, getImageForGamesCurrentCardSelection,
+  getGamesCurrentCardSelection, getImageForCardArray } from '../common/card_games'
 
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
@@ -583,6 +585,20 @@ export default {
     }
   },
   methods: {
+    getImageForCard: getImageForCard,
+    getImageForGamesCurrentCardSelectionLotr () {
+      return getImageForGamesCurrentCardSelection(
+        this.games_currentCardSelection, {
+          '/static/lotr/cards/card.jpg': [this.player['deck'], this.partner['deck']],
+          '/static/lotr/cards/encounter.jpg': [this.game['encounterDeck']]
+        })
+    },
+    getImageForCardArrayLotr (cardArray) {
+      return getImageForCardArray(cardArray, {
+        '/static/lotr/cards/card.jpg': [this.player['deck'], this.partner['deck']],
+        '/static/lotr/cards/encounter.jpg': [this.game['encounterDeck']]
+      })
+    },
     /**
      * Calls the backend to generate a new game with the populated input fields. Updates the game display once it is created.
      */
@@ -681,56 +697,6 @@ export default {
         setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
       }
     },
-    getImageForGames_CurrentCardSelection () {
-      if (!this.games_currentCardSelection.exists) {
-        return
-      }
-      if (this.games_currentCardSelection.array === this.player.deck ||
-          this.games_currentCardSelection.array === this.partner.deck) {
-        return '/static/lotr/cards/card.jpg'
-      } else if (this.games_currentCardSelection.array === this.game.encounterDeck) {
-        return '/static/lotr/cards/encounter.jpg'
-      }
-      let index = this.games_currentCardSelection.index
-      if (index === undefined) {
-        index = this.games_currentCardSelection.array.length - 1
-      }
-      if (index < 0) {
-        return '/static/blank-card.jpg'
-      } else if (this.games_currentCardSelection.array.length <= index) {
-        return ''
-      } else {
-        return this.getImageForCard(this.games_currentCardSelection.array[index])
-      }
-    },
-    getImageForCardArray (cardArray) {
-      if (cardArray.length === 0) {
-        return '/static/blank-card.jpg'
-      } else if (cardArray === this.player.deck || cardArray === this.partner.deck) {
-        return '/static/lotr/cards/card.jpg'
-      } else if (cardArray === this.game.encounterDeck) {
-        return '/static/lotr/cards/encounter.jpg'
-      } else {
-        return this.getImageForCard(cardArray[cardArray.length - 1])
-      }
-    },
-    getImageForCard (card) {
-      if (card.flipped) {
-        return card['flippedImage']
-      }
-      return card['image']
-    },
-    getGames_CurrentCardSelectionCard () {
-      let cardIndex = this.games_currentCardSelection.index
-      let cardArray = this.games_currentCardSelection.array
-      if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= cardArray.length)) {
-        return null
-      }
-      if (cardIndex === undefined) {
-        cardIndex = cardArray.length - 1
-      }
-      return cardArray[cardIndex]
-    },
     shuffleDeck () {
       shuffle(this.player.deck)
     },
@@ -739,9 +705,6 @@ export default {
     },
     singleCardFromDeckToHand () {
       moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
-    },
-    nextRound () {
-      // TODO: Implement.
     },
     addResourcesToCurrentCard () {
       this.games_currentCardSelection.array[this.games_currentCardSelection.index]['resources']++
@@ -752,21 +715,8 @@ export default {
     addDamageToCurrentCard () {
       this.games_currentCardSelection.array[this.games_currentCardSelection.index]['damage']++
     },
-    getCurrentCard () {
-      if (!this.games_currentCardSelection.exists || !this.games_currentCardSelection.array) {
-        return null
-      }
-      let index = this.games_currentCardSelection.index
-      if (index === undefined) {
-        if (this.games_currentCardSelection.array.length === 0) {
-          return null
-        }
-        index = this.games_currentCardSelection.array.length - 1
-      }
-      return this.games_currentCardSelection.array[index]
-    },
     flipCurrentCard () {
-      let card = this.getCurrentCard()
+      let card = getGamesCurrentCardSelection(this.games_currentCardSelection)
       if (!card) {
         return
       }

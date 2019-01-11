@@ -26,7 +26,7 @@
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
-          :src="getImageForGames_CurrentCardSelection()"/>
+          :src="getImageForGamesCurrentCardSelectionDominion()"/>
       <div class="dominion-cards-area-above-play-area">
         <div v-if="shownPage === 'kingdom'">
           <div class="dominion-vp-treasure-area">
@@ -38,7 +38,7 @@
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
               :callback="addGainToLog"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
             <div class="clearfix"/>
             <CardStack
               :key="'vp' + index" v-for="(cardArray, index) in game['vpCards']"
@@ -48,7 +48,7 @@
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
               :callback="addGainToLog"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-kingdom-area">
             <CardStack
@@ -59,7 +59,7 @@
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
               :callback="addGainToLog"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-events-area">
             <CardList
@@ -79,7 +79,7 @@
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :callback="addGainToLog"
-            :getImageForCardArray="getImageForCardArray" />
+            :getImageForCardArray="getImageForCardArrayDominion" />
         <CardStack
             v-else-if="shownPage === 'bane'"
             :cardArray="game['bane']"
@@ -88,7 +88,7 @@
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :callback="addGainToLog"
-            :getImageForCardArray="getImageForCardArray" />
+            :getImageForCardArray="getImageForCardArrayDominion" />
         <CardList
             v-else-if="shownPage === 'yourMats'"
             :cardArray="player['mats']"
@@ -163,13 +163,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
             <CardStack
               :cardArray="game['boonsDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <CardList
               :cardArray="game['boonsReveal']"
@@ -188,13 +188,13 @@
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
             <CardStack
               :cardArray="game['hexesDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <CardList
               :cardArray="game['hexesReveal']"
@@ -296,14 +296,14 @@
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
             <CardStack
               v-else
               :cardArray="opponent['deck']"
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-single-pile">
             <span class="card-games-text"><u>D</u>iscard<br/></span>
@@ -313,14 +313,14 @@
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
             <CardStack
               v-else
               :cardArray="opponent['discard']"
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArray" />
+              :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-hand-area">
             <span class="card-games-text">Your <u>H</u>and</span>
@@ -354,7 +354,10 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection, defaultPlayerToInvite } from '../common/card_games'
+import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection,
+  clearCurrentCardSelection, defaultPlayerToInvite, getImageForCard, getImageForGamesCurrentCardSelection,
+  getGamesCurrentCardSelection, getImageForCardArray }
+  from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -522,6 +525,22 @@ export default {
     }
   },
   methods: {
+    getImageForCard: getImageForCard,
+    getImageForGamesCurrentCardSelectionDominion () {
+      return getImageForGamesCurrentCardSelection(
+        this.games_currentCardSelection, {
+          'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1': [this.player['deck'], this.opponent['deck']],
+          'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1': [this.game['boonsDeck']],
+          'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1': [this.game['hexesDeck']]
+        })
+    },
+    getImageForCardArrayDominion (cardArray) {
+      return getImageForCardArray(cardArray, {
+        'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1': [this.player['deck'], this.opponent['deck']],
+        'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1': [this.game['boonsDeck']],
+        'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1': [this.game['hexesDeck']]
+      })
+    },
     /**
      * Calls the backend to generate a new game with the populated input fields. Updates the game display once it is created.
      */
@@ -654,68 +673,6 @@ export default {
         setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
       }
     },
-    getImageForGames_CurrentCardSelection () {
-      if (!this.games_currentCardSelection.exists) {
-        return
-      }
-      if (this.games_currentCardSelection['array'] === this.player['deck'] ||
-          this.games_currentCardSelection['array'] === this.opponent['deck']) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1'
-      } else if (this.games_currentCardSelection.array === this.game['boonsDeck']) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1'
-      } else if (this.games_currentCardSelection.array === this.game['hexesDeck']) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1'
-      }
-      let index = this.games_currentCardSelection.index
-      if (index === undefined) {
-        index = this.games_currentCardSelection.array.length - 1
-      }
-      if (index < 0) {
-        return '/static/blank-card.jpg'
-      } else if (this.games_currentCardSelection.array.length <= index) {
-        return ''
-      } else {
-        return this.getImageForCard(this.games_currentCardSelection.array[index])
-      }
-    },
-    getImageForCardArray (cardArray) {
-      if (cardArray.length === 0) {
-        return '/static/blank-card.jpg'
-      } else if (cardArray === this.player.deck || cardArray === this.opponent.deck) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1'
-      } else if (cardArray === this.game.boonsDeck) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1'
-      } else if (cardArray === this.game.hexesDeck) {
-        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1'
-      } else {
-        return this.getImageForCard(cardArray[cardArray.length - 1])
-      }
-    },
-    getImageForCard (card) {
-      return card['image']
-    },
-    getDisplayForCardArray (cardArray) {
-      if (cardArray.length === 0) {
-        return ''
-      } else {
-        let cardName = cardArray[cardArray.length - 1].name
-        if (cardName.length > 8) {
-          cardName = cardName.substring(0, 8) + '...'
-        }
-        return cardName + '\n$' + cardArray[cardArray.length - 1].cost.treasure + ', ' + cardArray.length + ' left'
-      }
-    },
-    getGames_CurrentCardSelectionCard () {
-      let cardIndex = this.games_currentCardSelection.index
-      let cardArray = this.games_currentCardSelection.array
-      if (cardIndex !== undefined && (cardIndex < 0 || cardIndex >= cardArray.length)) {
-        return null
-      }
-      if (cardIndex === undefined) {
-        cardIndex = cardArray.length - 1
-      }
-      return cardArray[cardIndex]
-    },
     shuffleDeck () {
       shuffle(this.player.deck)
     },
@@ -785,8 +742,7 @@ export default {
         case 'B': this.decrementNumBuys(); break
         case 'C': this.decrementNumCoins(); break
         case 'D': this.endTurnAndCleanUp(); return
-        case 'H':
-          this.deckToHand(); return
+        case 'H': this.deckToHand(); return
         case 'P': this.handToPlayArea(); return
         case 'Z': this.deckToDiscard(); return
         case 'w': this.singleCardFromDeckToHand(); return
@@ -804,7 +760,7 @@ export default {
         case 'm': destinationArray = this.player.mats; break
         case 'p': destinationArray = this.player.playArea; break
         case 'n':
-          let gamesCurrentCardSelectionCard = this.getGames_CurrentCardSelectionCard()
+          let gamesCurrentCardSelectionCard = getGamesCurrentCardSelection(this.games_currentCardSelection)
           if (gamesCurrentCardSelectionCard == null) {
             return
           }
