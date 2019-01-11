@@ -98,4 +98,20 @@ function clearCurrentCardSelection (component) {
   component.games_currentCardSelection = {}
 }
 
-export { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection }
+/*
+  * The default player name to invite to a game.
+  */
+function defaultPlayerToInvite (username) {
+  if (username === 'James') {
+    return 'Miriam'
+  } else if (username === 'Miriam') {
+    return 'James'
+  } else if (username === 'Angeline') {
+    return 'Sujinda'
+  } else if (username === 'Sujinda') {
+    return 'Angeline'
+  }
+  return ''
+}
+
+export { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection, defaultPlayerToInvite }

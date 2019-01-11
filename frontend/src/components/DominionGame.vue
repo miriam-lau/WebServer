@@ -354,7 +354,7 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../common/card_games'
+import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection, defaultPlayerToInvite } from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
@@ -385,7 +385,7 @@ export default {
     this.sidewaysCardWidth = style.getPropertyValue('--dominion-sideways-card-width')
     this.updateDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
-    this.playerToInvite = this.defaultPlayerToInvite()
+    this.playerToInvite = defaultPlayerToInvite(this.username)
   },
   mounted () {
     socket.on('refresh_dominion', (data) => {
@@ -607,21 +607,6 @@ export default {
     },
 
     moveCard: moveCard,
-    /*
-     * The default player name to invite to a game.
-     */
-    defaultPlayerToInvite () {
-      if (this.username === 'James') {
-        return 'Miriam'
-      } else if (this.username === 'Miriam') {
-        return 'James'
-      } else if (this.username === 'Angeline') {
-        return 'Sujinda'
-      } else if (this.username === 'Sujinda') {
-        return 'Angeline'
-      }
-      return ''
-    },
     saveGame () {
       callAxiosAndSetButterBar(
         this,

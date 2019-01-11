@@ -341,8 +341,8 @@
         </div>
         <div class="lotr-deck-and-hand">
           <div class="lotr-single-pile">
+            <span class="card-games-text-on-background">Dec<u>k</u></span>
             <div class="lotr-single-pile-cards">
-              <span class="card-games-text-on-background">Dec<u>k</u></span>
               <CardStack
                   :cardArray="player['deck']"
                   :defaultMoveArray="player['hand']"
@@ -351,11 +351,10 @@
                   :cardMargin="cardMargin"
                   :getImageForCardArray="getImageForCardArray" />
             </div>
-            Dec<u>k</u><br/>
           </div>
           <div class="lotr-single-pile">
+            <span class="card-games-text-on-background"><u>D</u>iscard</span>
             <div class="lotr-single-pile-cards">
-              <span class="card-games-text-on-background"><u>D</u>iscard</span>
               <CardStack
                   :cardArray="player['discard']"
                   :cardHeight="cardHeight"
@@ -363,7 +362,6 @@
                   :cardMargin="cardMargin"
                   :getImageForCardArray="getImageForCardArray" />
             </div>
-            <u>D</u>iscard<br/>
           </div>
           <div class="lotr-hand-area">
             <span class="card-games-text-on-background">Your <u>H</u>and</span>
@@ -399,7 +397,7 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection } from '../common/card_games'
+import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection, defaultPlayerToInvite } from '../common/card_games'
 
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
@@ -432,11 +430,10 @@ export default {
     this.updateLotrScenarios()
     this.updateDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
-    this.playerToInvite = this.defaultPlayerToInvite()
+    this.playerToInvite = defaultPlayerToInvite(this.username)
   },
   mounted () {
-    var that = this
-    socket.on('refresh_lotr', function (data) {
+    socket.on('refresh_lotr', (data) => {
       if (!data['players'].includes(this.username) || data['player_triggering_update'] === this.username) {
         return
       }
@@ -634,21 +631,6 @@ export default {
         'Failed to save lotr game.')
     },
     moveCard: moveCard,
-    /*
-     * The default player name to invite to a game.
-     */
-    defaultPlayerToInvite () {
-      if (this.username === 'James') {
-        return 'Miriam'
-      } else if (this.username === 'Miriam') {
-        return 'James'
-      } else if (this.username === 'Angeline') {
-        return 'Sujinda'
-      } else if (this.username === 'Sujinda') {
-        return 'Angeline'
-      }
-      return ''
-    },
     /**
      * Fetches the latest game for the currently logged in user and displays it if any exists.
      * playerTriggeringUpdate may be null.
