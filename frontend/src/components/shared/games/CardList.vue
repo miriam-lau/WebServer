@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import { moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../../../common/card_games'
+import { moveCurrentCard, setCurrentCard, clearCurrentCard } from '../../../common/card_games'
 
 /**
  * Renders the cards represented by {@code cardArray} as a list.
@@ -62,19 +62,19 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCardSelection(this.$parent, this.defaultMoveArray)
+      moveCurrentCard(this.$parent, this.defaultMoveArray)
     },
     handleMouseOver (cardArray, index) {
       if (this.shouldNotPopulateCurrentCard) {
         return
       }
-      setCurrentCardSelection(this.$parent, cardArray, index)
+      setCurrentCard(this.$parent, cardArray, index)
     },
     handleMouseOut () {
       if (this.shouldNotPopulateCurrentCard) {
         return
       }
-      clearCurrentCardSelection(this.$parent)
+      clearCurrentCard(this.$parent)
     }
   }
 }

@@ -26,7 +26,7 @@
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
-          :src="getImageForGamesCurrentCardSelectionDominion()"/>
+          :src="getImageForCurrentCardDominion()"/>
       <div class="dominion-cards-area-above-play-area">
         <div v-if="shownPage === 'kingdom'">
           <div class="dominion-vp-treasure-area">
@@ -351,12 +351,12 @@ import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
+import { shuffle, getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection,
-  clearCurrentCardSelection, defaultPlayerToInvite, getImageForCard, getImageForGamesCurrentCardSelection,
-  getGamesCurrentCardSelection, getImageForCardArray }
+import { moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
+  clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
+  getCurrentCard, getImageForCardArray }
   from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
@@ -526,9 +526,9 @@ export default {
   },
   methods: {
     getImageForCard: getImageForCard,
-    getImageForGamesCurrentCardSelectionDominion () {
-      return getImageForGamesCurrentCardSelection(
-        this.games_currentCardSelection, {
+    getImageForCurrentCardDominion () {
+      return getImageForCurrentCard(
+        this, {
           'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1': [this.player['deck'], this.opponent['deck']],
           'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1': [this.game['boonsDeck']],
           'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1': [this.game['hexesDeck']]
@@ -670,7 +670,7 @@ export default {
       this.opponent = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
 
       if (currentCardSelectionArrayPath) {
-        setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
+        setCurrentCard(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
       }
     },
     shuffleDeck () {
@@ -691,7 +691,7 @@ export default {
       moveAllCards(this.player.hand, this.player.discard)
       moveAllCards(this.player.playArea, this.player.discard)
       if (this.games_currentCardSelection.array === this.player.hand || this.games_currentCardSelection.array === this.player.playArea) {
-        clearCurrentCardSelection(this)
+        clearCurrentCard(this)
       }
       this.player.numActions = 1
       this.player.numBuys = 1
@@ -718,7 +718,7 @@ export default {
     handToPlayArea () {
       moveAllCards(this.player.hand, this.player.playArea)
       if (this.games_currentCardSelection.array === this.player.hand) {
-        clearCurrentCardSelection(this)
+        clearCurrentCard(this)
       }
     },
     endPlayerTurn () {
@@ -760,7 +760,7 @@ export default {
         case 'm': destinationArray = this.player.mats; break
         case 'p': destinationArray = this.player.playArea; break
         case 'n':
-          let gamesCurrentCardSelectionCard = getGamesCurrentCardSelection(this.games_currentCardSelection)
+          let gamesCurrentCardSelectionCard = getCurrentCard(this)
           if (gamesCurrentCardSelectionCard == null) {
             return
           }
@@ -799,7 +799,7 @@ export default {
       } else if (this.games_currentCardSelection.array === this.game.hexesDeck) {
         reshufflePile = this.game.hexesDiscard
       }
-      moveCurrentCardSelection(this, destinationArray, reshufflePile)
+      moveCurrentCard(this, destinationArray, reshufflePile)
     }
   }
 }

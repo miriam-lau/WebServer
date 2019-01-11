@@ -3,15 +3,15 @@
     <div class="card-games-card-stack-count">{{cardArray.length}}</div>
     <img
         v-on:click="handleClick"
-        v-on:mouseover="setCurrentCardSelection($parent, cardArray)"
-        v-on:mouseout="clearCurrentCardSelection($parent)"
+        v-on:mouseover="setCurrentCard($parent, cardArray)"
+        v-on:mouseout="clearCurrentCard($parent)"
         class="card-games-top-left-absolute-position"
         :style="cardImageStyle"
         :src="getImageForCardArray(cardArray)"/>
   </div>
 </template>
 <script>
-import { moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSelection } from '../../../common/card_games'
+import { moveCurrentCard, setCurrentCard, clearCurrentCard } from '../../../common/card_games'
 
 /**
  * Renders the stack of cards represented by {@code cardArray}.
@@ -72,13 +72,13 @@ export default {
     }
   },
   methods: {
-    setCurrentCardSelection: setCurrentCardSelection,
-    clearCurrentCardSelection: clearCurrentCardSelection,
+    setCurrentCard: setCurrentCard,
+    clearCurrentCard: clearCurrentCard,
     handleClick () {
       if (!this.defaultMoveArray) {
         return
       }
-      let card = moveCurrentCardSelection(this.$parent, this.defaultMoveArray, this.reshuffleArray)
+      let card = moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray)
       if (!card || !this.callback) {
         return
       }

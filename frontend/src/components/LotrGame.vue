@@ -33,7 +33,7 @@
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
-          :src="getImageForGamesCurrentCardSelectionLotr()"/>
+          :src="getImageForCurrentCardLotr()"/>
       <div class="lotr-cards-area-above-hand">
         <div v-if="shownPage === 'main'">
           <div class="lotr-staging-area">
@@ -394,12 +394,12 @@ import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import LotrCardList from './shared/games/LotrCardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
+import { shuffle, getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
 import { socket } from '../common/socketio'
-import { shuffle, moveCard, moveAllCards, moveCurrentCardSelection, setCurrentCardSelection,
-  defaultPlayerToInvite, getImageForCard, getImageForGamesCurrentCardSelection,
-  getGamesCurrentCardSelection, getImageForCardArray } from '../common/card_games'
+import { moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
+  defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
+  getCurrentCard, getImageForCardArray } from '../common/card_games'
 
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
@@ -586,9 +586,9 @@ export default {
   },
   methods: {
     getImageForCard: getImageForCard,
-    getImageForGamesCurrentCardSelectionLotr () {
-      return getImageForGamesCurrentCardSelection(
-        this.games_currentCardSelection, {
+    getImageForCurrentCardLotr () {
+      return getImageForCurrentCard(
+        this, {
           '/static/lotr/cards/card.jpg': [this.player['deck'], this.partner['deck']],
           '/static/lotr/cards/encounter.jpg': [this.game['encounterDeck']]
         })
@@ -694,7 +694,7 @@ export default {
       this.partner = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
 
       if (currentCardSelectionArrayPath) {
-        setCurrentCardSelection(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
+        setCurrentCard(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
       }
     },
     shuffleDeck () {
@@ -716,7 +716,7 @@ export default {
       this.games_currentCardSelection.array[this.games_currentCardSelection.index]['damage']++
     },
     flipCurrentCard () {
-      let card = getGamesCurrentCardSelection(this.games_currentCardSelection)
+      let card = getCurrentCard(this)
       if (!card) {
         return
       }
@@ -767,7 +767,7 @@ export default {
       if (this.games_currentCardSelection.array === this.player.deck) {
         reshuffleArray = this.player.discard
       }
-      moveCurrentCardSelection(this, destinationArray, reshuffleArray)
+      moveCurrentCard(this, destinationArray, reshuffleArray)
     }
   }
 }

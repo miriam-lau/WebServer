@@ -117,5 +117,25 @@ function transferContents (original, destination) {
   emptyArray(original)
 }
 
+/**
+ * Shuffles the array. Returns it.
+ * Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
+ * @param {array} array an array (of anything) to shuffle.
+ */
+function shuffle (array) {
+  var currentIndex = array.length
+  var temporaryValue, randomIndex
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    temporaryValue = array[currentIndex]
+    array[currentIndex] = array[randomIndex]
+    array[randomIndex] = temporaryValue
+  }
+  return array
+}
+
 export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray, transferContents }
+  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray, transferContents, shuffle }
