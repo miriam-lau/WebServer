@@ -1,0 +1,84 @@
+:root {
+  --extra-height-fix-for-scrollbars: 4px;
+  --card-margin: 0.14vw;
+  --standard-margin: 0.14vw;
+  --scrollbar-width: 7px;
+}
+
+.card-games-card-stack-outer-container {
+  position: relative;
+  float: left;
+}
+
+/* From dominion.games */
+.card-games-card-stack-count {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  z-index: 900;
+  background-color: rgba(255,0,0,.9);
+  box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
+  font-family: Monospaced;
+  border-radius: 0.18vw;
+  transform-origin: 0 0;
+  height: 0.9vw;
+  width: 0.9vw;
+  font-size: 0.78vw;
+  line-height: 0.9vw;
+  color: #fff;
+  text-align: center;
+}
+
+.card-games-top-left-absolute-position {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.card-games-new-game {
+  margin-bottom: 3vw;
+}
+
+.card-games-player-to-invite {
+  width: 7vw;
+}
+
+.card-games-stats-line {
+  margin-top: var(--standard-margin);
+}
+
+.card-games-stat-item {
+  margin-right: 1.2vw;
+}
+
+.card-games-text {
+  color: white;
+}
+
+.card-games-text-on-background {
+  background-color: white;
+  padding: 0 2px;
+  border-radius: 2px;
+  color: black;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(0,0,0,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+.card-games-counter {
+  text-align: center;
+  width: 1.8vw;
+}
+
+.card-games-note {
+  height: 100%;
+  width: 100%;
+}
+

@@ -29,6 +29,7 @@ function moveCurrentCardSelection (component, destinationPile, reshufflePile) {
 
 /**
  * Returns the moved card
+ * TODO: Do something better than just preventing the card from moving if it has attachments.
  * @param {array} originalPile
  * @param {number} cardIndex
  * @param {array} destinationPile
@@ -50,6 +51,9 @@ function moveCard (originalPile, cardIndex, destinationPile, reshufflePile) {
     return null
   }
   let card = originalPile[cardIndex]
+  if (card['attachments'] && card['attachments'].length > 0) {
+    return null
+  }
   destinationPile.push(card)
   originalPile.splice(cardIndex, 1)
   return card

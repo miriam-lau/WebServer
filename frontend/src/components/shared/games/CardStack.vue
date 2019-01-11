@@ -1,12 +1,13 @@
 <template>
-  <div class="card-container">
-    <div class="card-counter-container">{{cardArray.length}}</div>
+  <div class="card-games-card-stack-outer-container" :style="outerContainerStyle">
+    <div class="card-games-card-stack-count">{{cardArray.length}}</div>
     <img
         v-on:click="handleClick"
         v-on:mouseover="setCurrentCardSelection($parent, cardArray)"
         v-on:mouseout="clearCurrentCardSelection($parent)"
-        :class="cardClass + ' card-in-container'"
-        :src="$parent.getImageForCardArrayOrBlank(cardArray)"/>
+        class="card-games-top-left-absolute-position"
+        :style="cardImageStyle"
+        :src="getImageForCardArray(cardArray)"/>
   </div>
 </template>
 <script>
@@ -14,46 +15,74 @@ import { moveCurrentCardSelection, setCurrentCardSelection, clearCurrentCardSele
 
 /**
  * Renders the stack of cards represented by {@code cardArray}.
+ *
+ * When the card stack is hovered over, the currently selected card is set to this card array (not a specific card.)
+ * See the README.md file in this directory for more information on the currently selected card and usage.
+ *
+ * When the card stack is no longer hovered over, the currently selected card is cleared.
  */
 export default {
   name: 'CardStack',
   props: {
     /**
-     * Nullable. Represents the css class of the card to render. If none is specified, defaults to "card"
+     * The array of cards to render.
      */
-    className: String,
-    /**
-     * Nullable. The pile to refresh the cardArray with when a card is moved.
-     */
-    reshufflePileArray: Array,
-    /**
-     * Nullable. Where to move the top card of the card stack to on left click.
-     */
-    defaultMoveArray: Array,
     cardArray: Array,
     /**
-     * Nullable. If present, this is called with the current card which is moved.
+     * The css width of the card.
+     */
+    cardWidth: String,
+    /**
+     * The css height of the card.
+     */
+    cardHeight: String,
+    /**
+     * The css margin of the outer container surrounding the card.
+     */
+    cardMargin: String,
+    /**
+     * This is called with {@code cardArray} to get the image used to render the card stack.
+     */
+    getImageForCardArray: Function,
+    /**
+     * The img src used to render the card stack (represents the top card).
+    */
+    image: String,
+    /**
+     * Nullable. If {@code defaultMoveArray} is passed in, when the stack is clicked, the top card of this stack will
+     * be moved to that array.
+     */
+    defaultMoveArray: Array,
+    /**
+     * Nullable. If {@code cardArray} is empty and {@code reshuffleArray} is passed in, {@code reshuffleArray} will
+     * be shuffled into {@code cardArray} before moving the top card.
+     */
+    reshuffleArray: Array,
+    /**
+     * Nullable. If present, this is called with the top card which is moved.
      */
     callback: Function
   },
   computed: {
-    cardClass () {
-      if (this.className) {
-        return this.className
-      }
-      return 'card'
+    outerContainerStyle () {
+      return 'height: ' + this.cardHeight + '; width: ' + this.cardWidth + '; margin: ' + this.cardMargin
+    },
+    cardImageStyle () {
+      return 'height: ' + this.cardHeight + '; width: ' + this.cardWidth
     }
   },
   methods: {
     setCurrentCardSelection: setCurrentCardSelection,
     clearCurrentCardSelection: clearCurrentCardSelection,
     handleClick () {
-      if (this.defaultMoveArray) {
-        let card = moveCurrentCardSelection(this.$parent, this.defaultMoveArray, this.reshufflePileArray)
-        if (card && this.callback) {
-          this.callback(card)
-        }
+      if (!this.defaultMoveArray) {
+        return
       }
+      let card = moveCurrentCardSelection(this.$parent, this.defaultMoveArray, this.reshuffleArray)
+      if (!card || !this.callback) {
+        return
+      }
+      this.callback(card)
     }
   }
 }

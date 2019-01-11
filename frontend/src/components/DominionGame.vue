@@ -4,154 +4,137 @@
       :message="butterBar_message"
       :css="butterBar_css"
     />
-    <div class="new-game">
+    <div class="card-games-new-game">
       Invite:
-          <input v-model="playerToInvite" class="dominion-player-to-invite"/>
+          <input v-model="playerToInvite" class="card-games-player-to-invite"/>
           <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
       <button @click="shownPage = 'kingdom'">Kingdom</button>
-      <button v-if="game.nonSupplyCards.length > 0" @click="shownPage = 'nonSupply'">Non Supply</button>
-      <button v-if="game.hasBane" @click="shownPage = 'bane'">Bane</button>
-      <button v-if="game.hasBoons" @click="shownPage = 'boons'">Boons</button>
-      <button v-if="game.hasHexes" @click="shownPage = 'hexes'">Hexes</button>
-      <button v-if="player.mats.length > 0" @click="shownPage = 'yourMats'">Your Mats</button>
-      <button @click="shownPage = 'discard'">Your Discard</button>
-      <button v-if="opponent.mats.length > 0" @click="shownPage = 'opponentMats'">Opponent Mats</button>
-      <button v-if="game.revealArea.length > 0" @click="shownPage = 'reveal'"><u>R</u>evealed</button>
+      <button v-if="game['nonSupplyCards'].length > 0" @click="shownPage = 'nonSupply'">Non Supply</button>
+      <button v-if="game['hasBane']" @click="shownPage = 'bane'">Bane</button>
+      <button v-if="game['hasBoons']" @click="shownPage = 'boons'">Boons</button>
+      <button v-if="game['hasHexes']" @click="shownPage = 'hexes'">Hexes</button>
+      <button v-if="player['mats'].length > 0" @click="shownPage = 'yourMats'">Your <u>M</u>ats</button>
+      <button @click="shownPage = 'discard'">Your <u>D</u>iscard</button>
+      <button v-if="opponent['mats'].length > 0" @click="shownPage = 'opponentMats'">Opponent Mats</button>
+      <button v-if="game['revealArea'].length > 0" @click="shownPage = 'revealArea'"><u>R</u>evealed</button>
       <button @click="shownPage = 'trash'"><u>T</u>rash</button>
       <button @click="shownPage = 'notes'">Notes</button>
       <button @click="shownPage = 'allYourCards'">All your cards</button>
       <button @click="shownPage = 'shortcuts'">Shortcuts</button>
-      <div v-if="shownPage === 'kingdom'">
-        <div class="vp-treasure">
-          <CardStack
-            :key="'treasure' + index" v-for="(cardArray, index) in game.treasureCards"
-            :defaultMoveArray="player.discard"
-            :cardArray="cardArray"
-            :callback="addGainToLog"/>
-          <div class="c"></div>
-          <CardStack
-            :key="'vp' + index" v-for="(cardArray, index) in game.vpCards"
-            :defaultMoveArray="player.discard"
-            :cardArray="cardArray"
-            :callback="addGainToLog"/>
-        </div>
-        <div class="kingdom">
-          <CardStack
-            :key="'vp' + index" v-for="(cardArray, index) in game.kingdomCards"
-            :defaultMoveArray="player.discard"
-            :cardArray="cardArray"
-            :callback="addGainToLog"/>
-        </div>
-        <div class="events">
-          <img
-              v-for="(card, index) in game.sidewaysCards"
-              class="sideways-card"
-              :key="index"
-              :src="getImageForCard(card)"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'nonSupply'">
-        <div class="non-supply">
-          <CardStack
-            :key="index" v-for="(cardArray, index) in game.nonSupplyCards"
-            :defaultMoveArray="player.discard"
-            :cardArray="cardArray"
-            :callback="addGainToLog"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'bane'">
-        <div class="bane">
-          <CardStack
-            :defaultMoveArray="player.discard"
-            :cardArray="cardArray"
-            :callback="addGainToLog"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'boons'">
-        <div class="boons-deck-and-discard">
-          <div class="sideways-card-container">
-            <div class="card-counter-container">{{game.boonsDeck.length}}</div>
-            <img
-                v-on:click="moveCard(game.boonsDeck, undefined, game.boonsReveal, game.boonsDiscard)"
-                class="sideways-card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.boonsDeck)"/>
+      <img
+          v-if="games_currentCardSelection['exists']"
+          :class="getPreviewClassName()"
+          :src="getImageForGames_CurrentCardSelection()"/>
+      <div class="dominion-cards-area-above-play-area">
+        <div v-if="shownPage === 'kingdom'">
+          <div class="dominion-vp-treasure-area">
+            <CardStack
+              :key="'treasure' + index" v-for="(cardArray, index) in game['treasureCards']"
+              :cardArray="cardArray"
+              :defaultMoveArray="player['discard']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :callback="addGainToLog"
+              :getImageForCardArray="getImageForCardArray" />
+            <div class="clearfix"/>
+            <CardStack
+              :key="'vp' + index" v-for="(cardArray, index) in game['vpCards']"
+              :cardArray="cardArray"
+              :defaultMoveArray="player['discard']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :callback="addGainToLog"
+              :getImageForCardArray="getImageForCardArray" />
           </div>
-          <div class="sideways-card-container">
-            <div class="card-counter-container">{{game.boonsDiscard.length}}</div>
-            <img
-                class="sideways-card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.boonsDiscard)"/>
+          <div class="dominion-kingdom-area">
+            <CardStack
+              :key="index" v-for="(cardArray, index) in game['kingdomCards']"
+              :cardArray="cardArray"
+              :defaultMoveArray="player['discard']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :callback="addGainToLog"
+              :getImageForCardArray="getImageForCardArray" />
+          </div>
+          <div class="dominion-events-area">
+            <CardList
+                :cardArray="game['sidewaysCards']"
+                :cardHeight="cardHeight"
+                :cardWidth="sidewaysCardWidth"
+                :cardMargin="cardMargin"
+                :getImageForCard="getImageForCard" />
           </div>
         </div>
-        <div class="boons-reveal">
-          <img
-              v-for="(card, index) in game.boonsReveal"
-              :key="index"
-              v-on:click="moveCard(game.boonsReveal, index, game.boonsDiscard)"
-              class="sideways-card"
-              :src="getImageForCard(card)"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'hexes'">
-        <div class="hexes-deck-and-discard">
-          <div class="sideways-card-container">
-            <div class="card-counter-container">{{game.hexesDeck.length}}</div>
-            <img
-                v-on:click="moveCard(game.hexesDeck, undefined, game.hexesReveal, game.hexesDiscard)"
-                class="sideways-card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.hexesDeck)"/>
-          </div>
-          <div class="sideways-card-container">
-            <div class="card-counter-container">{{game.hexesDiscard.length}}</div>
-            <img
-                class="sideways-card card-in-container"
-                :src="getImageForCardArrayOrBlank(game.hexesDiscard)"/>
-          </div>
-        </div>
-        <div class="hexes-reveal">
-          <img
-              v-for="(card, index) in game.hexesReveal"
-              :key="index"
-              v-on:click="moveCard(game.hexesReveal, index, game.hexesDiscard)"
-              class="sideways-card"
-              :src="getImageForCard(card)"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'yourMats'">
-        <div class="your-mats">
-          <CardList
-              :cardArray="player.mats"
-              :defaultMoveArray="player.discard"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'opponentMats'">
-        <div class="opponent-mats">
-          <img
-              v-for="(card, index) in opponent.mats"
-              :key="index"
-              class="card"
-              :src="getImageForCard(card)"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'trash'">
-        <div class="trash">
-          <CardList :cardArray="game.trash"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'reveal'">
-        <div class="reveal-area">
-          <CardList :cardArray="game.revealArea"/>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'notes'">
-        <div class="notes">
-          <textarea class="note" v-model="notes"></textarea>
-        </div>
-      </div>
-      <div v-else-if="shownPage === 'shortcuts'">
-        <div class="shortcuts">
+        <CardStack
+            v-else-if="shownPage === 'nonSupply'"
+            :key="index" v-for="(cardArray, index) in game['nonSupplyCards']"
+            :cardArray="cardArray"
+            :defaultMoveArray="player['discard']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :callback="addGainToLog"
+            :getImageForCardArray="getImageForCardArray" />
+        <CardStack
+            v-else-if="shownPage === 'bane'"
+            :cardArray="game['bane']"
+            :defaultMoveArray="player['discard']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :callback="addGainToLog"
+            :getImageForCardArray="getImageForCardArray" />
+        <CardList
+            v-else-if="shownPage === 'yourMats'"
+            :cardArray="player['mats']"
+            :defaultMoveArray="player['discard']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <CardList
+            v-else-if="shownPage === 'opponentMats'"
+            :cardArray="opponent['mats']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <CardList
+            v-else-if="shownPage === 'trash'"
+            :cardArray="game['trash']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <CardList
+            v-else-if="shownPage === 'revealArea'"
+            :cardArray="game['revealArea']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <CardList
+            v-else-if="shownPage === 'discard'"
+            :cardArray="player['discard']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <CardList
+            v-else-if="shownPage === 'allYourCards'"
+            :cardArray="getAllPlayerCards()"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :shouldNotPopulateCurrentCard="true"
+            :getImageForCard="getImageForCard" />
+        <textarea v-else-if="shownPage === 'notes'" class="card-games-note" v-model="notes"></textarea>
+        <div v-else-if="shownPage === 'shortcuts'" class="card-games-text">
           a (A) - Increment num actions (Decrement num actions)<br/>
           b (B) - Increment num buys (Decrement num buys)<br/>
           c (C) - Increment num coins (Decrement num coins)<br/>
@@ -171,145 +154,195 @@
           w - Draw a single card from deck into your hand.<br/>
           v - Reveal the card in the revealed area.<br/>
         </div>
-      </div>
-      <div v-else-if="shownPage === 'discard'">
-        <div class="discard-area">
-          <CardList :cardArray="player.discard"/>
+        <div v-else-if="shownPage === 'boons'">
+          <div class="dominion-boons-and-hexes-deck-and-discard">
+            <CardStack
+              :cardArray="game['boonsDeck']"
+              :defaultMoveArray="game['boonsReveal']"
+              :reshuffleArray="game['boonsDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+            <CardStack
+              :cardArray="game['boonsDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+          </div>
+          <CardList
+              :cardArray="game['boonsReveal']"
+              :defaultMoveArray="game['boonsDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCard="getImageForCard" />
+        </div>
+        <div v-else-if="shownPage === 'hexes'">
+          <div class="dominion-boons-and-hexes-deck-and-discard">
+            <CardStack
+              :cardArray="game['hexesDeck']"
+              :defaultMoveArray="game['hexesReveal']"
+              :reshuffleArray="game['hexesDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+            <CardStack
+              :cardArray="game['hexesDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+          </div>
+          <CardList
+              :cardArray="game['hexesReveal']"
+              :defaultMoveArray="game['hexesDiscard']"
+              :cardHeight="cardHeight"
+              :cardWidth="sidewaysCardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCard="getImageForCard" />
         </div>
       </div>
-      <div v-else-if="shownPage === 'allYourCards'">
-        <div class="all-your-cards">
-          <img
-              v-for="(card, index) in [].concat(player.deck, player.discard, player.playArea, player.hand, player.mats)"
-              :key="index"
-              class="card"
-              :src="getImageForCard(card)"/>
-        </div>
-      </div>
-      <img class="preview" v-if="games_currentCardSelection.exists" :src="getImageForGames_CurrentCardSelection()"/>
-      <div class="c">
-      </div>
-      <span v-if="player.displayedPlayer === playerIndex">
-      Your display
-      </span>
-      <span v-else>
-      {{game.players[player.displayedPlayer].name}}'s display
-      </span>
-      <button @click="toggledisplayedPlayer">Toggle Display</button>
+      <div class="clearfix"/>
+      <span v-if="isPlayerDisplayed()" class="card-games-text">Your display</span>
+      <span v-else class="card-games-text">{{game['players'][player['displayedPlayer']]['name']}}'s display</span>
+      <button @click="toggledisplayedPlayer">Toggle</button>
       <br/>
-      <div class="game-log">
-        <div class="game-log-inner">
-          <div :key="index" v-for="(gameLogLine, index) in game.gameLog">
+      <div class="dominion-game-log">
+        <div>
+          <div :key="index" v-for="(gameLogLine, index) in game['gameLog']" class="card-games-text">
             {{gameLogLine}}<br/>
           </div>
         </div>
       </div>
-      <div class="player-area">
-        <div class="play-area">
-          <div class="play-cards">
-            <div v-if="player.displayedPlayer === playerIndex">
+      <div class="dominion-player-area">
+        <div class="dominion-play-area">
+          <span class="card-games-text"><u>P</u>layed Cards</span>
+          <div class="dominion-play-cards-area">
+            <div v-if="isPlayerDisplayed()">
               <CardList
-                  :cardArray="player.playArea"
-                  :defaultMoveArray="player.discard"/>
+                  :cardArray="player['playArea']"
+                  :defaultMoveArray="player.discard"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
             </div>
             <div v-else>
-              <CardList :cardArray="opponent.playArea"/>
+              <CardList
+                  :cardArray="opponent.playArea"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
             </div>
           </div>
-          <u>P</u>layed Cards
         </div>
-        <div class="duration-area">
-          <div class="duration-cards">
-            <div v-if="player.displayedPlayer === playerIndex">
+        <div class="dominion-duration-area">
+          <span class="card-games-text">D<u>u</u>ration</span>
+          <div class="dominion-duration-cards-area">
+            <div v-if="isPlayerDisplayed()">
               <CardList
-                  :cardArray="player.durationArea"
-                  :defaultMoveArray="player.discard"/>
+                  :cardArray="player['durationArea']"
+                  :defaultMoveArray="player['discard']"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
             </div>
             <div v-else>
-              <CardList :cardArray="opponent.durationArea"/>
+              <CardList
+                  :cardArray="opponent['durationArea']"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
             </div>
           </div>
-          D<u>u</u>ration
         </div>
-        <div class="c">
-        </div>
-        <div class="stats">
-          <div v-if="player.displayedPlayer === playerIndex">
-            <span class="stat-item"><u>A</u>ctions: <button @click="decrementNumActions">-</button><input class="counter" v-model="player.numActions"/><button @click="incrementNumActions">+</button></span>
-            <span class="stat-item"><u>B</u>uys: <button @click="decrementNumBuys">-</button><input class="counter" v-model="player.numBuys"/><button @click="incrementNumBuys">+</button></span>
-            <span class="stat-item"><u>C</u>oins: <button @click="decrementNumCoins">-</button><input class="counter" v-model="player.numCoins"/><button @click="incrementNumCoins">+</button></span>
-            <span class="stat-item">VP: <button @click="decrementNumVP">-</button><input class="counter" v-model="player.numVP"/><button @click="incrementNumVP">+</button></span>
-            <span class="stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="counter" v-model="player.numCoffers"/><button @click="incrementNumCoffers">+</button></span>
-            <span class="stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="counter" v-model="player.numVillagers"/><button @click="incrementNumVillagers">+</button></span>
-            <span class="stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="counter" v-model="player.numDebt"/><button @click="incrementNumDebt">+</button></span>
-            <button @click="endPlayerTurn" v-if="game.currentPlayerTurn === playerIndex">End Turn</button>
+        <div class="clearfix"/>
+        <div class="card-games-stats-line card-games-text">
+          <div v-if="isPlayerDisplayed()">
+            <span class="card-games-stat-item"><u>A</u>ctions: <button @click="decrementNumActions">-</button><input class="card-games-counter" v-model="player['numActions']"/><button @click="incrementNumActions">+</button></span>
+            <span class="card-games-stat-item"><u>B</u>uys: <button @click="decrementNumBuys">-</button><input class="card-games-counter" v-model="player['numBuys']"/><button @click="incrementNumBuys">+</button></span>
+            <span class="card-games-stat-item"><u>C</u>oins: <button @click="decrementNumCoins">-</button><input class="card-games-counter" v-model="player['numCoins']"/><button @click="incrementNumCoins">+</button></span>
+            <span class="card-games-stat-item">VP: <button @click="decrementNumVP">-</button><input class="card-games-counter" v-model="player['numVP']"/><button @click="incrementNumVP">+</button></span>
+            <span class="card-games-stat-item">Coffers: <button @click="decrementNumCoffers">-</button><input class="card-games-counter" v-model="player['numCoffers']"/><button @click="incrementNumCoffers">+</button></span>
+            <span class="card-games-stat-item">Villagers: <button @click="decrementNumVillagers">-</button><input class="card-games-counter" v-model="player['numVillagers']"/><button @click="incrementNumVillagers">+</button></span>
+            <span class="card-games-stat-item">Debt: <button @click="decrementNumDebt">-</button><input class="card-games-counter" v-model="player['numDebt']"/><button @click="incrementNumDebt">+</button></span>
             <span>Your turn</span>
           </div>
           <div v-else>
-            <span class="stat-item">Actions: {{opponent.numActions}}</span>
-            <span class="stat-item">Buys: {{opponent.numBuys}}</span>
-            <span class="stat-item">Coins: {{opponent.numCoins}}</span>
-            <span class="stat-item">VP: {{opponent.numVP}}</span>
-            <span class="stat-item">Coffers: {{opponent.numCoffers}}</span>
-            <span class="stat-item">Villagers: {{opponent.numVillagers}}</span>
-            <span class="stat-item">Debt: {{opponent.numDebt}}</span>
-            <span>{{opponent.name}}'s turn</span>
+            <span class="card-games-stat-item">Actions: {{opponent['numActions']}}</span>
+            <span class="card-games-stat-item">Buys: {{opponent['numBuys']}}</span>
+            <span class="card-games-stat-item">Coins: {{opponent['numCoins']}}</span>
+            <span class="card-games-stat-item">VP: {{opponent['numVP']}}</span>
+            <span class="card-games-stat-item">Coffers: {{opponent['numCoffers']}}</span>
+            <span class="card-games-stat-item">Villagers: {{opponent['numVillagers']}}</span>
+            <span class="card-games-stat-item">Debt: {{opponent['numDebt']}}</span>
+            <span>{{opponent['name']}}'s turn</span>
           </div>
         </div>
-        <div class="deck-and-hand">
-          <div class="single-pile">
-            <div class="single-pile-cards">
-              <div v-if="player.displayedPlayer === playerIndex">
-                <CardStack
-                  :reshufflePileArray="player.discard"
-                  :defaultMoveArray="player.hand"
-                  :cardArray="player.deck"/>
-              </div>
-              <div v-else>
-                <CardStack
-                  :cardArray="opponent.deck"/>
-              </div>
-            </div>
-            <span v-if="player.displayedPlayer === playerIndex">
-            Dec<u>k</u><br/>
-            </span>
-            <span v-else>
-            {{game.players[player.displayedPlayer].name}}'s deck
-            </span>
-
+        <div class="dominion-deck-and-hand">
+          <div class="dominion-single-pile">
+            <span class="card-games-text">Dec<u>k</u><br/></span>
+            <CardStack
+              v-if="isPlayerDisplayed()"
+              :reshuffleArray="player['discard']"
+              :defaultMoveArray="player['hand']"
+              :cardArray="player['deck']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+            <CardStack
+              v-else
+              :cardArray="opponent['deck']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
           </div>
-          <div class="single-pile">
-            <div class="single-pile-cards">
-              <div v-if="player.displayedPlayer === playerIndex">
-                <CardStack
-                  :cardArray="player.discard"/>
-              </div>
-              <div v-else>
-                <CardStack
-                  :cardArray="opponent.discard"/>
-              </div>
-            </div>
-            <span v-if="player.displayedPlayer === playerIndex">
-            <u>D</u>iscard<br/>
-            </span>
-            <span v-else>
-            {{game.players[player.displayedPlayer].name}}'s discard
-            </span>
+          <div class="dominion-single-pile">
+            <span class="card-games-text"><u>D</u>iscard<br/></span>
+            <CardStack
+              v-if="isPlayerDisplayed()"
+              :cardArray="player['discard']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
+            <CardStack
+              v-else
+              :cardArray="opponent['discard']"
+              :cardHeight="cardHeight"
+              :cardWidth="cardWidth"
+              :cardMargin="cardMargin"
+              :getImageForCardArray="getImageForCardArray" />
           </div>
-          <div class="hand">
-            <div class="hand-cards">
+          <div class="dominion-hand-area">
+            <span class="card-games-text">Your <u>H</u>and</span>
+            <div class="dominion-hand-cards-area">
               <CardList
-                  :defaultMoveArray="player.playArea"
-                  :cardArray="player.hand"/>
+                  :defaultMoveArray="player['playArea']"
+                  :cardArray="player['hand']"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
             </div>
-            Your <u>H</u>and
           </div>
         </div>
       </div>
     </div>
-    <div class="c"/>
+    <div class="clearfix"/>
   </div>
 </template>
+<style>
+  @import "../assets/style/card-games.css"
+</style>
 <style>
   @import "../assets/style/dominion-game.css"
 </style>
@@ -329,43 +362,14 @@ const SAVE_DOMINION_GAME_URL = getFullBackendUrlForPath('/save_dominion_game')
 
 export default {
   name: 'DominionGame',
-  data () {
-    return {
-      games_currentCardSelection: {}, // Object with keys 'array', and 'index', and 'exists'
-      shouldSaveChanges: false,
-      playerToInvite: '',
-      playerIndex: 0,
-      butterBar_message: '',
-      butterBar_css: '',
-      isInGame: false,
-      player: {},
-      opponent: {},
-      shownPage: 'kingdom',
-      notes: '',
-      game: {}
-    }
-  },
-  components: {
-    ButterBar, CardStack, CardList
-  },
-  created () {
-    this.updateDominionDisplayWithLatestGame()
-    window.addEventListener('keyup', this.handleKeyPress)
-    this.playerToInvite = this.defaultPlayerToInvite()
-  },
-  computed: {
-    username () {
-      return store.state.username
-    }
-  },
+  components: { ButterBar, CardStack, CardList },
+  computed: { username () { return store.state.username } },
   watch: {
-    username () {
-      this.updateDominionDisplayWithLatestGame()
-    },
+    username () { this.updateDisplayWithLatestGame() },
     game: {
       handler (val) {
         if (this.shouldSaveChanges) {
-          this.saveDominionGame()
+          this.saveGame()
         } else {
           this.shouldSaveChanges = true
         }
@@ -373,15 +377,235 @@ export default {
       deep: true
     }
   },
+  created () {
+    var style = getComputedStyle(document.body)
+    this.cardHeight = style.getPropertyValue('--dominion-card-height')
+    this.cardWidth = style.getPropertyValue('--dominion-card-width')
+    this.cardMargin = style.getPropertyValue('--card-margin')
+    this.sidewaysCardWidth = style.getPropertyValue('--dominion-sideways-card-width')
+    this.updateDisplayWithLatestGame()
+    window.addEventListener('keyup', this.handleKeyPress)
+    this.playerToInvite = this.defaultPlayerToInvite()
+  },
   mounted () {
-    var that = this
-    socket.on('refresh_dominion', function (data) {
-      if (data.players.includes(that.username) && data.player_triggering_update !== that.username) {
-        that.updateDominionDisplayWithGameData(data.gameData)
+    socket.on('refresh_dominion', (data) => {
+      if (!data['players'].includes(this.username) || data['player_triggering_update'] === this.username) {
+        return
       }
+      this.updateDisplayWithReceivedGameData(data['gameData'])
     })
   },
+  data () {
+    return {
+      /**
+       * Needed for butter bar.
+       */
+      butterBar_message: '',
+      /**
+       * Needed for butter bar.
+       */
+      butterBar_css: '',
+      /**
+       * The name of the player to invite when creating a new game.
+       */
+      playerToInvite: '',
+      /**
+       * Whether there is a game to display or not.
+       */
+      isInGame: false,
+      /**
+       * The height of a card in the game. Read from the css as a string.
+       */
+      cardHeight: '',
+      /**
+       * The width of a card in the game. Read from the css as a string.
+       */
+      cardWidth: '',
+      /**
+       * The margin of a card in the game. Read from the css as a string.
+       */
+      cardMargin: '',
+      /**
+       * The width of a sideways card in the game. Read from the css as a string.
+       */
+      sidewaysCardWidth: '',
+      /**
+       * Whether or not to save watched data changes to the database. Only false if we just received those changes from the server.
+       */
+      shouldSaveChanges: false,
+      /**
+       * In-game notes the player can type to themselves.
+       */
+      notes: '',
+      /**
+       * Represents the current game page to display.
+       */
+      shownPage: 'kingdom',
+      /**
+       * The currently selected card. When keyboard shortcuts are used, they normally interact with this card.
+       * This is an object with the following keys:
+       * array {array} the array representing the array of cards selected.
+       * index {number?} optional. If specified, this is the index of the card within the array. If not specified,
+       *     the keyboard shortcuts will interact with the card array as a whole, normally performing an action on
+       *     the top card.
+       * exists {boolean} whether or not a card is currently selected.
+       */
+      games_currentCardSelection: {'exists': false},
+      /**
+       * For convenience, this points to the object representing the player within game['players'].
+       */
+      player: {},
+      /**
+       * For convenience, this points to the object representing the opponent within game['players'].
+       */
+      opponent: {},
+      /**
+       * The index of the player within game['players'].
+       */
+      playerIndex: 0,
+      /**
+       * The game object represents all the data needed to render a game. It contains the following nested data:
+       * playerOrder {array[Player]} the players in the game in order.
+       * currentPlayerTurn {number} the index of the player who has the current turn.
+       * revealArea {array[Card]} the card which have been revealed by either player.
+       * gameLog {array[String]} the game log.
+       * boonsDiscard {array[Card]} if boons are in the game, the discard pile of boons.
+       * hexesDiscard {array[Card]} if hexes are in the game, the discard pile of hexes.
+       * boonsDeck {array[Card]} if boons are in the game, the deck of boons.
+       * boonsReveal {array[Card]} if boons are in the game, the revealed boons.
+       * hexesDeck {array[Card]} if hexes are in the game, the deck of hexes.
+       * hexesReveal {array[Card]} if hexes are in the game, the revealed hexes.
+       * nonSupplyCards {array[array[Card]]} the non supply cards in the game if any.
+       * kingdomCards {array[array[Card]]} the kingdom cards in the game.
+       * vpCards {array[array[Card]]} the victory point cards in the game.
+       * treasureCards {array[array[Card]]} the treasure cards in the game.
+       * trash {array[Card]} the trashed cards.
+       * bane {Card} the bane card if Young Witch is in the game.
+       * sidewaysCards {array[Card]} the sideways cards in the game (events, landmarks, or projects)
+       * hasBane {boolean} whether or not a bane is present.
+       * hasBoons {boolean} whether or not boons are in the game.
+       * hasHexes {boolean} whether or not hexes are in the game.
+       *
+       * The objects referenced in game are Players and Cards.
+       *
+       * Player represents a player in the game. It contains the following keys:
+       * name {string} the name of the player
+       * durationArea {array[Card]} the duration cards played by the player.
+       * playArea {array[Card]} the cards played by the player.
+       * deck {array[Card]} the deck of the player.
+       * hand {array[Card]} the hand of the player.
+       * mats {array[Card]} the cards the player has put on any mat (not separated by mat).
+       * discard {array[Card]} the discard pile of the player.
+       * numActions {number} the number of actions the player has remaining in their turn.
+       * numBuys {number} the number of buys the player has remaining in their turn.
+       * numCoins {number} the number of coins the player has remaining in their turn.
+       * numVP {number} the number of VP tokens the player has collected this game.
+       * numCoffers {number} the number of coffers the player has.
+       * numVillagers {number} the number of villagers the player has.
+       * numDebt {number} the number of debt tokens the player has.
+       * displayedPlayer {number} the index of the player who this player is viewing. (self or opponent)
+       *
+       * Card represents a card in the game. It contains many keys which can be found in the .yaml files
+       * referenced by dominion.py. The relevant keys to us are the following:
+       * cost {
+       *   potion {number} the number of potions needed to buy the card.
+       *   treasure {number} the number of coins to buy this.
+       * }
+       * image {string} the url to render the card.
+       * name {string} the name of the card.
+       * pile_type {string} the type of pile the card belongs to.
+       * pile_index {number} the index number of the pile the card originally belongs to.
+       *      (corresponding to pile_type)
+       * type {string} the type of card it is (card, event, landmark, project, ...)
+       */
+      game: {}
+    }
+  },
   methods: {
+    /**
+     * Calls the backend to generate a new game with the populated input fields. Updates the game display once it is created.
+     */
+    newGame () {
+      var randomizedPlayers = [this.username, this.playerToInvite]
+      randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
+
+      callAxiosAndSetButterBar(
+        this,
+        CREATE_DOMINION_GAME_URL,
+        {
+          player1: randomizedPlayers[0],
+          player2: randomizedPlayers[1],
+          username: this.username
+        },
+        'Generated Kingdom',
+        'Failed to generate kingdom.',
+        (response) => {
+          let data = response.data
+          this.updateDisplayWithReceivedGameData(data)
+        })
+    },
+    /**
+     * Gets the css class name to use for the preview card based on the currently selected card.
+     */
+    getPreviewClassName () {
+      if (!this.games_currentCardSelection['exists']) {
+        return ''
+      }
+      let currentCardSelectionArray = this.games_currentCardSelection['array']
+      return (
+        currentCardSelectionArray === this.game['sidewaysCards'] ||
+        currentCardSelectionArray === this.game['boonsDeck'] ||
+        currentCardSelectionArray === this.game['boonsDiscard'] ||
+        currentCardSelectionArray === this.game['boonsReveal'] ||
+        currentCardSelectionArray === this.game['hexesDeck'] ||
+        currentCardSelectionArray === this.game['hexesDiscard'] ||
+        currentCardSelectionArray === this.game['hexesReveal'])
+        ? 'dominion-preview-sideways'
+        : 'dominion-preview-normal'
+    },
+    /**
+     * Returns an array containing all the cards in a player's deck. This array is just a view of all the arrays the
+     * player owns. Cards do not 'belong' to this array in the same way they do to the arrays in the player object.
+     * (Each card can only belong to one array at a time.)
+     */
+    getAllPlayerCards () {
+      let allCards = [].concat(this.player['deck'], this.player['discard'], this.player['playArea'], this.player['hand'], this.player['mats'])
+      allCards = allCards.sort(function (a, b) {
+        if (a['isVictory'] && !b['isVictory']) {
+          return -1
+        } else if (b['isVictory'] && !a['isVictory']) {
+          return 1
+        } else if (a['isVictory'] && b['isVictory']) {
+          return a['name'] < b['name'] ? -1 : 1
+        }
+
+        if (a['isAction'] && !b['isAction']) {
+          return -1
+        } else if (b['isAction'] && !a['isAction']) {
+          return 1
+        } else if (a['isAction'] && b['isAction']) {
+          return a['name'] < b['name'] ? -1 : 1
+        }
+
+        if (a['isTreasure'] && !b['isTreasure']) {
+          return -1
+        } else if (b['isTreasure'] && !a['isTreasure']) {
+          return 1
+        } else if (a['isTreasure'] && b['isTreasure']) {
+          return a['name'] < b['name'] ? -1 : 1
+        }
+
+        return a['name'] < b['name'] ? -1 : 1
+      })
+      return allCards
+    },
+    /**
+     * Whether or not the player is displaying their own play area.
+     */
+    isPlayerDisplayed () {
+      return this.player['displayedPlayer'] === this.playerIndex
+    },
+
     moveCard: moveCard,
     /*
      * The default player name to invite to a game.
@@ -398,27 +622,7 @@ export default {
       }
       return ''
     },
-    newGame () {
-      var randomizedPlayers = [this.username, this.playerToInvite]
-      randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
-
-      let that = this
-      callAxiosAndSetButterBar(
-        this,
-        CREATE_DOMINION_GAME_URL,
-        {
-          player1: randomizedPlayers[0],
-          player2: randomizedPlayers[1],
-          username: this.username
-        },
-        'Generated Kingdom',
-        'Failed to generate kingdom.',
-        function (response) {
-          let data = response.data
-          that.updateDominionDisplayWithGameData(data)
-        })
-    },
-    saveDominionGame () {
+    saveGame () {
       callAxiosAndSetButterBar(
         this,
         SAVE_DOMINION_GAME_URL,
@@ -434,7 +638,7 @@ export default {
      * Fetches the latest game for the currently logged in user and displays it if any exists.
      * playerTriggeringUpdate may be null.
      */
-    updateDominionDisplayWithLatestGame () {
+    updateDisplayWithLatestGame () {
       callAxiosAndSetButterBar(
         this,
         DOMINION_GET_LATEST_GAME_URL,
@@ -446,10 +650,10 @@ export default {
             this.isInGame = false
             return
           }
-          this.updateDominionDisplayWithGameData(response.data.data)
+          this.updateDisplayWithReceivedGameData(response.data.data)
         })
     },
-    updateDominionDisplayWithGameData (gameData) {
+    updateDisplayWithReceivedGameData (gameData) {
       let currentCardSelectionArrayPath
       if (this.games_currentCardSelection.exists) {
         currentCardSelectionArrayPath = findPath(this.games_currentCardSelection.array, this.game)
@@ -469,9 +673,13 @@ export default {
       if (!this.games_currentCardSelection.exists) {
         return
       }
-      if (this.games_currentCardSelection.array === this.player.deck ||
-          this.games_currentCardSelection.array === this.opponent.deck) {
-        return '/static/dominion/card_images/backside_blue.jpg'
+      if (this.games_currentCardSelection['array'] === this.player['deck'] ||
+          this.games_currentCardSelection['array'] === this.opponent['deck']) {
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1'
+      } else if (this.games_currentCardSelection.array === this.game['boonsDeck']) {
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1'
+      } else if (this.games_currentCardSelection.array === this.game['hexesDeck']) {
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1'
       }
       let index = this.games_currentCardSelection.index
       if (index === undefined) {
@@ -485,15 +693,15 @@ export default {
         return this.getImageForCard(this.games_currentCardSelection.array[index])
       }
     },
-    getImageForCardArrayOrBlank (cardArray) {
+    getImageForCardArray (cardArray) {
       if (cardArray.length === 0) {
         return '/static/blank-card.jpg'
       } else if (cardArray === this.player.deck || cardArray === this.opponent.deck) {
-        return '/static/dominion/card_images/backside_blue.jpg'
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AACzjeN3dpgOoEha8_iOHEcPa/backside_blue.jpg?raw=1'
       } else if (cardArray === this.game.boonsDeck) {
-        return '/static/dominion/card_images/Boon-back.jpg'
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AABPc5Q1wzCaJ2LIoaYR3GhBa/Boon-back.jpg?raw=1'
       } else if (cardArray === this.game.hexesDeck) {
-        return '/static/dominion/card_images/Hex-back.jpg'
+        return 'https://www.dropbox.com/sh/b8erq310514f3pd/AAA5FOdZEN8rfPrflQcrS6Mka/Hex-back.jpg?raw=1'
       } else {
         return this.getImageForCard(cardArray[cardArray.length - 1])
       }
@@ -596,7 +804,6 @@ export default {
           this.deckToHand(); return
         case 'P': this.handToPlayArea(); return
         case 'Z': this.deckToDiscard(); return
-        case 'e': this.endPlayerTurn(); break
         case 'w': this.singleCardFromDeckToHand(); return
       }
       if (!this.games_currentCardSelection.exists) {

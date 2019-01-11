@@ -1,126 +1,143 @@
 :root {
-  --extra-height-fix-for-scrollbars: 4px;
-  --card-margin: 0.14vw;
-  --card-width: 7vw;
-  --card-height: calc(var(--card-width) * 1.4);
-  --card-width-with-margin: calc(var(--card-width) + 2 * var(--card-margin));
-  --card-height-with-margin: calc(var(--card-height) + 2 * var(--card-margin) + var(--extra-height-fix-for-scrollbars));
-  --sideways-card-width: calc(var(--card-height) * 1.41);
-  --sideways-card-width-with-margin: calc(var(--sideways-card-width) + 2 * var(--card-margin));
-  --standard-margin: 0.14vw;
-  --scrollbar-width: 7px;
+  --lotr-card-width: 7vw;
+  --lotr-card-height: calc(var(--lotr-card-width) * 1.4);
+  --lotr-card-width-with-margin: calc(var(--lotr-card-width) + 2 * var(--card-margin));
+  --lotr-card-height-with-margin: calc(var(--lotr-card-height) + 2 * var(--card-margin));
+  --lotr-sideways-card-width: calc(var(--lotr-card-height) * 1.41);
+  --lotr-sideways-card-width-with-margin: calc(var(--lotr-sideways-card-width) + 2 * var(--card-margin));
 }
 
 .lotr-game {
   background-image: url('/static/lotr/background/background.jpg');
 }
 
-.new-game {
-  margin-bottom: 3vw;
+.lotr-cards-area-above-hand {
+  min-height: calc(var(--lotr-card-height-with-margin) * 4);
+  overflow: auto;
 }
 
-.lotr-player-to-invite {
-  width: 7vw;
-}
-
-.preview {
+.lotr-preview-normal, .lotr-preview-sideways {
   z-index: 1;
   position: fixed;
   right: 0;
   top: 0;
-  height: calc(2.5 * var(--card-height-with-margin) - 10px);
-  width: calc(2.5 * var(--card-height-with-margin) / 1.4);
   border-radius: 0.48vw;
   pointer-events: none;
 }
 
-.quest-preview {
-  z-index: 1;
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: calc(2.5 * var(--card-height-with-margin) - 10px);
-  width: calc(2.5 * var(--card-height-with-margin) * 1.41);
-  border-radius: 0.48vw;
-  pointer-events: none;
+.lotr-preview-normal {
+  height: calc(2.5 * var(--lotr-card-height));
+  width: calc(2.5 * var(--lotr-card-width));
 }
 
-.staging-area {
+.lotr-preview-sideways {
+  height: calc(2.5 * var(--lotr-card-height));
+  width: calc(2.5 * var(--lotr-sideways-card-width));
+}
+
+.lotr-card-list-outer {
   float: left;
-  width: calc(var(--card-width-with-margin) * 7 + var(--scrollbar-width));
-  height: var(--card-height-with-margin);
-  overflow: auto;
-}
-
-.active-location {
-  float: left;
-  width: var(--card-width-with-margin);
-  height: var(--card-height-with-margin);
-}
-
-.quest {
-  float: left;
-  width: var(--sideways-card-width-with-margin);
-  height: var(--card-height-with-margin);
-}
-
-.encounter {
-  float: left;
-  width: var(--card-width-with-margin);
-  height: var(--card-height-with-margin);
-}
-
-.player-play-area {
-  float: left;
-  margin-top: var(--standard-margin);
-  width: calc(var(--card-width-with-margin) * 6 + var(--scrollbar-width));
-}
-
-.engaged-enemies {
-  height: var(--card-height-with-margin);
-  overflow: auto;
-}
-
-.characters {
   position: relative;
-  height: calc(var(--card-height-with-margin) * 2);
-  overflow: auto;
 }
 
-.played {
-  float: left;
-  margin-top: var(--standard-margin);
-  width: var(--card-width-with-margin);
-  height: calc(var(--card-height-with-margin) * 3);
-  overflow: auto;
+.lotr-card-list-inner {
+  border-radius: 0.24vw;
+  position: absolute;
+  left: 0;
 }
 
-.player-area {
-  float: left;
-  margin-top: var(--standard-margin);
-}
-
-.stats {
-  margin-top: var(--standard-margin);
-}
-
-.stat-item {
-  margin-right: 1.2vw;
-}
-
-.counter {
+.lotr-card-list-token {
+  position: absolute;
+  z-index: 900;
+  background-color: rgba(255,0,0,.9);
+  box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
+  font-family: Monospaced;
+  border-radius: 0.18vw;
+  transform-origin: 0 0;
+  height: 0.9vw;
+  width: 0.9vw;
+  font-size: 0.78vw;
+  line-height: 0.9vw;
+  color: #fff;
   text-align: center;
-  width: 1.8vw;
 }
 
-.deck-and-hand {
-  margin-top: var(--standard-margin);
-  height: var(--card-height-with-margin);
-}
-
-.single-pile {
+.lotr-staging-area {
   float: left;
-  width: var(--card-width-with-margin);
+  width: calc(var(--lotr-card-width-with-margin) * 7 + var(--scrollbar-width));
+}
+
+.lotr-single-cards-row {
+  height: var(--lotr-card-height-with-margin);
+  overflow: auto;
+}
+
+.lotr-active-location {
+  float: left;
+  width: var(--lotr-card-width-with-margin);
+}
+
+.lotr-quest {
+  float: left;
+  width: var(--lotr-sideways-card-width-with-margin);
+}
+
+.lotr-encounter {
+  float: left;
+  width: var(--lotr-card-width-with-margin);
+}
+
+.lotr-player-play-area {
+  float: left;
+  margin-top: var(--standard-margin);
+  width: calc(var(--lotr-card-width-with-margin) * 6 + var(--scrollbar-width));
+}
+
+.lotr-engaged-enemies {
+  height: calc(var(--lotr-card-height-with-margin) * 1.11);
+  overflow: auto;
+}
+
+.lotr-characters {
+  position: relative;
+  height: calc(var(--lotr-card-height-with-margin) * 1.89);
+  overflow: auto;
+}
+
+.lotr-played {
+  float: left;
+  margin-top: var(--standard-margin);
+  width: calc(var(--lotr-card-width-with-margin) + var(--scrollbar-width));
+}
+
+.lotr-played-cards-area {
+  height: calc(var(--lotr-card-height-with-margin) * 3);
+  overflow: auto;
+}
+
+.lotr-player-area {
+  float: left;
+  margin-top: var(--standard-margin);
+}
+
+.lotr-quest-deck-and-discard {
+  float: left;
+  width: calc(var(--lotr-sideways-card-width-with-margin));
+}
+
+.lotr-deck-and-discard {
+  float: left;
+  width: calc(var(--lotr-card-width-with-margin));
+}
+
+.lotr-deck-and-hand {
+  margin-top: var(--standard-margin);
+  height: var(--lotr-card-height-with-margin);
+}
+
+.lotr-single-pile {
+  float: left;
+  width: var(--lotr-card-width-with-margin);
 }
 
 ::-webkit-scrollbar {
@@ -133,31 +150,27 @@
   -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
-.hand {
+.lotr-hand {
   float: left;
   margin-left: 1.8vw;
-  width: calc(100% - 1.8vw - 2 * var(--card-width-with-margin));
+  width: calc(100% - 1.8vw - 2 * var(--lotr-card-width-with-margin));
 }
 
-.hand-cards, .single-pile-cards, .play-cards {
+.lotr-hand-cards, .lotr-single-pile-cards, .lotr-play-cards {
   overflow: auto;
-  height: var(--card-height-with-margin);
+  height: var(--lotr-card-height-with-margin);
 }
 
-.hand-cards {
+.lotr-hand-cards {
   background-color: orange;
 }
 
-.play-cards {
+.lotr-play-cards {
   background-color: teal;
 }
 
-.c {
-  clear: both;
-}
-
 /* From dominion.games */
-.card-counter-container {
+.lotr-card-counter-container {
   top: 0px;
   left: 0px;
   position: relative;
@@ -175,99 +188,68 @@
   text-align: center;
 }
 
-.card-with-attachments-token {
-  left: calc(var(--card-width-with-margin)/2 - 0.45vw);
-  position: absolute;
-  z-index: 900;
-  background-color: rgba(255,0,0,.9);
-  box-shadow: 0 0 0.12vw 0.12vw rgba(0,0,0,.75);
-  font-family: Monospaced;
-  border-radius: 0.18vw;
-  transform-origin: 0 0;
-  height: 0.9vw;
-  width: 0.9vw;
-  font-size: 0.78vw;
-  line-height: 0.9vw;
-  color: #fff;
-  text-align: center;
-}
-
-.card-container {
+.lotr-card-container {
   position: relative;
   float: left;
-  height: var(--card-height);
-  width: var(--card-width);
+  height: var(--lotr-card-height);
+  width: var(--lotr-card-width);
   margin: var(--card-margin);
 }
 
-.sideways-card-container {
+.lotr-sideways-card-container {
   position: relative;
   float: left;
-  height: var(--card-height);
-  width: var(--sideways-card-width);
+  height: var(--lotr-card-height);
+  width: var(--lotr-sideways-card-width);
   margin: var(--card-margin);
 }
 
-.card {
+.lotr-card {
   top: 0px;
   left: 0px;
-  height: var(--card-height);
-  width: var(--card-width);
+  height: var(--lotr-card-height);
+  width: var(--lotr-card-width);
   margin: var(--card-margin);
   border-radius: 0.24vw;
 }
 
-.outer-card-with-attachments {
-  float: left;
-  width: var(--card-width);
-  margin: var(--card-margin);
-}
-
-.card-with-attachments {
-  height: var(--card-height);
-  width: var(--card-width);
-  margin: var(--card-margin);
-  border-radius: 0.24vw;
-  position: absolute;
-}
-
-.card-attachment {
-  height: var(--card-height);
-  width: var(--card-width);
-  margin: var(--card-margin);
-  border-radius: 0.24vw;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.card-in-container {
-  position: absolute;
-}
-
-.sideways-card {
+.lotr-sideways-card {
   top: 0px;
   left: 0px;
-  height: var(--card-height);
-  width: var(--sideways-card-width);
+  height: var(--lotr-card-height);
+  width: var(--lotr-sideways-card-width);
   margin: var(--card-margin);
   border-radius: 0.24vw;
 }
 
+.lotr-deck-and-hand {
+  margin-top: var(--standard-margin);
+}
 
-
-
-
-
-
-
-.non-supply, .bane, .your-mats, .opponent-mats, .trash, .reveal-area, .notes, .discard-area, .all-your-cards, .shortcuts {
+.lotr-single-pile {
   float: left;
-  width: calc(var(--card-width-with-margin) * 11 + var(--scrollbar-width));
-  height: calc(var(--card-height-with-margin) * 2);
+  width: var(--lotr-card-width-with-margin);
+}
+
+.lotr-hand-area {
+  float: left;
+  margin-left: 1.8vw;
+  width: calc(100% - 1.8vw - 2 * var(--lotr-card-width-with-margin));
+}
+
+.lotr-hand-cards-area, .lotr-single-pile-cards {
+  height: var(--lotr-card-height-with-margin);
+}
+
+.lotr-hand-cards-area {
   overflow: auto;
 }
 
-.main {
-  float: left;
+.lotr-hand-cards-area {
+  background-color: orange;
+}
+
+.lotr-note {
+  height: calc(var(--lotr-card-height-with-margin) * 3);
+  width: 100%;
 }

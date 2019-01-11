@@ -11,6 +11,7 @@ import yaml
 
 class Lotr:
   def __init__(self, database):
+    self._image_name_to_url = {}
     # A map of card id to card objects.
     #   key: The card id.
     #   value: An object with the following data:
@@ -19,7 +20,6 @@ class Lotr:
     #           "Engagement Cost", "Cost", "Sphere", "Willpower", "Unique", "Setup", "SetId", "SetName", "Id", "Name",
     #           "Size"
     #       value: A string representing the corresponding value for the key.
-    self._image_name_to_url = {}
     self._card_data = {}
     # A map of scenario name to scenario objects.
     #   key: The scenario property name.
@@ -106,7 +106,7 @@ class Lotr:
           # cards that don't have images.
           if card["Id"] not in self._image_name_to_url:
             continue
-          card["Image"] = self._image_name_to_url[card["Id"]]
+          card["image"] = self._image_name_to_url[card["Id"]]
           card["Name"] = card_xml.get("name")
           card["Size"] = card_xml.get("size")
           for property_or_alternate_xml in list(card_xml):
@@ -121,9 +121,8 @@ class Lotr:
                 name = property_xml.get("name")
                 value = property_xml.get("value")
                 card["Alternate"][name] = value
-              card["Alternate"]["Image"] = self._image_name_to_url[card["Id"] + ".B"]
+              card["flippedImage"] = self._image_name_to_url[card["Id"] + ".B"]
               card["flipped"] = False
-              card["isFlippable"] = True
           card["attachments"] = []
           card["resources"] = 0
           card["damage"] = 0
@@ -186,7 +185,8 @@ class Lotr:
       "discard": [],
       "engagedEnemies": [],
       "secondaryDeck": [],
-      "secondaryDeckDiscard": [],
+      "secondaryDiscard": [],
+      "secondaryReveal": [],
       "threat": threat
     }
 
@@ -197,42 +197,51 @@ class Lotr:
       player2_deck_xml = self.get_latest_deck(player2_name)
     if not player1_deck_xml or not player2_deck_xml:
       raise Exception("No deck available.")
-    print(player1_deck_xml)
     player1 = self._parse_player_xml(player1_name, player1_deck_xml)
     player2 = self._parse_player_xml(player2_name, player2_deck_xml)
     scenario = self._scenario_data[scenario_name].copy()
 
     data = {
-      "revealArea": [],
+      "trash": [],
       "playedCards": [],
       "stagingArea": [],
       "activeLocation": [],
+      "questReveal": [],
       "questDeck": [],
       "questDiscard": [],
+      "revealArea": [],
       "secondQuestDeck": [],
       "secondQuestDiscard": [],
+      "secondQuestReveal": [],
       "encounterDeck": [],
       "encounterDiscard": [],
       "victory": [],
       "specialDeck": [],
       "specialDiscard": [],
+      "specialReveal": [],
       "secondSpecialDeck": [],
       "secondSpecialDiscard": [],
+      "secondSpecialReveal": [],
       "setupArea": []
     }
     if "Staging Setup" in scenario:
       data["stagingArea"] = scenario.pop("Staging Setup")
     if "Setup" in scenario:
       data["setupArea"] = scenario.pop("Setup")
+      data["hasSetup"] = True
     if "Special" in scenario:
+      data["hasSpecial"] = True
       data["specialDeck"] = list(reversed(scenario.pop("Special")))
       random.shuffle(data["specialDeck"])
     if "Second Special" in scenario:
+      data["hasSecondSpecial"] = True
       data["secondSpecialDeck"] = list(reversed(scenario.pop("Second Special")))
       random.shuffle(data["secondSpecialDeck"])
     if "Quest" in scenario:
       data["questDeck"] = list(reversed(scenario.pop("Quest")))
+      data["questReveal"].append(data["questDeck"].pop())
     if "Second Quest" in scenario:
+      data["hasSecondQuest"] = True
       data["secondQuestDeck"] = list(reversed(scenario.pop("Second Quest")))
     if "Encounter" in scenario:
       data["encounterDeck"] = scenario.pop("Encounter")
