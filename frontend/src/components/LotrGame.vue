@@ -439,7 +439,7 @@ export default {
       if (!data['players'].includes(this.username) || data['player_triggering_update'] === this.username) {
         return
       }
-      this.updateDisplayWithReceivedGameData(data['gameData'])
+      this.updateDisplayWithGameData(data['gameData'])
     })
   },
   data () {
@@ -452,6 +452,10 @@ export default {
        * Needed for butter bar.
        */
       butterBar_css: '',
+      /**
+       * Needed for card-games.js.
+       */
+      games_currentCardSelection: {'exists': false},
       /**
        * The name of the player to invite when creating a new game.
        */
@@ -504,16 +508,6 @@ export default {
        * Represents the current game page to display.
        */
       shownPage: 'main',
-      /**
-       * The currently selected card. When keyboard shortcuts are used, they normally interact with this card.
-       * This is an object with the following keys:
-       * array {array} the array representing the array of cards selected.
-       * index {number?} optional. If specified, this is the index of the card within the array. If not specified,
-       *     the keyboard shortcuts will interact with the card array as a whole, normally performing an action on
-       *     the top card.
-       * exists {boolean} whether or not a card is currently selected.
-       */
-      games_currentCardSelection: {}, // Object with keys 'array', and 'index', and 'exists'
       /**
        * For convenience, this points to the object representing the player within game['players'].
        */
