@@ -1,6 +1,7 @@
 from typing import Dict, Optional
 import psycopg2
 
+
 class LotrDatabase:
   LOTR_GAMES_ID = "id"
   LOTR_GAMES_PLAYER1 = "player1"
@@ -28,17 +29,17 @@ class LotrDatabase:
 
   @staticmethod
   def add_game(cur, player1, player2, data, player1_deck_xml, player2_deck_xml) -> int:
-      cur.execute(
+    cur.execute(
         "INSERT INTO lotr_most_recent_deck (player, xml) VALUES(%s, %s) ON CONFLICT(player) DO UPDATE" +
         " SET xml = %s", (player1, player1_deck_xml, player1_deck_xml))
-      cur.execute(
+    cur.execute(
         "INSERT INTO lotr_most_recent_deck (player, xml) VALUES(%s, %s) ON CONFLICT(player) DO UPDATE" +
         " SET xml = %s", (player2, player2_deck_xml, player2_deck_xml))
-      cur.execute(
-          "INSERT INTO lotr_games(player1, player2, data) VALUES(%s, %s, %s) RETURNING id",
-          (player1, player2, psycopg2.extras.Json(data)))
-      game_id = cur.fetchone()["id"]
-      return game_id
+    cur.execute(
+        "INSERT INTO lotr_games(player1, player2, data) VALUES(%s, %s, %s) RETURNING id",
+        (player1, player2, psycopg2.extras.Json(data)))
+    game_id = cur.fetchone()["id"]
+    return game_id
 
   # Returned Dict has all fields of lotr_games
   @staticmethod
@@ -60,4 +61,5 @@ class LotrDatabase:
 
   @staticmethod
   def update_game(cur, game_id, data) -> int:
-    cur.execute("UPDATE lotr_games set data = %s where id = %s", (psycopg2.extras.Json(data), game_id))
+    cur.execute("UPDATE lotr_games set data = %s where id = %s",
+                (psycopg2.extras.Json(data), game_id))
