@@ -5,10 +5,9 @@ from src.dominion.dominion_database import DominionDatabase
 from typing import List, Optional, Dict
 import psycopg2
 import re
+import copy
 
 # Static files taken from DominionRandomizer/DominionWiki.
-
-
 class Dominion:
   NON_SUPPLY_CARDS = "non_supply_cards"
   KINGDOM_CARDS = "kingdom_cards"
@@ -26,14 +25,40 @@ class Dominion:
   HEXES = "hexes"
 
   def __init__(self, database):
-    # All the cards initialized below will have data specified in their corresponding yaml field as well as
-    # the set it comes from,
-    # Cards includes all cards to select the randomized kingdom from.
-    #     It includes events and landmarks and does not include cards dependent on others like potion.
-    self._image_name_to_url = {}
+    # NOTE: After population of all member variables, they should never be mutated.
+
+    # {map<string, string>} a map from local image filename to the url for rendering it.
+    self._image_name_to_url = self._get_image_name_to_url(
+      "static/dominion/image-name-to-url.yaml")
+    # {array<Card>} an array of all kingdom cards in dominion. Does not include cards not in the supply.
+    # It includes events and landmarks and does not include cards dependent on others like potion.
+    # It is used to generate the iniital kingdom cards.
+    #
+    # Card represents a card in the game. It contains many keys which can be found in the .yaml files.
+    # The relevant keys to us are the following:
+    # name {string} the name of the card. Populated automatically from the .yaml files.
+    # cost {
+    #   potion {number} the number of potions needed to buy the card.
+    #   treasure {number} the number of coins to buy this.
+    # } the cost of the card. Populated automatically from the .yaml files.
+    # image {string} the url to render the card. Added in the _add_additional_card_info function for
+    #     kingdom cards and in supplemental.yaml for non kingdom cards.
+    # type {string} the type of card it is (card, event, landmark, project, ...). Added in the
+    #     _add_additional_card_info function for kingdom cards and in supplemental.yaml for non kingdom cards.
+    # pile_type {string} the type of pile the card belongs to. Not present in the self._cards array. This is
+    #     only populated on each card just before sending the cards to the client when starting a new game.
+    #     This is used by the client to determine which pile in the game the card can be returned to.
+    # pile_index {number} the index number of the pile the card originally belongs to. Not present in the self._cards array.
+    #     Similar to pile_type, this is only populated just before sending the cards to the client.
+    # game_card_id {number} a unique identifier for each specific card (e.g. each copper card will have its own unique id).
+    #     Not present in the self._cards array. Each card will be populated with this just before sending it to the client
+    #     when a game is created.
     self._cards = []
+    # {array<Card>} an array of all boons in dominion.
     self._boons = []
+    # {array<Card>} an array of all hexes in dominion.
     self._hexes = []
+
     self._potion = {}
     self._shelters_card = {}
     self._colonies_platinums = {}
@@ -87,8 +112,7 @@ class Dominion:
     self._lucky_coin = {}
     self._shelters = []
     self._ruins = []
-    self._populate_image_name_to_url(
-      "static/dominion/image-name-to-url.yaml")
+
     self._add_cards_from_file("static/dominion/sets/adventures.yaml")
     self._add_cards_from_file("static/dominion/sets/alchemy.yaml")
     self._add_cards_from_file("static/dominion/sets/base-set-2.yaml")
@@ -107,46 +131,21 @@ class Dominion:
     self.remove_banned_cards_from_kingdom()
     self._dominion_database = DominionDatabase(database)
 
-  def _populate_image_name_to_url(self, filename):
+  # Returns a map of local image name to url for rendering.
+  # filename{string} the filename to read the image name to url data from.
+  def _get_image_name_to_url(self, filename):
+    ret = {}
     with open(filename, 'r') as stream:
       try:
         root = yaml.load(stream)
         for name in root:
-          self._image_name_to_url[name] = root[name]
+          ret[name] = root[name]
       except yaml.YAMLError as exc:
         print(exc)
+    return ret
 
-  # Adds the fields "type", and "iamge" to {@code card}.
-  # card: Object
-  # type: string
-  # return: The modified card object.
-  def _add_additional_card_info(self, card, type):
-    card["type"] = type
-    self._add_image_to_card(card)
-    return card
-
-  # Adds the field "image" to {@code card}.
-  # card: Object
-  # return: The modified card object.
-  def _add_image_to_card(self, card):
-    card["image"] = self._get_image_for_card(card)
-    return card
-
-  # Adds the field "image" to {@code cards}.
-  # card: Array<Object>
-  # return: The modified card object.
-  def _add_images_to_cards(self, cards):
-    for card in cards:
-      self._add_image_to_card(card)
-    return cards
-
-  # Returns a string with a link to the image for the given {@code card}
-  def _get_image_for_card(self, card):
-    image_name = card["name"]
-    image_name = re.sub(" / ", "", image_name)
-    image_name = re.sub("[ ]", "_", image_name)
-    return self._image_name_to_url[image_name]
-
+  # Populates the _cards, _hexes, and _boones variables with information about each card from the given filename
+  # filename {string} the name of the file to get card data from.
   def _add_cards_from_file(self, filename):
     with open(filename, 'r') as stream:
       try:
@@ -178,6 +177,41 @@ class Dominion:
       except yaml.YAMLError as exc:
         print(exc)
 
+  # Adds the fields "type", and "image" to {@code card}.
+  # card {Card} the card to modify.
+  # type {string} the type of the card.
+  # return: The modified card object.
+  def _add_additional_card_info(self, card, type):
+    card["type"] = type
+    self._add_image_to_card(card)
+    return card
+
+  # Adds the field "image" to {@code card}.
+  # card {Card} the card to modify.
+  # return: The modified card object.
+  def _add_image_to_card(self, card):
+    card["image"] = self._get_image_for_card(card)
+    return card
+
+  # Adds the field "image" to {@code cards}.
+  # cards {Array<Card>} the cards to modify.
+  # return: The modified card object.
+  def _add_images_to_cards(self, cards):
+    for card in cards:
+      self._add_image_to_card(card)
+    return cards
+
+  # Returns a string with a link to the image for the given {@code card}
+  # card {Card} the card to get the image url for.
+  # return {string} the image url to render for the card.
+  def _get_image_for_card(self, card):
+    image_name = card["name"]
+    image_name = re.sub(" / ", "", image_name)
+    image_name = re.sub("[ ]", "_", image_name)
+    return self._image_name_to_url[image_name]
+
+  # Populates the special cards in the game based on the data in filename.
+  # filename {string} the name of the file to read this special card data from.
   def _process_supplementary_cards(self, filename):
     with open(filename, 'r') as stream:
       try:
@@ -243,34 +277,33 @@ class Dominion:
       except yaml.YAMLError as exc:
         print(exc)
 
+  # Removes banned cards from the kingdom. These cards are typically banned due to the client not supporting
+  # them yet.
   def remove_banned_cards_from_kingdom(self):
     self._cards = [
-        card for card in self._cards if card["name"] != "Black Market"]
-    self._cards = [
-        card for card in self._cards if card["name"] != "Possession"]
+        card for card in self._cards if card["name"] not in ["Black Market", "Possession", "Stash", "Secret Passage", "Pearl Diver"]]
 
   # Generates a random dominion kingdom. It has the following keys:
-  # normal_cards: The normal set of 10 kingdom cards.
-  # sideways_cards: The landmarks, events, and projects.
-  # bane: If young witch is present, a bane card is added to the kingdom.
-  # should_include_potion: Whether or not the kingdom requires a potion.
-  # should_include_platinum_and_colony: Whether or not to include platinum and colony.
-  # should_include_shelters: Whether or not to use shelters instead of estates.
-  # boons: If Druid is in the game, these are the boons to use for it.
-  # supplementary_cards: Redundant with the should_include_* lines. Contains the cards to include
-  #     if those are selected.
-  # TODO: Skips Stash, Pearl Diver, and Secret Passage because they're unimplemented in the front end.
+  # normal_cards array{Card} The normal set of 10 kingdom cards.
+  # sideways_cards array{Card} The landmarks, events, and projects.
+  # bane {Card?} If young witch is present, a bane card is added to the kingdom.
+  # should_include_potion {boolean} Whether or not the kingdom requires a potion.
+  # should_include_platinum_and_colony {boolean} Whether or not to include platinum and colony.
+  # should_include_shelters {boolean} Whether or not to use shelters instead of estates.
+  # boons array{Card} If Druid is in the game, these are the boons to use for it.
+  # supplementary_cards array{Card} Redundant with the should_include_* lines. Contains the cards to include
+  #     if those are selected. Included for convenience when rendering the kingdom generated for an in-person game.
+  #
+  # Note, none of the objects directly references any member variables.
   def generate_random_kingdom(self):
     normal_cards = []
     sideways_cards = []
     bane = None
 
-    boons = random.sample(self._boons, len(self._boons))[:3]
+    boons = copy.deepcopy(random.sample(self._boons, len(self._boons))[:3])
 
-    shuffled_kingdom_cards = random.sample(self._cards, len(self._cards))
+    shuffled_kingdom_cards = copy.deepcopy(random.sample(self._cards, len(self._cards)))
     for card in shuffled_kingdom_cards:
-      if card["name"] in ["Stash", "Secret Passage", "Pearl Diver"]:
-        continue
       if bane is None:
         if card["type"] == "card":
           bane = card
@@ -295,11 +328,9 @@ class Dominion:
       bane = None
     ret["bane"] = bane
     ret["should_include_potion"] = Dominion.should_add_potion(normal_cards)
-    ret["should_include_platinum_and_colony"] = Dominion.should_add_platinum_and_colony(
-        normal_cards)
-    ret["should_include_shelters"] = Dominion.should_add_shelters(
-        normal_cards)
-    if not Dominion.should_include_boons(normal_cards):
+    ret["should_include_platinum_and_colony"] = Dominion.should_add_platinum_and_colony()
+    ret["should_include_shelters"] = Dominion.should_add_shelters()
+    if not Dominion.should_include_druid_boons(normal_cards):
       boons = []
     ret["boons"] = boons
     ret["supplementary_cards"] = []
@@ -311,32 +342,77 @@ class Dominion:
       ret["supplementary_cards"].append(self._shelters_card)
     return ret
 
+  # Given a list of cards, determines whether any of them causes a bane to be added to the kingdom.
+  # cards {array<Card>} the cards.
+  # return {boolean}
+  @staticmethod
+  def should_add_bane(cards):
+    for card in cards:
+      if card["name"] == "Young Witch":
+        return True
+    return False
+
+  # Given a list of cards, determines whether any of them causes a potion to be added to the kingdom.
+  # cards {array<Card>} the cards.
+  # return {boolean}
+  @staticmethod
+  def should_add_potion(cards):
+    for card in cards:
+      if card["cost"]["potion"] > 0:
+        return True
+    return False
+
+  # Determines whether platina and colonies should be added to the kingdom.
+  # return {boolean}
+  @staticmethod
+  def should_add_platinum_and_colony():
+    return random.random() < 0.2
+
+  # Determines whether shelters should be added to the kingdom.
+  # return {boolean}
+  @staticmethod
+  def should_add_shelters():
+    return random.random() < 0.1
+
+  # Determines whether 3 boons should be added to the kingdom face up.
+  # return {boolean}
+  @staticmethod
+  def should_include_druid_boons(cards):
+    for card in cards:
+      if card["name"] == "Druid":
+        return True
+    return False
+
+  # Generates the data used to render an online game. It contains the following keys:
+  # Dominion.KINGDOM_CARDS {array<array<Card>>} a nested array of Cards representing the cards in the kingdom.
+  # Dominion.NON_SUPPLY_CARDS {array<array<Card>>} a nested array of Cards not in the supply.
+  # Dominion.SIDEWAYS_CARDS {array<Card>} an array of sideways Cards in the game.
+  # Dominion.BANE {Card?} the bane card in the game if any.
+  # Dominion.TRASH {array<Card>} an array of trashed Cards in the game.
+  # Dominion.BOONS {array<Card>?} an array of boons Cards in the game.
+  # Dominion.HEXES {array<Card>?} an array of hex Cards in the game.
+  # Dominion.VP_CARDS {array<Card>} an array of the victory point Cards in the game.
+  # Dominion.TREASURE_CARDS {array<Card>} an array of the treasure Cards in the game.
+  # Dominion.PLAYER_1_DECK {array<Card>} an array of player 1's Cards in the game.
+  # Dominion.PLAYER_2_DECK {array<Card>} an array of player 2's Cards in the game.
+  # Dominion.PLAYER_1_HAND {array<Card>} an array of player 1's Cards in their hand.
+  # Dominion.PLAYER_2_HAND {array<Card>} an array of player 2's Cards in their hand.
   def generate_random_kingdom_for_online_game(self):
-    random_cards = self.generate_random_kingdom()
-    normal_cards = random_cards["normal_cards"].copy()
+    random_cards = copy.deepcopy(self.generate_random_kingdom())
+    normal_cards = random_cards["normal_cards"]
     normal_cards.sort(key=lambda card: card["cost"]["treasure"])
 
-    sideways_cards = random_cards["sideways_cards"].copy()
+    sideways_cards = random_cards["sideways_cards"]
     sideways_cards.sort(key=lambda card: card["cost"]["treasure"])
-    all_cards = normal_cards.copy()
+    all_non_sideways_cards = copy.deepcopy(normal_cards)
     bane = None
     if random_cards["bane"]:
-      all_cards += [random_cards["bane"]]
+      all_non_sideways_cards += [random_cards["bane"]]
       bane = random_cards["bane"]
 
     ret = {}
-    ret[Dominion.KINGDOM_CARDS] = []  # A nested array
-    ret[Dominion.NON_SUPPLY_CARDS] = []  # A nested array
-    ret[Dominion.SIDEWAYS_CARDS] = sideways_cards
-    ret[Dominion.BANE] = []
+    ret[Dominion.SIDEWAYS_CARDS] = copy.deepcopy(sideways_cards)
     ret[Dominion.TRASH] = []
-    ret[Dominion.BOONS] = []
-    ret[Dominion.HEXES] = []
-    ret[Dominion.VP_CARDS] = []
-    ret[Dominion.TREASURE_CARDS] = []
-    ret[Dominion.PLAYER_1_DECK] = []
-    ret[Dominion.PLAYER_2_DECK] = []
-    non_supply_cards_index = 0
 
     has_potion = random_cards["should_include_potion"]
     has_platinum_and_colony = random_cards["should_include_platinum_and_colony"]
@@ -365,7 +441,7 @@ class Dominion:
     has_cursed_gold = False
     has_lucky_coin = False
 
-    for card in all_cards:
+    for card in all_non_sideways_cards:
       card_name = card["name"]
       if card_name == "Page":
         has_page_line = True
@@ -429,73 +505,74 @@ class Dominion:
     if has_boons:
       has_will_o_wisp = True
 
+    ret[Dominion.NON_SUPPLY_CARDS] = []
+
     if has_page_line:
-      self.add_page_line(ret)
+      ret[Dominion.NON_SUPPLY_CARDS] += self.generate_page_line()
 
     if has_peasant_line:
-      self.add_peasant_line(ret)
-
-    if has_madman:
-      self.add_madman(ret)
+      ret[Dominion.NON_SUPPLY_CARDS] += self.generate_peasant_line()
 
     if has_prizes:
-      self.add_prizes(ret)
-
-    if has_mercenary:
-      self.add_mercenary(ret)
-
-    if has_bat:
-      self.add_bat(ret)
+      ret[Dominion.NON_SUPPLY_CARDS] += self.generate_prizes()
 
     if has_zombies:
-      self.add_zombies(ret)
+      ret[Dominion.TRASH] += self.generate_zombies()
+
+    if has_madman:
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_madman())
+
+    if has_mercenary:
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_mercenary())
+
+    if has_bat:
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_bat())
 
     if has_boons:
-      self.add_boons(ret)
+      ret[Dominion.BOONS] = self.generate_boons()
 
     if has_hexes:
-      self.add_hexes(ret)
+      ret[Dominion.HEXES] = self.generate_hexes()
 
     if has_spoils:
-      self.add_spoils(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_spoils())
 
     if has_curses:
-      self.add_curses(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_curses())
 
     if has_imp:
-      self.add_imp(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_imp())
 
     if has_will_o_wisp:
-      self.add_will_o_wisp(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_will_o_wisp())
 
     if has_ghost:
-      self.add_ghost(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_ghost())
 
     if has_wishes:
-      self.add_wishes(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_wishes())
 
     if has_ruins:
-      self.add_ruins(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_ruins())
 
     if has_potion:
-      self.add_potion(ret)
+      ret[Dominion.NON_SUPPLY_CARDS].append(self.generate_potion())
 
-    self.add_vp_cards(ret, has_platinum_and_colony)
-    self.add_treasure_cards(ret, has_platinum_and_colony)
-    self.generate_player_cards(
-        ret[Dominion.PLAYER_1_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
+    ret[Dominion.VP_CARDS] = self.generate_vp_cards(has_platinum_and_colony)
+    ret[Dominion.TREASURE_CARDS] = self.generate_treasure_cards(has_platinum_and_colony)
+    ret[Dominion.PLAYER_1_DECK] = self.generate_player_cards(
+        has_magic_lamp, has_haunted_mirror, has_goat,
         has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
-    self.generate_player_cards(
-        ret[Dominion.PLAYER_2_DECK], has_magic_lamp, has_haunted_mirror, has_goat,
+    ret[Dominion.PLAYER_2_DECK] = self.generate_player_cards(
+        has_magic_lamp, has_haunted_mirror, has_goat,
         has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters)
     ret[Dominion.PLAYER_1_HAND] = []
     ret[Dominion.PLAYER_2_HAND] = []
     for i in range(5):
-      ret[Dominion.PLAYER_1_HAND].append(
-          ret[Dominion.PLAYER_1_DECK].pop())
-      ret[Dominion.PLAYER_2_HAND].append(
-          ret[Dominion.PLAYER_2_DECK].pop())
+      ret[Dominion.PLAYER_1_HAND].append(ret[Dominion.PLAYER_1_DECK].pop())
+      ret[Dominion.PLAYER_2_HAND].append(ret[Dominion.PLAYER_2_DECK].pop())
 
+    ret[Dominion.KINGDOM_CARDS] = []
     for card in normal_cards:
       ret[Dominion.KINGDOM_CARDS].append(self.generate_pile(card))
 
@@ -505,58 +582,87 @@ class Dominion:
     Dominion.annotate_card_piles(ret)
     return ret
 
-  @staticmethod
-  def get_copper_pile_index(card_map):
-    for (pile_index, card_array) in enumerate(card_map[Dominion.TREASURE_CARDS]):
-      if card_array[0]["name"] == "Copper":
-        return pile_index
-
-  @staticmethod
-  def get_estate_pile_index(card_map):
-    for (pile_index, card_array) in enumerate(card_map[Dominion.VP_CARDS]):
-      if card_array[0]["name"] == "Estate":
-        return pile_index
-
-  @staticmethod
-  def annotate_card_piles(card_map):
-    copper_pile_index = Dominion.get_copper_pile_index(card_map)
-    estate_pile_index = Dominion.get_estate_pile_index(card_map)
-    for pile_type in [Dominion.TREASURE_CARDS, Dominion.VP_CARDS, Dominion.KINGDOM_CARDS, Dominion.NON_SUPPLY_CARDS]:
-      for (pile_index, card_array) in enumerate(card_map[pile_type]):
-        for card in card_array:
-          card["pile_type"] = pile_type
-          card["pile_index"] = pile_index
-    for pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK, Dominion.PLAYER_1_HAND, Dominion.PLAYER_2_HAND]:
-      for card in card_map[pile_type]:
-        if card["name"] == "Copper":
-          card["pile_type"] = Dominion.TREASURE_CARDS
-          card["pile_index"] = copper_pile_index
-        elif card["name"] == "Estate":
-          card["pile_type"] = Dominion.VP_CARDS
-          card["pile_index"] = estate_pile_index
-
-  def add_treasure_cards(self, card_map, has_platinum_and_colony):
+  # Generates the victory point cards for use in a Dominion game.
+  # has_platinum_and_colony {boolean} whether there is a platinum and colony in the game.
+  # return {array<array<Card>>} a nested array of Cards which are the victory point cards in the game.
+  def generate_vp_cards(self, has_platinum_and_colony):
+    ret = []
     if has_platinum_and_colony:
-      card_map[Dominion.TREASURE_CARDS].append(
-        Dominion.create_n_copies(self._platinum, 12))
-    card_map[Dominion.TREASURE_CARDS].append(
-      Dominion.create_n_copies(self._gold, 30))
-    card_map[Dominion.TREASURE_CARDS].append(
-      Dominion.create_n_copies(self._silver, 40))
-    card_map[Dominion.TREASURE_CARDS].append(
-      Dominion.create_n_copies(self._copper, 46))
+      ret.append(Dominion.create_n_copies(self._colony, 8))
+    ret.append(Dominion.create_n_copies(self._province, 8))
+    ret.append(Dominion.create_n_copies(self._duchy, 8))
+    ret.append(Dominion.create_n_copies(self._estate, 8))
+    return ret
 
-  def add_vp_cards(self, card_map, has_platinum_and_colony):
+  @staticmethod
+  def create_n_copies(obj, num):
+    return [copy.deepcopy(obj) for i in range(num)]
+
+  # Generates the treasure cards for use in a Dominion game.
+  # has_platinum_and_colony {boolean} whether there is a platinum and colony in the game.
+  # return {array<array<Card>>} a nested array of Cards which are the treasure cards in the game.
+  def generate_treasure_cards(self, has_platinum_and_colony):
+    ret = []
     if has_platinum_and_colony:
-      card_map[Dominion.VP_CARDS].append(
-        Dominion.create_n_copies(self._colony, 8))
-    card_map[Dominion.VP_CARDS].append(
-      Dominion.create_n_copies(self._province, 8))
-    card_map[Dominion.VP_CARDS].append(
-      Dominion.create_n_copies(self._duchy, 8))
-    card_map[Dominion.VP_CARDS].append(
-      Dominion.create_n_copies(self._estate, 8))
+      ret.append(Dominion.create_n_copies(self._platinum, 12))
+    ret.append(Dominion.create_n_copies(self._gold, 30))
+    ret.append(Dominion.create_n_copies(self._silver, 40))
+    ret.append(Dominion.create_n_copies(self._copper, 46))
+    return ret
 
+  # Generates the initial cards for a player's deck.
+  # has_* {boolean} whether the card is in the game.
+  # return {array<Card>} the cards in the player's hand.
+  def generate_player_cards(self, has_magic_lamp, has_haunted_mirror, has_goat,
+                            has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters):
+    ret = []
+    if has_magic_lamp:
+      ret.append(copy.deepcopy(self._magic_lamp))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_haunted_mirror:
+      ret.append(copy.deepcopy(self._haunted_mirror))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_goat:
+      ret.append(copy.deepcopy(self._goat))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_pasture:
+      ret.append(copy.deepcopy(self._pasture))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_pouch:
+      ret.append(copy.deepcopy(self._pouch))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_cursed_gold:
+      ret.append(copy.deepcopy(self._cursed_gold))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_lucky_coin:
+      ret.append(copy.deepcopy(self._lucky_coin))
+    else:
+      ret.append(copy.deepcopy(self._copper))
+
+    if has_shelters:
+      ret += copy.deepcopy(self._shelters)
+    else:
+      ret.append(copy.deepcopy(self._estate))
+      ret.append(copy.deepcopy(self._estate))
+      ret.append(copy.deepcopy(self._estate))
+    random.shuffle(ret)
+    return ret
+
+  # Generates a pile of cards corresponding to the given card.
+  # card {Card} the card to make a pile of.
+  # return {<array[Card]>} the array of Cards representing the pile.
   def generate_pile(self, card):
     card_name = card["name"]
 
@@ -586,11 +692,11 @@ class Dominion:
       ret += Dominion.create_n_copies(self._sauna, 5)
       return ret
     if card_name == "Knights":
-      ret = self._knights.copy()
+      ret = copy.deepcopy(self._knights)
       random.shuffle(ret)
       return ret
     if card_name == "Castles":
-      ret = self._castles.copy()
+      ret = copy.deepcopy(self._castles)
       return ret
 
     num_cards = 10
@@ -603,164 +709,163 @@ class Dominion:
     ret += Dominion.create_n_copies(card, num_cards)
     return ret
 
-  def add_page_line(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._treasure_hunter, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._warrior, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._hero, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._champion, 5))
+  # Only used by generate_random_kingdom_for_online_game. This will annotate the map it generates just before returning
+  # with additional information.
+  # card_map {Object} the object which is (almost) generated by generate_random_kingdom_for_online_game. See the
+  #     comment for that function for the parameters expected in card_map. This parameter will be modified by this
+  #     function.
+  @staticmethod
+  def annotate_card_piles(card_map):
+    copper_pile_index = Dominion.get_copper_pile_index(card_map[Dominion.TREASURE_CARDS])
+    estate_pile_index = Dominion.get_estate_pile_index(card_map[Dominion.VP_CARDS])
+    game_card_id = 0
+    for pile_type in card_map:
+      if pile_type in [Dominion.TREASURE_CARDS, Dominion.VP_CARDS, Dominion.KINGDOM_CARDS, Dominion.NON_SUPPLY_CARDS]:
+        for (pile_index, card_array) in enumerate(card_map[pile_type]):
+          for card in card_array:
+            card["game_card_id"] = game_card_id
+            game_card_id += 1
+            card["pile_type"] = pile_type
+            card["pile_index"] = pile_index
+            if card["name"] == "Copper":
+              copper_pile_index = pile_index
+            if card["name"] == "Estate":
+              estate_pile_index = pile_index
+      elif pile_type in [Dominion.SIDEWAYS_CARDS, Dominion.BANE, Dominion.BOONS, Dominion.HEXES, Dominion.TRASH]:
+        for card in card_map[pile_type]:
+          card["game_card_id"] = game_card_id
+          game_card_id += 1
+          card["pile_type"] = pile_type
+      elif pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK, Dominion.PLAYER_1_HAND, Dominion.PLAYER_2_HAND]:
+        for card in card_map[pile_type]:
+          card["game_card_id"] = game_card_id
+          game_card_id += 1
+          if card["name"] == "Copper":
+            card["pile_type"] = Dominion.TREASURE_CARDS
+            card["pile_index"] = copper_pile_index
+          elif card["name"] == "Estate":
+            card["pile_type"] = Dominion.VP_CARDS
+            card["pile_index"] = estate_pile_index
+      else:
+        raise Exception("Unexpected key.")
 
-  def add_peasant_line(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._soldier, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._fugitive, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._disciple, 5))
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._teacher, 5))
+  # Gets the index of the copper pile in the given array of cards if any.
+  @staticmethod
+  def get_copper_pile_index(arr):
+    for (pile_index, card_array) in enumerate(arr):
+      if card_array[0]["name"] == "Copper":
+        return pile_index
 
-  def add_madman(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._madman, 10))
+  # Gets the index of the estate pile in the given array of cards if any.
+  @staticmethod
+  def get_estate_pile_index(arr):
+    for (pile_index, card_array) in enumerate(arr):
+      if card_array[0]["name"] == "Estate":
+        return pile_index
 
-  def add_prizes(self, card_map):
+  # Returns an array containing the page related supply piles.
+  # return {array<array<Card>>} an array of Card piles.
+  def generate_page_line(self):
+    ret = []
+    ret.append(Dominion.create_n_copies(self._treasure_hunter, 5))
+    ret.append(Dominion.create_n_copies(self._warrior, 5))
+    ret.append(Dominion.create_n_copies(self._hero, 5))
+    ret.append(Dominion.create_n_copies(self._champion, 5))
+    return ret
+
+  # Returns an array containing the peasant related supply piles.
+  # return {array<array<Card>>} an array of Card piles.
+  def generate_peasant_line(self):
+    ret = []
+    ret.append(Dominion.create_n_copies(self._soldier, 5))
+    ret.append(Dominion.create_n_copies(self._fugitive, 5))
+    ret.append(Dominion.create_n_copies(self._disciple, 5))
+    ret.append(Dominion.create_n_copies(self._teacher, 5))
+    return ret
+
+  # Returns an array containing the prize supply piles.
+  # return {array<array<Card>>} an array of Card piles.
+  def generate_prizes(self):
+    ret = []
     for prize in self._prizes:
-      card_map[Dominion.NON_SUPPLY_CARDS].append(
-        Dominion.create_n_copies(prize, 1))
+      ret.append(Dominion.create_n_copies(prize, 1))
+    return ret
 
-  def add_mercenary(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._mercenary, 10))
-
-  def add_potion(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._potion, 16))
-
-  def add_bat(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._bat, 10))
-
-  def add_zombies(self, card_map):
+  # Returns the zombie cards as an array.
+  # return {array<Card>} an array of zombie cards.
+  def generate_zombies(self):
+    ret = []
     for zombie in self._zombies:
-      card_map[Dominion.TRASH].append(zombie)
+      ret.append(zombie)
+    return ret
 
-  def add_boons(self, card_map):
-    card_map[Dominion.BOONS] = random.sample(self._boons, len(self._boons))
+  # Returns the madman cards.
+  # return {array<Card>} an array of madman cards.
+  def generate_madman(self):
+    return Dominion.create_n_copies(self._madman, 10)
 
-  def add_hexes(self, card_map):
-    card_map[Dominion.HEXES] = random.sample(self._hexes, len(self._hexes))
+  # Returns the mercenary cards.
+  # return {array<Card>} an array of mercenary cards.
+  def generate_mercenary(self):
+    return Dominion.create_n_copies(self._mercenary, 10)
 
-  def add_spoils(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._spoils, 15))
+  # Returns the potion cards.
+  # return {array<Card>} an array of potion cards.
+  def generate_potion(self):
+    return Dominion.create_n_copies(self._potion, 16)
 
-  def add_curses(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._curse, 10))
+  # Returns the bat cards.
+  # return {array<Card>} an array of bat cards.
+  def generate_bat(self):
+    return Dominion.create_n_copies(self._bat, 10)
 
-  def add_imp(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._imp, 13))
+  # Returns the boons cards.
+  # return {array<Card>} an array of boons cards.
+  def generate_boons(self):
+    return copy.deepcopy(random.sample(self._boons, len(self._boons)))
 
-  def add_will_o_wisp(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._will_o_wisp, 12))
+  # Returns the hex cards.
+  # return {array<Card>} an array of hex cards.
+  def generate_hexes(self):
+    return copy.deepcopy(random.sample(self._hexes, len(self._hexes)))
 
-  def add_ghost(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._ghost, 6))
+  # Returns the spoils cards.
+  # return {array<Card>} an array of spoils cards.
+  def generate_spoils(self):
+    return Dominion.create_n_copies(self._spoils, 15)
 
-  def add_wishes(self, card_map):
-    card_map[Dominion.NON_SUPPLY_CARDS].append(
-      Dominion.create_n_copies(self._wish, 12))
+  # Returns the curse cards.
+  # return {array<Card>} an array of curse cards.
+  def generate_curses(self):
+    return Dominion.create_n_copies(self._curse, 10)
 
-  def generate_player_cards(self, player_deck, has_magic_lamp, has_haunted_mirror, has_goat,
-                            has_pasture, has_pouch, has_cursed_gold, has_lucky_coin, has_shelters):
-    if has_magic_lamp:
-      player_deck.append(self._magic_lamp)
-    else:
-      player_deck.append(self._copper)
+  # Returns the imp cards.
+  # return {array<Card>} an array of imp cards.
+  def generate_imp(self):
+    return Dominion.create_n_copies(self._imp, 13)
 
-    if has_haunted_mirror:
-      player_deck.append(self._haunted_mirror)
-    else:
-      player_deck.append(self._copper)
+  # Returns the will o' wisp cards.
+  # return {array<Card>} an array of will o' wisp cards.
+  def generate_will_o_wisp(self):
+    return Dominion.create_n_copies(self._will_o_wisp, 12)
 
-    if has_goat:
-      player_deck.append(self._goat)
-    else:
-      player_deck.append(self._copper)
+  # Returns the ghost cards.
+  # return {array<Card>} an array of ghost cards.
+  def generate_ghost(self):
+    return Dominion.create_n_copies(self._ghost, 6)
 
-    if has_pasture:
-      player_deck.append(self._pasture)
-    else:
-      player_deck.append(self._copper)
+  # Returns the wish cards.
+  # return {array<Card>} an array of wish cards.
+  def generate_wishes(self):
+    return Dominion.create_n_copies(self._wish, 12)
 
-    if has_pouch:
-      player_deck.append(self._pouch)
-    else:
-      player_deck.append(self._copper)
-
-    if has_cursed_gold:
-      player_deck.append(self._cursed_gold)
-    else:
-      player_deck.append(self._copper)
-
-    if has_lucky_coin:
-      player_deck.append(self._lucky_coin)
-    else:
-      player_deck.append(self._copper)
-
-    if has_shelters:
-      player_deck += self._shelters
-    else:
-      player_deck.append(self._estate)
-      player_deck.append(self._estate)
-      player_deck.append(self._estate)
-    random.shuffle(player_deck)
-
-  def add_ruins(self, card_map):
+  # Returns the ruins cards.
+  # return {array<Card>} an array of ruin cards.
+  def generate_ruins(self):
     ruins = []
     for i in range(10):
-      ruins += self._ruins
-    card_map[Dominion.NON_SUPPLY_CARDS].append(random.sample(ruins, 10))
-
-  @staticmethod
-  def create_n_copies(obj, num):
-    return [obj for i in range(num)]
-
-  @staticmethod
-  def should_add_bane(cards):
-    for card in cards:
-      if card["name"] == "Young Witch":
-        return True
-    return False
-
-  @staticmethod
-  def should_add_potion(cards):
-    for card in cards:
-      if card["cost"]["potion"] > 0:
-        return True
-    return False
-
-  @staticmethod
-  def should_add_platinum_and_colony(cards):
-    return random.random() < 0.2
-
-  @staticmethod
-  def should_add_shelters(cards):
-    return random.random() < 0.1
-
-  @staticmethod
-  def should_include_boons(cards):
-    for card in cards:
-      if card["name"] == "Druid":
-        return True
-    return False
+      ruins += copy.deepcopy(self._ruins)
+    return random.sample(ruins, 10)
 
   def create_game(self, player1, player2) -> int:
     game_data = self.generate_random_kingdom_for_online_game()
@@ -774,8 +879,8 @@ class Dominion:
         "name": player1,
         "durationArea": [],
         "playArea": [],
-        "deck": game_data["player_1_deck"],
-        "hand": game_data["player_1_hand"],
+        "deck": game_data[Dominion.PLAYER_1_DECK],
+        "hand": game_data[Dominion.PLAYER_1_HAND],
         "mats": [],
         "discard": [],
         "numActions": 1,
@@ -790,8 +895,8 @@ class Dominion:
         "name": player2,
         "durationArea": [],
         "playArea": [],
-        "deck": game_data["player_2_deck"],
-        "hand": game_data["player_2_hand"],
+        "deck": game_data[Dominion.PLAYER_2_DECK],
+        "hand": game_data[Dominion.PLAYER_2_HAND],
         "mats": [],
         "discard": [],
         "numActions": 1,
@@ -809,18 +914,21 @@ class Dominion:
     data["boonsReveal"] = []
     data["hexesDeck"] = []
     data["hexesReveal"] = []
-    data["nonSupplyCards"] = game_data["non_supply_cards"]
-    data["kingdomCards"] = game_data["kingdom_cards"]
-    data["vpCards"] = game_data["vp_cards"]
-    data["treasureCards"] = game_data["treasure_cards"]
-    data["trash"] = game_data["trash"]
-    data["bane"] = game_data["bane"]
-    data["hexesDeck"] = game_data["hexes"]
-    data["boonsDeck"] = game_data["boons"]
-    data["sidewaysCards"] = game_data["sideways_cards"]
-    data["hasBane"] = len(game_data["bane"]) > 0
-    data["hasBoons"] = len(game_data["boons"]) > 0
-    data["hasHexes"] = len(game_data["hexes"]) > 0
+    data["nonSupplyCards"] = game_data[Dominion.NON_SUPPLY_CARDS]
+    data["kingdomCards"] = game_data[Dominion.KINGDOM_CARDS]
+    data["vpCards"] = game_data[Dominion.VP_CARDS]
+    data["treasureCards"] = game_data[Dominion.TREASURE_CARDS]
+    data["trash"] = game_data[Dominion.TRASH]
+    if Dominion.BANE in game_data:
+      data["bane"] = game_data[Dominion.BANE]
+    if Dominion.HEXES in game_data:
+      data["hexesDeck"] = game_data[Dominion.HEXES]
+    if Dominion.BOONS in game_data:
+      data["boonsDeck"] = game_data[Dominion.BOONS]
+    data["sidewaysCards"] = game_data[Dominion.SIDEWAYS_CARDS]
+    data["hasBane"] = Dominion.BANE in game_data
+    data["hasBoons"] = Dominion.BOONS in game_data
+    data["hasHexes"] = Dominion.HEXES in game_data
 
     cur = self._dominion_database.get_cursor()
 
