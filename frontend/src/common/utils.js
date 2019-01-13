@@ -51,7 +51,7 @@ function isEqual (x, y) {
 
 function getDisplayDate (dateString) {
   let date = new Date(Date.parse(dateString))
-  let options = {month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC'}
+  let options = { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }
   return date.toLocaleDateString('en-US', options)
 }
 
@@ -82,14 +82,28 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
 /**
  * Finds the path of keys to a given variable within an object. The return is represented as as an array.
  * From https://stackoverflow.com/questions/43636000/javascript-find-path-to-object-reference-in-nested-object
+ * obj {Object} the object to search within.
+ * target {Object} the target to find. Must be an object.
+ * return {array<string>} an array with the path within the object to the target. (a series of keys.)
  */
-function findPath (a, obj) {
+function findPath (obj, target) {
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      if (a === obj[key]) return [key]
-      else if (obj[key] && typeof obj[key] === 'object') {
-        var path = findPath(a, obj[key])
-        if (path) return [key].concat(path)
+      if (target === obj[key]) {
+        if (obj instanceof Array) {
+          return [parseInt(key, 10)]
+        } else {
+          return [key]
+        }
+      } else if (obj[key] && typeof obj[key] === 'object') {
+        let path = findPath(obj[key], target)
+        if (path) {
+          if (obj instanceof Array) {
+            return [parseInt(key, 10)].concat(path)
+          } else {
+            return [key].concat(path)
+          }
+        }
       }
     }
   }
@@ -137,5 +151,7 @@ function shuffle (array) {
   return array
 }
 
-export { getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
-  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray, transferContents, shuffle }
+export {
+  getElementById, getValueOfElementWithDefault, getFullBackendUrlForPath, playSound, generateExpandIcon,
+  isEqual, getDisplayDate, callAxios, findPath, fetchFromPath, emptyArray, transferContents, shuffle
+}

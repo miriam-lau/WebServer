@@ -5,7 +5,7 @@
       :css="butterBar_css"
     />
     <div class="card-games-new-game">
-      <span class="card-games-text-on-background">Invite:</span> <input v-model="playerToInvite" class="card-games-player-to-invite"/>
+      <span class="card-games-text-on-background">Invite:</span> <input v-model="games_playerToInvite" class="card-games-player-to-invite"/>
       <span class="card-games-text-on-background">Scenario:</span> <select v-model="scenarioName">
                   <option v-for="scenario in scenarioList" :key="scenario">
                     {{ scenario }}
@@ -432,7 +432,7 @@ export default {
     this.updateLotrScenarios()
     this.updateDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
-    this.playerToInvite = defaultPlayerToInvite(this.username)
+    this.games_playerToInvite = defaultPlayerToInvite(this.username)
   },
   mounted () {
     socket.on('refresh_lotr', (data) => {
@@ -459,7 +459,7 @@ export default {
       /**
        * The name of the player to invite when creating a new game.
        */
-      playerToInvite: '',
+      games_playerToInvite: '',
       /**
        * The deck the current player will use when creating a new game.
        */
@@ -603,7 +603,7 @@ export default {
         {
           scenario: this.scenarioName,
           player1: this.username,
-          player2: this.playerToInvite,
+          player2: this.games_playerToInvite,
           player1Deck: this.player1DeckXml,
           player2Deck: this.player2DeckXml,
           username: this.username
@@ -678,7 +678,7 @@ export default {
     updateDisplayWithGameData (gameData) {
       let currentCardSelectionArrayPath
       if (this.games_currentCardSelection.exists) {
-        currentCardSelectionArrayPath = findPath(this.games_currentCardSelection.array, this.game)
+        currentCardSelectionArrayPath = findPath(this.game, this.games_currentCardSelection.array)
       }
       this.shouldSaveChanges = false
       this.isInGame = true

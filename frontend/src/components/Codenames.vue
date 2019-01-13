@@ -52,7 +52,7 @@
     </div>
     <div>
       Invite:
-          <input v-model="playerToInvite" class="codenames-player-to-invite"/>
+          <input v-model="games_playerToInvite" class="codenames-player-to-invite"/>
           <button v-on:click="newGame">New Game</button>
     </div>
     <div class="codenames-log">
@@ -93,7 +93,7 @@ export default {
       gameId: 0,
       player1: '',
       player2: '',
-      playerToInvite: '',
+      games_playerToInvite: '',
       turnNumber: 0,
       timeTokensUsed: 0,
       turnType: '',
@@ -144,7 +144,7 @@ export default {
   },
   created () {
     this.updateCodenamesDisplayWithLatestGame(null)
-    this.playerToInvite = this.defaultPlayerToInvite()
+    this.games_playerToInvite = this.defaultPlayerToInvite()
   },
   mounted () {
     var that = this
@@ -201,7 +201,7 @@ export default {
      * Creates a new game with the invited player.
      */
     newGame () {
-      var randomizedPlayers = [this.username, this.playerToInvite]
+      var randomizedPlayers = [this.username, this.games_playerToInvite]
       randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
 
       callAxiosAndSetButterBar(
@@ -212,8 +212,8 @@ export default {
           player1: randomizedPlayers[0],
           player2: randomizedPlayers[1]
         },
-        'Invited ' + this.playerToInvite + ' to a game.',
-        'Failed to invite ' + this.playerToInvite + ' to a game.')
+        'Invited ' + this.games_playerToInvite + ' to a game.',
+        'Failed to invite ' + this.games_playerToInvite + ' to a game.')
     },
     endGuesses () {
       callAxiosAndSetButterBar(

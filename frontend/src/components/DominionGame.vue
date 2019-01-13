@@ -6,10 +6,11 @@
     />
     <div class="card-games-new-game">
       Invite:
-          <input v-model="playerToInvite" class="card-games-player-to-invite"/>
+          <input v-model="games_playerToInvite" class="card-games-player-to-invite"/>
           <button v-on:click="newGame">New Game</button>
     </div>
     <div v-if="isInGame">
+      Debug sync: {{numExpectedResponses}}<br/>
       <button @click="shownPage = 'kingdom'">Kingdom</button>
       <button v-if="game['nonSupplyCards'].length > 0" @click="shownPage = 'nonSupply'">Non Supply</button>
       <button v-if="game['hasBane']" @click="shownPage = 'bane'">Bane</button>
@@ -171,13 +172,15 @@
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
-          <CardList
-              :cardArray="game['boonsReveal']"
-              :defaultMoveArray="game['boonsDiscard']"
-              :cardHeight="cardHeight"
-              :cardWidth="sidewaysCardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCard="getImageForCard" />
+          <div class="dominion-boons-and-hexes-reveal">
+            <CardList
+                :cardArray="game['boonsReveal']"
+                :defaultMoveArray="game['boonsDiscard']"
+                :cardHeight="cardHeight"
+                :cardWidth="sidewaysCardWidth"
+                :cardMargin="cardMargin"
+                :getImageForCard="getImageForCard" />
+          </div>
         </div>
         <div v-else-if="shownPage === 'hexes'">
           <div class="dominion-boons-and-hexes-deck-and-discard">
@@ -196,13 +199,15 @@
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
-          <CardList
-              :cardArray="game['hexesReveal']"
-              :defaultMoveArray="game['hexesDiscard']"
-              :cardHeight="cardHeight"
-              :cardWidth="sidewaysCardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCard="getImageForCard" />
+          <div class="dominion-boons-and-hexes-reveal">
+            <CardList
+                :cardArray="game['hexesReveal']"
+                :defaultMoveArray="game['hexesDiscard']"
+                :cardHeight="cardHeight"
+                :cardWidth="sidewaysCardWidth"
+                :cardMargin="cardMargin"
+                :getImageForCard="getImageForCard" />
+          </div>
         </div>
       </div>
       <div class="clearfix"/>
@@ -351,17 +356,16 @@ import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { shuffle, getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
+import { getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
 import { store } from '../store/store'
-import { socket } from '../common/socketio'
 import { moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
   clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
-  getCurrentCard, getImageForCardArray }
+  getCurrentCard, getImageForCardArray, handleGameMount, mutateProperty }
   from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
-const SAVE_DOMINION_GAME_URL = getFullBackendUrlForPath('/save_dominion_game')
+const DOMINION_MUTATE_GAME_URL = getFullBackendUrlForPath('/dominion_mutate_game')
 
 export default {
   name: 'DominionGame',
@@ -369,15 +373,13 @@ export default {
   computed: { username () { return store.state.username } },
   watch: {
     username () { this.updateDisplayWithLatestGame() },
-    game: {
+    mutations: {
       handler (val) {
-        if (this.shouldSaveChanges) {
+        if (this.mutations.length > 0) {
           this.saveGame()
-        } else {
-          this.shouldSaveChanges = true
+          this.mutations = []
         }
-      },
-      deep: true
+      }
     }
   },
   created () {
@@ -388,15 +390,10 @@ export default {
     this.sidewaysCardWidth = style.getPropertyValue('--dominion-sideways-card-width')
     this.updateDisplayWithLatestGame()
     window.addEventListener('keyup', this.handleKeyPress)
-    this.playerToInvite = defaultPlayerToInvite(this.username)
+    this.games_playerToInvite = defaultPlayerToInvite(this.username)
   },
   mounted () {
-    socket.on('refresh_dominion', (data) => {
-      if (!data['players'].includes(this.username) || data['player_triggering_update'] === this.username) {
-        return
-      }
-      this.updateDisplayWithReceivedGameData(data['gameData'])
-    })
+    handleGameMount(this, 'refreshDominion')
   },
   data () {
     return {
@@ -415,7 +412,7 @@ export default {
       /**
        * The name of the player to invite when creating a new game.
        */
-      playerToInvite: '',
+      games_playerToInvite: '',
       /**
        * Whether there is a game to display or not.
        */
@@ -437,10 +434,6 @@ export default {
        */
       sidewaysCardWidth: '',
       /**
-       * Whether or not to save watched data changes to the database. Only false if we just received those changes from the server.
-       */
-      shouldSaveChanges: false,
-      /**
        * In-game notes the player can type to themselves.
        */
       notes: '',
@@ -460,6 +453,14 @@ export default {
        * The index of the player within game['players'].
        */
       playerIndex: 0,
+      /**
+       * The pending mutations to be sent to the server.
+       */
+      mutations: [],
+      /**
+       * Num expected responses
+       */
+      numExpectedResponses: 0,
       /**
        * The game object represents all the data needed to render a game. It contains the following nested data:
        * playerOrder {array[Player]} the players in the game in order.
@@ -510,9 +511,9 @@ export default {
        * }
        * image {string} the url to render the card.
        * name {string} the name of the card.
-       * pile_type {string} the type of pile the card belongs to.
-       * pile_index {number} the index number of the pile the card originally belongs to.
-       *      (corresponding to pile_type)
+       * pileType {string} the type of pile the card belongs to.
+       * pileIndex {number} the index number of the pile the card originally belongs to.
+       *      (corresponding to pileType)
        * type {string} the type of card it is (card, event, landmark, project, ...)
        */
       game: {}
@@ -539,7 +540,7 @@ export default {
      * Calls the backend to generate a new game with the populated input fields. Updates the game display once it is created.
      */
     newGame () {
-      var randomizedPlayers = [this.username, this.playerToInvite]
+      var randomizedPlayers = [this.username, this.games_playerToInvite]
       randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
 
       callAxiosAndSetButterBar(
@@ -621,13 +622,14 @@ export default {
 
     moveCard: moveCard,
     saveGame () {
+      this.numExpectedResponses += 1
       callAxiosAndSetButterBar(
         this,
-        SAVE_DOMINION_GAME_URL,
+        DOMINION_MUTATE_GAME_URL,
         {
           gameId: this.game.gameId,
-          gameData: this.game,
-          username: this.username
+          username: this.username,
+          mutations: this.mutations
         },
         null,
         'Failed to save dominion game.')
@@ -654,9 +656,8 @@ export default {
     updateDisplayWithReceivedGameData (gameData) {
       let currentCardSelectionArrayPath
       if (this.games_currentCardSelection.exists) {
-        currentCardSelectionArrayPath = findPath(this.games_currentCardSelection.array, this.game)
+        currentCardSelectionArrayPath = findPath(this.game, this.games_currentCardSelection.array)
       }
-      this.shouldSaveChanges = false
       this.isInGame = true
       this.game = gameData
       this.playerIndex = gameData.playerOrder[0] === this.username ? 0 : 1
@@ -667,23 +668,20 @@ export default {
         setCurrentCard(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
       }
     },
-    shuffleDeck () {
-      shuffle(this.player.deck)
-    },
     deckToDiscard () {
-      moveAllCards(this.player.deck, this.player.discard)
+      moveAllCards(this, this.player.deck, this.player.discard)
     },
     deckToHand () {
       for (let i = 0; i < 5; ++i) {
-        moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
+        moveCard(this, this.player.deck, undefined, this.player.hand, this.player.discard)
       }
     },
     singleCardFromDeckToHand () {
-      moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
+      moveCard(this, this.player.deck, undefined, this.player.hand, this.player.discard)
     },
     endTurnAndCleanUp () {
-      moveAllCards(this.player.hand, this.player.discard)
-      moveAllCards(this.player.playArea, this.player.discard)
+      moveAllCards(this, this.player.hand, this.player.discard)
+      moveAllCards(this, this.player.playArea, this.player.discard)
       if (this.games_currentCardSelection.array === this.player.hand || this.games_currentCardSelection.array === this.player.playArea) {
         clearCurrentCard(this)
       }
@@ -695,22 +693,22 @@ export default {
       this.endPlayerTurn()
       this.deckToHand()
     },
-    incrementNumActions () { this.player.numActions++ },
-    decrementNumActions () { this.player.numActions-- },
-    incrementNumBuys () { this.player.numBuys++ },
-    decrementNumBuys () { this.player.numBuys-- },
-    incrementNumCoins () { this.player.numCoins++ },
-    decrementNumCoins () { this.player.numCoins-- },
-    incrementNumVP () { this.player.numVP++ },
-    decrementNumVP () { this.player.numVP-- },
-    incrementNumVillagers () { this.player.numVillagers++ },
-    decrementNumVillagers () { this.player.numVillagers-- },
-    incrementNumCoffers () { this.player.numCoffers++ },
-    decrementNumCoffers () { this.player.numCoffers-- },
-    incrementNumDebt () { this.player.numDebt++ },
-    decrementNumDebt () { this.player.numDebt-- },
+    incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'incrementProperty') },
+    decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'decrementProperty') },
+    incrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'incrementProperty') },
+    decrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'decrementProperty') },
+    incrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'incrementProperty') },
+    decrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'decrementProperty') },
+    incrementNumVP () { mutateProperty(this, this.player, 'numVP', 'incrementProperty') },
+    decrementNumVP () { mutateProperty(this, this.player, 'numVP', 'decrementProperty') },
+    incrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'incrementProperty') },
+    decrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'decrementProperty') },
+    incrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'incrementProperty') },
+    decrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'decrementProperty') },
+    incrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'incrementProperty') },
+    decrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'decrementProperty') },
     handToPlayArea () {
-      moveAllCards(this.player.hand, this.player.playArea)
+      moveAllCards(this, this.player.hand, this.player.playArea)
       if (this.games_currentCardSelection.array === this.player.hand) {
         clearCurrentCard(this)
       }
@@ -764,21 +762,20 @@ export default {
             return
           }
           switch (destinationPileType) {
-            case 'vp_cards':
+            case 'vpCards':
               destinationArray = this.game.vpCards[destinationPileIndex]
               break
-            case 'treasure_cards':
+            case 'treasureCards':
               destinationArray = this.game.treasureCards[destinationPileIndex]
               break
-            case 'kingdom_cards':
+            case 'kingdomCards':
               destinationArray = this.game.kingdomCards[destinationPileIndex]
               break
-            case 'non_supply_cards':
+            case 'nonSupplyCards':
               destinationArray = this.game.nonSupplyCards[destinationPileIndex]
               break
           }
           break
-        case 's': this.shuffleDeck(); return
         case 't': destinationArray = this.game.trash; break
         case 'r': destinationArray = this.game.revealArea; break
         case 'o': destinationArray = this.opponent.hand; break

@@ -1,30 +1,34 @@
 import yaml
 import random
 import pprint
-from src.dominion.dominion_database import DominionDatabase
+from src.card_games.card_games import CardGames
 from typing import List, Optional, Dict
 import psycopg2
 import re
 import copy
 
+# Backend for the Dominion game.
 # Static files taken from DominionRandomizer/DominionWiki.
 class Dominion:
-  NON_SUPPLY_CARDS = "non_supply_cards"
-  KINGDOM_CARDS = "kingdom_cards"
-  VP_CARDS = "vp_cards"
-  TREASURE_CARDS = "treasure_cards"
-  NORMAL_CARDS = "normal_cards"
-  SIDEWAYS_CARDS = "sideways_cards"
+  DOMINION_TABLE_NAME = "dominion_games"
+  NON_SUPPLY_CARDS = "nonSupplyCards"
+  KINGDOM_CARDS = "kingdomCards"
+  VP_CARDS = "vpCards"
+  TREASURE_CARDS = "treasureCards"
+  NORMAL_CARDS = "normalCards"
+  SIDEWAYS_CARDS = "sidewaysCards"
   TRASH = "trash"
-  PLAYER_1_DECK = "player_1_deck"
-  PLAYER_2_DECK = "player_2_deck"
-  PLAYER_1_HAND = "player_1_hand"
-  PLAYER_2_HAND = "player_2_hand"
+  PLAYER_1_DECK = "player1Deck"
+  PLAYER_2_DECK = "player2Deck"
+  PLAYER_1_HAND = "player1Hand"
+  PLAYER_2_HAND = "player2Hand"
   BOONS = "boons"
   BANE = "bane"
   HEXES = "hexes"
 
+  # database {Database} the database used to save games.
   def __init__(self, database):
+    self._card_games = CardGames(database, Dominion.DOMINION_TABLE_NAME)
     # NOTE: After population of all member variables, they should never be mutated.
 
     # {map<string, string>} a map from local image filename to the url for rendering it.
@@ -45,12 +49,12 @@ class Dominion:
     #     kingdom cards and in supplemental.yaml for non kingdom cards.
     # type {string} the type of card it is (card, event, landmark, project, ...). Added in the
     #     _add_additional_card_info function for kingdom cards and in supplemental.yaml for non kingdom cards.
-    # pile_type {string} the type of pile the card belongs to. Not present in the self._cards array. This is
+    # pileType {string} the type of pile the card belongs to. Not present in the self._cards array. This is
     #     only populated on each card just before sending the cards to the client when starting a new game.
     #     This is used by the client to determine which pile in the game the card can be returned to.
-    # pile_index {number} the index number of the pile the card originally belongs to. Not present in the self._cards array.
-    #     Similar to pile_type, this is only populated just before sending the cards to the client.
-    # game_card_id {number} a unique identifier for each specific card (e.g. each copper card will have its own unique id).
+    # pileIndex {number} the index number of the pile the card originally belongs to. Not present in the self._cards array.
+    #     Similar to pileType, this is only populated just before sending the cards to the client.
+    # gameCardId {number} a unique identifier for each specific card (e.g. each copper card will have its own unique id).
     #     Not present in the self._cards array. Each card will be populated with this just before sending it to the client
     #     when a game is created.
     self._cards = []
@@ -129,7 +133,6 @@ class Dominion:
     self._process_supplementary_cards(
         "static/dominion/sets/supplementary.yaml")
     self.remove_banned_cards_from_kingdom()
-    self._dominion_database = DominionDatabase(database)
 
   # Returns a map of local image name to url for rendering.
   # filename{string} the filename to read the image name to url data from.
@@ -723,29 +726,29 @@ class Dominion:
       if pile_type in [Dominion.TREASURE_CARDS, Dominion.VP_CARDS, Dominion.KINGDOM_CARDS, Dominion.NON_SUPPLY_CARDS]:
         for (pile_index, card_array) in enumerate(card_map[pile_type]):
           for card in card_array:
-            card["game_card_id"] = game_card_id
+            card["gameCardId"] = game_card_id
             game_card_id += 1
-            card["pile_type"] = pile_type
-            card["pile_index"] = pile_index
+            card["pileType"] = pile_type
+            card["pileIndex"] = pile_index
             if card["name"] == "Copper":
               copper_pile_index = pile_index
             if card["name"] == "Estate":
               estate_pile_index = pile_index
       elif pile_type in [Dominion.SIDEWAYS_CARDS, Dominion.BANE, Dominion.BOONS, Dominion.HEXES, Dominion.TRASH]:
         for card in card_map[pile_type]:
-          card["game_card_id"] = game_card_id
+          card["gameCardId"] = game_card_id
           game_card_id += 1
-          card["pile_type"] = pile_type
+          card["pileType"] = pile_type
       elif pile_type in [Dominion.PLAYER_1_DECK, Dominion.PLAYER_2_DECK, Dominion.PLAYER_1_HAND, Dominion.PLAYER_2_HAND]:
         for card in card_map[pile_type]:
-          card["game_card_id"] = game_card_id
+          card["gameCardId"] = game_card_id
           game_card_id += 1
           if card["name"] == "Copper":
-            card["pile_type"] = Dominion.TREASURE_CARDS
-            card["pile_index"] = copper_pile_index
+            card["pileType"] = Dominion.TREASURE_CARDS
+            card["pileIndex"] = copper_pile_index
           elif card["name"] == "Estate":
-            card["pile_type"] = Dominion.VP_CARDS
-            card["pile_index"] = estate_pile_index
+            card["pileType"] = Dominion.VP_CARDS
+            card["pileIndex"] = estate_pile_index
       else:
         raise Exception("Unexpected key.")
 
@@ -867,6 +870,9 @@ class Dominion:
       ruins += copy.deepcopy(self._ruins)
     return random.sample(ruins, 10)
 
+  # Creates a new game with the given player names.
+  # player1 {string} the name of the first player in the game.
+  # player2 {string} the name of the second player in the game.
   def create_game(self, player1, player2) -> int:
     game_data = self.generate_random_kingdom_for_online_game()
 
@@ -930,47 +936,15 @@ class Dominion:
     data["hasBoons"] = Dominion.BOONS in game_data
     data["hasHexes"] = Dominion.HEXES in game_data
 
-    cur = self._dominion_database.get_cursor()
-
-    try:
-      game_id = DominionDatabase.add_game(cur, player1, player2, {})
-      data["gameId"] = game_id
-      DominionDatabase.update_game(cur, game_id, data)
-
-      self._dominion_database.commit()
-      cur.close()
-    except psycopg2.Error:
-      self._dominion_database.rollback()
-      cur.close()
-      raise
+    self._card_games.create_game(player1, player2, data)
 
     return data
 
-  # Returns the game as a dict.
+  # Get the latest game for the given player.
+  # player {string} the name of the player to fetch the latest game of.
   def get_latest_game(self, player) -> Optional[Dict]:
-    cur = self._dominion_database.get_cursor()
+    return self._card_games.get_latest_game(player)
 
-    try:
-      game = DominionDatabase.get_latest_game(cur, player)
-      cur.close()
-      if game is None:
-        return None
-    except psycopg2.Error:
-      self._dominion_database.rollback()
-      cur.close()
-      raise
-
-    return game
-
-  def update_game(self, game_id, data) -> int:
-    cur = self._dominion_database.get_cursor()
-
-    try:
-      DominionDatabase.update_game(cur, game_id, data)
-
-      self._dominion_database.commit()
-      cur.close()
-    except psycopg2.Error:
-      self._dominion_database.rollback()
-      cur.close()
-      raise
+  # See comment in card_games.py.
+  def mutate_game(self, game_id, mutations):
+    return self._card_games.mutate_game(game_id, mutations)

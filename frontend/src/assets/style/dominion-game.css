@@ -57,6 +57,11 @@
   width: calc(var(--dominion-sideways-card-width-with-margin));
 }
 
+.dominion-boons-and-hexes-reveal {
+  float: left;
+  width: calc(var(--dominion-sideways-card-width-with-margin) * 3);
+}
+
 .dominion-game-log {
   display:flex;
   flex-direction:column-reverse;
