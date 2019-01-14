@@ -58,12 +58,14 @@ class CardGames:
   # game_id {number} the id of the game.
   # mutations {array<{
   #   type {string} the type of mutation to perform. Can be "moveCard", "incrementProperty", "decrementProperty",
-  #       or "invertProperty", or "shuffleCards".
+  #       or "invertProperty", "setProperty", or "shuffleCards", "appendElement".
   #       incrementProperty expects an integer to be specified and increments that number. Acts on type card or property.
   #       decrementProperty expects an integer to be specified and decrements that number. Acts on type card or property.
   #       invertProperty expects a boolean to be specified and inverts it. Acts on type card or property.
-  #       moveCards takes the specified card and moves it from cardPath to destinationCardPath. Acts on type card.
+  #       setProperty sets the property to the given value.
+  #       moveCards takes the specified card and moves it from path to destinationCardPath. Acts on type card.
   #       shuffleCards takes in a cardPath and shuffles it. Acts on type array.
+  #       appendElement appends "value" to to the array. Acts on type array.
   #   dataType {string} the data type to perform the mutation on. Can be "card", "array" or "property".
   #   gameCardId {number?} the id of the card to perform the mutation on. If the card cannot be found in the sourceArray path,
   #       the mutation is skipped. Only used if the dataType specified is of type card.
@@ -78,6 +80,7 @@ class CardGames:
   #       data["a"]["b"]["c"]["d"]). Only used if the dataType specified is of type "property".
   #   property {string} the key of the property to modify. This is only used by the "incrementProperty",
   #       "decrementProperty", and "invertProperty" mutation types.
+  #   value {string|number|anything?} only used if "setProperty" is set. The value to set the property to.
   # }>} the mutations to perform on the game data.
   def mutate_game(self, game_id, mutations):
     cur = self._card_games_database.get_cursor()
@@ -117,8 +120,12 @@ class CardGames:
         elif mutation["type"] == "invertProperty":
           property_path[mutation["property"]
                         ] = not property_path[mutation["property"]]
+        elif mutation["type"] == "setProperty":
+          property_path[mutation["property"]] = mutation["value"]
         elif mutation["type"] == "shuffleCards":
           CardGames._shuffle(source_array, mutation["shuffleIndices"])
+        elif mutation["type"] == "appendElement":
+          property_path[mutation["property"]].append(mutation["value"])
         else:
           raise Exception("Unknown mutation type.")
       self._card_games_database.update_game(cur, game_id, game_data)

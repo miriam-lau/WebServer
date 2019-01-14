@@ -1,5 +1,6 @@
-import { shuffle, findPath } from './utils'
+import { shuffle, findPath, fetchFromPath } from './utils'
 import { socket } from '../common/socketio'
+import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 
 /**
  * This file defines utility functions for card games. It is used in conjunction with card_games.py. It relies on the
@@ -23,8 +24,8 @@ import { socket } from '../common/socketio'
  * 3. A 'game' variable on the Vue component which holds all variables that need to be synced with the server.
  *     Any modification to any game variable must call a function from here and the function here must
  *     perform an action which is entirely consistent with what will occur on the server via setting the
- *     'mutations' field on the Vue component.
- * 4. A mutations field on the Vue component as described previously.
+ *     'games_mutations' field on the Vue component.
+ * 4. A games_mutations field on the Vue component as described previously.
  * To use this, handleGameMount() must be called within mounted() on the Vue component.
  */
 
@@ -54,7 +55,7 @@ function moveCurrentCard (component, destinationArray, reshuffleArray) {
 
 /**
  * Moves the card specified by the originalArray and cardIndex to the destination pile. Also adds the
- * mutations it performs to the Vue component.
+ * games_mutations it performs to the Vue component.
  * TODO: There is a hack here which prevents a card from being moved if it has attached cards. Do
  *     something better to allow the card to still move.
  * @param {Vue Object} component the Vue component which contains the games_currentCardSelection variable.
@@ -83,7 +84,7 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
   let destinationCardPath = findPath(component['game'], destinationArray)
   destinationArray.push(card)
   originalArray.splice(originalArray.findIndex(c => c === card), 1)
-  component.mutations.push({
+  component['games_mutations'].push({
     type: 'moveCard',
     dataType: 'card',
     cardPath: cardPath,
@@ -94,8 +95,8 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
 }
 
 /**
- * Shuffles the given array of cards. Adds the mutations to the component.
- * component {Vue Object} the Vue coponent to add mutations to.
+ * Shuffles the given array of cards. Adds the games_mutations to the component.
+ * component {Vue Object} the Vue coponent to add games_mutations to.
  * array {array<Card>} the array of cards to shuffle.
  */
 function shuffleCards (component, array) {
@@ -112,7 +113,7 @@ function shuffleCards (component, array) {
     array[currentIndex] = array[randomIndex]
     array[randomIndex] = temporaryValue
   }
-  component.mutations.push({
+  component['games_mutations'].push({
     type: 'shuffleCards',
     dataType: 'array',
     cardPath: findPath(component['game'], array),
@@ -272,32 +273,34 @@ function getImageForCardArray (cardArray, cardImageToCardArrayArray) {
  * players {array<string>} the player names in this game.
  * update_type {string} 'create' for game creation or 'mutate' for game updates.
  * player_triggering_update {string} the name of the player performing the action causing this data to be received.
- *
- * It expects the following to be defined on the component:
- * numExpectedResponses {number} the number of responses the client is expecting from the server before rendering.
- *     it is to prevent the server from refreshing to an earlier state when the client click in rapid succession,
- *     causing the client to be ahead of the server.
- * username {string} the username of the current player.
  * @param {Object} component the Vue component to act on.
  * @param {string} refreshName the name of the socketio channel to receive updates on.
  */
-function handleGameMount (component, refreshName) {
+function handleComponentMount (component, refreshName) {
   socket.on(refreshName, (data) => {
     if (!data['players'].includes(component['username'])) {
       return
     }
-    if (data['update_type'] === 'create') {
-      component['numExpectedResponses'] = 0
-    } else if (data['player_triggering_update'] === component['username']) {
-      component['numExpectedResponses'] -= 1
+    if (data['updateType'] === 'create') {
+      component['games_numExpectedResponses'] = 0
+    } else if (data['playerTriggeringUpdate'] === component['username']) {
+      component['games_numExpectedResponses'] -= 1
     }
-    if (component['numExpectedResponses'] < 0) {
+    if (component['games_numExpectedResponses'] < 0) {
       throw new Error('Unexpected response from server.')
     }
-    if (component['numExpectedResponses'] === 0 || data['player_triggering_update'] !== component['username']) {
-      component.updateDisplayWithReceivedGameData(data['gameData'])
+    if (component['games_numExpectedResponses'] === 0 || data['playerTriggeringUpdate'] !== component['username']) {
+      updateDisplayWithReceivedGameData(component, data['gameData'])
     }
   })
+}
+
+/**
+ * This must be called in mounted() in the Vue component. Handles setup.
+ * @param {Object} component the Vue component to act on.
+ */
+function handleComponentCreated (component) {
+  component['games_playerToInvite'] = defaultPlayerToInvite(component['username'])
 }
 
 /**
@@ -306,16 +309,18 @@ function handleGameMount (component, refreshName) {
  * @param {Object} obj the object to modify the property on (the property is a key on this object). Must be a subelement of
  *     component['game']. May be nested.
  * @param {string} propertyName the name of the property to modify
- * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", or
- *     "invertProperty" (for booleans).
+ * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "set", or
+ *     "invertProperty" (for booleans), or "appendElement".
+ * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
  */
-function mutateProperty (component, obj, propertyName, mutationType) {
+function mutateProperty (component, obj, propertyName, mutationType, val) {
   let propertyPath = findPath(component['game'], obj)
-  component.mutations.push({
+  component['games_mutations'].push({
     type: mutationType,
     dataType: 'property',
     property: propertyName,
-    propertyPath: propertyPath
+    propertyPath: propertyPath,
+    value: val
   })
   if (mutationType === 'incrementProperty') {
     obj[propertyName]++
@@ -323,11 +328,100 @@ function mutateProperty (component, obj, propertyName, mutationType) {
     obj[propertyName]--
   } else if (mutationType === 'invertProperty') {
     obj[propertyName] = !obj[propertyName]
+  } else if (mutationType === 'setProperty') {
+    obj[propertyName] = val
+  } else if (mutationType === 'appendElement') {
+    obj[propertyName].push(val)
+  } else {
+    throw new Error('Unexpected mutation type.')
   }
+}
+
+/**
+ * Fetches the latest game for the currently logged in user and displays it if any exists.
+ * component {Object} the Vue component to act on.
+ * url {string} the url to fetch the latest game from.
+ */
+function updateDisplayWithLatestGame (component, url) {
+  callAxiosAndSetButterBar(
+    component,
+    url,
+    { username: component['username'] },
+    null,
+    'Failed to load game.',
+    (response) => {
+      if (response['data'] === null) {
+        component['games_isInGame'] = false
+        return
+      }
+      updateDisplayWithReceivedGameData(component, response['data']['data'])
+    })
+}
+
+function updateDisplayWithReceivedGameData (component, gameData) {
+  let currentCardSelectionArrayPath
+  if (component['games_currentCardSelection']['exists']) {
+    currentCardSelectionArrayPath = findPath(component['game'], component['games_currentCardSelection']['array'])
+  }
+  component['games_isInGame'] = true
+  component['game'] = gameData
+  if (currentCardSelectionArrayPath) {
+    setCurrentCard(component, fetchFromPath(component['game'], currentCardSelectionArrayPath), component['games_currentCardSelection']['index'])
+  }
+  if (component['games_callbackForUpdateDisplayWithReceivedGameData'] !== undefined) {
+    component['games_callbackForUpdateDisplayWithReceivedGameData'](gameData)
+  }
+}
+
+/**
+ * Calls the backend to generate a new game. Updates the game display once it is created.
+ * component {Object} the Vue component to create the game on.
+ * players {array<string>} a string of 2 player names to create the game with.
+ * url {string} the url to call to create the game.
+ */
+function newGame (component, players, url) {
+  callAxiosAndSetButterBar(
+    component,
+    url,
+    {
+      player1: players[0],
+      player2: players[1],
+      username: component['username']
+    },
+    'Generated Game',
+    'Failed to generate game.',
+    (response) => {
+      let data = response.data
+      updateDisplayWithReceivedGameData(component, data)
+    })
+}
+
+/**
+ * Saves the stored games_mutations to the backend.
+ * @param {Object} component the Vue component to save the game on.
+ * @param {*} url the url used to save the game.
+ */
+function saveGame (component, url) {
+  if (component['games_mutations'].length === 0) {
+    return
+  }
+  component['games_numExpectedResponses'] += 1
+  callAxiosAndSetButterBar(
+    component,
+    url,
+    {
+      gameId: component['game']['gameId'],
+      username: component['username'],
+      mutations: component['games_mutations']
+    },
+    null,
+    'Failed to save game.')
+  component['games_mutations'] = []
 }
 
 export {
   shuffle, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
   clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
-  getCurrentCard, getImageForCardArray, handleGameMount, mutateProperty
+  getCurrentCard, getImageForCardArray, handleComponentMount, handleComponentCreated, mutateProperty,
+  updateDisplayWithLatestGame, newGame, saveGame
 }

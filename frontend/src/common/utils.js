@@ -87,6 +87,9 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
  * return {array<string>} an array with the path within the object to the target. (a series of keys.)
  */
 function findPath (obj, target) {
+  if (target === obj) {
+    return []
+  }
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
       if (target === obj[key]) {

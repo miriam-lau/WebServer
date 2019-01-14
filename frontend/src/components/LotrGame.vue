@@ -15,7 +15,7 @@
       <span class="card-games-text-on-background">Partner's Deck:</span> <textarea v-model="player2DeckXml"/>
       <button v-on:click="newGame">New Game</button>
     </div>
-    <div v-if="isInGame">
+    <div v-if="games_isInGame">
       <button @click="shownPage = 'main'">Main</button>
       <button @click="shownPage = 'quest'">Quest</button>
       <button v-if="game['hasSetup']" @click="shownPage = 'setup'">Setup</button>
@@ -479,7 +479,7 @@ export default {
       /**
        * Whether there is a game to display or not.
        */
-      isInGame: false,
+      games_isInGame: false,
       /**
        * The height of a card in the game. Read from the css as a string.
        */
@@ -654,7 +654,7 @@ export default {
         'Failed to save lotr game.',
         (response) => {
           if (response.data === null) {
-            this.isInGame = false
+            this.games_isInGame = false
             return
           }
           this.updateDisplayWithGameData(response.data.data)
@@ -681,7 +681,7 @@ export default {
         currentCardSelectionArrayPath = findPath(this.game, this.games_currentCardSelection.array)
       }
       this.shouldSaveChanges = false
-      this.isInGame = true
+      this.games_isInGame = true
       this.game = gameData
       this.playerIndex = gameData.players[0].name === this.username ? 0 : 1
       this.player = this.game.players[this.playerIndex]
@@ -722,7 +722,7 @@ export default {
     incrementThreat () { this.player.threat++ },
     decrementThreat () { this.player.threat-- },
     handleKeyPress (event) {
-      if (!this.isInGame) {
+      if (!this.games_isInGame) {
         return
       }
       switch (event.key) {
