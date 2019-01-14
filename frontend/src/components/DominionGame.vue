@@ -23,7 +23,6 @@
       <button @click="shownPage = 'trash'"><u>T</u>rash</button>
       <button @click="shownPage = 'notes'">Notes</button>
       <button @click="shownPage = 'allYourCards'">All your cards</button>
-      <button @click="shownPage = 'shortcuts'">Shortcuts</button>
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
@@ -135,26 +134,6 @@
             :shouldNotPopulateCurrentCard="true"
             :getImageForCard="getImageForCard" />
         <textarea v-else-if="shownPage === 'notes'" class="card-games-note" v-model="notes"></textarea>
-        <div v-else-if="shownPage === 'shortcuts'" class="card-games-text">
-          a (A) - Increment num actions (Decrement num actions)<br/>
-          b (B) - Increment num buys (Decrement num buys)<br/>
-          c (C) - Increment num coins (Decrement num coins)<br/>
-          d - Discard the card.<br/>
-          D - Discard all cards in your hand and play area and end the turn.<br/>
-          e - End the turn.
-          h - Draw the card into your hand.<br/>
-          H - Draw 5 new cards into your hand.<br/>
-          k - Topdeck the card onto your deck.<br/>
-          m - Move the card to your mat.<br/>
-          o - Move the card to your opponent's hand.<br/>
-          P - Play all cards in your hand.<br/>
-          p - Play the card to your play area.<br/>
-          r - Return the card to its original pile.<br/>
-          s - Shuffle your deck.<br/><br/>
-          t - Trash the card.<br/>
-          w - Draw a single card from deck into your hand.<br/>
-          v - Reveal the card in the revealed area.<br/>
-        </div>
         <div v-else-if="shownPage === 'boons'">
           <div class="dominion-boons-and-hexes-deck-and-discard">
             <CardStack
@@ -215,16 +194,29 @@
       <span v-else class="card-games-text">{{game['players'][player['displayedPlayer']]['name']}}'s display</span>
       <button @click="toggleDisplayedPlayer">Toggle</button>
       <br/>
-      <div class="dominion-game-log">
-        <div>
-          <div :key="index" v-for="(gameLogLine, index) in game['gameLog']" class="card-games-text">
-            {{gameLogLine}}<br/>
+      <div class="dominion-side-panel">
+        shift+#: Decrement counters.<br/>
+        p: Play all treasures.<br/>
+        e: End turn and draw hand.<br/>
+        c: Discard all your cards.<br/>
+        z: Place deck in discard.<br/>
+        m: Move card to mat.<br/>
+        n: Return card.<br/>
+        t: Move card to trash.<br/>
+        r: Reveal card.<br/>
+        o: Give card to opponent.<br/><br/>
+        Log:
+        <div class="dominion-game-log">
+          <div>
+            <div :key="index" v-for="(gameLogLine, index) in game['gameLog']" class="card-games-text">
+              {{gameLogLine}}<br/>
+            </div>
           </div>
         </div>
       </div>
       <div class="dominion-player-area">
         <div class="dominion-play-area">
-          <span class="card-games-text"><u>P</u>layed Cards</span>
+          <span class="card-games-text">P<u>l</u>ayed cards</span>
           <div class="dominion-play-cards-area">
             <div v-if="isPlayerDisplayed()">
               <CardList
@@ -623,6 +615,7 @@ export default {
         case 'p': this.playTreasuresFromHand(); return
         case 'z': this.deckToDiscard(); return
         case 'e': this.endTurnAndCleanUp(); return
+        case 'c': this.cleanUp(); return
       }
       if (!this.games_currentCardSelection.exists) {
         return
@@ -632,6 +625,7 @@ export default {
       switch (event.key) {
         case 'd': destinationArray = this.player['discard']; break
         case 'u': destinationArray = this.player['durationArea']; break
+        case 'l': destinationArray = this.player['playArea']; break
         case 'h': destinationArray = this.player['hand']; break
         case 'k': destinationArray = this.player['deck']; break
         case 'm': destinationArray = this.player['mats']; break
@@ -693,16 +687,19 @@ export default {
       moveAllCards(this, this.player['deck'], this.player['discard'])
     },
     endTurnAndCleanUp () {
+      this.cleanUp()
+      mutateProperty(this, this.player, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.opponent, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.game, 'currentPlayerTurn', 'setProperty', 1 - this.playerIndex)
+      this.drawNewHand()
+    },
+    cleanUp () {
       moveAllCards(this, this.player['hand'], this.player['discard'])
       moveAllCards(this, this.player['playArea'], this.player['discard'])
       moveAllCards(this, this.player['durationArea'], this.player['playArea'])
       mutateProperty(this, this.player, 'numActions', 'setProperty', 1)
       mutateProperty(this, this.player, 'numBuys', 'setProperty', 1)
-      mutateProperty(this, this.player, 'numCoins', 'setProperty', 1)
-      mutateProperty(this, this.player, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.opponent, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.game, 'currentPlayerTurn', 'setProperty', 1 - this.playerIndex)
-      this.drawNewHand()
+      mutateProperty(this, this.player, 'numCoins', 'setProperty', 0)
     },
     setNumberProperty (obj, propertyName, val) {
       if (obj[propertyName] === val) {

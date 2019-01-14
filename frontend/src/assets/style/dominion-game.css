@@ -62,7 +62,21 @@
   width: calc(var(--dominion-sideways-card-width-with-margin) * 3);
 }
 
+.dominion-side-panel {
+  color: white;
+  float: right;
+  margin-top: var(--standard-margin);
+  width: 16vw;
+}
 .dominion-game-log {
+  display:flex;
+  flex-direction:column-reverse;
+  height: 10vw;
+  overflow: auto;
+}
+
+.dominion-shortcuts-side {
+  color: white;
   display:flex;
   flex-direction:column-reverse;
   float: right;
