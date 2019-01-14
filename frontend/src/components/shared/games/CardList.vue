@@ -50,7 +50,11 @@ export default {
     /**
      * Nullable. Whether or not to populate the currently selected card on mouseover.
      */
-    shouldNotPopulateCurrentCard: Boolean
+    shouldNotPopulateCurrentCard: Boolean,
+    /**
+     * Nullable. If present, this is called with the top card which is moved.
+     */
+    callback: Function
   },
   computed: {
     cardImageStyle () {
@@ -62,7 +66,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray)
+      moveCurrentCard(this.$parent, this.defaultMoveArray, undefined, this.callback)
     },
     handleMouseOver (cardArray, index) {
       if (this.shouldNotPopulateCurrentCard) {

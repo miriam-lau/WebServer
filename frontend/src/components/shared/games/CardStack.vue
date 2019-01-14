@@ -78,11 +78,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      let card = moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray)
-      if (!card || !this.callback) {
-        return
-      }
-      this.callback(card)
+      moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray, this.callback)
     }
   }
 }

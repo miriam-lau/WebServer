@@ -8,39 +8,50 @@ import os
 import xml.etree.ElementTree as ET
 from src.common.xml import Xml
 import yaml
+from src.card_games.card_games import CardGames
 
+# Backend for the Lotr game.
 class Lotr:
+  LOTR_TABLE_NAME = "lotr_games"
+
   def __init__(self, database):
-    self._image_name_to_url = {}
-    # A map of card id to card objects.
-    #   key: The card id.
-    #   value: An object with the following data:
-    #       key: One of the following strings: "Text", "Card Number", "Quantity", "Encounter Set", "Keywords", "Type",
-    #           "Victory Points", "Attack", "Defense", "Health", "Shadow", "Traits", "Threat", "Quest Points",
-    #           "Engagement Cost", "Cost", "Sphere", "Willpower", "Unique", "Setup", "SetId", "SetName", "Id", "Name",
-    #           "Size"
-    #       value: A string representing the corresponding value for the key.
+    self._card_games = CardGames(database, Lotr.LOTR_TABLE_NAME)
+    # {map<string, string>} a map from local image filename to the url for rendering it.
+    self._image_name_to_url = self._get_image_name_to_url("static/lotr/image-name-to-url.yaml")
+    # {map<string, Card}. A map of card id to card objects. The card id is a unique identifier
+    #     for each card determined by the input files.
+    #
+    # Card represents a card in the game. It contains many keys which can be found in the .xml files.
+    # Some but not all keys include: "Text", "Card Number", "Quantity", "Encounter Set", "Keywords", "Type",
+    #     "Victory Points", "Attack", "Defense", "Health", "Shadow", "Traits", "Threat", "Quest Points",
+    #     "Engagement Cost", "Cost", "Sphere", "Willpower", "Unique", "Setup", "SetId", "SetName", "Id", "Name",
+    #     "Size"
+    # The relevant keys to us are the following:
+    # image {string} the url to render the card. Populated from the .xml files.
+    # flippedImage {string} the url to render the card when it is flipped. Populated from the .xml files.
+    # flipped {boolean?} whether the card is flipped or not. Usually only set if the card is flipped.
+    # gameCardId {number} a unique identifier for each specific card (e.g. even cards with the same name will have
+    #     its own unique id). Each card will be populated with this just before sending it to the client
+    #     when a game is created.
     self._card_data = {}
-    # A map of scenario name to scenario objects.
-    #   key: The scenario property name.
-    #   value: An object with the following data:
-    #       key: One of the following strings: Setup, Second Special, Special, Staging Setup, Second Quest Deck, Quest,
-    #            Encounter, Active Setup.
-    #       value: An array of card objects in the deck.
+    # {map<string, Scenario>} A map of scenario name to scenario objects. Scenario objects will have many
+    #     keys populated from the .xml files such as:
+    #         Setup, Second Special, Special, Staging Setup, Second Quest Deck, Quest, Encounter, Active Setup.
     self._scenario_data = {}
-    self._populate_image_name_to_url("static/lotr/image-name-to-url.yaml")
     self._load_card_data("static/lotr/Sets/")
     self._load_scenario_data("static/lotr/Decks/")
     self._lotr_database = LotrDatabase(database)
 
-  def _populate_image_name_to_url(self, filename):
+  def _get_image_name_to_url(self, filename):
+    ret = {}
     with open(filename, 'r') as stream:
       try:
         root = yaml.load(stream)
         for name in root:
-          self._image_name_to_url[name] = root[name]
+          ret[name] = root[name]
       except yaml.YAMLError as exc:
         print(exc)
+    return ret
 
   # Populates the _scenario_data map with the following data using files in the given directory. See _scenario_data for
   # mroe info.

@@ -5,17 +5,20 @@
       :css="butterBar_css"
     />
     <div class="card-games-new-game">
-      <span class="card-games-text-on-background">Invite:</span> <input v-model="games_playerToInvite" class="card-games-player-to-invite"/>
-      <span class="card-games-text-on-background">Scenario:</span> <select v-model="scenarioName">
-                  <option v-for="scenario in scenarioList" :key="scenario">
-                    {{ scenario }}
-                  </option>
-                </select>
+      <span class="card-games-text-on-background">Invite:</span>
+      <input v-model="games_playerToInvite" class="card-games-player-to-invite"/>
+      <span class="card-games-text-on-background">Scenario:</span>
+      <select v-model="scenarioName">
+        <option v-for="scenario in scenarioList" :key="scenario">
+          {{ scenario }}
+        </option>
+      </select>
       <span class="card-games-text-on-background">Your Deck:</span> <textarea v-model="player1DeckXml"/>
       <span class="card-games-text-on-background">Partner's Deck:</span> <textarea v-model="player2DeckXml"/>
-      <button v-on:click="newGame">New Game</button>
+      <button v-on:click="newLotrGame">New Game</button>
     </div>
     <div v-if="games_isInGame">
+      Debug sync: {{games_numExpectedResponses}}<br/>
       <button @click="shownPage = 'main'">Main</button>
       <button @click="shownPage = 'quest'">Quest</button>
       <button v-if="game['hasSetup']" @click="shownPage = 'setup'">Setup</button>

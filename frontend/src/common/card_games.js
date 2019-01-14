@@ -36,14 +36,15 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
  * @param {array[Card]} destinationArray the destination array of cards to move the card to.
  * @param {array[Card]?} reshuffleArray if present, then if the original array is emptied, this pile of cards is
  *     reshuffled into the original array before the card is moved.
+ * @param {Function?} callback if present, this is called when the card is moved.
  * @return {Card} the moved card if successful or null if not.
  */
-function moveCurrentCard (component, destinationArray, reshuffleArray) {
+function moveCurrentCard (component, destinationArray, reshuffleArray, callback) {
   let selection = component['games_currentCardSelection']
   if (!selection['exists']) {
     return null
   }
-  let card = moveCard(component, selection['array'], selection['index'], destinationArray, reshuffleArray)
+  let card = moveCard(component, selection['array'], selection['index'], destinationArray, reshuffleArray, callback)
   if (!card) {
     return null
   }
@@ -64,9 +65,10 @@ function moveCurrentCard (component, destinationArray, reshuffleArray) {
  * @param {array[Card]} destinationArray the pile to move the card to.
  * @param {array[Card]?} reshuffleArray if present, this deck will get emptied and reshuffled into the
  *     originalArray if the original pile is empty when the move is requested.
+ * @param {Function?} callback if present, this is called when the card is moved.
  * @return {Card} the card that was moved or null if nothing if unsuccessful.
  */
-function moveCard (component, originalArray, cardIndex, destinationArray, reshuffleArray) {
+function moveCard (component, originalArray, cardIndex, destinationArray, reshuffleArray, callback) {
   if (cardIndex === undefined) {
     if (originalArray.length === 0 && reshuffleArray && reshuffleArray.length !== 0) {
       moveAllCards(component, reshuffleArray, originalArray)
@@ -91,6 +93,9 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
     destinationCardPath: destinationCardPath,
     gameCardId: card['gameCardId']
   })
+  if (callback) {
+    callback(card, originalArray, destinationArray)
+  }
   return card
 }
 

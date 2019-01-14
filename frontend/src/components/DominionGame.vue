@@ -190,8 +190,8 @@
         </div>
       </div>
       <div class="clearfix"/>
-      <span v-if="isPlayerDisplayed()" class="card-games-text">Your display</span>
-      <span v-else class="card-games-text">{{game['players'][player['displayedPlayer']]['name']}}'s display</span>
+      <span v-if="isPlayerDisplayed()" class="card-games-text">Your play area</span>
+      <span v-else class="card-games-text">{{game['players'][player['displayedPlayer']]['name']}}'s play area</span>
       <button @click="toggleDisplayedPlayer">Toggle</button>
       <br/>
       <div class="dominion-side-panel">
@@ -286,17 +286,9 @@
           <div class="dominion-single-pile">
             <span class="card-games-text">Dec<u>k</u><br/></span>
             <CardStack
-              v-if="isPlayerDisplayed()"
               :reshuffleArray="player['discard']"
               :defaultMoveArray="player['hand']"
               :cardArray="player['deck']"
-              :cardHeight="cardHeight"
-              :cardWidth="cardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArrayDominion" />
-            <CardStack
-              v-else
-              :cardArray="opponent['deck']"
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
@@ -305,15 +297,7 @@
           <div class="dominion-single-pile">
             <span class="card-games-text"><u>D</u>iscard<br/></span>
             <CardStack
-              v-if="isPlayerDisplayed()"
               :cardArray="player['discard']"
-              :cardHeight="cardHeight"
-              :cardWidth="cardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArrayDominion" />
-            <CardStack
-              v-else
-              :cardArray="opponent['discard']"
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
@@ -646,7 +630,10 @@ export default {
           }
           break
         case 't': destinationArray = this.game['trash']; break
-        case 'r': destinationArray = this.game['revealArea']; break
+        case 'r':
+          this.shownPage = 'revealArea'
+          destinationArray = this.game['revealArea']
+          break
         case 'o': destinationArray = this.opponent['hand']; break
       }
       if (!destinationArray) {
@@ -659,7 +646,7 @@ export default {
       } else if (this.games_currentCardSelection['array'] === this.game['hexesDeck']) {
         reshufflePile = this.game['hexesDiscard']
       }
-      moveCurrentCard(this, destinationArray, reshufflePile)
+      moveCurrentCard(this, destinationArray, reshufflePile, this.addGainToLog)
     },
     incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'incrementProperty') },
     decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'decrementProperty') },
@@ -723,8 +710,24 @@ export default {
     toggleDisplayedPlayer () {
       mutateProperty(this, this.player, 'displayedPlayer', 'setProperty', 1 - this.player['displayedPlayer'])
     },
-    addGainToLog (card) {
-      mutateProperty(this, this.game, 'gameLog', 'appendElement', this.player['name'] + ': +' + card['name'])
+    /**
+     * Whether or not the given array is owned by the current player.
+     * array {array<Card>} the array in question.
+     */
+    isArrayOwnedByPlayer (array) {
+      return array === this.player['hand'] || array === this.player['deck'] || array === this.player['discard'] ||
+          array === this.player['playArea'] || array === this.player['durationArea'] ||
+          array === this.player['mats']
+    },
+    addGainToLog (card, originalArray, destinationArray) {
+      if (originalArray === this.game['revealArea'] || destinationArray === this.game['revealArea']) {
+        return
+      }
+      if (!this.isArrayOwnedByPlayer(originalArray) && this.isArrayOwnedByPlayer(destinationArray)) {
+        mutateProperty(this, this.game, 'gameLog', 'appendElement', this.player['name'] + ': +' + card['name'])
+      } else if (this.isArrayOwnedByPlayer(originalArray) && !this.isArrayOwnedByPlayer(destinationArray)) {
+        mutateProperty(this, this.game, 'gameLog', 'appendElement', this.player['name'] + ': -' + card['name'])
+      }
     }
   }
 }
