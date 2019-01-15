@@ -55,9 +55,9 @@ function _getCssClassForButterBarType (type) {
  * @param {Vue Object} component the Vue component this is called from.
  * @param {string} backendPath the path to call using Axios.
  * @param {Data Object} params params to send to the backend.
- * @param {string?} successMessage the message to set the butter bar to on success. If null, does not set it.
- * @param {string?} errorMessage the message to set the butter bar to on error. If null, does not set it.
- * @param {Function?} successCallback the callback function to call on success if one exists.
+ * @param {string|null} successMessage the message to set the butter bar to on success. If null, does not set it.
+ * @param {string} errorMessage the message to set the butter bar to on error. If null, does not set it.
+ * @param {Function|null?} successCallback the callback function to call on success if one exists.
  */
 function callAxiosAndSetButterBar (component, backendPath, params, successMessage, errorMessage, successCallback) {
   callAxios(
