@@ -39,7 +39,7 @@ function showModal (component, title, formLines, passThroughProps, callback, but
  * @param {string} id the html id of the formModalLine.
  * @param {string} name the name of the form modal parameter when saving to the backend.
  * @param {string} displayName the name to display in html for the form line.
- * @param {any?} value the initial value of the formModalLine. If null or undefined, set it to the 
+ * @param {any|null?} value the initial value of the formModalLine. If null or undefined, set it to the 
  *     empty string.
  * @returns {Object{id, name, displayName, value}} the object representing the form line.
  */
