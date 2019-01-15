@@ -5,14 +5,22 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 /**
  * This file defines utility functions for card games. It is used in conjunction with card_games.py. It relies on the
  * following data being defined in the component:
- * 1. games_currentCardSelection {Object{
- *     array {array[Card]} an array of card objects (representing a group of associated cards like a deck.)
- *     exists {boolean} whether a currently selected card exists or not
- *     index {number?} the index into the {@code array} of the currently selected card. If this is unset,
+ * games_currentCardSelection {Object{
+ *     {boolean} exists whether there is any card selected or not.
+ *     {array<Card>} array an array of card objects (representing a group of associated cards like a deck.)
+ *     {number|null} index the index into the {@code array} of the currently selected card. If this is unset,
  *         the entire array is selected.
  *   }} This is the object on the Vue component representing the currently selected object by the user. This
  *       is normally set when the user mouses over a card or deck in a game. it relies on Card objects being
  *       used.
+ * games_isInGame {boolean} represents whether the current user has a game for display or not.
+ * games_numExpectedResponses {number} the number of expected responses from the server. This should usually be
+ *     0 to represent that the client is in sync with the server.
+ * games_playerToInvite {string} a string representing the player to send a game invitation to. Rendered in an input box.
+ * games_callbackForUpdateDisplayWithReceivedGameData {Function({Object} gameData)?} if defined, this is called after the game has updated
+ *      its display with the received game data. Called with a param representing the gameData received.
+ * games_mutations
+ * 
  * 2. Card {Object {
  *      image {string} the url to the image used to render a card.
  *      flippedImage {string?} Not needed in every game. if flipped is set, this must be also, otherwise not.
