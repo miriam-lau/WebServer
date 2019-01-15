@@ -20,7 +20,7 @@ let ButterBarType = {
  * Sets the butter bar message text on the component. It will automatically clear after ten seconds.
  * @param {Vue Component} component the Vue component calling this function.
  * @param {string} text the butter bar message.
- * @param {ButterBarType} type
+ * @param {ButterBarType} type the type of butter bar message.
  */
 function setButterBarMessage (component, text, type) {
   if (component == null || text == null || type == null) {
@@ -37,7 +37,9 @@ function setButterBarMessage (component, text, type) {
 }
 
 /**
- * @param {ButterBarType} type
+ * Returns the css class used to display the butter bar based on the type of message.
+ * @param {ButterBarType} type the type of butter bar message.
+ * @returns {string} the css class for rendering.
  */
 function _getCssClassForButterBarType (type) {
   switch (type) {
