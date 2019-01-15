@@ -61,7 +61,8 @@ function createFormModalEntry (id, name, displayName, value) {
  * will be closed. On error, it will update the modal status with the error text specified
  * @param {Object} the Vue component.
  * @param {string} backendPath the path on the backend to call.
- * @param {Function} successCallback. The function to call upon success of calling the backend.
+ * @param {Function({Object} response)} successCallback. The function to call upon success of calling the backend. Called
+ *     with the response from the backend.
  */
 function generateAxiosModalCallback (component, backendPath, successCallback) {
   return function (modalOutput) {
