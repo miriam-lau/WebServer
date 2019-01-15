@@ -57,7 +57,8 @@ function _getCssClassForButterBarType (type) {
  * @param {Data Object} params params to send to the backend.
  * @param {string|null} successMessage the message to set the butter bar to on success. If null, does not set it.
  * @param {string} errorMessage the message to set the butter bar to on error. If null, does not set it.
- * @param {Function|null?} successCallback the callback function to call on success if one exists.
+ * @param {Function({Object} response)|null?} successCallback the callback function to call on success if one exists. Called
+ *     with the response from the server.
  */
 function callAxiosAndSetButterBar (component, backendPath, params, successMessage, errorMessage, successCallback) {
   callAxios(
