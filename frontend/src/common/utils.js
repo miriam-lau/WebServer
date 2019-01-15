@@ -81,8 +81,9 @@ function getDisplayDate (dateString) {
  * Use axios to make a call to a backend then call one of the callback functions.
  * @param {string} backendPath the backend path.
  * @param {Object} params the params object to pass to the backend.
- * @param {Function?} successCallback optional.
- * @param {Function?} errorCallback optional.
+ * @param {Function({Object} response)?} successCallback optional. Called with the response from the backend.
+ * @param {Function({Object} response)?} errorCallback optional. Called with the response object on the error 
+ *     returned from the backend.
  */
 function callAxios (backendPath, params, successCallback, errorCallback) {
   axios.post(backendPath, params)
