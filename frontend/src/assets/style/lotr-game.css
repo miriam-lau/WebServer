@@ -55,7 +55,7 @@
   border-radius: 0.18vw;
   transform-origin: 0 0;
   height: 0.9vw;
-  width: 0.9vw;
+  width: 1.2vw;
   font-size: 0.78vw;
   line-height: 0.9vw;
   color: #fff;
@@ -104,14 +104,15 @@
   overflow: auto;
 }
 
-.lotr-played {
+.lotr-attachment {
   float: left;
   margin-top: var(--standard-margin);
   width: calc(var(--lotr-card-width-with-margin) + var(--scrollbar-width));
+  height: calc(var(--lotr-card-height-with-margin) * 3);
 }
 
-.lotr-played-cards-area {
-  height: calc(var(--lotr-card-height-with-margin) * 3);
+.lotr-attachment-card-area {
+  height: var(--lotr-card-height-with-margin);
   overflow: auto;
 }
 

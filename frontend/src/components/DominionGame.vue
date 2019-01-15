@@ -447,6 +447,10 @@ export default {
        */
       games_isInGame: false,
       /**
+       * The pending mutations to be sent to the server.
+       */
+      games_mutations: [],
+      /**
        * The height of a card in the game. Read from the css as a string.
        */
       cardHeight: '',
@@ -481,18 +485,20 @@ export default {
       /**
        * The index of the player within game['players'].
        */
-      playerIndex: 0,
-      /**
-       * The pending mutations to be sent to the server.
-       */
-      games_mutations: []
+      playerIndex: 0
     }
   },
   methods: {
     newDominionGame () {
       let randomizedPlayers = [this.username, this.games_playerToInvite]
       randomizedPlayers.sort(function (a, b) { return 0.5 - Math.random() })
-      newGame(this, randomizedPlayers, CREATE_DOMINION_GAME_URL)
+      newGame(
+        this, {
+          player1: randomizedPlayers[0],
+          player2: randomizedPlayers[1],
+          username: this.username
+        },
+        CREATE_DOMINION_GAME_URL)
     },
     getImageForCard: getImageForCard,
     getImageForCurrentCardDominion () {
@@ -582,20 +588,20 @@ export default {
         return
       }
       switch (event.key) {
-        case '1': this.incrementNumActions(); break
-        case '!': this.decrementNumActions(); break
-        case '2': this.incrementNumCoins(); break
-        case '@': this.decrementNumCoins(); break
-        case '3': this.incrementNumVP(); break
-        case '#': this.decrementNumVP(); break
-        case '4': this.incrementNumCoffers(); break
-        case '$': this.decrementNumCoffers(); break
-        case '5': this.incrementNumVillagers(); break
-        case '%': this.decrementNumVillagers(); break
-        case '6': this.incrementNumDebt(); break
-        case '^': this.decrementNumDebt(); break
-        case '7': this.incrementNumBuys(); break
-        case '&': this.decrementNumBuys(); break
+        case '1': this.incrementNumActions(); return
+        case '!': this.decrementNumActions(); return
+        case '2': this.incrementNumCoins(); return
+        case '@': this.decrementNumCoins(); return
+        case '3': this.incrementNumVP(); return
+        case '#': this.decrementNumVP(); return
+        case '4': this.incrementNumCoffers(); return
+        case '$': this.decrementNumCoffers(); return
+        case '5': this.incrementNumVillagers(); return
+        case '%': this.decrementNumVillagers(); return
+        case '6': this.incrementNumDebt(); return
+        case '^': this.decrementNumDebt(); return
+        case '7': this.incrementNumBuys(); return
+        case '&': this.decrementNumBuys(); return
         case 'p': this.playTreasuresFromHand(); return
         case 'z': this.deckToDiscard(); return
         case 'e': this.endTurnAndCleanUp(); return
@@ -648,20 +654,20 @@ export default {
       }
       moveCurrentCard(this, destinationArray, reshufflePile, this.addGainToLog)
     },
-    incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'incrementProperty') },
-    decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'decrementProperty') },
-    incrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'incrementProperty') },
-    decrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'decrementProperty') },
-    incrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'incrementProperty') },
-    decrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'decrementProperty') },
-    incrementNumVP () { mutateProperty(this, this.player, 'numVP', 'incrementProperty') },
-    decrementNumVP () { mutateProperty(this, this.player, 'numVP', 'decrementProperty') },
-    incrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'incrementProperty') },
-    decrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'decrementProperty') },
-    incrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'incrementProperty') },
-    decrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'decrementProperty') },
-    incrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'incrementProperty') },
-    decrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'decrementProperty') },
+    incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'incrementProperty') },
+    decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'decrementProperty') },
+    incrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'property', 'incrementProperty') },
+    decrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'property', 'decrementProperty') },
+    incrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'property', 'incrementProperty') },
+    decrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'property', 'decrementProperty') },
+    incrementNumVP () { mutateProperty(this, this.player, 'numVP', 'property', 'incrementProperty') },
+    decrementNumVP () { mutateProperty(this, this.player, 'numVP', 'property', 'decrementProperty') },
+    incrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'property', 'incrementProperty') },
+    decrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'property', 'decrementProperty') },
+    incrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'property', 'incrementProperty') },
+    decrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'property', 'decrementProperty') },
+    incrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'property', 'incrementProperty') },
+    decrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'property', 'decrementProperty') },
     playTreasuresFromHand () {
       for (let i = this.player['hand'].length - 1; i >= 0; --i) {
         let card = this.player['hand'][i]
@@ -675,18 +681,18 @@ export default {
     },
     endTurnAndCleanUp () {
       this.cleanUp()
-      mutateProperty(this, this.player, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.opponent, 'displayedPlayer', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.game, 'currentPlayerTurn', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.player, 'displayedPlayer', 'property', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.opponent, 'displayedPlayer', 'property', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.game, 'currentPlayerTurn', 'property', 'setProperty', 1 - this.playerIndex)
       this.drawNewHand()
     },
     cleanUp () {
       moveAllCards(this, this.player['hand'], this.player['discard'])
       moveAllCards(this, this.player['playArea'], this.player['discard'])
       moveAllCards(this, this.player['durationArea'], this.player['playArea'])
-      mutateProperty(this, this.player, 'numActions', 'setProperty', 1)
-      mutateProperty(this, this.player, 'numBuys', 'setProperty', 1)
-      mutateProperty(this, this.player, 'numCoins', 'setProperty', 0)
+      mutateProperty(this, this.player, 'numActions', 'property', 'setProperty', 1)
+      mutateProperty(this, this.player, 'numBuys', 'property', 'setProperty', 1)
+      mutateProperty(this, this.player, 'numCoins', 'property', 'setProperty', 0)
     },
     setNumberProperty (obj, propertyName, val) {
       if (obj[propertyName] === val) {
@@ -694,12 +700,12 @@ export default {
       }
       if (obj[propertyName] > val) {
         while (obj[propertyName] > val) {
-          mutateProperty(this, obj, propertyName, 'decrementProperty')
+          mutateProperty(this, obj, propertyName, 'property', 'decrementProperty')
         }
         return
       }
       while (obj[propertyName] < val) {
-        mutateProperty(this, obj, propertyName, 'incrementProperty')
+        mutateProperty(this, obj, propertyName, 'property', 'incrementProperty')
       }
     },
     drawNewHand () {
@@ -708,7 +714,7 @@ export default {
       }
     },
     toggleDisplayedPlayer () {
-      mutateProperty(this, this.player, 'displayedPlayer', 'setProperty', 1 - this.player['displayedPlayer'])
+      mutateProperty(this, this.player, 'displayedPlayer', 'property', 'setProperty', 1 - this.player['displayedPlayer'])
     },
     /**
      * Whether or not the given array is owned by the current player.
@@ -724,9 +730,9 @@ export default {
         return
       }
       if (!this.isArrayOwnedByPlayer(originalArray) && this.isArrayOwnedByPlayer(destinationArray)) {
-        mutateProperty(this, this.game, 'gameLog', 'appendElement', this.player['name'] + ': +' + card['name'])
+        mutateProperty(this, this.game, 'gameLog', 'property', 'appendElement', this.player['name'] + ': +' + card['name'])
       } else if (this.isArrayOwnedByPlayer(originalArray) && !this.isArrayOwnedByPlayer(destinationArray)) {
-        mutateProperty(this, this.game, 'gameLog', 'appendElement', this.player['name'] + ': -' + card['name'])
+        mutateProperty(this, this.game, 'gameLog', 'property', 'appendElement', this.player['name'] + ': -' + card['name'])
       }
     }
   }

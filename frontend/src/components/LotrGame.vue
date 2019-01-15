@@ -20,19 +20,19 @@
     <div v-if="games_isInGame">
       Debug sync: {{games_numExpectedResponses}}<br/>
       <button @click="shownPage = 'main'">Main</button>
-      <button @click="shownPage = 'quest'">Quest</button>
+      <button @click="shownPage = 'quest'">Quest Discard</button>
       <button v-if="game['hasSetup']" @click="shownPage = 'setup'">Setup</button>
       <button v-if="game['revealArea'].length > 0" @click="shownPage = 'revealArea'"><u>R</u>evealed</button>
       <button v-if="game['hasSecondQuest']" @click="shownPage = 'secondQuest'">Second Quest</button>
       <button @click="shownPage = 'encounterDiscard'">Encounter Discard</button>
       <button @click="shownPage = 'victory'">Victory</button>
-      <button @click="shownPage = 'secondDeck'">Second Deck</button>
+      <button @click="shownPage = 'secondDeck'">Your Second Deck</button>
       <button v-if="game['hasSpecial']" @click="shownPage = 'special'">Special</button>
       <button v-if="game['hasSecondSpecial']" @click="shownPage = 'secondSpecial'">Second Special</button>
-      <button @click="shownPage = 'discard'">Your <u>D</u>iscard</button>
+      <button @click="shownPage = 'deck'">Your Deck</button>
+      <button @click="shownPage = 'discard'">Your D<u>i</u>scard</button>
       <button @click="shownPage = 'trash'"><u>T</u>rash</button>
       <button @click="shownPage = 'notes'">Notes</button>
-      <button @click="shownPage = 'shortcuts'">Shortcuts</button>
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
@@ -40,10 +40,11 @@
       <div class="lotr-cards-area-above-hand">
         <div v-if="shownPage === 'main'">
           <div class="lotr-staging-area">
-            <span class="card-games-text-on-background">Staging Area</span>
+            <span class="card-games-text-on-background">Sta<u>g</u>ing Area</span>
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['stagingArea']"
+                  :getMoveArray="getMoveArrayFromStagingArea"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -51,11 +52,11 @@
             </div>
           </div>
           <div class="lotr-active-location">
-            <span class="card-games-text-on-background">Location</span>
+            <span class="card-games-text-on-background"><u>L</u>ocation</span>
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['activeLocation']"
-                  :defaultMoveArray="game['encounterDiscard']"
+                  :getMoveArray="getMoveArrayFromActiveLocation"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -65,19 +66,19 @@
           <div class="lotr-quest">
             <span class="card-games-text-on-background">Quest</span>
             <div class="lotr-single-cards-row">
-              <LotrCardList
-                :cardArray="game['questReveal']"
+              <LotrCardStack
+                :cardArray="game['questDeck']"
                 :defaultMoveArray="game['questDiscard']"
                 :cardHeight="cardHeight"
                 :cardWidth="sidewaysCardWidth"
                 :cardMargin="cardMargin"
-                :getImageForCard="getImageForCard" />
+                :getImageForCardArray="getImageForCardArrayLotr" />
               </div>
           </div>
           <div class="lotr-encounter">
             <span class="card-games-text-on-background">Encounter</span>
             <div class="lotr-single-cards-row">
-              <CardStack
+              <LotrCardStack
                 :cardArray="game['encounterDeck']"
                 :defaultMoveArray="game['stagingArea']"
                 :reshuffleArray="game['encounterDiscard']"
@@ -90,11 +91,11 @@
           <div class="clearfix"/>
           <div class="lotr-player-play-area">
             <div>
-              <span class="card-games-text-on-background">Your Engaged Enemies</span>
+              <span class="card-games-text-on-background">Your E<u>n</u>gaged Enemies</span>
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="player['engagedEnemies']"
-                    :defaultMoveArray="game['encounterDiscard']"
+                    :getMoveArray="getMoveArrayFromEngagedArea"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -102,7 +103,7 @@
               </div>
             </div>
             <div>
-              <span class="card-games-text-on-background">Your Characters</span>
+              <span class="card-games-text-on-background">Your <u>C</u>haracters</span>
               <div class="lotr-characters">
                 <LotrCardList
                     :cardArray="player['characters']"
@@ -114,12 +115,20 @@
               </div>
             </div>
           </div>
-          <div class="lotr-played">
-            <span class="card-games-text-on-background">Played Cards</span>
-            <div class="lotr-played-cards-area">
+          <div class="lotr-attachment">
+            <span class="card-games-text-on-background">Your Attachment</span>
+            <div class="lotr-attachment-card-area">
               <LotrCardList
-                  :cardArray="game['playedCards']"
-                  :defaultMoveArray="player['discard']"
+                  :cardArray="player['selectedAttachment']"
+                  :cardHeight="cardHeight"
+                  :cardWidth="cardWidth"
+                  :cardMargin="cardMargin"
+                  :getImageForCard="getImageForCard" />
+            </div>
+            <span class="card-games-text-on-background">Partner's Attachment</span>
+            <div class="lotr-attachment-card-area">
+              <LotrCardList
+                  :cardArray="partner['selectedAttachment']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -132,7 +141,7 @@
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="partner['engagedEnemies']"
-                    :defaultMoveArray="game['encounterDiscard']"
+                    :getMoveArray="getMoveArrayFromEngagedArea"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -153,24 +162,8 @@
           </div>
         </div>
         <div v-else-if="shownPage === 'quest'">
-          <div class="lotr-quest-deck-and-discard">
-            <CardStack
-              :cardArray="game['questDeck']"
-              :defaultMoveArray="game['questReveal']"
-              :cardHeight="cardHeight"
-              :cardWidth="sidewaysCardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArrayLotr" />
-            <CardStack
+          <LotrCardList
               :cardArray="game['questDiscard']"
-              :cardHeight="cardHeight"
-              :cardWidth="sidewaysCardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArrayLotr" />
-          </div>
-          <CardList
-              :cardArray="game['questReveal']"
-              :defaultMoveArray="game['questDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -178,21 +171,21 @@
         </div>
         <div v-else-if="shownPage === 'secondQuest'">
           <div class="lotr-quest-deck-and-discard">
-            <CardStack
+            <LotrCardStack
               :cardArray="game['secondQuestDeck']"
               :defaultMoveArray="game['secondQuestReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
-            <CardStack
+            <LotrCardStack
               :cardArray="game['secondQuestDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
-          <CardList
+          <LotrCardList
               :cardArray="game['secondQuestReveal']"
               :defaultMoveArray="game['secondQuestDiscard']"
               :cardHeight="cardHeight"
@@ -202,50 +195,50 @@
         </div>
         <div v-else-if="shownPage === 'secondDeck'">
           <div class="lotr-deck-and-discard">
-            <CardStack
-              :cardArray="game['secondDeck']"
-              :defaultMoveArray="game['secondReveal']"
+            <LotrCardStack
+              :cardArray="player['secondaryDeck']"
+              :defaultMoveArray="player['secondaryReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
-            <CardStack
-              :cardArray="game['secondDiscard']"
+            <LotrCardStack
+              :cardArray="player['secondaryDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
-          <CardList
-              :cardArray="game['secondReveal']"
+          <LotrCardList
+              :cardArray="game['secondaryReveal']"
               :defaultMoveArray="game['secondDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCard="getImageForCard" />
         </div>
-        <CardList
+        <LotrCardList
             v-else-if="shownPage === 'setup'"
             :cardArray="game['setupArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
-        <CardList
+        <LotrCardList
             v-else-if="shownPage === 'revealArea'"
             :cardArray="game['revealArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
-        <CardList
+        <LotrCardList
             v-else-if="shownPage === 'encounterDiscard'"
             :cardArray="game['encounterDiscard']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
-        <CardList
+        <LotrCardList
             v-else-if="shownPage === 'victory'"
             :cardArray="game['victory']"
             :cardHeight="cardHeight"
@@ -254,21 +247,21 @@
             :getImageForCard="getImageForCard" />
         <div v-else-if="shownPage === 'special'">
           <div class="lotr-deck-and-discard">
-            <CardStack
+            <LotrCardStack
               :cardArray="game['specialDeck']"
               :defaultMoveArray="game['specialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
-            <CardStack
+            <LotrCardStack
               :cardArray="game['specialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
-          <CardList
+          <LotrCardList
               :cardArray="game['specialReveal']"
               :defaultMoveArray="game['specialDiscard']"
               :cardHeight="cardHeight"
@@ -278,21 +271,21 @@
         </div>
         <div v-else-if="shownPage === 'secondSpecial'">
           <div class="lotr-deck-and-discard">
-            <CardStack
+            <LotrCardStack
               :cardArray="game['secondSpecialDeck']"
               :defaultMoveArray="game['secondSpecialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
-            <CardStack
+            <LotrCardStack
               :cardArray="game['secondSpecialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
-          <CardList
+          <LotrCardList
               :cardArray="game['secondSpecialReveal']"
               :defaultMoveArray="game['secondSpecialDiscard']"
               :cardHeight="cardHeight"
@@ -300,14 +293,21 @@
               :cardMargin="cardMargin"
               :getImageForCard="getImageForCard" />
         </div>
-        <CardList
+        <LotrCardList
             v-else-if="shownPage === 'trash'"
             :cardArray="game['trash']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
-        <CardList
+        <LotrCardList
+            v-else-if="shownPage === 'deck'"
+            :cardArray="player['deck']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <LotrCardList
             v-else-if="shownPage === 'discard'"
             :cardArray="player['discard']"
             :cardHeight="cardHeight"
@@ -315,38 +315,18 @@
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
         <textarea v-else-if="shownPage === 'notes'" class="lotr-note" v-model="notes"></textarea>
-        <div v-else-if="shownPage === 'shortcuts'" class="card-games-text-on-background">
-          a (A) - Increment num actions (Decrement num actions)<br/>
-          b (B) - Increment num buys (Decrement num buys)<br/>
-          c (C) - Increment num coins (Decrement num coins)<br/>
-          d - Discard the card.<br/>
-          D - Discard all cards in your hand and play area and end the turn.<br/>
-          e - End the turn.
-          h - Draw the card into your hand.<br/>
-          H - Draw 5 new cards into your hand.<br/>
-          k - Topdeck the card onto your deck.<br/>
-          m - Move the card to your mat.<br/>
-          o - Move the card to your opponent's hand.<br/>
-          P - Play all cards in your hand.<br/>
-          p - Play the card to your play area.<br/>
-          r - Return the card to its original pile.<br/>
-          s - Shuffle your deck.<br/><br/>
-          t - Trash the card.<br/>
-          w - Draw a single card from deck into your hand.<br/>
-          v - Reveal the card in the revealed area.<br/>
-        </div>
       </div>
       <div class="clearfix"/>
       <div class="lotr-player-area">
         <div class="card-games-stats-line">
-          <span class="card-games-stat-item card-games-text-on-background">Threat Points: <button @click="decrementThreat">-</button><input class="card-games-counter" v-model="player['threat']"/><button @click="incrementThreat">+</button></span>
+          <span class="card-games-stat-item card-games-text-on-background">(1) Threat Points: {{player['threat']}}</span>
           <span class="card-games-stat-item card-games-text-on-background">Partner Threat Points: {{partner['threat']}}</span>
         </div>
         <div class="lotr-deck-and-hand">
           <div class="lotr-single-pile">
             <span class="card-games-text-on-background">Dec<u>k</u></span>
             <div class="lotr-single-pile-cards">
-              <CardStack
+              <LotrCardStack
                   :cardArray="player['deck']"
                   :defaultMoveArray="player['hand']"
                   :cardHeight="cardHeight"
@@ -358,7 +338,7 @@
           <div class="lotr-single-pile">
             <span class="card-games-text-on-background"><u>D</u>iscard</span>
             <div class="lotr-single-pile-cards">
-              <CardStack
+              <LotrCardStack
                   :cardArray="player['discard']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
@@ -371,7 +351,7 @@
             <div class="lotr-hand-cards-area">
               <LotrCardList
                   :cardArray="player['hand']"
-                  :defaultMoveArray="game['playedCards']"
+                  :defaultMoveArray="player['characters']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -396,35 +376,27 @@ import ButterBar from './shared/ButterBar'
 import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import LotrCardList from './shared/games/LotrCardList'
+import LotrCardStack from './shared/games/LotrCardStack'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
-import { shuffle, getFullBackendUrlForPath, findPath, fetchFromPath } from '../common/utils'
+import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import { socket } from '../common/socketio'
-import { moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
-  defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
-  getCurrentCard, getImageForCardArray } from '../common/card_games'
+import { moveCard, moveCurrentCard, handleComponentMount, handleComponentCreated,
+  getImageForCard, getImageForCurrentCard, updateDisplayWithLatestGame, mutateProperty,
+  mutateCurrentCard, mutateCard, shuffleCards,
+  getCurrentCard, getImageForCardArray, newGame, saveGame } from '../common/card_games'
 
+const LOTR_GET_SCENARIO_NAMES_URL = getFullBackendUrlForPath('/lotr_get_scenario_names')
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
-const LOTR_GET_SCENARIO_NAMES_URL = getFullBackendUrlForPath('/lotr_get_scenario_names')
-const SAVE_LOTR_GAME_URL = getFullBackendUrlForPath('/save_lotr_game')
+const LOTR_MUTATE_GAME_URL = getFullBackendUrlForPath('/lotr_mutate_game')
 
 export default {
   name: 'LotrGame',
-  components: { ButterBar, CardStack, CardList, LotrCardList },
+  components: { ButterBar, CardStack, CardList, LotrCardList, LotrCardStack },
   computed: { username () { return store.state.username } },
   watch: {
-    username () { this.updateDisplayWithLatestGame() },
-    game: {
-      handler (val) {
-        if (this.shouldSaveChanges) {
-          this.saveGame()
-        } else {
-          this.shouldSaveChanges = true
-        }
-      },
-      deep: true
-    }
+    username () { updateDisplayWithLatestGame(this, LOTR_GET_LATEST_GAME_URL) },
+    games_mutations: { handler (val) { saveGame(this, LOTR_MUTATE_GAME_URL) } }
   },
   created () {
     var style = getComputedStyle(document.body)
@@ -433,17 +405,12 @@ export default {
     this.cardMargin = style.getPropertyValue('--card-margin')
     this.sidewaysCardWidth = style.getPropertyValue('--lotr-sideways-card-width')
     this.updateLotrScenarios()
-    this.updateDisplayWithLatestGame()
+    updateDisplayWithLatestGame(this, LOTR_GET_LATEST_GAME_URL)
     window.addEventListener('keyup', this.handleKeyPress)
-    this.games_playerToInvite = defaultPlayerToInvite(this.username)
+    handleComponentCreated(this)
   },
   mounted () {
-    socket.on('refresh_lotr', (data) => {
-      if (!data['players'].includes(this.username) || data['player_triggering_update'] === this.username) {
-        return
-      }
-      this.updateDisplayWithGameData(data['gameData'])
-    })
+    handleComponentMount(this, 'refreshLotr')
   },
   data () {
     return {
@@ -456,73 +423,9 @@ export default {
        */
       butterBar_css: '',
       /**
-       * Needed for card-games.js.
+       * Num expected responses
        */
-      games_currentCardSelection: {'exists': false},
-      /**
-       * The name of the player to invite when creating a new game.
-       */
-      games_playerToInvite: '',
-      /**
-       * The deck the current player will use when creating a new game.
-       */
-      player1DeckXml: '',
-      /**
-       * The deck the partner player will use when creating a new game.
-       */
-      player2DeckXml: '',
-      /**
-       * The list of scenarios to choose from when creating a new game.
-       */
-      scenarioList: [],
-      /**
-       * The name of the scenario to create a new game with.
-       */
-      scenarioName: '',
-      /**
-       * Whether there is a game to display or not.
-       */
-      games_isInGame: false,
-      /**
-       * The height of a card in the game. Read from the css as a string.
-       */
-      cardHeight: '',
-      /**
-       * The width of a card in the game. Read from the css as a string.
-       */
-      cardWidth: '',
-      /**
-       * The margin of a card in the game. Read from the css as a string.
-       */
-      cardMargin: '',
-      /**
-       * The width of a sideways card in the game. Read from the css as a string.
-       */
-      sidewaysCardWidth: '',
-      /**
-       * Whether or not to save watched data changes to the database. Only false if we just received those changes from the server.
-       */
-      shouldSaveChanges: false,
-      /**
-       * In-game notes the player can type to themselves.
-       */
-      notes: '',
-      /**
-       * Represents the current game page to display.
-       */
-      shownPage: 'main',
-      /**
-       * For convenience, this points to the object representing the player within game['players'].
-       */
-      player: {},
-      /**
-       * For convenience, this points to the object representing the player's partner within game['players'].
-       */
-      partner: {},
-      /**
-       * The index of the player within game['players'].
-       */
-      playerIndex: 0,
+      games_numExpectedResponses: 0,
       /**
        * The game object represents all the data needed to render a game. It contains the following nested data:
        * playedCards {array[Card]} the cards played by either player.
@@ -578,10 +481,90 @@ export default {
        * damage {number} the number of damage tokens on this card.
        * flipped {boolean} whether the card is flipped or not.
        */
-      game: {}
+      game: {},
+      /**
+       * Needed for card-games.js.
+       */
+      games_currentCardSelection: {'exists': false},
+      /**
+       * The name of the player to invite when creating a new game.
+       */
+      games_playerToInvite: '',
+      /**
+       * Whether there is a game to display or not.
+       */
+      games_isInGame: false,
+      /**
+       * The pending mutations to be sent to the server.
+       */
+      games_mutations: [],
+      /**
+       * The deck the current player will use when creating a new game.
+       */
+      player1DeckXml: '',
+      /**
+       * The deck the partner player will use when creating a new game.
+       */
+      player2DeckXml: '',
+      /**
+       * The name of the scenario to create a new game with.
+       */
+      scenarioName: '',
+      /**
+       * The list of scenarios to choose from when creating a new game.
+       */
+      scenarioList: [],
+      /**
+       * The height of a card in the game. Read from the css as a string.
+       */
+      cardHeight: '',
+      /**
+       * The width of a card in the game. Read from the css as a string.
+       */
+      cardWidth: '',
+      /**
+       * The margin of a card in the game. Read from the css as a string.
+       */
+      cardMargin: '',
+      /**
+       * The width of a sideways card in the game. Read from the css as a string.
+       */
+      sidewaysCardWidth: '',
+      /**
+       * In-game notes the player can type to themselves.
+       */
+      notes: '',
+      /**
+       * Represents the current game page to display.
+       */
+      shownPage: 'main',
+      /**
+       * For convenience, this points to the object representing the player within game['players'].
+       */
+      player: {},
+      /**
+       * For convenience, this points to the object representing the player's partner within game['players'].
+       */
+      partner: {},
+      /**
+       * The index of the player within game['players'].
+       */
+      playerIndex: 0
     }
   },
   methods: {
+    newLotrGame () {
+      newGame(
+        this, {
+          scenario: this.scenarioName,
+          player1: this.username,
+          player2: this.games_playerToInvite,
+          player1Deck: this.player1DeckXml,
+          player2Deck: this.player2DeckXml,
+          username: this.username
+        },
+        CREATE_LOTR_GAME_URL)
+    },
     getImageForCard: getImageForCard,
     getImageForCurrentCardLotr () {
       return getImageForCurrentCard(
@@ -596,28 +579,6 @@ export default {
         '/static/lotr/cards/encounter.jpg': [this.game['encounterDeck']]
       })
     },
-    /**
-     * Calls the backend to generate a new game with the populated input fields. Updates the game display once it is created.
-     */
-    newGame () {
-      callAxiosAndSetButterBar(
-        this,
-        CREATE_LOTR_GAME_URL,
-        {
-          scenario: this.scenarioName,
-          player1: this.username,
-          player2: this.games_playerToInvite,
-          player1Deck: this.player1DeckXml,
-          player2Deck: this.player2DeckXml,
-          username: this.username
-        },
-        'Generated Kingdom',
-        'Failed to generate kingdom.',
-        (response) => {
-          let data = response.data
-          this.updateDisplayWithGameData(data)
-        })
-    },
     getPreviewClassName () {
       if (!this.games_currentCardSelection['exists']) {
         return ''
@@ -631,37 +592,39 @@ export default {
         cardArray === this.game['secondQuestReveal'] ||
         cardArray === this.game['secondQuestDisard']) ? 'lotr-preview-sideways' : 'lotr-preview-normal'
     },
-    saveGame () {
-      callAxiosAndSetButterBar(
-        this,
-        SAVE_LOTR_GAME_URL,
-        {
-          gameId: this.game.gameId,
-          gameData: this.game,
-          username: this.username
-        },
-        null,
-        'Failed to save lotr game.')
-    },
     moveCard: moveCard,
-    /**
-     * Fetches the latest game for the currently logged in user and displays it if any exists.
-     * playerTriggeringUpdate may be null.
-     */
-    updateDisplayWithLatestGame () {
-      callAxiosAndSetButterBar(
-        this,
-        LOTR_GET_LATEST_GAME_URL,
-        { username: this.username },
-        null,
-        'Failed to save lotr game.',
-        (response) => {
-          if (response.data === null) {
-            this.games_isInGame = false
-            return
-          }
-          this.updateDisplayWithGameData(response.data.data)
-        })
+    getMoveArrayFromStagingArea (card, isAttachment) {
+      if (card['Type'] === 'Location') {
+        if (this.game['activeLocation'].length > 0) {
+          return null
+        }
+        return this.game['activeLocation']
+      }
+      if (card['Type'] === 'Treachery') {
+        return this.game['encounterDiscard']
+      }
+      if (card['Type'] === 'Enemy') {
+        return this.player['engagedEnemies']
+      }
+      return null
+    },
+    getMoveArrayFromEngagedArea (card, isAttachment) {
+      if (isAttachment) {
+        return this.game['encounterDiscard']
+      }
+      if (card['Victory Points'] && card['Victory Points'] > 0) {
+        return this.game['victory']
+      }
+      return this.game['encounterDiscard']
+    },
+    getMoveArrayFromActiveLocation (card, isAttachment) {
+      if (isAttachment) {
+        return this.game['encounterDiscard']
+      }
+      if (card['Victory Points'] && card['Victory Points'] > 0) {
+        return this.game['victory']
+      }
+      return this.game['encounterDiscard']
     },
     updateLotrScenarios () {
       callAxiosAndSetButterBar(
@@ -678,39 +641,100 @@ export default {
           this.scenarioName = this.scenarioList[0]
         })
     },
-    updateDisplayWithGameData (gameData) {
-      let currentCardSelectionArrayPath
-      if (this.games_currentCardSelection.exists) {
-        currentCardSelectionArrayPath = findPath(this.game, this.games_currentCardSelection.array)
-      }
-      this.shouldSaveChanges = false
-      this.games_isInGame = true
-      this.game = gameData
+    games_callbackForUpdateDisplayWithReceivedGameData (gameData) {
       this.playerIndex = gameData.players[0].name === this.username ? 0 : 1
       this.player = this.game.players[this.playerIndex]
       this.partner = this.game.players[1 - this.playerIndex] // Only supports a 2 player game.
-
-      if (currentCardSelectionArrayPath) {
-        setCurrentCard(this, fetchFromPath(this.game, currentCardSelectionArrayPath), this.games_currentCardSelection.index)
+    },
+    handleKeyPress (event) {
+      if (!this.games_isInGame) {
+        return
       }
+      switch (event.key) {
+        case '1': this.incrementThreat(); return
+        case '!': this.decrementThreat(); return
+        case 'e': this.endRound(); return
+      }
+      if (!this.games_currentCardSelection.exists) {
+        return
+      }
+      let destinationArray = null
+      let reshuffleArray = null
+      switch (event.key) {
+        case 'l':
+          if (this.game['activeLocation'].length > 0) {
+            return
+          }
+          destinationArray = this.game['activeLocation']
+          break
+        case 'c': destinationArray = this.player.characters; break
+        case 'n': destinationArray = this.player.engagedEnemies; break
+        case 'o': destinationArray = this.game.encounterDiscard; break
+        case 'y': destinationArray = this.game.encounterDeck; break
+        case 'q': destinationArray = this.game.questDeck; break
+        case 'i': destinationArray = this.player.discard; break
+        case 'h': destinationArray = this.player.hand; break
+        case 'k': destinationArray = this.player.deck; break
+        case 'g': destinationArray = this.game.stagingArea; break
+        case 't': destinationArray = this.game.trash; break
+        case 'f': this.flipCurrentCard(); return
+        case 'r': this.incrementResources(); return
+        case 'd': this.incrementDamage(); return
+        case 'p': this.incrementProgress(); return
+        case 'R': this.decrementResources(); return
+        case 'D': this.decrementDamage(); return
+        case 'P': this.decrementProgress(); return
+        case 'x': this.toggleExhaustCurrentCard(); return
+        case 'a': this.handleAttachmentClick(); return
+        case 's': this.dealShadowCard(); return
+        case 'u': this.shuffleCards(); return
+      }
+      if (!destinationArray) {
+        return
+      }
+      if (this.games_currentCardSelection.array === this.player.deck) {
+        reshuffleArray = this.player.discard
+      }
+      moveCurrentCard(this, destinationArray, reshuffleArray)
     },
-    shuffleDeck () {
-      shuffle(this.player.deck)
+    incrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'incrementProperty') },
+    decrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'decrementProperty') },
+    incrementResources () {
+      mutateCurrentCard(this, 'resources', 'incrementProperty')
     },
-    deckToDiscard () {
-      moveAllCards(this.player.deck, this.player.discard)
+    decrementResources () {
+      mutateCurrentCard(this, 'resources', 'decrementProperty')
     },
-    singleCardFromDeckToHand () {
-      moveCard(this.player.deck, undefined, this.player.hand, this.player.discard)
+    incrementProgress () {
+      mutateCurrentCard(this, 'progress', 'incrementProperty')
     },
-    addResourcesToCurrentCard () {
-      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['resources']++
+    decrementProgress () {
+      mutateCurrentCard(this, 'progress', 'decrementProperty')
     },
-    addProgressToCurrentCard () {
-      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['progress']++
+    incrementDamage () {
+      mutateCurrentCard(this, 'damage', 'incrementProperty')
     },
-    addDamageToCurrentCard () {
-      this.games_currentCardSelection.array[this.games_currentCardSelection.index]['damage']++
+    decrementDamage () {
+      mutateCurrentCard(this, 'damage', 'decrementProperty')
+    },
+    toggleExhaustCurrentCard () {
+      mutateCurrentCard(this, 'exhausted', 'invertProperty')
+    },
+    shuffleCards () {
+      if (!this.games_currentCardSelection['exists']) {
+        return
+      }
+      if (this.games_currentCardSelection['index'] !== undefined) {
+        return
+      }
+      shuffleCards(this, this.games_currentCardSelection['array'])
+    },
+    dealShadowCard () {
+      let card = getCurrentCard(this)
+      if (card === null) {
+        return
+      }
+      moveCard(this, this.game['encounterDeck'], undefined, card['attachments'], this.game['encounterDiscard'])
     },
     flipCurrentCard () {
       let card = getCurrentCard(this)
@@ -720,51 +744,56 @@ export default {
       if (!card.flippedImage) {
         return
       }
-      card.flipped = !card.flipped
+      mutateCurrentCard(this, 'flipped', 'invertProperty')
     },
-    incrementThreat () { this.player.threat++ },
-    decrementThreat () { this.player.threat-- },
-    handleKeyPress (event) {
-      if (!this.games_isInGame) {
+    endRound () {
+      for (let cardIndex in this.player['characters']) {
+        let card = this.player['characters'][cardIndex]
+        for (let attachmentIndex in card['attachments']) {
+          let attachment = card['attachments'][attachmentIndex]
+          mutateCard(this, attachment, 'exhausted', 'setProperty', false)
+        }
+        mutateCard(this, card, 'exhausted', 'setProperty', false)
+        if (card['Type'] === 'Hero') {
+          mutateCard(this, card, 'resources', 'incrementProperty')
+        }
+      }
+      for (let cardIndex in this.partner['characters']) {
+        let card = this.partner['characters'][cardIndex]
+        for (let attachmentIndex in card['attachments']) {
+          let attachment = card['attachments'][attachmentIndex]
+          mutateCard(this, attachment, 'exhausted', 'setProperty', false)
+        }
+        mutateCard(this, card, 'exhausted', 'setProperty', false)
+        if (card['Type'] === 'Hero') {
+          mutateCard(this, card, 'resources', 'incrementProperty')
+        }
+      }
+      moveCard(this, this.player['deck'], undefined, this.player['hand'], this.player['discard'])
+      moveCard(this, this.partner['deck'], undefined, this.partner['hand'], this.partner['discard'])
+      mutateProperty(this, this.player, 'threat', 'property', 'incrementProperty')
+      mutateProperty(this, this.partner, 'threat', 'property', 'incrementProperty')
+    },
+    handleAttachmentClick () {
+      if (this.player['selectedAttachment'].length > 1) {
+        throw new Error('Too many selected attachments')
+      }
+      let card = getCurrentCard(this)
+      if (this.player['selectedAttachment'].length === 1) {
+        let selectionArray = this.games_currentCardSelection['array']
+        if (selectionArray !== this.player['characters'] &&
+            selectionArray !== this.player['engagedEnemies'] &&
+            selectionArray !== this.partner['characters'] &&
+            selectionArray !== this.partner['engagedEnemies'] &&
+            selectionArray !== this.partner['engagedEnemies'] &&
+            selectionArray !== this.game['stagingArea'] &&
+            selectionArray !== this.game['activeLocation']) {
+          return
+        }
+        moveCard(this, this.player['selectedAttachment'], 0, card['attachments'])
         return
       }
-      switch (event.key) {
-        case 't': this.incrementThreat(); break
-        case 'T': this.decrementThreat(); break
-        case 'w': this.singleCardFromDeckToHand(); return
-      }
-      if (!this.games_currentCardSelection.exists) {
-        return
-      }
-      let destinationArray = null
-      let reshuffleArray = null
-      switch (event.key) {
-        case 'r': this.addResourcesToCurrentCard(); return
-        case 'd': this.addDamageToCurrentCard(); return
-        case 'f': this.flipCurrentCard(); return
-        case 'p': this.addProgressToCurrentCard(); return
-        case '1': destinationArray = this.player.characters[0]['attachments']; break
-        case '2': destinationArray = this.player.characters[1]['attachments']; break
-        case '3': destinationArray = this.player.characters[2]['attachments']; break
-        case '4': destinationArray = this.player.characters[3]['attachments']; break
-        case '5': destinationArray = this.player.characters[4]['attachments']; break
-        case 'c': destinationArray = this.player.characters; break
-        case 'e': destinationArray = this.player.engagedEnemies; break
-        case 'l': destinationArray = this.game.activeLocation; break
-        case 'o': destinationArray = this.partner.characters; break
-        case 'i': destinationArray = this.player.discard; break
-        case 'h': destinationArray = this.player.hand; break
-        case 'k': destinationArray = this.player.deck; break
-        case 's': this.shuffleDeck(); return
-        case 't': destinationArray = this.game.trash; break
-      }
-      if (!destinationArray) {
-        return
-      }
-      if (this.games_currentCardSelection.array === this.player.deck) {
-        reshuffleArray = this.player.discard
-      }
-      moveCurrentCard(this, destinationArray, reshuffleArray)
+      moveCurrentCard(this, this.player['selectedAttachment'])
     }
   }
 }

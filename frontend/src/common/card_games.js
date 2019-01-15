@@ -1,4 +1,4 @@
-import { shuffle, findPath, fetchFromPath } from './utils'
+import { findPath, fetchFromPath } from './utils'
 import { socket } from '../common/socketio'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 
@@ -314,15 +314,16 @@ function handleComponentCreated (component) {
  * @param {Object} obj the object to modify the property on (the property is a key on this object). Must be a subelement of
  *     component['game']. May be nested.
  * @param {string} propertyName the name of the property to modify
+ * @param {string} dataType the type data. Can be "property", "array", "card"
  * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "set", or
  *     "invertProperty" (for booleans), or "appendElement".
  * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
  */
-function mutateProperty (component, obj, propertyName, mutationType, val) {
+function mutateProperty (component, obj, propertyName, dataType, mutationType, val) {
   let propertyPath = findPath(component['game'], obj)
   component['games_mutations'].push({
     type: mutationType,
-    dataType: 'property',
+    dataType: dataType,
     property: propertyName,
     propertyPath: propertyPath,
     value: val
@@ -337,6 +338,56 @@ function mutateProperty (component, obj, propertyName, mutationType, val) {
     obj[propertyName] = val
   } else if (mutationType === 'appendElement') {
     obj[propertyName].push(val)
+  } else {
+    throw new Error('Unexpected mutation type.')
+  }
+}
+
+/**
+ * Modifies the given property.
+ * @param {Object} component the Vue component to perform the modification on.
+ * @param {string} propertyName the name of the property to modify
+ * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "setProperty", or
+ *     "invertProperty" (for booleans), or "appendElement".
+ * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
+ */
+function mutateCurrentCard (component, propertyName, mutationType, val) {
+  let card = getCurrentCard(component)
+  mutateCard(component, card, propertyName, mutationType, val)
+}
+
+/**
+* Modifies the given property.
+* @param {Object} component the Vue component to perform the modification on.
+* @param {string} propertyName the name of the property to modify
+* @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "setProperty", or
+*     "invertProperty" (for booleans), or "appendElement".
+* @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
+*/
+function mutateCard (component, card, propertyName, mutationType, val) {
+  if (!card) {
+    return
+  }
+  let cardPath = findPath(component['game'], card)
+  cardPath.pop()
+  component['games_mutations'].push({
+    type: mutationType,
+    dataType: 'card',
+    cardPath: cardPath,
+    property: propertyName,
+    gameCardId: card['gameCardId'],
+    value: val
+  })
+  if (mutationType === 'incrementProperty') {
+    card[propertyName]++
+  } else if (mutationType === 'decrementProperty') {
+    card[propertyName]--
+  } else if (mutationType === 'invertProperty') {
+    card[propertyName] = !card[propertyName]
+  } else if (mutationType === 'setProperty') {
+    card[propertyName] = val
+  } else if (mutationType === 'appendElement') {
+    card[propertyName].push(val)
   } else {
     throw new Error('Unexpected mutation type.')
   }
@@ -381,18 +432,14 @@ function updateDisplayWithReceivedGameData (component, gameData) {
 /**
  * Calls the backend to generate a new game. Updates the game display once it is created.
  * component {Object} the Vue component to create the game on.
- * players {array<string>} a string of 2 player names to create the game with.
+ * params {map<string, string|number|anything>} a map of the game data to pass in.
  * url {string} the url to call to create the game.
  */
-function newGame (component, players, url) {
+function newGame (component, params, url) {
   callAxiosAndSetButterBar(
     component,
     url,
-    {
-      player1: players[0],
-      player2: players[1],
-      username: component['username']
-    },
+    params,
     'Generated Game',
     'Failed to generate game.',
     (response) => {
@@ -425,8 +472,8 @@ function saveGame (component, url) {
 }
 
 export {
-  shuffle, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
+  shuffleCards, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
   clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
   getCurrentCard, getImageForCardArray, handleComponentMount, handleComponentCreated, mutateProperty,
-  updateDisplayWithLatestGame, newGame, saveGame
+  updateDisplayWithLatestGame, newGame, saveGame, mutateCurrentCard, mutateCard
 }

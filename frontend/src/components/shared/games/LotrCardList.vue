@@ -5,18 +5,18 @@
       <div v-if="card.damage" :style="'top:' + damageVerticalPosition(card) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{card.damage}}D</div>
       <div v-if="card.progress" :style="'top:' + progressVerticalPosition(card) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{card.progress}}P</div>
       <img v-for="(attachment, index) in card['attachments']" :key="index"
-          v-on:click="handleClick()"
+          v-on:click="handleClick(attachment, true)"
           v-on:mouseover="handleMouseOver(card['attachments'], index)"
           v-on:mouseout="handleMouseOut()"
           class="lotr-card-list-inner"
-          :style="'top:' + getCardVerticalPosition(index) + '; height: ' + cardHeight + '; width: ' + cardWidth"
+          :style="getStyle(attachment, index)"
           :src="getImageForCard(attachment)"/>
       <img
-          v-on:click="handleClick()"
+          v-on:click="handleClick(card, false)"
           v-on:mouseover="handleMouseOver(cardArray, index)"
           v-on:mouseout="handleMouseOut()"
           class="lotr-card-list-inner"
-          :style="'top:' + getCardVerticalPosition(card['attachments'].length) + '; height: ' + cardHeight + '; width: ' + cardWidth"
+          :style="getStyle(card, card['attachments'].length)"
           :src="getImageForCard(card)"/>
     </div>
   </div>
@@ -56,20 +56,41 @@ export default {
      */
     getImageForCard: Function,
     /**
-     * Nullable. If {@code defaultMoveArray} is passed in, when a card is clicked, it will be moved to that array.
+     * Nullable. If {@code defaultMoveArray} is passed in, when a card is clicked, it will be moved to that array. Only one
+     *     of this or getMoveArray may be set.
      */
     defaultMoveArray: Array,
+    /**
+     * Nullable. If {@code getMoveArray} is passed in, when a card is clicked, the function will return the
+     * array the card is to be moved to. Only one of this or defaultMoveArray may be set.
+     */
+    getMoveArray: Function,
     /**
      * Nullable. Whether or not to populate the currently selected card on mouseover.
      */
     shouldNotPopulateCurrentCard: Boolean
   },
   methods: {
-    handleClick () {
-      if (!this.defaultMoveArray) {
-        return
+    handleClick (card, isAttachment) {
+      if (this.getMoveArray && this.defaultMoveArray) {
+        throw new Error('Multiple move array conditions passed in.')
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray)
+      if (this.defaultMoveArray) {
+        moveCurrentCard(this.$parent, this.defaultMoveArray)
+      }
+      if (this.getMoveArray) {
+        let array = this.getMoveArray(card, isAttachment)
+        if (array !== null) {
+          moveCurrentCard(this.$parent, array)
+        }
+      }
+    },
+    getStyle (card, index) {
+      let style = 'top:' + this.getCardVerticalPosition(index) + '; height: ' + this.cardHeight + '; width: ' + this.cardWidth
+      if (card['exhausted']) {
+        style += ';filter: brightness(0.5)'
+      }
+      return style
     },
     getHeight (card) {
       return 'calc(' + this.cardHeight + '*.11 * ' + card['attachments'].length + ' + ' + this.cardHeight + ')'

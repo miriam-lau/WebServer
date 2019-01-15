@@ -172,7 +172,7 @@ def _dominion_send_socketio_refresh(game_data, player_triggering_update, update_
 def _lotr_send_socketio_refresh(game_data, player_triggering_update, update_type):
   players = game_data["players"]
   player_names = [player["name"] for player in players]
-  _send_socketio_refresh(LOTR_REFRESH_NAME, game_data, player_names,
+  _send_socketio_refresh(LOTR_REFRESH_NAME, player_names, game_data,
                          player_triggering_update, update_type)
 
 
@@ -518,14 +518,14 @@ def dominion_mutate_game():
 
 @app.route("/create_lotr_game", methods=["POST"])
 def create_lotr_game():
-  player1 = request.json["player1"]
-  player2 = request.json["player2"]
+  player1_name = request.json["player1"]
+  player2_name = request.json["player2"]
   player1_deck = request.json["player1Deck"]
   player2_deck = request.json["player2Deck"]
   scenario_name = request.json["scenario"]
   username = request.json["username"]
   game_data = lotr.create_game(
-      scenario_name, player1, player2, player1_deck, player2_deck)
+      scenario_name, player1_name, player2_name, player1_deck, player2_deck)
   _lotr_send_socketio_refresh(game_data, username, "create")
   return jsonify(game_data)
 
@@ -541,12 +541,12 @@ def lotr_get_scenario_names():
   return jsonify(lotr.get_scenario_names())
 
 
-@app.route("/save_lotr_game", methods=["POST"])
-def lotr_save_game():
-  username = request.json["username"]
+@app.route("/lotr_mutate_game", methods=["POST"])
+def lotr_mutate_game():
   game_id = request.json["gameId"]
-  game_data = request.json["gameData"]
-  lotr.update_game(game_id, game_data)
+  username = request.json["username"]
+  mutations = request.json["mutations"]
+  game_data = lotr.mutate_game(game_id, mutations)
   _lotr_send_socketio_refresh(game_data, username, "mutate")
   return ""
 
