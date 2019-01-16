@@ -380,7 +380,7 @@ import LotrCardStack from './shared/games/LotrCardStack'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import { moveCard, moveCurrentCard, handleComponentMount, handleComponentCreated,
+import { moveCard, moveCurrentCard, handleComponentMounted, handleComponentCreated,
   getImageForCard, getImageForCurrentCard, updateDisplayWithLatestGame, mutateProperty,
   mutateCurrentCard, mutateCard, shuffleCards,
   getCurrentCard, getImageForCardArray, newGame, saveGame } from '../common/card_games'
@@ -410,7 +410,7 @@ export default {
     handleComponentCreated(this)
   },
   mounted () {
-    handleComponentMount(this, 'refreshLotr')
+    handleComponentMounted(this, 'refreshLotr')
   },
   data () {
     return {
