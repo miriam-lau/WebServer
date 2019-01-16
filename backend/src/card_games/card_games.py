@@ -57,30 +57,45 @@ class CardGames:
   # Performs the given mutations on the game with the given id.
   # game_id {number} the id of the game.
   # mutations {array<{
-  #   type {string} the type of mutation to perform. Can be "moveCard", "incrementProperty", "decrementProperty",
-  #       or "invertProperty", "setProperty", or "shuffleCards", "appendElement".
-  #       incrementProperty expects an integer to be specified and increments that number. Acts on type card or property.
-  #       decrementProperty expects an integer to be specified and decrements that number. Acts on type card or property.
-  #       invertProperty expects a boolean to be specified and inverts it. Acts on type card or property.
-  #       setProperty sets the property to the given value.
-  #       moveCards takes the specified card and moves it from path to destinationCardPath. Acts on type card.
-  #       shuffleCards takes in a cardPath and shuffles it. Acts on type array.
-  #       appendElement appends "value" to to the array. Acts on type array.
-  #   dataType {string} the data type to perform the mutation on. Can be "card", "array" or "property".
-  #   gameCardId {number?} the id of the card to perform the mutation on. If the card cannot be found in the sourceArray path,
-  #       the mutation is skipped. Only used if the dataType specified is of type card.
-  #   cardPath {array?} this is an array of keys that determines where in the data object the array of cards are. If the
-  #       data type is "card" then this is where the card is found. If it is of type "array", then it is the array that is used.
-  #       (e.g., if cardPath is ['a', 'b', 'c'], then the Card is expected to be present in the array defined by
-  #       data["a"]["b"]["c"]). Only used if the dataType specified is of type "card" or "array".
-  #   destinationCardPath {array?} this is the array of keys that determines where in the data object the card will be
-  #       moved to. This is similar to cardPath. This is only used by the move_card operation if the dataType is "card".
-  #   propertyPath {array?} this is an array of keys that determines where in the data object the property key is.
-  #       (e.g., if propertyPath is ['a', 'b', 'c'], and the property is "d", then the property is represented by
-  #       data["a"]["b"]["c"]["d"]). Only used if the dataType specified is of type "property".
-  #   property {string} the key of the property to modify. This is only used by the "incrementProperty",
-  #       "decrementProperty", and "invertProperty" mutation types.
-  #   value {string|number|anything?} only used if "setProperty" is set. The value to set the property to.
+  #   Required:
+  #   type {string} Required. the type of mutation to perform. Possible values are:
+  #       increment: Increment a value. Supports data type.
+  #       decrement: Decrement a value. Supports any data type.
+  #       invert: Inverts a boolean value. Supports any data type.
+  #       set: Sets a value. Works on any data type.
+  #       moveCard: Moves a card to the destinationCardPath. Requires datatype = card
+  #       shuffle: Shuffles the array specified. Requires datatype = property
+  #       append: appends "value" to to the array. Requires datatype = property
+  #   dataType {string} Required. the type of data to act on. Possible values are:
+  #       card: Acts on a card object. Finds the card object in the game to act on.
+  #           Requires gameCardId
+  #       property: The a set property in the object to act on.
+  #
+  #   IFF datatype=card:
+  #   gameCardId {number} the id of the card to perform the mutation on.
+  #   cardPath {array} Required. this is an array of keys that determines where in the data object the object containing
+  #       the card is.
+  #
+  #   IFF type=moveCard:
+  #   destinationCardPath {array}: The array to move the card to.
+  #
+  #   IFF type in [increment, decrement, invert, set, shuffle, append]
+  #   propertyPath {array} this is an array of keys that determines where in the data object the object containing
+  #       the property is. For shuffle and append, this specifies the array to be modified.
+  #       For type 'card', it begins at the card.
+  #       For type property, it begins on the game object.
+  #       (e.g., if subPath is ['a', 'b', 'c'], and the property is "d", then the property is represented by
+  #       data["a"]["b"]["c"]["d"]).
+  #
+  #   IFF type in [increment, decrement, invert, set]
+  #   property {string} the key of the property to modify.
+  #
+  #   IFF type in [set, append]
+  #   value {anything} The value to set the property to or the value to append.
+  #
+  #   IFF type = shuffle
+  #   shuffleIndices {array[number]} the list of numbers used by the algorithm to shuffle the array
+  #
   # }>} the mutations to perform on the game data.
   def mutate_game(self, game_id, mutations):
     cur = self._card_games_database.get_cursor()
@@ -89,43 +104,44 @@ class CardGames:
       game_row = self._card_games_database.get_game(cur, game_id)
       game_data = game_row["data"]
       for mutation in mutations:
-        source_array = None
+        card_array = None
         card = None
-        property_path = None
-        if mutation["dataType"] in ["array", "card"]:
-          source_array = CardGames._get_property(
-              game_data, mutation["cardPath"])
+        property_array = None
 
         if mutation["dataType"] == "card":
-          for cur_card in source_array:
+          card_array = CardGames._fetch_from_path(
+              game_data, mutation["cardPath"])
+          for cur_card in card_array:
             if cur_card["gameCardId"] == mutation["gameCardId"]:
               card = cur_card
               break
           if card is None:
             continue
-          property_path = card
-        elif mutation["dataType"] == "property":
-          property_path = CardGames._get_property(
-              game_data, mutation["propertyPath"])
 
+        if mutation["type"] in ["increment", "decrement", "invert", "set", "shuffle", "append"]:
+          starting_object = game_data
+          if mutation["dataType"] == "card":
+            starting_object = card
+          property_array = CardGames._fetch_from_path(
+              starting_object, mutation["propertyPath"])
         if mutation["type"] == "moveCard":
-          destination_array = CardGames._get_property(
+          destination_array = CardGames._fetch_from_path(
               game_data, mutation["destinationCardPath"])
-          source_array.remove(card)
+          card_array.remove(card)
           destination_array.append(card)
-        elif mutation["type"] == "incrementProperty":
-          property_path[mutation["property"]] += 1
-        elif mutation["type"] == "decrementProperty":
-          property_path[mutation["property"]] -= 1
-        elif mutation["type"] == "invertProperty":
-          property_path[mutation["property"]
-                        ] = not property_path[mutation["property"]]
-        elif mutation["type"] == "setProperty":
-          property_path[mutation["property"]] = mutation["value"]
-        elif mutation["type"] == "shuffleCards":
-          CardGames._shuffle(source_array, mutation["shuffleIndices"])
-        elif mutation["type"] == "appendElement":
-          property_path[mutation["property"]].append(mutation["value"])
+        elif mutation["type"] == "increment":
+          property_array[mutation["property"]] += 1
+        elif mutation["type"] == "decrement":
+          property_array[mutation["property"]] -= 1
+        elif mutation["type"] == "invert":
+          property_array[mutation["property"]
+                         ] = not property_array[mutation["property"]]
+        elif mutation["type"] == "set":
+          property_array[mutation["property"]] = mutation["value"]
+        elif mutation["type"] == "shuffle":
+          CardGames._shuffle(property_array, mutation["shuffleIndices"])
+        elif mutation["type"] == "append":
+          property_array.append(mutation["value"])
         else:
           raise Exception("Unknown mutation type.")
       self._card_games_database.update_game(cur, game_id, game_data)
@@ -143,7 +159,7 @@ class CardGames:
   # keys {array<string|number|anything>} the keys used to retrieve the property. (e.g. if keys is [1,'a', 2])
   # the property retrieved is obj[1]['a'][2].
   @staticmethod
-  def _get_property(obj, keys):
+  def _fetch_from_path(obj, keys):
     ret = obj
     for key in keys:
       ret = ret[key]

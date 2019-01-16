@@ -37,7 +37,7 @@
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :callback="addGainToLog"
+              :afterMoveCallback="addGainToLog"
               :getImageForCardArray="getImageForCardArrayDominion" />
             <div class="clearfix"/>
             <CardStack
@@ -47,7 +47,7 @@
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :callback="addGainToLog"
+              :afterMoveCallback="addGainToLog"
               :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-kingdom-area">
@@ -58,7 +58,7 @@
               :cardHeight="cardHeight"
               :cardWidth="cardWidth"
               :cardMargin="cardMargin"
-              :callback="addGainToLog"
+              :afterMoveCallback="addGainToLog"
               :getImageForCardArray="getImageForCardArrayDominion" />
           </div>
           <div class="dominion-events-area">
@@ -78,7 +78,7 @@
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
-            :callback="addGainToLog"
+            :afterMoveCallback="addGainToLog"
             :getImageForCardArray="getImageForCardArrayDominion" />
         <CardStack
             v-else-if="shownPage === 'bane'"
@@ -87,7 +87,7 @@
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
-            :callback="addGainToLog"
+            :afterMoveCallback="addGainToLog"
             :getImageForCardArray="getImageForCardArrayDominion" />
         <CardList
             v-else-if="shownPage === 'yourMats'"
@@ -138,6 +138,7 @@
           <div class="dominion-boons-and-hexes-deck-and-discard">
             <CardStack
               :cardArray="game['boonsDeck']"
+              :beforeMoveCallback="handleReshuffle"
               :defaultMoveArray="game['boonsReveal']"
               :reshuffleArray="game['boonsDiscard']"
               :cardHeight="cardHeight"
@@ -165,6 +166,7 @@
           <div class="dominion-boons-and-hexes-deck-and-discard">
             <CardStack
               :cardArray="game['hexesDeck']"
+              :beforeMoveCallback="handleReshuffle"
               :defaultMoveArray="game['hexesReveal']"
               :reshuffleArray="game['hexesDiscard']"
               :cardHeight="cardHeight"
@@ -286,7 +288,7 @@
           <div class="dominion-single-pile">
             <span class="card-games-text">Dec<u>k</u><br/></span>
             <CardStack
-              :reshuffleArray="player['discard']"
+              :beforeMoveCallback="handleReshuffle"
               :defaultMoveArray="player['hand']"
               :cardArray="player['deck']"
               :cardHeight="cardHeight"
@@ -334,9 +336,9 @@ import CardStack from './shared/games/CardStack'
 import CardList from './shared/games/CardList'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import { moveCard, moveAllCards, moveCurrentCard, getImageForCard, getImageForCurrentCard,
+import { moveCard, moveAllCards, moveCurrentCard, getImageForCard, getImageForCurrentCard, shuffleCards,
   getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
-  updateDisplayWithLatestGame, newGame, saveGame }
+  updateDisplayWithLatestGame, newGame, saveGame, MUTATION_VALUE, MUTATION_PROPERTY }
   from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
@@ -611,7 +613,6 @@ export default {
         return
       }
       let destinationArray
-      let reshufflePile
       switch (event.key) {
         case 'd': destinationArray = this.player['discard']; break
         case 'u': destinationArray = this.player['durationArea']; break
@@ -645,29 +646,42 @@ export default {
       if (!destinationArray) {
         return
       }
-      if (this.games_currentCardSelection['array'] === this.player['deck']) {
-        reshufflePile = this.player['discard']
-      } else if (this.games_currentCardSelection['array'] === this.game['boonsDeck']) {
-        reshufflePile = this.game['boonsDiscard']
-      } else if (this.games_currentCardSelection['array'] === this.game['hexesDeck']) {
-        reshufflePile = this.game['hexesDiscard']
-      }
-      moveCurrentCard(this, destinationArray, reshufflePile, { afterMoveCallback: this.addGainToLog })
+      moveCurrentCard(this, destinationArray, { beforeMoveCallback: this.handleReshuffle, afterMoveCallback: this.addGainToLog })
     },
-    incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'incrementProperty') },
-    decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'decrementProperty') },
-    incrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'property', 'incrementProperty') },
-    decrementNumBuys () { mutateProperty(this, this.player, 'numBuys', 'property', 'decrementProperty') },
-    incrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'property', 'incrementProperty') },
-    decrementNumCoins () { mutateProperty(this, this.player, 'numCoins', 'property', 'decrementProperty') },
-    incrementNumVP () { mutateProperty(this, this.player, 'numVP', 'property', 'incrementProperty') },
-    decrementNumVP () { mutateProperty(this, this.player, 'numVP', 'property', 'decrementProperty') },
-    incrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'property', 'incrementProperty') },
-    decrementNumVillagers () { mutateProperty(this, this.player, 'numVillagers', 'property', 'decrementProperty') },
-    incrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'property', 'incrementProperty') },
-    decrementNumCoffers () { mutateProperty(this, this.player, 'numCoffers', 'property', 'decrementProperty') },
-    incrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'property', 'incrementProperty') },
-    decrementNumDebt () { mutateProperty(this, this.player, 'numDebt', 'property', 'decrementProperty') },
+    incrementNumActions () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numActions' }) },
+    decrementNumActions () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numActions' }) },
+    incrementNumBuys () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numBuys' }) },
+    decrementNumBuys () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numBuys' }) },
+    incrementNumCoins () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numCoins' }) },
+    decrementNumCoins () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numCoins' }) },
+    incrementNumVP () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numVP' }) },
+    decrementNumVP () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numVP' }) },
+    incrementNumCoffers () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numCoffers' }) },
+    decrementNumCoffers () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numCoffers' }) },
+    incrementNumVillagers () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numVillagers' }) },
+    decrementNumVillagers () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numVillagers' }) },
+    incrementNumDebt () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'numDebt' }) },
+    decrementNumDebt () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'numDebt' }) },
+    handleReshuffle (card, originalArray, destinationArray) {
+      if (originalArray.length > 0) {
+        return true
+      }
+      let reshuffleArray
+      if (originalArray === this.player['deck']) {
+        reshuffleArray = this.player['discard']
+      } else if (originalArray === this.opponent['deck']) {
+        reshuffleArray = this.opponent['deck']
+      } else if (originalArray === this.game['boonsDeck']) {
+        reshuffleArray = this.game['boonsDiscard']
+      } else if (originalArray === this.game['hexesDeck']) {
+        reshuffleArray = this.game['hexesDiscard']
+      }
+      if (reshuffleArray.length > 0) {
+        moveAllCards(this, reshuffleArray, originalArray)
+        shuffleCards(this, originalArray)
+      }
+      return true
+    },
     playTreasuresFromHand () {
       for (let i = this.player['hand'].length - 1; i >= 0; --i) {
         let card = this.player['hand'][i]
@@ -681,40 +695,26 @@ export default {
     },
     endTurnAndCleanUp () {
       this.cleanUp()
-      mutateProperty(this, this.player, 'displayedPlayer', 'property', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.opponent, 'displayedPlayer', 'property', 'setProperty', 1 - this.playerIndex)
-      mutateProperty(this, this.game, 'currentPlayerTurn', 'property', 'setProperty', 1 - this.playerIndex)
+      mutateProperty(this, this.player, 'set', { [MUTATION_PROPERTY]: 'displayedPlayer', [MUTATION_VALUE]: 1 - this.playerIndex })
+      mutateProperty(this, this.opponent, 'set', { [MUTATION_PROPERTY]: 'displayedPlayer', [MUTATION_VALUE]: 1 - this.playerIndex })
+      mutateProperty(this, this.game, 'set', { [MUTATION_PROPERTY]: 'currentPlayerTurn', [MUTATION_VALUE]: 1 - this.playerIndex })
       this.drawNewHand()
     },
     cleanUp () {
       moveAllCards(this, this.player['hand'], this.player['discard'])
       moveAllCards(this, this.player['playArea'], this.player['discard'])
       moveAllCards(this, this.player['durationArea'], this.player['playArea'])
-      mutateProperty(this, this.player, 'numActions', 'property', 'setProperty', 1)
-      mutateProperty(this, this.player, 'numBuys', 'property', 'setProperty', 1)
-      mutateProperty(this, this.player, 'numCoins', 'property', 'setProperty', 0)
-    },
-    setNumberProperty (obj, propertyName, val) {
-      if (obj[propertyName] === val) {
-        return
-      }
-      if (obj[propertyName] > val) {
-        while (obj[propertyName] > val) {
-          mutateProperty(this, obj, propertyName, 'property', 'decrementProperty')
-        }
-        return
-      }
-      while (obj[propertyName] < val) {
-        mutateProperty(this, obj, propertyName, 'property', 'incrementProperty')
-      }
+      mutateProperty(this, this.player, 'set', { [MUTATION_PROPERTY]: 'numActions', [MUTATION_VALUE]: 1 })
+      mutateProperty(this, this.player, 'set', { [MUTATION_PROPERTY]: 'numBuys', [MUTATION_VALUE]: 1 })
+      mutateProperty(this, this.player, 'set', { [MUTATION_PROPERTY]: 'numCoins', [MUTATION_VALUE]: 0 })
     },
     drawNewHand () {
       for (let i = 0; i < 5; ++i) {
-        moveCard(this, this.player.deck, undefined, this.player.hand, this.player.discard)
+        moveCard(this, this.player.deck, null, this.player.hand, { beforeMoveCallback: this.handleReshuffle })
       }
     },
     toggleDisplayedPlayer () {
-      mutateProperty(this, this.player, 'displayedPlayer', 'property', 'setProperty', 1 - this.player['displayedPlayer'])
+      mutateProperty(this, this.player, 'set', { [MUTATION_PROPERTY]: 'displayedPlayer', [MUTATION_VALUE]: 1 - this.player['displayedPlayer'] })
     },
     /**
      * Whether or not the given array is owned by the current player.
@@ -730,9 +730,9 @@ export default {
         return
       }
       if (!this.isArrayOwnedByPlayer(originalArray) && this.isArrayOwnedByPlayer(destinationArray)) {
-        mutateProperty(this, this.game, 'gameLog', 'property', 'appendElement', this.player['name'] + ': +' + card['name'])
+        mutateProperty(this, this.game['gameLog'], 'append', {[MUTATION_VALUE]: this.player['name'] + ': +' + card['name']})
       } else if (this.isArrayOwnedByPlayer(originalArray) && !this.isArrayOwnedByPlayer(destinationArray)) {
-        mutateProperty(this, this.game, 'gameLog', 'property', 'appendElement', this.player['name'] + ': -' + card['name'])
+        mutateProperty(this, this.game['gameLog'], 'append', {[MUTATION_VALUE]: this.player['name'] + ': -' + card['name']})
       }
     }
   }

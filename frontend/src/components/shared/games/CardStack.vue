@@ -3,7 +3,7 @@
     <div class="card-games-card-stack-count">{{cardArray.length}}</div>
     <img
         v-on:click="handleClick"
-        v-on:mouseover="setCurrentCard($parent, cardArray)"
+        v-on:mouseover="setCurrentCard($parent, cardArray, null)"
         v-on:mouseout="clearCurrentCard($parent)"
         class="card-games-top-left-absolute-position"
         :style="cardImageStyle"
@@ -59,9 +59,13 @@ export default {
      */
     reshuffleArray: Array,
     /**
-     * Nullable. If present, this is called with the top card which is moved.
+     * Nullable. Passed to moveCard.
      */
-    callback: Function
+    afterMoveCallback: Function,
+    /**
+     * Nullable. Passed to moveCard.
+     */
+    beforeMoveCallback: Function
   },
   computed: {
     outerContainerStyle () {
@@ -78,7 +82,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray, { afterMoveCallback: this.callback })
+      moveCurrentCard(this.$parent, this.defaultMoveArray, { beforeMoveCallback: this.beforeMoveCallback, afterMoveCallback: this.afterMoveCallback })
     }
   }
 }

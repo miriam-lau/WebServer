@@ -45,8 +45,9 @@
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['stagingArea']"
+                  :beforeMoveCallback="isMoveAllowed"
                   :getMoveArray="getMoveArrayFromStagingArea"
-                  :callback="discardAttachmentsForCardListCallback"
+                  :afterMoveCallback="discardAttachmentsForCardListCallback"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -58,8 +59,9 @@
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['activeLocation']"
+                  :beforeMoveCallback="isMoveAllowed"
                   :getMoveArray="getMoveArrayFromActiveLocation"
-                  :callback="discardAttachmentsForCardListCallback"
+                  :afterMoveCallback="discardAttachmentsForCardListCallback"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -71,6 +73,7 @@
             <div class="lotr-single-cards-row">
               <LotrCardStack
                 :cardArray="game['questDeck']"
+                :beforeMoveCallback="isMoveAllowed"
                 :defaultMoveArray="game['questDiscard']"
                 :cardHeight="cardHeight"
                 :cardWidth="sidewaysCardWidth"
@@ -83,8 +86,8 @@
             <div class="lotr-single-cards-row">
               <LotrCardStack
                 :cardArray="game['encounterDeck']"
+                :beforeMoveCallback="isMoveAllowed"
                 :defaultMoveArray="game['stagingArea']"
-                :reshuffleArray="game['encounterDiscard']"
                 :cardHeight="cardHeight"
                 :cardWidth="cardWidth"
                 :cardMargin="cardMargin"
@@ -98,8 +101,9 @@
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="player['engagedEnemies']"
+                    :beforeMoveCallback="isMoveAllowed"
                     :getMoveArray="getMoveArrayFromEngagedArea"
-                    :callback="discardAttachmentsForCardListCallback"
+                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -111,8 +115,9 @@
               <div class="lotr-characters">
                 <LotrCardList
                     :cardArray="player['characters']"
-                    :defaultMoveArray="player['discard']"
-                    :callback="discardAttachmentsForCardListCallback"
+                    :beforeMoveCallback="isMoveAllowed"
+                    :getMoveArray="getMoveArrayFromCharacterArea"
+                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -146,6 +151,8 @@
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="partner['engagedEnemies']"
+                    :beforeMoveCallback="isMoveAllowed"
+                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :getMoveArray="getMoveArrayFromEngagedArea"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
@@ -158,6 +165,9 @@
               <div class="lotr-characters">
                 <LotrCardList
                     :cardArray="partner['characters']"
+                    :beforeMoveCallback="isMoveAllowed"
+                    :getMoveArray="getMoveArrayFromCharacterArea"
+                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -169,6 +179,9 @@
         <div v-else-if="shownPage === 'quest'">
           <LotrCardList
               :cardArray="game['questDiscard']"
+              :beforeMoveCallback="isMoveAllowed"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
+              :defaultMoveArray="game['questDeck']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -178,21 +191,18 @@
           <div class="lotr-quest-deck-and-discard">
             <LotrCardStack
               :cardArray="game['secondQuestDeck']"
-              :defaultMoveArray="game['secondQuestReveal']"
-              :cardHeight="cardHeight"
-              :cardWidth="sidewaysCardWidth"
-              :cardMargin="cardMargin"
-              :getImageForCardArray="getImageForCardArrayLotr" />
-            <LotrCardStack
-              :cardArray="game['secondQuestDiscard']"
+              :beforeMoveCallback="isMoveAllowed"
+              :defaultMoveArray="game['secondQuestDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
               :getImageForCardArray="getImageForCardArrayLotr" />
           </div>
           <LotrCardList
-              :cardArray="game['secondQuestReveal']"
-              :defaultMoveArray="game['secondQuestDiscard']"
+              :cardArray="game['secondQuestDiscard']"
+              :beforeMoveCallback="isMoveAllowed"
+              :defaultMoveArray="game['secondQuestDeck']"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -202,6 +212,7 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="player['secondaryDeck']"
+              :beforeMoveCallback="isMoveAllowed"
               :defaultMoveArray="player['secondaryReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -216,7 +227,9 @@
           </div>
           <LotrCardList
               :cardArray="game['secondaryReveal']"
-              :defaultMoveArray="game['secondDiscard']"
+              :beforeMoveCallback="isMoveAllowed"
+              :defaultMoveArray="game['secondaryDiscard']"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -239,6 +252,9 @@
         <LotrCardList
             v-else-if="shownPage === 'encounterDiscard'"
             :cardArray="game['encounterDiscard']"
+            :beforeMoveCallback="isMoveAllowed"
+            :afterMoveCallback="discardAttachmentsForCardListCallback"
+            :defaultMoveArray="game['stagingArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
@@ -246,6 +262,9 @@
         <LotrCardList
             v-else-if="shownPage === 'encounterDeck'"
             :cardArray="game['encounterDeck']"
+            :beforeMoveCallback="isMoveAllowed"
+            :afterMoveCallback="discardAttachmentsForCardListCallback"
+            :defaultMoveArray="game['stagingArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
@@ -261,6 +280,8 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="game['specialDeck']"
+              :beforeMoveCallback="isMoveAllowed"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :defaultMoveArray="game['specialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -275,6 +296,8 @@
           </div>
           <LotrCardList
               :cardArray="game['specialReveal']"
+              :beforeMoveCallback="isMoveAllowed"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :defaultMoveArray="game['specialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -285,6 +308,8 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="game['secondSpecialDeck']"
+              :beforeMoveCallback="isMoveAllowed"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :defaultMoveArray="game['secondSpecialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -299,7 +324,9 @@
           </div>
           <LotrCardList
               :cardArray="game['secondSpecialReveal']"
+              :beforeMoveCallback="isMoveAllowed"
               :defaultMoveArray="game['secondSpecialDiscard']"
+              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -340,6 +367,8 @@
             <div class="lotr-single-pile-cards">
               <LotrCardStack
                   :cardArray="player['deck']"
+                  :beforeMoveCallback="isMoveAllowed"
+                  :afterMoveCallback="discardAttachmentsForCardListCallback"
                   :defaultMoveArray="player['hand']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
@@ -363,6 +392,8 @@
             <div class="lotr-hand-cards-area">
               <LotrCardList
                   :cardArray="player['hand']"
+                  :beforeMoveCallback="isMoveAllowed"
+                  :afterMoveCallback="discardAttachmentsForCardListCallback"
                   :defaultMoveArray="player['characters']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
@@ -394,7 +425,7 @@ import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 import { moveCard, moveCurrentCard, handleComponentMounted, handleComponentCreated,
   getImageForCard, getImageForCurrentCard, updateDisplayWithLatestGame, mutateProperty,
-  mutateCurrentCard, mutateCard, shuffleCards,
+  mutateCurrentCard, mutateCard, shuffleCards, MUTATION_PROPERTY, getCurrentCardArray, MUTATION_VALUE,
   getCurrentCard, getImageForCardArray, newGame, saveGame } from '../common/card_games'
 
 const LOTR_GET_SCENARIO_NAMES_URL = getFullBackendUrlForPath('/lotr_get_scenario_names')
@@ -605,46 +636,58 @@ export default {
         cardArray === this.game['secondQuestDisard']) ? 'lotr-preview-sideways' : 'lotr-preview-normal'
     },
     moveCard: moveCard,
-    getMoveArrayFromStagingArea (card, isAttachment) {
-      if (card['Type'] === 'Location') {
-        if (this.game['activeLocation'].length > 0) {
-          return null
-        }
-        return this.game['activeLocation']
+    getDefaultDiscardForCard (card) {
+      if (card['owner'] && card['owner'] === 'player1') {
+        return this.game['players'][0]['discard']
       }
-      if (card['Type'] === 'Treachery') {
-        return this.game['encounterDiscard']
+      if (card['owner'] && card['owner'] === 'player2') {
+        return this.game['players'][1]['discard']
       }
-      if (card['Type'] === 'Enemy') {
-        return this.player['engagedEnemies']
-      }
-      return null
-    },
-    getMoveArrayFromEngagedArea (card, isAttachment) {
-      if (isAttachment) {
-        return this.game['encounterDiscard']
-      }
-      if (card['Victory Points'] && card['Victory Points'] > 0) {
+      if (card['Victory Points']) {
         return this.game['victory']
       }
       return this.game['encounterDiscard']
     },
+    getMoveArrayFromStagingArea (card, isAttachment) {
+      if (isAttachment) {
+        return this.getDefaultDiscardForCard(card)
+      }
+      if (card['Type'] === 'Location') {
+        return this.game['activeLocation']
+      } else if (card['Type'] === 'Treachery') {
+        return this.game['encounterDiscard']
+      } else if (card['Type'] === 'Enemy') {
+        return this.player['engagedEnemies']
+      }
+      return null
+    },
+    getMoveArrayFromActiveLocation (card, isAttachment) {
+      return this.getDefaultDiscardForCard(card)
+    },
+    getMoveArrayFromEngagedArea (card, isAttachment) {
+      return this.getDefaultDiscardForCard(card)
+    },
+    getMoveArrayFromCharacterArea (card, isAttachment) {
+      return this.getDefaultDiscardForCard(card)
+    },
+    isMoveAllowed (card, originalArray, destinationArray) {
+      if ([this.game['activeLocation'], this.game['selectedAttachment']].indexOf(destinationArray) === -1) {
+        return true
+      }
+      if (destinationArray.length > 0) {
+        return false
+      }
+      return true
+    },
     discardAttachmentsForCardListCallback (card, originalArray, destinationArray) {
-      if (destinationArray === this.player['discard'] || destinationArray === this.partner['discard'] || destinationArray === this.game['encounterDiscard']) {
+      if (destinationArray !== this.game['stagingArea'] && destinationArray !== this.partner['characters'] &&
+      destinationArray !== this.player['characters'] && destinationArray !== this.player['engagedEnemies'] &&
+      destinationArray !== this.partner['engagedEnemies'] && destinationArray !== this.game['activeLocation']) {
         for (let attachmentIndex = card['attachments'].length - 1; attachmentIndex >= 0; attachmentIndex--) {
           let attachment = card['attachments'][attachmentIndex]
           moveCard(this, card['attachments'], attachmentIndex, this.getDefaultDiscardForCard(attachment))
         }
       }
-    },
-    getMoveArrayFromActiveLocation (card, isAttachment) {
-      if (isAttachment) {
-        return this.game['encounterDiscard']
-      }
-      if (card['Victory Points'] && card['Victory Points'] > 0) {
-        return this.game['victory']
-      }
-      return this.game['encounterDiscard']
     },
     updateLotrScenarios () {
       callAxiosAndSetButterBar(
@@ -680,14 +723,8 @@ export default {
         return
       }
       let destinationArray = null
-      let reshuffleArray = null
       switch (event.key) {
-        case 'l':
-          if (this.game['activeLocation'].length > 0) {
-            return
-          }
-          destinationArray = this.game['activeLocation']
-          break
+        case 'l': destinationArray = this.game['activeLocation']; break
         case 'c': destinationArray = this.player.characters; break
         case 'n': destinationArray = this.player.engagedEnemies; break
         case 'o': destinationArray = this.game.encounterDiscard; break
@@ -713,58 +750,41 @@ export default {
       if (!destinationArray) {
         return
       }
-      if (this.games_currentCardSelection.array === this.player.deck) {
-        reshuffleArray = this.player.discard
-      }
-      moveCurrentCard(this, destinationArray, reshuffleArray)
+      moveCurrentCard(this, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
     },
-    getDefaultDiscardForCard (card) {
-      if (card['owner'] && card['owner'] === 'player1') {
-        return this.game['players'][0]['discard']
-      }
-      if (card['owner'] && card['owner'] === 'player2') {
-        return this.game['players'][1]['discard']
-      }
-      return this.game['encounterDiscard']
-    },
-    incrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'incrementProperty') },
-    decrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'decrementProperty') },
+    incrementThreat () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'threat' }) },
+    decrementThreat () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'threat' }) },
     incrementResources () {
-      mutateCurrentCard(this, 'resources', 'incrementProperty')
+      mutateCurrentCard(this, 'increment', [], { [MUTATION_PROPERTY]: 'resources' })
     },
     decrementResources () {
-      mutateCurrentCard(this, 'resources', 'decrementProperty')
+      mutateCurrentCard(this, 'decrement', [], { [MUTATION_PROPERTY]: 'resources' })
     },
     incrementProgress () {
-      mutateCurrentCard(this, 'progress', 'incrementProperty')
+      mutateCurrentCard(this, 'increment', [], { [MUTATION_PROPERTY]: 'progress' })
     },
     decrementProgress () {
-      mutateCurrentCard(this, 'progress', 'decrementProperty')
+      mutateCurrentCard(this, 'decrement', [], { [MUTATION_PROPERTY]: 'progress' })
     },
     incrementDamage () {
-      mutateCurrentCard(this, 'damage', 'incrementProperty')
+      mutateCurrentCard(this, 'increment', [], { [MUTATION_PROPERTY]: 'damage' })
     },
     decrementDamage () {
-      mutateCurrentCard(this, 'damage', 'decrementProperty')
+      mutateCurrentCard(this, 'decrement', [], { [MUTATION_PROPERTY]: 'damage' })
     },
     toggleExhaustCurrentCard () {
-      mutateCurrentCard(this, 'exhausted', 'invertProperty')
+      mutateCurrentCard(this, 'invert', [], { [MUTATION_PROPERTY]: 'exhausted' })
     },
     shuffleCards () {
-      if (!this.games_currentCardSelection['exists']) {
-        return
-      }
-      if (this.games_currentCardSelection['index'] !== undefined) {
-        return
-      }
-      shuffleCards(this, this.games_currentCardSelection['array'])
+      shuffleCards(getCurrentCardArray(this))
     },
     dealShadowCard () {
+      // TODO: Handle reshuffle encounter.
       let card = getCurrentCard(this)
       if (card === null) {
         return
       }
-      moveCard(this, this.game['encounterDeck'], undefined, card['attachments'], this.game['encounterDiscard'])
+      moveCard(this, this.game['encounterDeck'], null, card['attachments'], { beforeMoveCallback: this.isMoveAllowed })
     },
     flipCurrentCard () {
       let card = getCurrentCard(this)
@@ -774,35 +794,35 @@ export default {
       if (!card.flippedImage) {
         return
       }
-      mutateCurrentCard(this, 'flipped', 'invertProperty')
+      mutateCurrentCard(this, 'invert', [], { [MUTATION_PROPERTY]: 'flipped' })
     },
     endRound () {
       for (let cardIndex in this.player['characters']) {
         let card = this.player['characters'][cardIndex]
         for (let attachmentIndex in card['attachments']) {
           let attachment = card['attachments'][attachmentIndex]
-          mutateCard(this, attachment, 'exhausted', 'setProperty', false)
+          mutateCard(this, attachment, 'set', [], { [MUTATION_PROPERTY]: 'exhausted', [MUTATION_VALUE]: false })
         }
-        mutateCard(this, card, 'exhausted', 'setProperty', false)
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'exhausted', [MUTATION_VALUE]: false })
         if (card['Type'] === 'Hero') {
-          mutateCard(this, card, 'resources', 'incrementProperty')
+          mutateCard(this, card, 'increment', [], { [MUTATION_PROPERTY]: 'resources' })
         }
       }
       for (let cardIndex in this.partner['characters']) {
         let card = this.partner['characters'][cardIndex]
         for (let attachmentIndex in card['attachments']) {
           let attachment = card['attachments'][attachmentIndex]
-          mutateCard(this, attachment, 'exhausted', 'setProperty', false)
+          mutateCard(this, attachment, 'set', [], { [MUTATION_PROPERTY]: 'exhausted', [MUTATION_VALUE]: false })
         }
-        mutateCard(this, card, 'exhausted', 'setProperty', false)
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'exhausted', [MUTATION_VALUE]: false })
         if (card['Type'] === 'Hero') {
-          mutateCard(this, card, 'resources', 'incrementProperty')
+          mutateCard(this, card, 'increment', [], { [MUTATION_PROPERTY]: 'resources' })
         }
       }
-      moveCard(this, this.player['deck'], undefined, this.player['hand'], this.player['discard'])
-      moveCard(this, this.partner['deck'], undefined, this.partner['hand'], this.partner['discard'])
-      mutateProperty(this, this.player, 'threat', 'property', 'incrementProperty')
-      mutateProperty(this, this.partner, 'threat', 'property', 'incrementProperty')
+      moveCard(this, this.player['deck'], null, this.player['hand'], { beforeMoveCallback: this.isMoveAllowed })
+      moveCard(this, this.partner['deck'], null, this.partner['hand'], { beforeMoveCallback: this.isMoveAllowed })
+      mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'threat' })
+      mutateProperty(this, this.partner, 'increment', { [MUTATION_PROPERTY]: 'threat' })
     },
     handleAttachmentClick () {
       if (this.player['selectedAttachment'].length > 1) {
@@ -810,7 +830,7 @@ export default {
       }
       let card = getCurrentCard(this)
       if (this.player['selectedAttachment'].length === 1) {
-        let selectionArray = this.games_currentCardSelection['array']
+        let selectionArray = getCurrentCardArray(this)
         if (selectionArray !== this.player['characters'] &&
             selectionArray !== this.player['engagedEnemies'] &&
             selectionArray !== this.partner['characters'] &&
@@ -820,12 +840,12 @@ export default {
             selectionArray !== this.game['activeLocation']) {
           return
         }
-        moveCard(this, this.player['selectedAttachment'], 0, card['attachments'])
+        moveCard(this, this.player['selectedAttachment'], 0, card['attachments'], { beforeMoveCallback: this.isMoveAllowed })
       } else {
         if (card['attachments'].length > 0) {
           return
         }
-        moveCurrentCard(this, this.player['selectedAttachment'])
+        moveCurrentCard(this, this.player['selectedAttachment'], { beforeMoveCallback: this.isMoveAllowed })
       }
     }
   }

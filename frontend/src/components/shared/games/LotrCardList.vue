@@ -66,9 +66,13 @@ export default {
      */
     getMoveArray: Function,
     /**
-     * Nullable. If it is passed in, the callback function is called upon click.
+     * Nullable. Passed to moveCard
      */
-    callback: Function,
+    afterMoveCallback: Function,
+    /**
+     * Nullable. Passed to moveCard.
+     */
+    beforeMoveCallback: Function,
     /**
      * Nullable. Whether or not to populate the currently selected card on mouseover.
      */
@@ -86,7 +90,7 @@ export default {
         array = this.getMoveArray(card, isAttachment)
       }
       if (array) {
-        moveCurrentCard(this.$parent, array, undefined, { afterMoveCallback: this.callback })
+        moveCurrentCard(this.$parent, array, { beforeMoveCallback: this.beforeMoveCallback, afterMoveCallback: this.afterMoveCallback })
       }
     },
     getStyle (card, index) {

@@ -52,9 +52,9 @@ export default {
      */
     shouldNotPopulateCurrentCard: Boolean,
     /**
-     * Nullable. If present, this is called with the top card which is moved.
+     * Nullable. Passed to moveCard
      */
-    callback: Function
+    afterMoveCallback: Function
   },
   computed: {
     cardImageStyle () {
@@ -66,7 +66,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray, undefined, { afterMoveCallback: this.callback })
+      moveCurrentCard(this.$parent, this.defaultMoveArray, { afterMoveCallback: this.afterMoveCallback })
     },
     handleMouseOver (cardArray, index) {
       if (this.shouldNotPopulateCurrentCard) {

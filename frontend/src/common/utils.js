@@ -82,7 +82,7 @@ function getDisplayDate (dateString) {
  * @param {string} backendPath the backend path.
  * @param {Object} params the params object to pass to the backend.
  * @param {Function({Object} response)?} successCallback optional. Called with the response from the backend.
- * @param {Function({Object} response)?} errorCallback optional. Called with the response object on the error 
+ * @param {Function({Object} response)?} errorCallback optional. Called with the response object on the error
  *     returned from the backend.
  */
 function callAxios (backendPath, params, successCallback, errorCallback) {

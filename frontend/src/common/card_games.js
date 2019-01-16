@@ -67,10 +67,29 @@ const CARD_FLIPPED_IMAGE = 'flippedImage'
 const CARD_GAME_CARD_ID = 'gameCardId'
 const CARD_FLIPPED = 'flipped'
 
+const BACKEND_KEY_DATA = 'data'
 const BACKEND_KEY_USERNAME = 'username'
+
 const SAVE_GAME_GAME_ID = 'gameId'
 const SAVE_GAME_MUTATIONS = 'mutations'
-const BACKEND_KEY_DATA = 'data'
+
+const MUTATION_TYPE = 'type'
+const MUTATION_DATA_TYPE = 'dataType'
+const MUTATION_INCREMENT = 'increment'
+const MUTATION_DECREMENT = 'decrement'
+const MUTATION_INVERT = 'invert'
+const MUTATION_SET = 'set'
+const MUTATION_MOVE_CARD = 'moveCard'
+const MUTATION_SHUFFLE = 'shuffle'
+const MUTATION_APPEND = 'append'
+const MUTATION_CARD = 'card'
+const MUTATION_PROPERTY = 'property'
+const MUTATION_GAME_CARD_ID = 'gameCardId'
+const MUTATION_CARD_PATH = 'cardPath'
+const MUTATION_DESTINATION_CARD_PATH = 'destinationCardPath'
+const MUTATION_PROPERTY_PATH = 'propertyPath'
+const MUTATION_VALUE = 'value'
+const MUTATION_SHUFFLE_INDICES = 'shuffleIndices'
 
 /**
  * This must be called in mounted() in the Vue component. It is to be used with card_games.py. It expects
@@ -113,7 +132,7 @@ function handleComponentCreated (component) {
  * @param {Object} gameData the game data used to update the Vue component.
  */
 function updateDisplayWithReceivedGameData (component, gameData) {
-  let currentCardSelectionArrayPath = getCurrentCardArray(component)
+  let currentCardSelectionArrayPath = findPath(component[GAME], getCurrentCardArray(component))
   component[GAMES_IS_IN_GAME] = true
   component[GAME] = gameData
   if (currentCardSelectionArrayPath) {
@@ -402,8 +421,9 @@ function newGame (component, params, url) {
 
 /**
  * Shuffles the given array of cards.
- * @param {Vue Object} component the Vue coponent to add games_mutations to.
+ * @param {Vue Object} component the Vue coponent.
  * @param {array<Card>} array the array of cards to shuffle.
+ * @returns {array<number>} the numbers used in the algorithm to shuffle the cards.
  */
 function shuffleCards (component, array) {
   var currentIndex = array.length
@@ -420,97 +440,12 @@ function shuffleCards (component, array) {
     array[randomIndex] = temporaryValue
   }
   component[GAMES_MUTATIONS].push({
-    type: 'shuffleCards',
-    dataType: 'array',
-    cardPath: findPath(component[GAME], array),
-    shuffleIndices: randomNumbersUsed
+    [MUTATION_TYPE]: MUTATION_SHUFFLE,
+    [MUTATION_DATA_TYPE]: MUTATION_PROPERTY,
+    [MUTATION_PROPERTY_PATH]: findPath(component[GAME], array),
+    [MUTATION_SHUFFLE_INDICES]: randomNumbersUsed
   })
   return randomNumbersUsed
-}
-
-/**
- * Modifies the given property.
- * @param {Object} component the Vue component to perform the modification on.
- * @param {Object} obj the object to modify the property on (the property is a key on this object). Must be a subelement of
- *     component[GAME]. May be nested.
- * @param {string} propertyName the name of the property to modify
- * @param {string} dataType the type data. Can be "property", "array", "card"
- * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "set", or
- *     "invertProperty" (for booleans), or "appendElement".
- * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
- */
-function mutateProperty (component, obj, propertyName, dataType, mutationType, val) {
-  let propertyPath = findPath(component[GAME], obj)
-  component[GAMES_MUTATIONS].push({
-    type: mutationType,
-    dataType: dataType,
-    property: propertyName,
-    propertyPath: propertyPath,
-    value: val
-  })
-  if (mutationType === 'incrementProperty') {
-    obj[propertyName]++
-  } else if (mutationType === 'decrementProperty') {
-    obj[propertyName]--
-  } else if (mutationType === 'invertProperty') {
-    obj[propertyName] = !obj[propertyName]
-  } else if (mutationType === 'setProperty') {
-    obj[propertyName] = val
-  } else if (mutationType === 'appendElement') {
-    obj[propertyName].push(val)
-  } else {
-    throw new Error('Unexpected mutation type.')
-  }
-}
-
-/**
- * Modifies the given property.
- * @param {Object} component the Vue component to perform the modification on.
- * @param {string} propertyName the name of the property to modify
- * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "setProperty", or
- *     "invertProperty" (for booleans), or "appendElement".
- * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
- */
-function mutateCurrentCard (component, propertyName, mutationType, val) {
-  let card = getCurrentCard(component)
-  mutateCard(component, card, propertyName, mutationType, val)
-}
-
-/**
-* Modifies the given property.
-* @param {Object} component the Vue component to perform the modification on.
-* @param {string} propertyName the name of the property to modify
-* @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "setProperty", or
-*     "invertProperty" (for booleans), or "appendElement".
-* @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
-*/
-function mutateCard (component, card, propertyName, mutationType, val) {
-  if (!card) {
-    return
-  }
-  let cardPath = findPath(component[GAME], card)
-  cardPath.pop()
-  component[GAMES_MUTATIONS].push({
-    type: mutationType,
-    dataType: 'card',
-    cardPath: cardPath,
-    property: propertyName,
-    gameCardId: card[CARD_GAME_CARD_ID],
-    value: val
-  })
-  if (mutationType === 'incrementProperty') {
-    card[propertyName]++
-  } else if (mutationType === 'decrementProperty') {
-    card[propertyName]--
-  } else if (mutationType === 'invertProperty') {
-    card[propertyName] = !card[propertyName]
-  } else if (mutationType === 'setProperty') {
-    card[propertyName] = val
-  } else if (mutationType === 'appendElement') {
-    card[propertyName].push(val)
-  } else {
-    throw new Error('Unexpected mutation type.')
-  }
 }
 
 /**
@@ -536,22 +471,26 @@ function moveCard (component, originalArray, cardIndex, destinationArray, opts) 
     afterMoveCallback = opts['afterMoveCallback']
   }
   let card = _getCard(originalArray, cardIndex)
+  if (beforeMoveCallback) {
+    let success = beforeMoveCallback(card, originalArray, destinationArray)
+    if (!success) {
+      return null
+    }
+  }
+  card = _getCard(originalArray, cardIndex)
   if (card === null) {
     return null
-  }
-  if (beforeMoveCallback) {
-    beforeMoveCallback(card, originalArray, destinationArray)
   }
   let cardPath = findPath(component[GAME], originalArray)
   let destinationCardPath = findPath(component[GAME], destinationArray)
   destinationArray.push(card)
   originalArray.splice(originalArray.findIndex(c => c === card), 1)
   component[GAMES_MUTATIONS].push({
-    type: 'moveCard',
-    dataType: 'card',
-    cardPath: cardPath,
-    destinationCardPath: destinationCardPath,
-    gameCardId: card[CARD_GAME_CARD_ID]
+    [MUTATION_TYPE]: MUTATION_MOVE_CARD,
+    [MUTATION_DATA_TYPE]: MUTATION_CARD,
+    [MUTATION_CARD_PATH]: cardPath,
+    [MUTATION_DESTINATION_CARD_PATH]: destinationCardPath,
+    [MUTATION_GAME_CARD_ID]: card[CARD_GAME_CARD_ID]
   })
   if (afterMoveCallback) {
     afterMoveCallback(card, originalArray, destinationArray)
@@ -559,9 +498,97 @@ function moveCard (component, originalArray, cardIndex, destinationArray, opts) 
   return card
 }
 
+/**
+ * Performs a mutation with data type property. See card_games.py for more explanation.
+ * @param {Object} component the Vue component to perform the modification on.
+ * @param {Object} obj the object containing the property to modify.
+ * @param {string} type the type of mutation to perform.
+ * @param {Object?} opt the optional parameters used. If populated, allows the following keys:
+ *    value {anything}: The value to set or append.
+ *    propertyName {string}: The name of the property to modify.
+ */
+function mutateProperty (component, obj, type, opt) {
+  let propertyPath = findPath(component[GAME], obj)
+  component[GAMES_MUTATIONS].push({
+    [MUTATION_TYPE]: type,
+    [MUTATION_DATA_TYPE]: MUTATION_PROPERTY,
+    [MUTATION_PROPERTY_PATH]: propertyPath,
+    [MUTATION_PROPERTY]: opt ? opt[MUTATION_PROPERTY] : null,
+    [MUTATION_VALUE]: opt ? opt[MUTATION_VALUE] : null
+  })
+  if (type === MUTATION_INCREMENT) {
+    obj[opt[MUTATION_PROPERTY]]++
+  } else if (type === MUTATION_DECREMENT) {
+    obj[opt[MUTATION_PROPERTY]]--
+  } else if (type === MUTATION_INVERT) {
+    obj[opt[MUTATION_PROPERTY]] = !obj[opt[MUTATION_PROPERTY]]
+  } else if (type === MUTATION_SET) {
+    obj[opt[MUTATION_PROPERTY]] = opt[MUTATION_VALUE]
+  } else if (type === MUTATION_APPEND) {
+    obj.push(opt[MUTATION_VALUE])
+  } else {
+    throw new Error('Unexpected mutation type.')
+  }
+}
+
+/**
+ * Performs a mutation with data type card. See card_games.py for more explanation.
+ * @param {Object} component the Vue component to perform the modification on.
+ * @param {Card} card the card containing the property to modify.
+ * @param {string} type the type of mutation to perform.
+ * @param {array} propertyPath the property path array to the object containing the property being modified.
+ * @param {Object?} opt the optional parameters used. If populated, allows the following keys:
+ *    value {anything}: The value to set or append.
+ *    propertyName {string}: The name of the property to modify.
+*/
+function mutateCard (component, card, type, propertyPath, opt) {
+  if (!card) {
+    return
+  }
+  let cardPath = findPath(component[GAME], card)
+  cardPath.pop()
+  let propertyObj = fetchFromPath(card, propertyPath)
+  component[GAMES_MUTATIONS].push({
+    [MUTATION_TYPE]: type,
+    [MUTATION_DATA_TYPE]: MUTATION_CARD,
+    [MUTATION_CARD_PATH]: cardPath,
+    [MUTATION_PROPERTY_PATH]: propertyPath,
+    [MUTATION_GAME_CARD_ID]: card[CARD_GAME_CARD_ID],
+    [MUTATION_PROPERTY]: opt ? opt[MUTATION_PROPERTY] : null,
+    [MUTATION_VALUE]: opt ? opt[MUTATION_VALUE] : null
+  })
+  if (type === MUTATION_INCREMENT) {
+    propertyObj[opt[MUTATION_PROPERTY]]++
+  } else if (type === MUTATION_DECREMENT) {
+    propertyObj[opt[MUTATION_PROPERTY]]--
+  } else if (type === MUTATION_INVERT) {
+    propertyObj[opt[MUTATION_PROPERTY]] = !card[opt[MUTATION_PROPERTY]]
+  } else if (type === MUTATION_SET) {
+    propertyObj[opt[MUTATION_PROPERTY]] = opt[MUTATION_VALUE]
+  } else if (type === MUTATION_APPEND) {
+    propertyObj[opt[MUTATION_PROPERTY]].push(opt[MUTATION_VALUE])
+  } else {
+    throw new Error('Unexpected mutation type.')
+  }
+}
+
+/**
+ * Performs a mutation on the current card. See card_games.py for more explanation.
+ * @param {Object} component the Vue component to perform the modification on.
+ * @param {string} type the type of mutation to perform.
+ * @param {array} propertyPath the property path array to the object containing the property being modified.
+ * @param {Object?} opt the optional parameters used. If populated, allows the following keys:
+ *    value {anything}: The value to set or append.
+ *    propertyName {string}: The name of the property to modify.
+*/
+function mutateCurrentCard (component, type, propertyPath, opt) {
+  let card = getCurrentCard(component)
+  mutateCard(component, card, type, propertyPath, opt)
+}
+
 export {
   shuffleCards, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
-  clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
+  clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard, getCurrentCardArray,
   getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
-  updateDisplayWithLatestGame, newGame, saveGame, mutateCurrentCard, mutateCard
+  updateDisplayWithLatestGame, newGame, saveGame, mutateCurrentCard, mutateCard, MUTATION_VALUE, MUTATION_PROPERTY
 }
