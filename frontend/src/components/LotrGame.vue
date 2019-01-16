@@ -24,6 +24,7 @@
       <button v-if="game['hasSetup']" @click="shownPage = 'setup'">Setup</button>
       <button v-if="game['revealArea'].length > 0" @click="shownPage = 'revealArea'"><u>R</u>evealed</button>
       <button v-if="game['hasSecondQuest']" @click="shownPage = 'secondQuest'">Second Quest</button>
+      <button @click="shownPage = 'encounterDeck'">Encounter Deck</button>
       <button @click="shownPage = 'encounterDiscard'">Encounter Discard</button>
       <button @click="shownPage = 'victory'">Victory</button>
       <button @click="shownPage = 'secondDeck'">Your Second Deck</button>
@@ -45,6 +46,7 @@
               <LotrCardList
                   :cardArray="game['stagingArea']"
                   :getMoveArray="getMoveArrayFromStagingArea"
+                  :callback="discardAttachmentsForCardListCallback"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -57,6 +59,7 @@
               <LotrCardList
                   :cardArray="game['activeLocation']"
                   :getMoveArray="getMoveArrayFromActiveLocation"
+                  :callback="discardAttachmentsForCardListCallback"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -96,6 +99,7 @@
                 <LotrCardList
                     :cardArray="player['engagedEnemies']"
                     :getMoveArray="getMoveArrayFromEngagedArea"
+                    :callback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -108,6 +112,7 @@
                 <LotrCardList
                     :cardArray="player['characters']"
                     :defaultMoveArray="player['discard']"
+                    :callback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -234,6 +239,13 @@
         <LotrCardList
             v-else-if="shownPage === 'encounterDiscard'"
             :cardArray="game['encounterDiscard']"
+            :cardHeight="cardHeight"
+            :cardWidth="cardWidth"
+            :cardMargin="cardMargin"
+            :getImageForCard="getImageForCard" />
+        <LotrCardList
+            v-else-if="shownPage === 'encounterDeck'"
+            :cardArray="game['encounterDeck']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
@@ -617,6 +629,14 @@ export default {
       }
       return this.game['encounterDiscard']
     },
+    discardAttachmentsForCardListCallback (card, originalArray, destinationArray) {
+      if (destinationArray === this.player['discard'] || destinationArray === this.partner['discard'] || destinationArray === this.game['encounterDiscard']) {
+        for (let attachmentIndex = card['attachments'].length - 1; attachmentIndex >= 0; attachmentIndex--) {
+          let attachment = card['attachments'][attachmentIndex]
+          moveCard(this, card['attachments'], attachmentIndex, this.getDefaultDiscardForCard(attachment))
+        }
+      }
+    },
     getMoveArrayFromActiveLocation (card, isAttachment) {
       if (isAttachment) {
         return this.game['encounterDiscard']
@@ -655,7 +675,8 @@ export default {
         case '!': this.decrementThreat(); return
         case 'e': this.endRound(); return
       }
-      if (!this.games_currentCardSelection.exists) {
+      let card = getCurrentCard(this)
+      if (!card) {
         return
       }
       let destinationArray = null
@@ -672,7 +693,7 @@ export default {
         case 'o': destinationArray = this.game.encounterDiscard; break
         case 'y': destinationArray = this.game.encounterDeck; break
         case 'q': destinationArray = this.game.questDeck; break
-        case 'i': destinationArray = this.player.discard; break
+        case 'i': destinationArray = this.getDefaultDiscardForCard(card); break
         case 'h': destinationArray = this.player.hand; break
         case 'k': destinationArray = this.player.deck; break
         case 'g': destinationArray = this.game.stagingArea; break
@@ -696,6 +717,15 @@ export default {
         reshuffleArray = this.player.discard
       }
       moveCurrentCard(this, destinationArray, reshuffleArray)
+    },
+    getDefaultDiscardForCard (card) {
+      if (card['owner'] && card['owner'] === 'player1') {
+        return this.game['players'][0]['discard']
+      }
+      if (card['owner'] && card['owner'] === 'player2') {
+        return this.game['players'][1]['discard']
+      }
+      return this.game['encounterDiscard']
     },
     incrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'incrementProperty') },
     decrementThreat () { mutateProperty(this, this.player, 'threat', 'property', 'decrementProperty') },
@@ -791,9 +821,12 @@ export default {
           return
         }
         moveCard(this, this.player['selectedAttachment'], 0, card['attachments'])
-        return
+      } else {
+        if (card['attachments'].length > 0) {
+          return
+        }
+        moveCurrentCard(this, this.player['selectedAttachment'])
       }
-      moveCurrentCard(this, this.player['selectedAttachment'])
     }
   }
 }

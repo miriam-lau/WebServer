@@ -66,7 +66,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray, undefined, this.callback)
+      moveCurrentCard(this.$parent, this.defaultMoveArray, undefined, { afterMoveCallback: this.callback })
     },
     handleMouseOver (cardArray, index) {
       if (this.shouldNotPopulateCurrentCard) {

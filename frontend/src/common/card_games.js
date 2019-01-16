@@ -36,15 +36,15 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
  * @param {array[Card]} destinationArray the destination array of cards to move the card to.
  * @param {array[Card]?} reshuffleArray if present, then if the original array is emptied, this pile of cards is
  *     reshuffled into the original array before the card is moved.
- * @param {Function?} callback if present, this is called when the card is moved.
+ * @param {map<string, anything>?} opts. Optional parameters. See moveCard.
  * @return {Card} the moved card if successful or null if not.
  */
-function moveCurrentCard (component, destinationArray, reshuffleArray, callback) {
+function moveCurrentCard (component, destinationArray, reshuffleArray, opts) {
   let selection = component['games_currentCardSelection']
   if (!selection['exists']) {
     return null
   }
-  let card = moveCard(component, selection['array'], selection['index'], destinationArray, reshuffleArray, callback)
+  let card = moveCard(component, selection['array'], selection['index'], destinationArray, reshuffleArray, opts)
   if (!card) {
     return null
   }
@@ -65,10 +65,12 @@ function moveCurrentCard (component, destinationArray, reshuffleArray, callback)
  * @param {array[Card]} destinationArray the pile to move the card to.
  * @param {array[Card]?} reshuffleArray if present, this deck will get emptied and reshuffled into the
  *     originalArray if the original pile is empty when the move is requested.
- * @param {Function?} callback if present, this is called when the card is moved.
+ * @param {map<string, anything>?} opts. Optional parameters with keys:
+ *     afterMoveCallback {Function(card, array<Card>, array<Card>)} this is called after the card is moved. Passed the
+ *     moved card, the original array, and destination array.
  * @return {Card} the card that was moved or null if nothing if unsuccessful.
  */
-function moveCard (component, originalArray, cardIndex, destinationArray, reshuffleArray, callback) {
+function moveCard (component, originalArray, cardIndex, destinationArray, reshuffleArray, opts) {
   if (cardIndex === undefined) {
     if (originalArray.length === 0 && reshuffleArray && reshuffleArray.length !== 0) {
       moveAllCards(component, reshuffleArray, originalArray)
@@ -77,9 +79,6 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
   }
   let card = _getCardByArrayAndIndex(originalArray, cardIndex)
   if (card === null) {
-    return null
-  }
-  if (card['attachments'] && card['attachments'].length > 0) {
     return null
   }
   let cardPath = findPath(component['game'], originalArray)
@@ -93,8 +92,8 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
     destinationCardPath: destinationCardPath,
     gameCardId: card['gameCardId']
   })
-  if (callback) {
-    callback(card, originalArray, destinationArray)
+  if (opts && opts['afterMoveCallback']) {
+    opts['afterMoveCallback'](card, originalArray, destinationArray)
   }
   return card
 }

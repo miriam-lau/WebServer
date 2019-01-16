@@ -652,7 +652,7 @@ export default {
       } else if (this.games_currentCardSelection['array'] === this.game['hexesDeck']) {
         reshufflePile = this.game['hexesDiscard']
       }
-      moveCurrentCard(this, destinationArray, reshufflePile, this.addGainToLog)
+      moveCurrentCard(this, destinationArray, reshufflePile, { afterMoveCallback: this.addGainToLog })
     },
     incrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'incrementProperty') },
     decrementNumActions () { mutateProperty(this, this.player, 'numActions', 'property', 'decrementProperty') },

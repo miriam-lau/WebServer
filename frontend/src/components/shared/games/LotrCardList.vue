@@ -66,6 +66,10 @@ export default {
      */
     getMoveArray: Function,
     /**
+     * Nullable. If it is passed in, the callback function is called upon click.
+     */
+    callback: Function,
+    /**
      * Nullable. Whether or not to populate the currently selected card on mouseover.
      */
     shouldNotPopulateCurrentCard: Boolean
@@ -75,14 +79,14 @@ export default {
       if (this.getMoveArray && this.defaultMoveArray) {
         throw new Error('Multiple move array conditions passed in.')
       }
+      let array
       if (this.defaultMoveArray) {
-        moveCurrentCard(this.$parent, this.defaultMoveArray)
+        array = this.defaultMoveArray
+      } else if (this.getMoveArray) {
+        array = this.getMoveArray(card, isAttachment)
       }
-      if (this.getMoveArray) {
-        let array = this.getMoveArray(card, isAttachment)
-        if (array !== null) {
-          moveCurrentCard(this.$parent, array)
-        }
+      if (array) {
+        moveCurrentCard(this.$parent, array, undefined, { afterMoveCallback: this.callback })
       }
     },
     getStyle (card, index) {

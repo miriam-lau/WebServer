@@ -387,6 +387,7 @@ class Lotr:
         "secondaryDiscard",
         "secondaryReveal"]:
         for card in card_map["players"][0][pile_type]:
+          card["owner"] = "player1"
           card["gameCardId"] = game_card_id
           game_card_id += 1
     for pile_type in card_map["players"][1]:
@@ -400,6 +401,7 @@ class Lotr:
         "secondaryDiscard",
         "secondaryReveal"]:
         for card in card_map["players"][1][pile_type]:
+          card["owner"] = "player2"
           card["gameCardId"] = game_card_id
           game_card_id += 1
 

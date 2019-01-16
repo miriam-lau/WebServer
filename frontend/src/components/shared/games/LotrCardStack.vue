@@ -1,9 +1,9 @@
 <template>
   <div class="card-games-card-stack-outer-container" :style="outerContainerStyle">
     <div class="card-games-card-stack-count">{{cardArray.length}}</div>
-    <div v-if="cardResources() > 0" :style="'top:' + resourceVerticalPosition(card) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{cardResources()}}R</div>
-    <div v-if="cardDamage() > 0" :style="'top:' + damageVerticalPosition(card) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{cardDamage()}}D</div>
-    <div v-if="cardProgress() > 0" :style="'top:' + progressVerticalPosition(card) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{cardProgress()}}P</div>
+    <div v-if="card() && card().resources" :style="'top:' + resourceVerticalPosition(card()) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{card().resources}}R</div>
+    <div v-if="card() && card().damage" :style="'top:' + damageVerticalPosition(card()) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{card().damage}}D</div>
+    <div v-if="card() && card().progress" :style="'top:' + progressVerticalPosition(card()) + '; left:' + getTokenLeftPosition()" class="lotr-card-list-token">{{card().progress}}P</div>
     <img
         v-on:click="handleClick"
         v-on:mouseover="setCurrentCard($parent, cardArray)"
@@ -89,25 +89,7 @@ export default {
       return this.cardArray[this.cardArray.length - 1]
     },
     cardResources () {
-      let card = this.card()
-      if (!card) {
-        return 0
-      }
-      return card.resources
-    },
-    cardDamage () {
-      let card = this.card()
-      if (!card) {
-        return 0
-      }
-      return card.damage
-    },
-    cardProgress () {
-      let card = this.card()
-      if (!card) {
-        return 0
-      }
-      return card.progress
+      return this.card().resources
     },
     resourceVerticalPosition (card) {
       return 'calc(' + this.cardHeight + '/2 - 1.2vw)'
@@ -125,7 +107,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray, this.callback)
+      moveCurrentCard(this.$parent, this.defaultMoveArray, this.reshuffleArray, { afterMoveCallback: this.callback })
     }
   }
 }
