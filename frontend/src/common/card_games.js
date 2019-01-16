@@ -3,8 +3,13 @@ import { socket } from '../common/socketio'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 
 /**
- * This file defines utility functions for card games. It is used in conjunction with card_games.py. It relies on the
- * following data being defined in the component:
+ * This file defines utility functions for card games. It is used in conjunction with card_games.py. Only methods here
+ * should be used to modify any data on the card games. Failure to do so will place the client and server out of sync.
+ * Usage:
+ *    handleComponentMounted() must be called within mounted() on the Vue component.
+ *    handleComponentCreated() must be called within created() on the Vue component.
+ *    
+ * This file relies on the following data being defined in the component:
  * games_currentCardSelection {Object{
  *     {boolean} exists whether there is any card selected or not.
  *     {array<Card>} array an array of card objects (representing a group of associated cards like a deck.)
@@ -15,83 +20,209 @@ import { callAxiosAndSetButterBar } from '../common/butterbar_component'
  *       used.
  * games_isInGame {boolean} represents whether the current user has a game for display or not.
  * games_numExpectedResponses {number} the number of expected responses from the server. This should usually be
- *     0 to represent that the client is in sync with the server.
+ *      0 to represent that the client is in sync with the server. Each time the current user performs an update, 
+ *      the client will increment this by one and send a call to the backend. When the server updates itself and
+ *      sends a response back to the client, this count will decrement by one. Only when the count is zero does the 
+ *      game refresh itself to sync with the server's version. This is to prevent temporary blips as the server is
+ *      catching up to the client.
  * games_playerToInvite {string} a string representing the player to send a game invitation to. Rendered in an input box.
  * games_callbackForUpdateDisplayWithReceivedGameData {Function({Object} gameData)?} if defined, this is called after the game has updated
  *      its display with the received game data. Called with a param representing the gameData received.
- * games_mutations
+ * games_mutations {Object} Keys must correspond to backend/src/card_games/card_games.py. See comment there.
+ * game {Object} a nested variable that holds the game data. Can have any structure.
  * 
- * 2. Card {Object {
+ * Card objects:
+ * Card {Object {
+ *      gameCardId {number} a unique identifier for the specific card object. Eeven card objects with the same name will have
+ *            different gameCardIds.
  *      image {string} the url to the image used to render a card.
  *      flippedImage {string?} Not needed in every game. if flipped is set, this must be also, otherwise not.
  *          It is the url of the image to render when the card is in a flipped state.
  *      flipped {boolean?} Not needed in every game. if set, whether a card is in the flipped state or not.
- *      attachments {array[Card]?} Not needed in every game. If set, it is the list of cards attached to this one
- *          such as weapons in LOTR.
  *    }}
- * 3. A 'game' variable on the Vue component which holds all variables that need to be synced with the server.
- *     Any modification to any game variable must call a function from here and the function here must
- *     perform an action which is entirely consistent with what will occur on the server via setting the
- *     'games_mutations' field on the Vue component.
- * 4. A games_mutations field on the Vue component as described previously.
- * To use this, handleGameMount() must be called within mounted() on the Vue component.
  */
 
+const DATA_PLAYERS = 'players'
+const DATA_UPDATE_TYPE = 'updateType'
+const DATA_PLAYER_TRIGGERING_UPDATE = 'playerTriggeringUpdate'
+const DATA_VALUE_CREATE = 'create'
+const DATA_GAMEDATA = 'gameData'
+
+const COMPONENT_USERNAME = 'username'
+
+const GAMES_NUM_EXPECTED_RESPONSES = 'games_numExpectedResponses'
+const GAMES_PLAYER_TO_INVITE = 'games_playerToInvite'
+const GAMES_IS_IN_GAME = 'games_isInGame'
+const GAME = 'game'
+const GAMES_CALLBACK_FOR_UPDATE_DISPLAY_WITH_RECEIVED_GAME_DATA = 'games_callbackForUpdateDisplayWithReceivedGameData'
+const GAMES_CURRENT_CARD_SELECTION = 'games_currentCardSelection'
+const GAMES_CURRENT_CARD_SELECTION_EXISTS = 'exists'
+const GAMES_CURRENT_CARD_SELECTION_ARRAY = 'array'
+const GAMES_CURRENT_CARD_SELECTION_INDEX = 'index'
+
 /**
- * Moves the card pointed to by games_currentCardSelection to the destination array. Re-sets what's pointed
- * to after the card is moved.
- * @param {Vue Object} component the Vue component which contains the games_currentCardSelection variable.
- * @param {array[Card]} destinationArray the destination array of cards to move the card to.
- * @param {array[Card]?} reshuffleArray if present, then if the original array is emptied, this pile of cards is
- *     reshuffled into the original array before the card is moved.
- * @param {Function?} callback if present, this is called when the card is moved.
- * @return {Card} the moved card if successful or null if not.
+ * This must be called in mounted() in the Vue component. It is to be used with card_games.py. It expects 
+ * 'players', 'updateType', 'playerTriggeringUpdate' to be defined on the response it receives from the server in its
+ * socketio connection. See backend/src/app.py for more information.
+ * @param {Object} component the Vue component to act on.
+ * @param {string} refreshName the name of the socketio channel to receive updates on.
  */
-function moveCurrentCard (component, destinationArray, reshuffleArray, callback) {
-  let selection = component['games_currentCardSelection']
-  if (!selection['exists']) {
+function handleComponentMounted (component, refreshName) {
+  socket.on(refreshName, (data) => {
+    if (!data[DATA_PLAYERS].includes(component[COMPONENT_USERNAME])) {
+      return
+    }
+    if (data[DATA_UPDATE_TYPE] === DATA_VALUE_CREATE) {
+      component[GAMES_NUM_EXPECTED_RESPONSES] = 0
+    } else if (data[DATA_PLAYER_TRIGGERING_UPDATE] === component[COMPONENT_USERNAME]) {
+      component[GAMES_NUM_EXPECTED_RESPONSES] -= 1
+    }
+    if (component[GAMES_NUM_EXPECTED_RESPONSES] < 0) {
+      throw new Error('Unexpected response from server.')
+    }
+    if (component[GAMES_NUM_EXPECTED_RESPONSES] === 0 || data[DATA_PLAYER_TRIGGERING_UPDATE] !== component[COMPONENT_USERNAME]) {
+      updateDisplayWithReceivedGameData(component, data[DATA_GAMEDATA])
+    }
+  })
+}
+
+/**
+ * This must be called in created() in the Vue component. Handles setup.
+ * @param {Object} component the Vue component to act on.
+ */
+function handleComponentCreated (component) {
+  component[GAMES_PLAYER_TO_INVITE] = defaultPlayerToInvite(component)
+}
+
+/**
+ * Updates the game display with the provided game data object. Calls GAMES_CALLBACK_FOR_UPDATE_DISPLAY_WITH_RECEIVED_GAME_DATA
+ * upon success.
+ * @param {Object} component the Vue component to refresh.
+ * @param {Object} gameData the game data used to update the Vue component.
+ */
+function updateDisplayWithReceivedGameData (component, gameData) {
+  let currentCardSelectionArrayPath = getCurrentCardArray(component)
+  component[GAMES_IS_IN_GAME] = true
+  component[GAME] = gameData
+  if (currentCardSelectionArrayPath) {
+    setCurrentCard(component, fetchFromPath(component[GAME], currentCardSelectionArrayPath), getCurrentCardIndex(component))
+  }
+  if (component[GAMES_CALLBACK_FOR_UPDATE_DISPLAY_WITH_RECEIVED_GAME_DATA] !== undefined) {
+    component[GAMES_CALLBACK_FOR_UPDATE_DISPLAY_WITH_RECEIVED_GAME_DATA](gameData)
+  }
+}
+
+/**
+ * The default player name to invite to a game.
+ * @param {Object} component the Vue component to act on.
+ * @return {string} the default player to invite or the empty string is there is none.
+ */
+function defaultPlayerToInvite (component) {
+  let username = component[COMPONENT_USERNAME]
+  if (username === 'James') {
+    return 'Miriam'
+  } else if (username === 'Miriam') {
+    return 'James'
+  } else if (username === 'Angeline') {
+    return 'Sujinda'
+  } else if (username === 'Sujinda') {
+    return 'Angeline'
+  }
+  return ''
+}
+
+/**
+ * Given a Vue component get the array holding the selected card.
+ * @param {Vue Object} component
+ * @return {array<Cards>|null} the array holding the selected card or null if none exists.
+ */
+function getCurrentCardArray (component) {
+  let selection = component[GAMES_CURRENT_CARD_SELECTION]
+  if (!selection[GAMES_CURRENT_CARD_SELECTION_EXISTS] || !selection[GAMES_CURRENT_CARD_SELECTION_ARRAY]) {
     return null
   }
-  let card = moveCard(component, selection['array'], selection['index'], destinationArray, reshuffleArray, callback)
+  return selection[GAMES_CURRENT_CARD_SELECTION_ARRAY]
+}
+
+/**
+ * Given a Vue component get the index of the selected card within its containing array.
+ * @param {Vue Object} component
+ * @returns {number|null} the index of the selected card or null if there is none.
+ */
+function getCurrentCardIndex (component) {
+  let selection = component[GAMES_CURRENT_CARD_SELECTION]
+  if (!selection[GAMES_CURRENT_CARD_SELECTION_EXISTS] || !selection[GAMES_CURRENT_CARD_SELECTION_ARRAY] === null || 
+      selection[GAMES_CURRENT_CARD_SELECTION_INDEX] === null) {
+    return null
+  }
+  return selection[GAMES_CURRENT_CARD_SELECTION_INDEX]
+}
+
+/**
+ * Moves the selected card to the destination array. Re-sets what's pointed to after the card is moved.
+ * @param {Vue Object} component the Vue component.
+ * @param {array[Card]|null} destinationArray the destination array of cards to move the card to. If null, then
+ *      the card is unmoved.
+ * @param {Object?} opt the optional parameters passed to moveCard. See that function for further details.
+ * @returns {Card|null} the moved card if successful or null if not.
+ */
+function moveCurrentCard (component, destinationArray, opts) {
+  if (!getCurrentCardExists(component)) {
+    return null
+  }
+  let cardArray = getCurrentCardArray(component)
+  let cardIndex = getCurrentCardIndex(component)
+  let card = moveCard(component, cardArray, cardIndex, destinationArray, opts)
   if (!card) {
     return null
   }
-  if (selection['index'] !== undefined) {
-    setCurrentCard(component, selection['array'], selection['index'])
+  if (cardIndex !== null) {
+    setCurrentCard(component, cardArray, cardIndex)
   }
   return card
 }
 
 /**
- * Moves the card specified by the originalArray and cardIndex to the destination pile. Also adds the
- * games_mutations it performs to the Vue component.
- * TODO: There is a hack here which prevents a card from being moved if it has attached cards. Do
- *     something better to allow the card to still move.
- * @param {Vue Object} component the Vue component which contains the games_currentCardSelection variable.
- * @param {array} originalArray the original pile to move the card from.
- * @param {number} cardIndex the index of the card in the original pile.
- * @param {array[Card]} destinationArray the pile to move the card to.
- * @param {array[Card]?} reshuffleArray if present, this deck will get emptied and reshuffled into the
- *     originalArray if the original pile is empty when the move is requested.
- * @param {Function?} callback if present, this is called when the card is moved.
- * @return {Card} the card that was moved or null if nothing if unsuccessful.
+ * Given a Vue component get whether there is a selected card or not.
+ * @param {Vue Object} component
+ * @returns {boolean} whether there is a currently selected card or not.
  */
-function moveCard (component, originalArray, cardIndex, destinationArray, reshuffleArray, callback) {
-  if (cardIndex === undefined) {
-    if (originalArray.length === 0 && reshuffleArray && reshuffleArray.length !== 0) {
-      moveAllCards(component, reshuffleArray, originalArray)
-      shuffleCards(component, originalArray)
-    }
+function getCurrentCardExists (component) {
+  let selection = component[GAMES_CURRENT_CARD_SELECTION]
+  return selection[GAMES_CURRENT_CARD_SELECTION_EXISTS]
+}
+
+/**
+ * Moves the card specified by the originalArray and cardIndex to the destination pile.
+ * @param {Vue Object} component the Vue component which contains the GAMES_CURRENT_CARD_SELECTION variable.
+ * @param {array<Card>} originalArray the original pile to move the card from.
+ * @param {number|null} cardIndex the index of the card in the original pile. Can be null in which case it moves the top
+ *      card.
+ * @param {array[Card]} destinationArray the pile to move the card to.
+ * @param {Object?} opts the optional parameters used to perform various tasks. If it exists, it can take any of the following
+ *      keys:
+ *      beforeMoveCallback {Function(card {Card}, originalArray {array<Card>}, destinationArray {array<Card>})} -> boolean the 
+ *          function to call before a card is moved. If it does not return true, the move card is canceled.
+ *      afterMoveCallback {Function(card {Card}, originalArray {array<Card>}, destinationArray {array<Card>})} the function
+ *          to call after a card is moved.
+ * @returns {Card|null} the card that was moved or null if nothing if unsuccessful.
+ */
+function moveCard (component, originalArray, cardIndex, destinationArray, opts) {
+  let beforeMoveCallback
+  let afterMoveCallback
+  if (opts) {
+    beforeMoveCallback = opts['beforeMoveCallback']
+    afterMoveCallback = opts['afterMoveCallback']
   }
-  let card = _getCardByArrayAndIndex(originalArray, cardIndex)
+  let card = _getCard(originalArray, cardIndex)
   if (card === null) {
     return null
   }
-  if (card['attachments'] && card['attachments'].length > 0) {
-    return null
+  if (beforeMoveCallback) {
+    beforeMoveCallback(card, originalArray, destinationArray)
   }
-  let cardPath = findPath(component['game'], originalArray)
-  let destinationCardPath = findPath(component['game'], destinationArray)
+  let cardPath = findPath(component[GAME], originalArray)
+  let destinationCardPath = findPath(component[GAME], destinationArray)
   destinationArray.push(card)
   originalArray.splice(originalArray.findIndex(c => c === card), 1)
   component['games_mutations'].push({
@@ -101,8 +232,8 @@ function moveCard (component, originalArray, cardIndex, destinationArray, reshuf
     destinationCardPath: destinationCardPath,
     gameCardId: card['gameCardId']
   })
-  if (callback) {
-    callback(card, originalArray, destinationArray)
+  if (afterMoveCallback) {
+    afterMoveCallback(card, originalArray, destinationArray)
   }
   return card
 }
@@ -129,20 +260,24 @@ function shuffleCards (component, array) {
   component['games_mutations'].push({
     type: 'shuffleCards',
     dataType: 'array',
-    cardPath: findPath(component['game'], array),
+    cardPath: findPath(component[GAME], array),
     shuffleIndices: randomNumbersUsed
   })
   return randomNumbersUsed
 }
 
 /**
- * Given an array of cards and optionally an index for the card, return the represented card.
- * (Either the card at the index or the last card of the array.)
- * @param {array[Card]} array
- * @param {number?} index
+ * Gets the card represented by {@code array} and {@code index}. If no index is provided, it returns the last
+ * card of the array.
+ * @param {array[Card]|null} array the array containing the card. null would be an error and return null.
+ * @param {number|null} index the index of the card or null.
+ * @returns {Card|null} retuns the card or null if none exists.
  */
-function _getCardByArrayAndIndex (array, index) {
-  if (index === undefined) {
+function _getCard (array, index) {
+  if (array === null) {
+    return null
+  }
+  if (index === null) {
     index = array.length - 1
   }
   if (index < 0 || index >= array.length) {
@@ -163,7 +298,7 @@ function moveAllCards (component, originalArray, destinationArray) {
 }
 
 /**
- * Sets the games_currentCardSelection variable in the Vue component. If the index is invalid, it
+ * Sets the GAMES_CURRENT_CARD_SELECTION variable in the Vue component. If the index is invalid, it
  * clears the current selection.
  * @param {Object} component the Vue component to set the card on.
  * @param {array[Card]} cardArray the card array to set the current selected card from.
@@ -174,7 +309,7 @@ function setCurrentCard (component, cardArray, index) {
     clearCurrentCard(component)
     return
   }
-  component.games_currentCardSelection = {
+  component[GAMES_CURRENT_CARD_SELECTION] = {
     array: cardArray,
     index: index,
     exists: true
@@ -186,25 +321,8 @@ function setCurrentCard (component, cardArray, index) {
  * @param {Object} component
  */
 function clearCurrentCard (component) {
-  component.games_currentCardSelection = { 'exists': false }
-}
-
-/**
- * The default player name to invite to a game.
- * @param {string} username the name of the currently logged in player.
- * @return {string} the default player to invite.
- */
-function defaultPlayerToInvite (username) {
-  if (username === 'James') {
-    return 'Miriam'
-  } else if (username === 'Miriam') {
-    return 'James'
-  } else if (username === 'Angeline') {
-    return 'Sujinda'
-  } else if (username === 'Sujinda') {
-    return 'Angeline'
-  }
-  return ''
+  component[GAMES_CURRENT_CARD_SELECTION] = { }
+  component[GAMES_CURRENT_CARD_SELECTION][GAMES_CURRENT_CARD_SELECTION_EXISTS] = false
 }
 
 /**
@@ -226,14 +344,14 @@ function getImageForCard (card) {
  * @return {string} the url to render the card or the empty string on failure.
  */
 function getImageForCurrentCard (component, cardImageToCardArrayArray) {
-  let selection = component['games_currentCardSelection']
-  if (!selection['exists']) {
+  let selection = component[GAMES_CURRENT_CARD_SELECTION]
+  if (!selection[GAMES_CURRENT_CARD_SELECTION_EXISTS]) {
     return ''
   }
   for (let cardImage in cardImageToCardArrayArray) {
     let cardArrayArrays = cardImageToCardArrayArray[cardImage]
     for (let index in cardArrayArrays) {
-      if (cardArrayArrays[index] === selection['array']) {
+      if (cardArrayArrays[index] === selection[GAMES_CURRENT_CARD_SELECTION_ARRAY]) {
         return cardImage
       }
     }
@@ -251,11 +369,11 @@ function getImageForCurrentCard (component, cardImageToCardArrayArray) {
  * @return {Card?}
  */
 function getCurrentCard (component) {
-  let selection = component['games_currentCardSelection']
-  if (!selection['exists'] || !selection['array']) {
+  let selection = component[GAMES_CURRENT_CARD_SELECTION]
+  if (!selection[GAMES_CURRENT_CARD_SELECTION_EXISTS] || !selection[GAMES_CURRENT_CARD_SELECTION_ARRAY]) {
     return null
   }
-  return _getCardByArrayAndIndex(selection['array'], selection['index'])
+  return _getCard(selection[GAMES_CURRENT_CARD_SELECTION_ARRAY], selection[GAMES_CURRENT_CARD_SELECTION_INDEX])
 }
 
 /**
@@ -278,49 +396,14 @@ function getImageForCardArray (cardArray, cardImageToCardArrayArray) {
       }
     }
   }
-  return getImageForCard(_getCardByArrayAndIndex(cardArray))
-}
-
-/**
- * This must be called in mounted() in the Vue component. It expects the following keys to be defined on data received
- * players {array<string>} the player names in this game.
- * update_type {string} 'create' for game creation or 'mutate' for game updates.
- * player_triggering_update {string} the name of the player performing the action causing this data to be received.
- * @param {Object} component the Vue component to act on.
- * @param {string} refreshName the name of the socketio channel to receive updates on.
- */
-function handleComponentMount (component, refreshName) {
-  socket.on(refreshName, (data) => {
-    if (!data['players'].includes(component['username'])) {
-      return
-    }
-    if (data['updateType'] === 'create') {
-      component['games_numExpectedResponses'] = 0
-    } else if (data['playerTriggeringUpdate'] === component['username']) {
-      component['games_numExpectedResponses'] -= 1
-    }
-    if (component['games_numExpectedResponses'] < 0) {
-      throw new Error('Unexpected response from server.')
-    }
-    if (component['games_numExpectedResponses'] === 0 || data['playerTriggeringUpdate'] !== component['username']) {
-      updateDisplayWithReceivedGameData(component, data['gameData'])
-    }
-  })
-}
-
-/**
- * This must be called in mounted() in the Vue component. Handles setup.
- * @param {Object} component the Vue component to act on.
- */
-function handleComponentCreated (component) {
-  component['games_playerToInvite'] = defaultPlayerToInvite(component['username'])
+  return getImageForCard(_getCard(cardArray, null))
 }
 
 /**
  * Modifies the given property.
  * @param {Object} component the Vue component to perform the modification on.
  * @param {Object} obj the object to modify the property on (the property is a key on this object). Must be a subelement of
- *     component['game']. May be nested.
+ *     component[GAME]. May be nested.
  * @param {string} propertyName the name of the property to modify
  * @param {string} dataType the type data. Can be "property", "array", "card"
  * @param {string} mutationType the type of mutation to perform. Can be "incrementProperty", "decrementProperty", "set", or
@@ -328,7 +411,7 @@ function handleComponentCreated (component) {
  * @param {number|string|anything?} val the value to set the property to. Only used if mutationType is "set"
  */
 function mutateProperty (component, obj, propertyName, dataType, mutationType, val) {
-  let propertyPath = findPath(component['game'], obj)
+  let propertyPath = findPath(component[GAME], obj)
   component['games_mutations'].push({
     type: mutationType,
     dataType: dataType,
@@ -376,7 +459,7 @@ function mutateCard (component, card, propertyName, mutationType, val) {
   if (!card) {
     return
   }
-  let cardPath = findPath(component['game'], card)
+  let cardPath = findPath(component[GAME], card)
   cardPath.pop()
   component['games_mutations'].push({
     type: mutationType,
@@ -410,31 +493,16 @@ function updateDisplayWithLatestGame (component, url) {
   callAxiosAndSetButterBar(
     component,
     url,
-    { username: component['username'] },
+    { username: component[COMPONENT_USERNAME] },
     null,
     'Failed to load game.',
     (response) => {
       if (response['data'] === null) {
-        component['games_isInGame'] = false
+        component[GAMES_IS_IN_GAME] = false
         return
       }
       updateDisplayWithReceivedGameData(component, response['data']['data'])
     })
-}
-
-function updateDisplayWithReceivedGameData (component, gameData) {
-  let currentCardSelectionArrayPath
-  if (component['games_currentCardSelection']['exists']) {
-    currentCardSelectionArrayPath = findPath(component['game'], component['games_currentCardSelection']['array'])
-  }
-  component['games_isInGame'] = true
-  component['game'] = gameData
-  if (currentCardSelectionArrayPath) {
-    setCurrentCard(component, fetchFromPath(component['game'], currentCardSelectionArrayPath), component['games_currentCardSelection']['index'])
-  }
-  if (component['games_callbackForUpdateDisplayWithReceivedGameData'] !== undefined) {
-    component['games_callbackForUpdateDisplayWithReceivedGameData'](gameData)
-  }
 }
 
 /**
@@ -465,13 +533,13 @@ function saveGame (component, url) {
   if (component['games_mutations'].length === 0) {
     return
   }
-  component['games_numExpectedResponses'] += 1
+  component[GAMES_NUM_EXPECTED_RESPONSES] += 1
   callAxiosAndSetButterBar(
     component,
     url,
     {
-      gameId: component['game']['gameId'],
-      username: component['username'],
+      gameId: component[GAME]['gameId'],
+      username: component[COMPONENT_USERNAME],
       mutations: component['games_mutations']
     },
     null,
@@ -482,6 +550,6 @@ function saveGame (component, url) {
 export {
   shuffleCards, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
   clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard,
-  getCurrentCard, getImageForCardArray, handleComponentMount, handleComponentCreated, mutateProperty,
+  getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
   updateDisplayWithLatestGame, newGame, saveGame, mutateCurrentCard, mutateCard
 }
