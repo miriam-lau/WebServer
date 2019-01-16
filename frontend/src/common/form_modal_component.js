@@ -12,6 +12,17 @@ import { callAxios } from './utils'
  *   formModal_show
  *   formModal_shouldShowError
  */
+
+/**
+ * Displays the modal with the given properties set.
+ * @param {Object} component the Vue component to display the modal on.
+ * @param {string} title the title.
+ * @param {array<Object{id, name, displayName, value}>} formLines the lines of the form. See createFormModalEntry.
+ * @param {Object} a map of properties to pass through to the modal.
+ * @param {Function} callback the callback function when the modal is clicked.
+ * @param {string} buttonText the text of the button to save the modal.
+ * @param {string} errorText the text to display upon error.
+ */
 function showModal (component, title, formLines, passThroughProps, callback, buttonText, errorText) {
   component.formModal_title = title
   component.formModal_formLines = formLines
@@ -23,6 +34,15 @@ function showModal (component, title, formLines, passThroughProps, callback, but
   component.formModal_show = true
 }
 
+/**
+ * Creates a single formLine object used to display a formModal.
+ * @param {string} id the html id of the formModalLine.
+ * @param {string} name the name of the form modal parameter when saving to the backend.
+ * @param {string} displayName the name to display in html for the form line.
+ * @param {any|null?} value the initial value of the formModalLine. If null or undefined, set it to the 
+ *     empty string.
+ * @returns {Object{id, name, displayName, value}} the object representing the form line.
+ */
 function createFormModalEntry (id, name, displayName, value) {
   if (value === null || value === undefined) {
     value = ''
@@ -39,7 +59,10 @@ function createFormModalEntry (id, name, displayName, value) {
  * Generates a callback function that can be called by the modal upon button click which will make an axios call
  * to the backend specified. Upon success, the callback passed into this function is called after which the modal
  * will be closed. On error, it will update the modal status with the error text specified
- * @param {Function} successCallback
+ * @param {Object} the Vue component.
+ * @param {string} backendPath the path on the backend to call.
+ * @param {Function({Object} response)} successCallback. The function to call upon success of calling the backend. Called
+ *     with the response from the backend.
  */
 function generateAxiosModalCallback (component, backendPath, successCallback) {
   return function (modalOutput) {

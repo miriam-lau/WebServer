@@ -20,7 +20,7 @@ let ButterBarType = {
  * Sets the butter bar message text on the component. It will automatically clear after ten seconds.
  * @param {Vue Component} component the Vue component calling this function.
  * @param {string} text the butter bar message.
- * @param {ButterBarType} type
+ * @param {ButterBarType} type the type of butter bar message.
  */
 function setButterBarMessage (component, text, type) {
   if (component == null || text == null || type == null) {
@@ -37,7 +37,9 @@ function setButterBarMessage (component, text, type) {
 }
 
 /**
- * @param {ButterBarType} type
+ * Returns the css class used to display the butter bar based on the type of message.
+ * @param {ButterBarType} type the type of butter bar message.
+ * @returns {string} the css class for rendering.
  */
 function _getCssClassForButterBarType (type) {
   switch (type) {
@@ -53,9 +55,10 @@ function _getCssClassForButterBarType (type) {
  * @param {Vue Object} component the Vue component this is called from.
  * @param {string} backendPath the path to call using Axios.
  * @param {Data Object} params params to send to the backend.
- * @param {string?} successMessage the message to set the butter bar to on success. If null, does not set it.
- * @param {string?} errorMessage the message to set the butter bar to on error. If null, does not set it.
- * @param {Function?} successCallback the callback function to call on success if one exists.
+ * @param {string|null} successMessage the message to set the butter bar to on success. If null, does not set it.
+ * @param {string} errorMessage the message to set the butter bar to on error. If null, does not set it.
+ * @param {Function({Object} response)|null?} successCallback the callback function to call on success if one exists. Called
+ *     with the response from the server.
  */
 function callAxiosAndSetButterBar (component, backendPath, params, successMessage, errorMessage, successCallback) {
   callAxios(

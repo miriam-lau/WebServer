@@ -2,13 +2,17 @@ import axios from 'axios'
 
 /*
  * Gets the element specified by the id.
+ * @param {string} id the id of the html element.
  */
 function getElementById (id) {
   return document.getElementById(id)
 }
 
 /*
- * Gets the value of the element with the given id. Uses the default value if none is specified.
+ * Gets the value of the element with the given id. Uses {@code defaultValue} if the element has no value.
+ * @param {string} id the id of the html element.
+ * @param {string?} defaultValue the value to provide if the element has no value.
+ * @returns {string} the value of the html element, the default value, or ''.
  */
 function getValueOfElementWithDefault (id, defaultValue) {
   if (defaultValue === undefined) {
@@ -24,18 +28,25 @@ function getValueOfElementWithDefault (id, defaultValue) {
 /*
  * Gets the full http address to the python server given a relative path. It is always on the same server as
  * the Vue frontend.
+ * @param {string} path the relative path of the address.
+ * @return {string} the full http address.
  */
 function getFullBackendUrlForPath (path) {
   return 'http://' + window.location.hostname + ':5000' + path
 }
 
+/*
+ * Plays the sound stored at the given url.
+ * @param {string} url the url the sound is stored at.
+ */
 function playSound (url) {
   var audio = new Audio(url)
   audio.play()
 }
 
 /*
- * Creates the expand icon based on whether the icon is expanded or not.
+ * Creates the expand or collapse icon based on whether the icon is expanded or not.
+ * @param {boolean} isExpanded whether or not the icon is expanded.
  */
 function generateExpandIcon (isExpanded) {
   if (isExpanded) {
@@ -45,10 +56,21 @@ function generateExpandIcon (isExpanded) {
   }
 }
 
+/**
+ * Whether the two numbers are equal or not. Can handle floats/doubles.
+ * @param {number} x the first number.
+ * @param {number} y the second number.
+ * @returns {boolean} whether or not the numbers are equal.
+ */
 function isEqual (x, y) {
   return Math.abs(x - y) < Number.EPSILON
 }
 
+/**
+ * Given a date string, returns a reformatted version of the string for a standardized display.
+ * @param {string} dateString the string representing the date.
+ * @returns {string} a reformatted date string.
+ */
 function getDisplayDate (dateString) {
   let date = new Date(Date.parse(dateString))
   let options = { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }
@@ -59,8 +81,9 @@ function getDisplayDate (dateString) {
  * Use axios to make a call to a backend then call one of the callback functions.
  * @param {string} backendPath the backend path.
  * @param {Object} params the params object to pass to the backend.
- * @param {Function?} successCallback optional.
- * @param {Function?} errorCallback optional.
+ * @param {Function({Object} response)?} successCallback optional. Called with the response from the backend.
+ * @param {Function({Object} response)?} errorCallback optional. Called with the response object on the error 
+ *     returned from the backend.
  */
 function callAxios (backendPath, params, successCallback, errorCallback) {
   axios.post(backendPath, params)
@@ -81,10 +104,11 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
 
 /**
  * Finds the path of keys to a given variable within an object. The return is represented as as an array.
+ * For example, findPath({'a': { 'b': c } }, c) will return ['a', 'b']
  * From https://stackoverflow.com/questions/43636000/javascript-find-path-to-object-reference-in-nested-object
- * obj {Object} the object to search within.
- * target {Object} the target to find. Must be an object.
- * return {array<string>} an array with the path within the object to the target. (a series of keys.)
+ * @param {Object} obj the object to search within.
+ * @param {Object} target the target to find. Must be an object.
+ * @param {array|null} return an array with the path within the object to the target. Or null if it's not found.
  */
 function findPath (obj, target) {
   if (target === obj) {
@@ -110,9 +134,19 @@ function findPath (obj, target) {
       }
     }
   }
+  return null
 }
 
+/**
+ * Given a path to an object, (generated from {@code findPath}), retrieve the object.
+ * @param {Object} obj the initial object to search within.
+ * @param {array} path the path within {@code obj} to fetch the object. Possibly null.
+ * @returns {Object|null} the retrieved object or null if path is null.
+ */
 function fetchFromPath (obj, path) {
+  if (!path) {
+    return null
+  }
   let curObj = obj
   for (var idx in path) {
     curObj = curObj[path[idx]]
@@ -120,6 +154,10 @@ function fetchFromPath (obj, path) {
   return curObj
 }
 
+/**
+ * Empties the given array in place. {@code arr} is modified.
+ * @param {array} arr the array to modify.
+ */
 function emptyArray (arr) {
   for (let i = arr.length; i > 0; --i) {
     arr.pop()
@@ -127,17 +165,20 @@ function emptyArray (arr) {
 }
 
 /**
- * Moves all items in the original array to the destination array.
+ * Moves all items in the source array to the destination array.
+ * @param {array} source the array to transfer items from.
+ * @param {array} destination the array to transfer items to.
  */
-function transferContents (original, destination) {
-  destination.push(...original)
-  emptyArray(original)
+function transferContents (source, destination) {
+  destination.push(...source)
+  emptyArray(source)
 }
 
 /**
- * Shuffles the array. Returns it.
+ * Shuffles {@code array} in place and returns it.
  * Taken from https://gomakethings.com/how-to-shuffle-an-array-with-vanilla-js/
- * @param {array} array an array (of anything) to shuffle.
+ * @param {array} array the array to shuffle. This is modified in place.
+ * @returns {array} a reference to the shuffled array.
  */
 function shuffle (array) {
   var currentIndex = array.length

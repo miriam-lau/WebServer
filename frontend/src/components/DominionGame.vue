@@ -335,7 +335,7 @@ import CardList from './shared/games/CardList'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 import { moveCard, moveAllCards, moveCurrentCard, getImageForCard, getImageForCurrentCard,
-  getCurrentCard, getImageForCardArray, handleComponentMount, handleComponentCreated, mutateProperty,
+  getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
   updateDisplayWithLatestGame, newGame, saveGame }
   from '../common/card_games'
 
@@ -362,7 +362,7 @@ export default {
     handleComponentCreated(this)
   },
   mounted () {
-    handleComponentMount(this, 'refreshDominion')
+    handleComponentMounted(this, 'refreshDominion')
   },
   data () {
     return {
