@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import { moveCurrentCard, setCurrentCard, clearCurrentCard } from '../../../common/card_games'
+import { setCurrentCard, clearCurrentCard } from '../../../common/card_games'
 
 /**
  * Renders the cards represented by {@code cardArray} as a list. This is similar to CardList but can handle rendering
@@ -66,13 +66,9 @@ export default {
      */
     getMoveArray: Function,
     /**
-     * Nullable. Passed to moveCard
+     * The function to call when a card is clicked.
      */
-    afterMoveCallback: Function,
-    /**
-     * Nullable. Passed to moveCard.
-     */
-    beforeMoveCallback: Function,
+    lotrMoveCurrentCardFunction: Function,
     /**
      * Nullable. Whether or not to populate the currently selected card on mouseover.
      */
@@ -90,7 +86,7 @@ export default {
         array = this.getMoveArray(card, isAttachment)
       }
       if (array) {
-        moveCurrentCard(this.$parent, array, { beforeMoveCallback: this.beforeMoveCallback, afterMoveCallback: this.afterMoveCallback })
+        this.lotrMoveCurrentCardFunction(this.$parent, array)
       }
     },
     getStyle (card, index) {

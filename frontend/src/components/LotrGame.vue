@@ -31,8 +31,9 @@
       <button v-if="game['hasSpecial']" @click="shownPage = 'special'">Special</button>
       <button v-if="game['hasSecondSpecial']" @click="shownPage = 'secondSpecial'">Second Special</button>
       <button @click="shownPage = 'deck'">Your Deck</button>
-      <button @click="shownPage = 'discard'">Your D<u>i</u>scard</button>
-      <button @click="shownPage = 'trash'"><u>T</u>rash</button>
+      <button @click="shownPage = 'discard'">Your Discard</button>
+      <button @click="shownPage = 'trash'">Remo<u>v</u>ed</button>
+      <button @click="shownPage = 'shortcuts'">Shortcuts</button>
       <button @click="shownPage = 'notes'">Notes</button>
       <img
           v-if="games_currentCardSelection['exists']"
@@ -41,13 +42,12 @@
       <div class="lotr-cards-area-above-hand">
         <div v-if="shownPage === 'main'">
           <div class="lotr-staging-area">
-            <span class="card-games-text-on-background">Sta<u>g</u>ing Area</span>
+            <span class="card-games-text-on-background">S<u>t</u>aging Area</span>
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['stagingArea']"
-                  :beforeMoveCallback="isMoveAllowed"
                   :getMoveArray="getMoveArrayFromStagingArea"
-                  :afterMoveCallback="discardAttachmentsForCardListCallback"
+                  :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -59,9 +59,8 @@
             <div class="lotr-single-cards-row">
               <LotrCardList
                   :cardArray="game['activeLocation']"
-                  :beforeMoveCallback="isMoveAllowed"
+                  :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                   :getMoveArray="getMoveArrayFromActiveLocation"
-                  :afterMoveCallback="discardAttachmentsForCardListCallback"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
                   :cardMargin="cardMargin"
@@ -73,7 +72,7 @@
             <div class="lotr-single-cards-row">
               <LotrCardStack
                 :cardArray="game['questDeck']"
-                :beforeMoveCallback="isMoveAllowed"
+                :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                 :defaultMoveArray="game['questDiscard']"
                 :cardHeight="cardHeight"
                 :cardWidth="sidewaysCardWidth"
@@ -82,11 +81,11 @@
               </div>
           </div>
           <div class="lotr-encounter">
-            <span class="card-games-text-on-background">Encounter</span>
+            <span class="card-games-text-on-background">Enc<u>o</u>unter</span>
             <div class="lotr-single-cards-row">
               <LotrCardStack
                 :cardArray="game['encounterDeck']"
-                :beforeMoveCallback="isMoveAllowed"
+                :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                 :defaultMoveArray="game['stagingArea']"
                 :cardHeight="cardHeight"
                 :cardWidth="cardWidth"
@@ -101,9 +100,8 @@
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="player['engagedEnemies']"
-                    :beforeMoveCallback="isMoveAllowed"
+                    :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                     :getMoveArray="getMoveArrayFromEngagedArea"
-                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -115,9 +113,8 @@
               <div class="lotr-characters">
                 <LotrCardList
                     :cardArray="player['characters']"
-                    :beforeMoveCallback="isMoveAllowed"
+                    :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                     :getMoveArray="getMoveArrayFromCharacterArea"
-                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -126,7 +123,7 @@
             </div>
           </div>
           <div class="lotr-attachment">
-            <span class="card-games-text-on-background">Your Attachment</span>
+            <span class="card-games-text-on-background">Your <u>A</u>ttachment</span>
             <div class="lotr-attachment-card-area">
               <LotrCardList
                   :cardArray="player['selectedAttachment']"
@@ -151,8 +148,7 @@
               <div class="lotr-engaged-enemies">
                 <LotrCardList
                     :cardArray="partner['engagedEnemies']"
-                    :beforeMoveCallback="isMoveAllowed"
-                    :afterMoveCallback="discardAttachmentsForCardListCallback"
+                    :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                     :getMoveArray="getMoveArrayFromEngagedArea"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
@@ -165,9 +161,8 @@
               <div class="lotr-characters">
                 <LotrCardList
                     :cardArray="partner['characters']"
-                    :beforeMoveCallback="isMoveAllowed"
+                    :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                     :getMoveArray="getMoveArrayFromCharacterArea"
-                    :afterMoveCallback="discardAttachmentsForCardListCallback"
                     :cardHeight="cardHeight"
                     :cardWidth="cardWidth"
                     :cardMargin="cardMargin"
@@ -179,8 +174,7 @@
         <div v-else-if="shownPage === 'quest'">
           <LotrCardList
               :cardArray="game['questDiscard']"
-              :beforeMoveCallback="isMoveAllowed"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['questDeck']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -191,7 +185,7 @@
           <div class="lotr-quest-deck-and-discard">
             <LotrCardStack
               :cardArray="game['secondQuestDeck']"
-              :beforeMoveCallback="isMoveAllowed"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['secondQuestDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -200,9 +194,8 @@
           </div>
           <LotrCardList
               :cardArray="game['secondQuestDiscard']"
-              :beforeMoveCallback="isMoveAllowed"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['secondQuestDeck']"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -212,7 +205,7 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="player['secondaryDeck']"
-              :beforeMoveCallback="isMoveAllowed"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="player['secondaryReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -227,9 +220,8 @@
           </div>
           <LotrCardList
               :cardArray="game['secondaryReveal']"
-              :beforeMoveCallback="isMoveAllowed"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['secondaryDiscard']"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -252,8 +244,7 @@
         <LotrCardList
             v-else-if="shownPage === 'encounterDiscard'"
             :cardArray="game['encounterDiscard']"
-            :beforeMoveCallback="isMoveAllowed"
-            :afterMoveCallback="discardAttachmentsForCardListCallback"
+            :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
             :defaultMoveArray="game['stagingArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
@@ -262,8 +253,7 @@
         <LotrCardList
             v-else-if="shownPage === 'encounterDeck'"
             :cardArray="game['encounterDeck']"
-            :beforeMoveCallback="isMoveAllowed"
-            :afterMoveCallback="discardAttachmentsForCardListCallback"
+            :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
             :defaultMoveArray="game['stagingArea']"
             :cardHeight="cardHeight"
             :cardWidth="cardWidth"
@@ -280,8 +270,7 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="game['specialDeck']"
-              :beforeMoveCallback="isMoveAllowed"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['specialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -296,8 +285,7 @@
           </div>
           <LotrCardList
               :cardArray="game['specialReveal']"
-              :beforeMoveCallback="isMoveAllowed"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['specialDiscard']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -308,8 +296,7 @@
           <div class="lotr-deck-and-discard">
             <LotrCardStack
               :cardArray="game['secondSpecialDeck']"
-              :beforeMoveCallback="isMoveAllowed"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['secondSpecialReveal']"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
@@ -324,9 +311,8 @@
           </div>
           <LotrCardList
               :cardArray="game['secondSpecialReveal']"
-              :beforeMoveCallback="isMoveAllowed"
+              :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
               :defaultMoveArray="game['secondSpecialDiscard']"
-              :afterMoveCallback="discardAttachmentsForCardListCallback"
               :cardHeight="cardHeight"
               :cardWidth="sidewaysCardWidth"
               :cardMargin="cardMargin"
@@ -353,6 +339,29 @@
             :cardWidth="cardWidth"
             :cardMargin="cardMargin"
             :getImageForCard="getImageForCard" />
+        <div v-else-if="shownPage === 'shortcuts'" class="card-games-text-on-background">
+          1: Increment threat (Hold shift to decrement)<br/>
+          e: End Round<br/>
+          f: Flip card<br/>
+          r: Increment resources <br/>
+          d: Increment damage<br/>
+          p: Increment progress<br/>
+          x: Exhaust card<br/>
+          s: Deal shadow card<br/>
+          u: Shuffle deck<br/>
+
+          a: Move to attachment or attach card.<br/>
+          l: Move to active location<br/>
+          c: Move to characters<br/>
+          n: Move to engaged enemies<br/>
+          o: Move to encounter deck<br/>
+          q: Move to quest deck<br/>
+          i: Discard card<br/>
+          h: Move to hand<br/>
+          k: Move to deck<br/>
+          t: Move to staging area<br/>
+          v: Move to removed<br/>
+        </div>
         <textarea v-else-if="shownPage === 'notes'" class="lotr-note" v-model="notes"></textarea>
       </div>
       <div class="clearfix"/>
@@ -367,8 +376,7 @@
             <div class="lotr-single-pile-cards">
               <LotrCardStack
                   :cardArray="player['deck']"
-                  :beforeMoveCallback="isMoveAllowed"
-                  :afterMoveCallback="discardAttachmentsForCardListCallback"
+                  :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                   :defaultMoveArray="player['hand']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
@@ -377,7 +385,7 @@
             </div>
           </div>
           <div class="lotr-single-pile">
-            <span class="card-games-text-on-background"><u>D</u>iscard</span>
+            <span class="card-games-text-on-background">D<u>i</u>scard</span>
             <div class="lotr-single-pile-cards">
               <LotrCardStack
                   :cardArray="player['discard']"
@@ -392,8 +400,7 @@
             <div class="lotr-hand-cards-area">
               <LotrCardList
                   :cardArray="player['hand']"
-                  :beforeMoveCallback="isMoveAllowed"
-                  :afterMoveCallback="discardAttachmentsForCardListCallback"
+                  :lotrMoveCurrentCardFunction="moveCurrentLotrCard"
                   :defaultMoveArray="player['characters']"
                   :cardHeight="cardHeight"
                   :cardWidth="cardWidth"
@@ -635,7 +642,12 @@ export default {
         cardArray === this.game['secondQuestReveal'] ||
         cardArray === this.game['secondQuestDisard']) ? 'lotr-preview-sideways' : 'lotr-preview-normal'
     },
-    moveCard: moveCard,
+    moveLotrCard (component, originalArray, cardIndex, destinationArray) {
+      return moveCard(component, originalArray, cardIndex, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
+    },
+    moveCurrentLotrCard (component, destinationArray) {
+      return moveCurrentCard(component, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
+    },
     getDefaultDiscardForCard (card) {
       if (card['owner'] && card['owner'] === 'player1') {
         return this.game['players'][0]['discard']
@@ -683,9 +695,13 @@ export default {
       if (destinationArray !== this.game['stagingArea'] && destinationArray !== this.partner['characters'] &&
       destinationArray !== this.player['characters'] && destinationArray !== this.player['engagedEnemies'] &&
       destinationArray !== this.partner['engagedEnemies'] && destinationArray !== this.game['activeLocation']) {
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'resources', [MUTATION_VALUE]: 0 })
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'progress', [MUTATION_VALUE]: 0 })
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'damage', [MUTATION_VALUE]: 0 })
+        mutateCard(this, card, 'set', [], { [MUTATION_PROPERTY]: 'exhausted', [MUTATION_VALUE]: false })
         for (let attachmentIndex = card['attachments'].length - 1; attachmentIndex >= 0; attachmentIndex--) {
           let attachment = card['attachments'][attachmentIndex]
-          moveCard(this, card['attachments'], attachmentIndex, this.getDefaultDiscardForCard(attachment))
+          this.moveLotrCard(this, card['attachments'], attachmentIndex, this.getDefaultDiscardForCard(attachment))
         }
       }
     },
@@ -725,16 +741,15 @@ export default {
       let destinationArray = null
       switch (event.key) {
         case 'l': destinationArray = this.game['activeLocation']; break
-        case 'c': destinationArray = this.player.characters; break
-        case 'n': destinationArray = this.player.engagedEnemies; break
-        case 'o': destinationArray = this.game.encounterDiscard; break
-        case 'y': destinationArray = this.game.encounterDeck; break
-        case 'q': destinationArray = this.game.questDeck; break
+        case 'c': destinationArray = this.player['characters']; break
+        case 'n': destinationArray = this.player['engagedEnemies']; break
+        case 'o': destinationArray = this.game['encounterDeck']; break
+        case 'q': destinationArray = this.game['questDeck']; break
         case 'i': destinationArray = this.getDefaultDiscardForCard(card); break
-        case 'h': destinationArray = this.player.hand; break
-        case 'k': destinationArray = this.player.deck; break
-        case 'g': destinationArray = this.game.stagingArea; break
-        case 't': destinationArray = this.game.trash; break
+        case 'h': destinationArray = this.player['hand']; break
+        case 'k': destinationArray = this.player['deck']; break
+        case 't': destinationArray = this.game['stagingArea']; break
+        case 'v': destinationArray = this.game['trash']; break
         case 'f': this.flipCurrentCard(); return
         case 'r': this.incrementResources(); return
         case 'd': this.incrementDamage(); return
@@ -750,7 +765,7 @@ export default {
       if (!destinationArray) {
         return
       }
-      moveCurrentCard(this, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
+      this.moveCurrentLotrCard(this, destinationArray)
     },
     incrementThreat () { mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'threat' }) },
     decrementThreat () { mutateProperty(this, this.player, 'decrement', { [MUTATION_PROPERTY]: 'threat' }) },
@@ -776,7 +791,7 @@ export default {
       mutateCurrentCard(this, 'invert', [], { [MUTATION_PROPERTY]: 'exhausted' })
     },
     shuffleCards () {
-      shuffleCards(getCurrentCardArray(this))
+      shuffleCards(this, getCurrentCardArray(this))
     },
     dealShadowCard () {
       // TODO: Handle reshuffle encounter.
@@ -784,7 +799,7 @@ export default {
       if (card === null) {
         return
       }
-      moveCard(this, this.game['encounterDeck'], null, card['attachments'], { beforeMoveCallback: this.isMoveAllowed })
+      this.moveLotrCard(this, this.game['encounterDeck'], null, card['attachments'])
     },
     flipCurrentCard () {
       let card = getCurrentCard(this)
@@ -819,8 +834,8 @@ export default {
           mutateCard(this, card, 'increment', [], { [MUTATION_PROPERTY]: 'resources' })
         }
       }
-      moveCard(this, this.player['deck'], null, this.player['hand'], { beforeMoveCallback: this.isMoveAllowed })
-      moveCard(this, this.partner['deck'], null, this.partner['hand'], { beforeMoveCallback: this.isMoveAllowed })
+      this.moveLotrCard(this, this.player['deck'], null, this.player['hand'])
+      this.moveLotrCard(this, this.partner['deck'], null, this.partner['hand'])
       mutateProperty(this, this.player, 'increment', { [MUTATION_PROPERTY]: 'threat' })
       mutateProperty(this, this.partner, 'increment', { [MUTATION_PROPERTY]: 'threat' })
     },
@@ -840,12 +855,12 @@ export default {
             selectionArray !== this.game['activeLocation']) {
           return
         }
-        moveCard(this, this.player['selectedAttachment'], 0, card['attachments'], { beforeMoveCallback: this.isMoveAllowed })
+        this.moveLotrCard(this, this.player['selectedAttachment'], 0, card['attachments'])
       } else {
         if (card['attachments'].length > 0) {
           return
         }
-        moveCurrentCard(this, this.player['selectedAttachment'], { beforeMoveCallback: this.isMoveAllowed })
+        this.moveCurrentLotrCard(this, this.player['selectedAttachment'])
       }
     }
   }

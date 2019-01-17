@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-import { moveCurrentCard, setCurrentCard, clearCurrentCard } from '../../../common/card_games'
+import { setCurrentCard, clearCurrentCard } from '../../../common/card_games'
 
 /**
  * Renders the stack of cards represented by {@code cardArray}.
@@ -62,13 +62,9 @@ export default {
      */
     reshuffleArray: Array,
     /**
-     * Nullable. Passed to moveCard.
+     * The function to call when a card is clicked.
      */
-    afterMoveCallback: Function,
-    /**
-     * Nullable. Passed to moveCard.
-     */
-    beforeMoveCallback: Function
+    lotrMoveCurrentCardFunction: Function
   },
   computed: {
     outerContainerStyle () {
@@ -111,7 +107,7 @@ export default {
       if (!this.defaultMoveArray) {
         return
       }
-      moveCurrentCard(this.$parent, this.defaultMoveArray, { beforeMoveCallback: this.beforeMoveCallback, afterMoveCallback: this.callback })
+      this.lotrMoveCurrentCardFunction(this.$parent, this.defaultMoveArray)
     }
   }
 }
