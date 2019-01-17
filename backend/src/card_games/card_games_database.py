@@ -54,3 +54,10 @@ class CardGamesDatabase:
   def update_game(self, cur, game_id, data) -> int:
     cur.execute("UPDATE " + self._games_table + " set data = %s where id = %s",
                 (psycopg2.extras.Json(data), game_id))
+
+  # Deletes the games with the given players.
+  # player1 {string} the id of the player.
+  # player2 {string} the id of the player.
+  def delete_game(self, cur, player1, player2) -> int:
+    cur.execute("DELETE FROM " + self._games_table + " where player1 = %s or player1 = %s or player2 = %s or player2 = %s",
+                (player1, player2, player1, player2))

@@ -23,6 +23,7 @@ class CardGames:
     cur = self._card_games_database.get_cursor()
 
     try:
+      self._card_games_database.delete_game(cur, player1, player2)
       game_id = self._card_games_database.add_game(cur, player1, player2)
       data["gameId"] = game_id
       self._card_games_database.update_game(cur, game_id, data)
