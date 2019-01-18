@@ -35,6 +35,7 @@
       <button @click="shownPage = 'trash'">Remo<u>v</u>ed</button>
       <button @click="shownPage = 'shortcuts'">Shortcuts</button>
       <button @click="shownPage = 'notes'">Notes</button>
+      <a v-if="game['manual']" class="card-games-stat-item card-games-text" target="_blank" :href="game['manual']">Rules</a>
       <img
           v-if="games_currentCardSelection['exists']"
           :class="getPreviewClassName()"
@@ -348,7 +349,8 @@
           p: Increment progress<br/>
           x: Exhaust card<br/>
           s: Deal shadow card<br/>
-          u: Shuffle deck<br/>
+          w: Shuffle deck<br/>
+          u: Undo<br/>
 
           a: Move to attachment or attach card.<br/>
           l: Move to active location<br/>
@@ -430,8 +432,8 @@ import LotrCardStack from './shared/games/LotrCardStack'
 import { callAxiosAndSetButterBar } from '../common/butterbar_component'
 import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
-import { moveCard, moveCurrentCard, handleComponentMounted, handleComponentCreated,
-  getImageForCard, getImageForCurrentCard, updateDisplayWithLatestGame, mutateProperty,
+import { moveCard, moveCurrentCard, handleComponentMounted, handleComponentCreated, undo,
+  moveAllCards, getImageForCard, getImageForCurrentCard, updateDisplayWithLatestGame, mutateProperty,
   mutateCurrentCard, mutateCard, shuffleCards, MUTATION_PROPERTY, getCurrentCardArray, MUTATION_VALUE,
   getCurrentCard, getImageForCardArray, newGame, saveGame } from '../common/card_games'
 
@@ -439,6 +441,7 @@ const LOTR_GET_SCENARIO_NAMES_URL = getFullBackendUrlForPath('/lotr_get_scenario
 const CREATE_LOTR_GAME_URL = getFullBackendUrlForPath('/create_lotr_game')
 const LOTR_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/lotr_get_latest_game')
 const LOTR_MUTATE_GAME_URL = getFullBackendUrlForPath('/lotr_mutate_game')
+const LOTR_UNDO_URL = getFullBackendUrlForPath('/lotr_undo')
 
 export default {
   name: 'LotrGame',
@@ -643,10 +646,10 @@ export default {
         cardArray === this.game['secondQuestDisard']) ? 'lotr-preview-sideways' : 'lotr-preview-normal'
     },
     moveLotrCard (component, originalArray, cardIndex, destinationArray) {
-      return moveCard(component, originalArray, cardIndex, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
+      return moveCard(component, originalArray, cardIndex, destinationArray, { beforeMoveCallback: this.lotrBeforeMoveCallback, afterMoveCallback: this.discardAttachmentsForCardListCallback })
     },
     moveCurrentLotrCard (component, destinationArray) {
-      return moveCurrentCard(component, destinationArray, { beforeMoveCallback: this.isMoveAllowed, afterMoveCallback: this.discardAttachmentsForCardListCallback })
+      return moveCurrentCard(component, destinationArray, { beforeMoveCallback: this.lotrBeforeMoveCallback, afterMoveCallback: this.discardAttachmentsForCardListCallback })
     },
     getDefaultDiscardForCard (card) {
       if (card['owner'] && card['owner'] === 'player1') {
@@ -682,7 +685,13 @@ export default {
     getMoveArrayFromCharacterArea (card, isAttachment) {
       return this.getDefaultDiscardForCard(card)
     },
-    isMoveAllowed (card, originalArray, destinationArray) {
+    lotrBeforeMoveCallback (card, originalArray, destinationArray) {
+      if (originalArray === this.game['encounterDeck']) {
+        if (this.game['encounterDeck'].length === 0 && this.game['encounterDiscard'].length > 0) {
+          moveAllCards(this, this.game['encounterDiscard'], this.game['encounterDeck'])
+          shuffleCards(this, this.game['encounterDeck'])
+        }
+      }
       if ([this.game['activeLocation'], this.game['selectedAttachment']].indexOf(destinationArray) === -1) {
         return true
       }
@@ -733,6 +742,7 @@ export default {
         case '1': this.incrementThreat(); return
         case '!': this.decrementThreat(); return
         case 'e': this.endRound(); return
+        case 'u': undo(this, LOTR_UNDO_URL); return
       }
       let card = getCurrentCard(this)
       if (!card) {
@@ -760,7 +770,7 @@ export default {
         case 'x': this.toggleExhaustCurrentCard(); return
         case 'a': this.handleAttachmentClick(); return
         case 's': this.dealShadowCard(); return
-        case 'u': this.shuffleCards(); return
+        case 'w': this.shuffleCards(); return
       }
       if (!destinationArray) {
         return

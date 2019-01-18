@@ -46,6 +46,8 @@ const DATA_PLAYERS = 'players'
 const DATA_UPDATE_TYPE = 'updateType'
 const DATA_PLAYER_TRIGGERING_UPDATE = 'playerTriggeringUpdate'
 const DATA_VALUE_CREATE = 'create'
+const DATA_VALUE_UNDO = 'undo'
+const DATA_VALUE_MUTATE = 'mutate'
 const DATA_GAMEDATA = 'gameData'
 
 const COMPONENT_USERNAME = 'username'
@@ -70,6 +72,7 @@ const CARD_FLIPPED = 'flipped'
 const BACKEND_KEY_DATA = 'data'
 const BACKEND_KEY_USERNAME = 'username'
 
+const UNDO_GAME_GAME_ID = 'gameId'
 const SAVE_GAME_GAME_ID = 'gameId'
 const SAVE_GAME_MUTATIONS = 'mutations'
 
@@ -105,13 +108,15 @@ function handleComponentMounted (component, refreshName) {
     }
     if (data[DATA_UPDATE_TYPE] === DATA_VALUE_CREATE) {
       component[GAMES_NUM_EXPECTED_RESPONSES] = 0
-    } else if (data[DATA_PLAYER_TRIGGERING_UPDATE] === component[COMPONENT_USERNAME]) {
-      component[GAMES_NUM_EXPECTED_RESPONSES] -= 1
+    } else if (data[DATA_UPDATE_TYPE] === DATA_VALUE_MUTATE) {
+      if (data[DATA_PLAYER_TRIGGERING_UPDATE] === component[COMPONENT_USERNAME]) {
+        component[GAMES_NUM_EXPECTED_RESPONSES] -= 1
+      }
     }
     if (component[GAMES_NUM_EXPECTED_RESPONSES] < 0) {
       throw new Error('Unexpected response from server.')
     }
-    if (component[GAMES_NUM_EXPECTED_RESPONSES] === 0 || data[DATA_PLAYER_TRIGGERING_UPDATE] !== component[COMPONENT_USERNAME]) {
+    if (data[DATA_UPDATE_TYPE] === DATA_VALUE_UNDO || component[GAMES_NUM_EXPECTED_RESPONSES] === 0 || data[DATA_PLAYER_TRIGGERING_UPDATE] !== component[COMPONENT_USERNAME]) {
       updateDisplayWithReceivedGameData(component, data[DATA_GAMEDATA])
     }
   })
@@ -264,6 +269,23 @@ function saveGame (component, url) {
     null,
     'Failed to save game.')
   component[GAMES_MUTATIONS] = []
+}
+
+/**
+ * Undoes the latest game move.
+ * @param {Object} component the Vue component to save the game on.
+ * @param {string} url the url used to save the game.
+ */
+function undo (component, url) {
+  callAxiosAndSetButterBar(
+    component,
+    url,
+    {
+      [UNDO_GAME_GAME_ID]: component[GAME][GAMES_GAME_ID],
+      [BACKEND_KEY_USERNAME]: component[COMPONENT_USERNAME]
+    },
+    null,
+    'Failed to undo.')
 }
 
 /**
@@ -589,6 +611,6 @@ function mutateCurrentCard (component, type, propertyPath, opt) {
 export {
   shuffleCards, moveCard, moveAllCards, moveCurrentCard, setCurrentCard,
   clearCurrentCard, defaultPlayerToInvite, getImageForCard, getImageForCurrentCard, getCurrentCardArray,
-  getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
+  getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty, undo,
   updateDisplayWithLatestGame, newGame, saveGame, mutateCurrentCard, mutateCard, MUTATION_VALUE, MUTATION_PROPERTY
 }

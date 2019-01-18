@@ -14,12 +14,15 @@ import copy
 # Backend for the Lotr game.
 class Lotr:
   LOTR_TABLE_NAME = "lotr_games"
+  LOTR_DATA_TABLE_NAME = "lotr_game_data"
 
   def __init__(self, database):
     self._lotr_database = LotrDatabase(database)
-    self._card_games = CardGames(database, Lotr.LOTR_TABLE_NAME)
+    self._card_games = CardGames(database, Lotr.LOTR_TABLE_NAME, Lotr.LOTR_DATA_TABLE_NAME)
     # {map<string, string>} a map from local image filename to the url for rendering it.
     self._image_name_to_url = self._get_image_name_to_url("static/lotr/image-name-to-url.yaml")
+    # {map<string, string>} a map from scenario name to the manual url.
+    self._scenario_name_to_manual = self._get_scenario_name_to_manual("static/lotr/scenario-name-to-manual.yaml")
     # {map<string, Card}. A map of card id to card objects. The card id is a unique identifier
     #     for each card determined by the input files.
     #
@@ -55,6 +58,20 @@ class Lotr:
         print(exc)
     return ret
 
+  # Returns a map of scenario name to a url for rendering the manual.
+  # filename{string} the filename to read the scenario name to manual info from.
+  # return {map<string, string>} scenario name to manual url.
+  def _get_scenario_name_to_manual(self, filename):
+    ret = {}
+    with open(filename, 'r') as stream:
+      try:
+        root = yaml.load(stream)
+        for name in root:
+          ret[name] = root[name]
+      except yaml.YAMLError as exc:
+        print(exc)
+    return ret
+
   # Populates the _scenario_data map with the following data using files in the given directory. See _scenario_data for
   # more info.
   # Returns a map of scenario id to scenario data.
@@ -66,6 +83,8 @@ class Lotr:
     for scenario_folder in scenario_folders:
       for scenario_name in os.listdir(directory + "/" + scenario_folder):
         scenario = {}
+        if scenario_name in self._scenario_name_to_manual:
+          scenario['manual'] = self._scenario_name_to_manual[scenario_name]
         tree = ET.parse(directory + "/" + scenario_folder + "/" + scenario_name)
         card_deck_xml = tree.getroot()
         Xml.verify_tag(card_deck_xml, ["deck"])
@@ -300,8 +319,10 @@ class Lotr:
       "secondSpecialDeck": [],
       "secondSpecialDiscard": [],
       "secondSpecialReveal": [],
-      "setupArea": []
+      "setupArea": [],
     }
+    if "manual" in scenario:
+      data["manual"] = scenario.pop("manual")
     if "Staging Setup" in scenario:
       data["stagingArea"] += scenario.pop("Staging Setup")
     if "Setup" in scenario:
@@ -438,3 +459,7 @@ class Lotr:
   # See comment in card_games.py.
   def mutate_game(self, game_id, mutations):
     return self._card_games.mutate_game(game_id, mutations)
+
+# See comment in card_games.py.
+  def undo_and_fetch_latest(self, game_id):
+    return self._card_games.undo_and_fetch_latest(game_id)

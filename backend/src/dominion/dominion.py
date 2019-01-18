@@ -11,6 +11,7 @@ import copy
 # Static files taken from DominionRandomizer/DominionWiki.
 class Dominion:
   DOMINION_TABLE_NAME = "dominion_games"
+  DOMINION_DATA_TABLE_NAME = "dominion_game_data"
   NON_SUPPLY_CARDS = "nonSupplyCards"
   KINGDOM_CARDS = "kingdomCards"
   VP_CARDS = "vpCards"
@@ -28,7 +29,7 @@ class Dominion:
 
   # database {Database} the database used to save games.
   def __init__(self, database):
-    self._card_games = CardGames(database, Dominion.DOMINION_TABLE_NAME)
+    self._card_games = CardGames(database, Dominion.DOMINION_TABLE_NAME, Dominion.DOMINION_DATA_TABLE_NAME)
     # NOTE: After population of all member variables, they should never be mutated.
 
     # {map<string, string>} a map from local image filename to the url for rendering it.
@@ -948,3 +949,7 @@ class Dominion:
   # See comment in card_games.py.
   def mutate_game(self, game_id, mutations):
     return self._card_games.mutate_game(game_id, mutations)
+
+  # See comment in card_games.py.
+  def undo_and_fetch_latest(self, game_id):
+    return self._card_games.undo_and_fetch_latest(game_id)

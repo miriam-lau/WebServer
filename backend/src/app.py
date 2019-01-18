@@ -504,6 +504,15 @@ def dominion_get_latest_game():
   return jsonify(dominion.get_latest_game(username))
 
 
+@app.route("/dominion_undo", methods=["POST"])
+def dominion_undo():
+  game_id = request.json["gameId"]
+  username = request.json["username"]
+  game_data = dominion.undo_and_fetch_latest(game_id)
+  _dominion_send_socketio_refresh(game_data, username, "undo")
+  return ""
+
+
 @app.route("/dominion_mutate_game", methods=["POST"])
 def dominion_mutate_game():
   game_id = request.json["gameId"]
@@ -539,6 +548,15 @@ def lotr_get_latest_game():
 @app.route("/lotr_get_scenario_names", methods=["POST"])
 def lotr_get_scenario_names():
   return jsonify(lotr.get_scenario_names())
+
+
+@app.route("/lotr_undo", methods=["POST"])
+def lotr_undo():
+  game_id = request.json["gameId"]
+  username = request.json["username"]
+  game_data = lotr.undo_and_fetch_latest(game_id)
+  _lotr_send_socketio_refresh(game_data, username, "undo")
+  return ""
 
 
 @app.route("/lotr_mutate_game", methods=["POST"])

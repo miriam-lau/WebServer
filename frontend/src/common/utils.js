@@ -107,10 +107,13 @@ function callAxios (backendPath, params, successCallback, errorCallback) {
  * For example, findPath({'a': { 'b': c } }, c) will return ['a', 'b']
  * From https://stackoverflow.com/questions/43636000/javascript-find-path-to-object-reference-in-nested-object
  * @param {Object} obj the object to search within.
- * @param {Object} target the target to find. Must be an object.
+ * @param {Object|null} target the target to find. Must be an object.
  * @param {array|null} return an array with the path within the object to the target. Or null if it's not found.
  */
 function findPath (obj, target) {
+  if (target === null) {
+    return null
+  }
   if (target === obj) {
     return []
   }

@@ -198,6 +198,7 @@
       <br/>
       <div class="dominion-side-panel">
         shift+#: Decrement counters.<br/>
+        u: Undo.<br/>
         p: Play all treasures.<br/>
         e: End turn and draw hand.<br/>
         c: Discard all your cards.<br/>
@@ -240,7 +241,7 @@
           </div>
         </div>
         <div class="dominion-duration-area">
-          <span class="card-games-text">D<u>u</u>ration</span>
+          <span class="card-games-text">Dur<u>a</u>tion</span>
           <div class="dominion-duration-cards-area">
             <div v-if="isPlayerDisplayed()">
               <CardList
@@ -338,12 +339,13 @@ import { getFullBackendUrlForPath } from '../common/utils'
 import { store } from '../store/store'
 import { moveCard, moveAllCards, moveCurrentCard, getImageForCard, getImageForCurrentCard, shuffleCards,
   getCurrentCard, getImageForCardArray, handleComponentMounted, handleComponentCreated, mutateProperty,
-  updateDisplayWithLatestGame, newGame, saveGame, MUTATION_VALUE, MUTATION_PROPERTY }
+  updateDisplayWithLatestGame, newGame, saveGame, undo, MUTATION_VALUE, MUTATION_PROPERTY }
   from '../common/card_games'
 
 const CREATE_DOMINION_GAME_URL = getFullBackendUrlForPath('/create_dominion_game')
 const DOMINION_GET_LATEST_GAME_URL = getFullBackendUrlForPath('/dominion_get_latest_game')
 const DOMINION_MUTATE_GAME_URL = getFullBackendUrlForPath('/dominion_mutate_game')
+const DOMINION_UNDO_URL = getFullBackendUrlForPath('/dominion_undo')
 
 export default {
   name: 'DominionGame',
@@ -608,6 +610,7 @@ export default {
         case 'z': this.deckToDiscard(); return
         case 'e': this.endTurnAndCleanUp(); return
         case 'c': this.cleanUp(); return
+        case 'u': undo(this, DOMINION_UNDO_URL); return
       }
       if (!this.games_currentCardSelection.exists) {
         return
@@ -615,7 +618,7 @@ export default {
       let destinationArray
       switch (event.key) {
         case 'd': destinationArray = this.player['discard']; break
-        case 'u': destinationArray = this.player['durationArea']; break
+        case 'a': destinationArray = this.player['durationArea']; break
         case 'l': destinationArray = this.player['playArea']; break
         case 'h': destinationArray = this.player['hand']; break
         case 'k': destinationArray = this.player['deck']; break

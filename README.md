@@ -287,14 +287,24 @@ create table inventory (
 create table dominion_games (
   id serial primary key,
   player1 varchar(50) references users not null,
-  player2 varchar(50) references users not null,
+  player2 varchar(50) references users not null
+);
+
+create table dominion_game_data (
+  id serial primary key,
+  game_id integer references dominion_games on DELETE CASCADE not null,
   data jsonb
 );
 
 create table lotr_games (
   id serial primary key,
   player1 varchar(50) references users not null,
-  player2 varchar(50) references users not null,
+  player2 varchar(50) references users not null
+);
+
+create table lotr_game_data (
+  id serial primary key,
+  game_id integer references lotr_games on DELETE CASCADE not null,
   data jsonb
 );
 

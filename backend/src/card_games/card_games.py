@@ -12,8 +12,9 @@ import copy
 
 
 class CardGames:
-  def __init__(self, database, games_table):
-    self._card_games_database = CardGamesDatabase(database, games_table)
+  def __init__(self, database, games_table, game_data_table):
+    self._card_games_database = CardGamesDatabase(
+        database, games_table, game_data_table)
 
   # Creates a game with the given information. Modifies data to add the gameId.
   # player1 {string} the username of the first player.
@@ -102,7 +103,8 @@ class CardGames:
     cur = self._card_games_database.get_cursor()
 
     try:
-      game_row = self._card_games_database.get_game(cur, game_id)
+      game_row = self._card_games_database.get_latest_turn_in_game(
+          cur, game_id)
       game_data = game_row["data"]
       for mutation in mutations:
         card_array = None
@@ -181,3 +183,24 @@ class CardGames:
       arr[currentIndex] = arr[shuffleIndex]
       arr[shuffleIndex] = temporaryValue
     return arr
+
+  # Undoes the last move in the game.
+  def undo_and_fetch_latest(self, game_id):
+    cur = self._card_games_database.get_cursor()
+
+    try:
+      num_turns = self._card_games_database.get_num_turns_in_game(cur, game_id)
+      if num_turns > 1:
+        self._card_games_database.delete_latest_turn_in_game(
+            cur, game_id)
+      game_row = self._card_games_database.get_latest_turn_in_game(
+          cur, game_id)
+      game_data = game_row["data"]
+
+      self._card_games_database.commit()
+
+    except psycopg2.Error:
+      self._card_games_database.rollback()
+      cur.close()
+      raise
+    return game_data
