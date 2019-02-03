@@ -358,6 +358,27 @@ export default {
       }
       return (rating1 + rating2) / 2
     },
+    compareCities (city1, city2) {
+      if (city1.values[2] < city2.values[2]) {
+        return -1
+      }
+      if (city1.values[2] > city2.values[2]) {
+        return 1
+      }
+      if (city1.values[1] < city2.values[1]) {
+        return -1
+      }
+      if (city1.values[1] > city2.values[1]) {
+        return 1
+      }
+      if (city1.values[0] < city2.values[0]) {
+        return -1
+      }
+      if (city1.values[0] > city2.values[0]) {
+        return 1
+      }
+      return 0
+    },
     showCities () {
       this.backLinks = []
       this.title = 'Cities'
@@ -367,7 +388,8 @@ export default {
       this.infoDicts = []
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'State', 'Country', 'Notes']
-      this.childTableValues = this.entity['children'].map(cityId => {
+
+      let unsortedCityValues = this.entity['children'].map(cityId => {
         let city = this.restaurantsPageData['city'][cityId]
         let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { city: '' + cityId })
         return {
@@ -376,6 +398,10 @@ export default {
           values: [city['name'], city['state'], city['country'], city['notes']]
         }
       })
+      unsortedCityValues.sort(this.compareCities)
+
+      this.childTableValues = unsortedCityValues
+      console.log(unsortedCityValues)
     },
     navigateTo (name, queryParams) {
       this.$router.push({ name: name, query: queryParams })
