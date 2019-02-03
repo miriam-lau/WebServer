@@ -111,9 +111,9 @@ export default {
           return "nav-inventory-tracker";
         case "dominion":
           return "nav-dominion";
-        case "dominion-game":
+        case "dominionGame":
           return "nav-dominion-game";
-        case "lotr-game":
+        case "lotrGame":
           return "nav-lotr-game";
       }
     }
