@@ -84,15 +84,12 @@ class PantryPage:
       cur.close()
       raise
 
-  def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_title, grocery_list_store, grocery_list_date):
-    if not grocery_list_title:
-      raise Exception("Title must not be empty.")
-
+  def edit_grocery_list_metadata(self, grocery_list_id, grocery_list_store, grocery_list_date):
     cur = self._database.get_cursor()
 
     try:
-      cur.execute("UPDATE grocery_lists SET title = %s, store = %s, date = %s where id = %s RETURNING *",
-                  (grocery_list_title, grocery_list_store, grocery_list_date, grocery_list_id))
+      cur.execute("UPDATE grocery_lists SET store = %s, date = %s where id = %s RETURNING *",
+                  (grocery_list_store, grocery_list_date, grocery_list_id))
       ret = cur.fetchone()
       self._database.commit()
       cur.close()
@@ -117,15 +114,12 @@ class PantryPage:
       cur.close()
       raise
 
-  def add_grocery_list(self, title, store, date):
-    if not title:
-      raise Exception("Title must not be empty.")
-
+  def add_grocery_list(self, store, date):
     cur = self._database.get_cursor()
 
     try:
-      cur.execute("INSERT INTO grocery_lists(title, store, date, list, imported) VALUES(%s, %s, %s, %s, false) RETURNING *",
-                  (title, store, date, ""))
+      cur.execute("INSERT INTO grocery_lists(store, date, list, imported) VALUES(%s, %s, %s, false) RETURNING *",
+                  (store, date, ""))
       ret = cur.fetchone()
       self._database.commit()
       cur.close()

@@ -2,32 +2,56 @@
   <div>
     <div class="nav-container">
       <nav :class="navigationClass" v-on:click.prevent>
-        <a href="#" class="nav-pantry-grocery-lists" v-on:click="navigateToSubPath('grocery-lists')">Grocery Lists</a>
-        <a href="#" class="nav-pantry-pantry-store" v-on:click="navigateToSubPath('pantry-store')">Pantry Store</a>
-        <a href="#" class="nav-pantry-known-words" v-on:click="navigateToSubPath('known-words')">Known Words</a>
-        <a href="#" class="nav-pantry-categories" v-on:click="navigateToSubPath('store-categories')">Categories</a>
+        <a
+          href="#"
+          class="nav-pantry-grocery-lists"
+          v-on:click="navigateToSubPath('grocery-lists')"
+        >Grocery Lists</a>
+        <a
+          href="#"
+          class="nav-pantry-pantry-store"
+          v-on:click="navigateToSubPath('pantry-store')"
+        >Pantry Store</a>
+        <a
+          href="#"
+          class="nav-pantry-known-words"
+          v-on:click="navigateToSubPath('known-words')"
+        >Known Words</a>
+        <a
+          href="#"
+          class="nav-pantry-categories"
+          v-on:click="navigateToSubPath('store-categories')"
+        >Categories</a>
       </nav>
     </div>
-    <ButterBar
-      :message="butterBar_message"
-      :css="butterBar_css"
-    />
+    <ButterBar :message="butterBar_message" :css="butterBar_css"/>
     <div v-if="currentPage === 'grocery-lists'">
       <h2>Grocery Lists</h2>
       <div class="input-form">
-        Store: <input v-model="groceryListStoreToAdd" ref="grocery-list-store-to-add" />
-        Title: <input v-model="groceryListTitleToAdd" />
-        <input v-model="groceryListDateToAdd" type="date"/>
+        Store:
+        <input v-model="groceryListStoreToAdd" ref="grocery-list-store-to-add">
+        <input v-model="groceryListDateToAdd" type="date">
         <button @click="addGroceryList">Add Grocery List</button>
       </div>
       <div v-masonry transition-duration="0" item-selector=".item">
-        <div v-masonry-tile class="item textarea-div" v-for="groceryList in groceryLists" :key="groceryList['id']">
+        <div
+          v-masonry-tile
+          class="item textarea-div"
+          v-for="groceryList in groceryLists"
+          :key="groceryList['id']"
+        >
           <div class="textarea-title">
-            {{ groceryList['store'] }}: {{groceryList['title']}} - {{ getDisplayDate(groceryList['date']) }}
-            <font-awesome-icon icon="pencil-alt" class="icon"
-                @click="showEditGroceryMetadataModal(groceryList)" />
-            <font-awesome-icon icon="trash" class="icon"
-                @click="showDeleteGroceryListModal(groceryList)" />
+            {{ groceryList['store'] }}: {{ getDisplayDate(groceryList['date']) }}
+            <font-awesome-icon
+              icon="pencil-alt"
+              class="icon"
+              @click="showEditGroceryMetadataModal(groceryList)"
+            />
+            <font-awesome-icon
+              icon="trash"
+              class="icon"
+              @click="showDeleteGroceryListModal(groceryList)"
+            />
           </div>
           <div class="textarea-text">
             <EditableDiv
@@ -37,9 +61,7 @@
             />
           </div>
           <div v-if="groceryList['saved']">
-            <span v-if="groceryList['imported']">
-              Imported.
-            </span>
+            <span v-if="groceryList['imported']">Imported.</span>
             <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
             <button @click="showExportGroceryListModal(groceryList)">Export list</button>
           </div>
@@ -71,16 +93,22 @@
     <div v-else-if="currentPage === 'pantry-store'">
       <h2>Pantry</h2>
       <div class="input-form">
-        <input v-model="pantryItemToAdd" ref="pantry-item-to-add" /> <button @click="addPantryItem">Add Item</button>
+        <input v-model="pantryItemToAdd" ref="pantry-item-to-add">
+        <button @click="addPantryItem">Add Item</button>
       </div>
       <table class="table">
         <tr>
-          <th>Name</th><th>Delete</th>
+          <th>Name</th>
+          <th>Delete</th>
         </tr>
         <tr :key="pantryItem['item']" v-for="pantryItem in pantry">
           <td>{{ pantryItem['item'] }}</td>
-          <td><font-awesome-icon icon="trash" class="icon"
-              @click="showDeletePantryItemModal(pantryItem)" />
+          <td>
+            <font-awesome-icon
+              icon="trash"
+              class="icon"
+              @click="showDeletePantryItemModal(pantryItem)"
+            />
           </td>
         </tr>
       </table>
@@ -88,8 +116,10 @@
     <div v-else-if="currentPage === 'known-words'">
       <h2>Known Words</h2>
       <div class="input-form">
-        Word: <input v-model="knownWordToAdd" ref="known-word-to-add" />
-        Category: <input v-model="knownWordToAddCategory"/>
+        Word:
+        <input v-model="knownWordToAdd" ref="known-word-to-add">
+        Category:
+        <input v-model="knownWordToAddCategory">
         <select v-model="knownWordToAddShouldSave">
           <option>True</option>
           <option>False</option>
@@ -98,14 +128,21 @@
       </div>
       <table class="table">
         <tr>
-          <th>Name</th><th>Category</th><th>Addable to Pantry</th><th>Delete</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Addable to Pantry</th>
+          <th>Delete</th>
         </tr>
         <tr :key="knownWord['word']" v-for="knownWord in knownWords">
           <td>{{ knownWord['word'] }}</td>
           <td>{{ knownWord['category'] }}</td>
           <td>{{ knownWord['should_save'] }}</td>
-          <td><font-awesome-icon icon="trash" class="icon"
-              @click="showDeleteKnownWordModal(knownWord)" />
+          <td>
+            <font-awesome-icon
+              icon="trash"
+              class="icon"
+              @click="showDeleteKnownWordModal(knownWord)"
+            />
           </td>
         </tr>
       </table>
@@ -113,21 +150,34 @@
     <div v-else-if="currentPage === 'store-categories'">
       <h2>Store Categories</h2>
       <div class="input-form">
-        Store: <input v-model="storeCategoryStoreToAdd" ref="store-category-store-to-add" />
-        Category: <input v-model="storeCategoryCategoryToAdd" />
-        Label: <input v-model="storeCategoryLabelToAdd" />
+        Store:
+        <input v-model="storeCategoryStoreToAdd" ref="store-category-store-to-add">
+        Category:
+        <input v-model="storeCategoryCategoryToAdd">
+        Label:
+        <input v-model="storeCategoryLabelToAdd">
         <button @click="addStoreCategory">Add Store Category</button>
       </div>
       <table class="table">
         <tr>
-          <th>Store</th><th>Category</th><th>Label</th><th>Delete</th>
+          <th>Store</th>
+          <th>Category</th>
+          <th>Label</th>
+          <th>Delete</th>
         </tr>
-        <tr :key="storeCategory['store'] + '@@' + storeCategory['category']" v-for="storeCategory in storeCategories">
+        <tr
+          :key="storeCategory['store'] + '@@' + storeCategory['category']"
+          v-for="storeCategory in storeCategories"
+        >
           <td>{{ storeCategory['store'] }}</td>
           <td>{{ storeCategory['category'] }}</td>
           <td>{{ storeCategory['label'] }}</td>
-          <td><font-awesome-icon icon="trash" class="icon"
-              @click="showDeleteStoreCategoryModal(storeCategory)" />
+          <td>
+            <font-awesome-icon
+              icon="trash"
+              class="icon"
+              @click="showDeleteStoreCategoryModal(storeCategory)"
+            />
           </td>
         </tr>
       </table>
@@ -141,37 +191,60 @@
       :callback="formModal_callback"
       :passThroughProps="formModal_passThroughProps"
       :buttonText="formModal_buttonText"
-      :shouldShowError="formModal_shouldShowError" />
+      :shouldShowError="formModal_shouldShowError"
+    />
   </div>
 </template>
 <style>
-  @import "../assets/style/pantry.css"
+@import '../assets/style/pantry.css'
 </style>
 <script>
 import ButterBar from './shared/ButterBar'
-import { setButterBarMessage, ButterBarType, callAxiosAndSetButterBar } from '../common/butterbar_component'
+import {
+  setButterBarMessage,
+  ButterBarType,
+  callAxiosAndSetButterBar
+} from '../common/butterbar_component'
 
 import FormModal from './shared/FormModal'
-import { showModal, createFormModalEntry, generateAxiosModalCallback } from '../common/form_modal_component'
+import {
+  showModal,
+  createFormModalEntry,
+  generateAxiosModalCallback
+} from '../common/form_modal_component'
 
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
 import ExportGroceryListModal from './pantry_page/ExportGroceryListModal'
-import { getFullBackendUrlForPath, getDisplayDate, callAxios } from '../common/utils'
+import {
+  getFullBackendUrlForPath,
+  getDisplayDate,
+  callAxios
+} from '../common/utils'
 
 const GET_PANTRY_PAGE_URL = getFullBackendUrlForPath('/get_pantry_page')
-const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath('/edit_grocery_list_metadata')
-const DELETE_GROCERY_LIST_URL = getFullBackendUrlForPath('/delete_grocery_list')
+const EDIT_GROCERY_LIST_METADATA_URL = getFullBackendUrlForPath(
+  '/edit_grocery_list_metadata'
+)
+const DELETE_GROCERY_LIST_URL = getFullBackendUrlForPath(
+  '/delete_grocery_list'
+)
 const EDIT_GROCERY_LIST_URL = getFullBackendUrlForPath('/edit_grocery_list')
 const ADD_GROCERY_LIST_URL = getFullBackendUrlForPath('/add_grocery_list')
-const ATTEMPT_IMPORT_GROCERY_LIST_TO_PANTRY_URL = getFullBackendUrlForPath('/attempt_add_to_pantry')
-const IMPORT_GROCERY_LIST_TO_PANTRY_URL = getFullBackendUrlForPath('/add_to_pantry')
+const ATTEMPT_IMPORT_GROCERY_LIST_TO_PANTRY_URL = getFullBackendUrlForPath(
+  '/attempt_add_to_pantry'
+)
+const IMPORT_GROCERY_LIST_TO_PANTRY_URL = getFullBackendUrlForPath(
+  '/add_to_pantry'
+)
 const DELETE_PANTRY_ITEM_URL = getFullBackendUrlForPath('/delete_pantry_item')
 const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
 const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
-const DELETE_STORE_CATEGORY_URL = getFullBackendUrlForPath('/delete_store_category')
+const DELETE_STORE_CATEGORY_URL = getFullBackendUrlForPath(
+  '/delete_store_category'
+)
 const ADD_STORE_CATEGORY_URL = getFullBackendUrlForPath('/add_store_category')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
 
@@ -183,7 +256,6 @@ export default {
       pantry: [],
       storeCategories: [],
       knownWords: [],
-      groceryListTitleToAdd: '',
       groceryListStoreToAdd: '',
       groceryListDateToAdd: '',
       pantryItemToAdd: '',
@@ -223,7 +295,11 @@ export default {
     this.setCurrentPage()
   },
   components: {
-    FormModal, EditableDiv, ImportToPantryModal, ExportGroceryListModal, ButterBar
+    FormModal,
+    EditableDiv,
+    ImportToPantryModal,
+    ExportGroceryListModal,
+    ButterBar
   },
   computed: {
     navigationClass () {
@@ -248,22 +324,30 @@ export default {
     }
   },
   watch: {
-    '$route': function () {
+    $route: function () {
       this.setCurrentPage()
     },
     allGroceryListsSaved: function (oldValue, newValue) {
       if (newValue) {
-        window.onbeforeunload = function () { return '' }
+        window.onbeforeunload = function () {
+          return ''
+        }
       } else {
-        window.onbeforeunload = function () { return null }
+        window.onbeforeunload = function () {
+          return null
+        }
       }
     }
   },
   beforeRouteLeave (to, from, next) {
     if (!this.allGroceryListsSaved) {
-      const answer = window.confirm('You haven\'t saved your changes. Are you sure you want to leave?')
+      const answer = window.confirm(
+        'You haven\'t saved your changes. Are you sure you want to leave?'
+      )
       if (answer) {
-        window.onbeforeunload = function () { return null }
+        window.onbeforeunload = function () {
+          return null
+        }
         next()
       } else {
         next(false)
@@ -289,10 +373,16 @@ export default {
         { id: groceryList['id'] },
         null,
         'Failed to move note.',
-        (response) => {
-          this.showImportModal(groceryList, response['data']['add'], response['data']['ignore'], response['data']['unrecognized'],
-            response['data']['already_in_pantry'])
-        })
+        response => {
+          this.showImportModal(
+            groceryList,
+            response['data']['add'],
+            response['data']['ignore'],
+            response['data']['unrecognized'],
+            response['data']['already_in_pantry']
+          )
+        }
+      )
     },
     showExportGroceryListModal (groceryList) {
       callAxiosAndSetButterBar(
@@ -301,9 +391,10 @@ export default {
         { id: groceryList['id'] },
         null,
         'Failed to move note.',
-        (response) => {
+        response => {
           this.showExportModal(groceryList, response['data'])
-        })
+        }
+      )
     },
     navigateToSubPath (path) {
       this.$router.push({ path: '/pantry/' + path })
@@ -325,7 +416,13 @@ export default {
     closeImportModal () {
       this.shouldShowImportModal = false
     },
-    showImportModal (groceryList, willImportWords, willIgnoreWords, unrecognizedWords, alreadyInPantryWords) {
+    showImportModal (
+      groceryList,
+      willImportWords,
+      willIgnoreWords,
+      unrecognizedWords,
+      alreadyInPantryWords
+    ) {
       this.groceryListToImport = groceryList
       this.willImportWords = willImportWords
       this.willIgnoreWords = willIgnoreWords
@@ -344,30 +441,46 @@ export default {
     showEditGroceryMetadataModal (groceryList) {
       let modalFormLines = [
         createFormModalEntry(
-          'edit-grocery-metadata-modal-store-' + groceryList['id'], 'store', 'Store:', groceryList['store']),
+          'edit-grocery-metadata-modal-store-' + groceryList['id'],
+          'store',
+          'Store:',
+          groceryList['store']
+        ),
         createFormModalEntry(
-          'edit-grocery-metadata-modal-title-' + groceryList['id'], 'title', 'Title:', groceryList['title']),
-        createFormModalEntry(
-          'edit-grocery-metadata-modal-date-' + groceryList['id'], 'date', 'Date:', groceryList['date'])
+          'edit-grocery-metadata-modal-date-' + groceryList['id'],
+          'date',
+          'Date:',
+          groceryList['date']
+        )
       ]
       showModal(
         this,
-        'Editing ' + groceryList['title'],
+        'Editing ' + groceryList['store'],
         modalFormLines,
         groceryList,
-        generateAxiosModalCallback(this, EDIT_GROCERY_LIST_METADATA_URL, this.editGroceryListMetadata),
+        generateAxiosModalCallback(
+          this,
+          EDIT_GROCERY_LIST_METADATA_URL,
+          this.editGroceryListMetadata
+        ),
         'Save',
-        'Error saving ' + groceryList['title'])
+        'Error saving ' + groceryList['store']
+      )
     },
     showDeleteGroceryListModal (groceryList) {
       showModal(
         this,
-        'Deleting ' + groceryList['title'],
+        'Deleting ' + groceryList['store'],
         [],
         { id: groceryList['id'] },
-        generateAxiosModalCallback(this, DELETE_GROCERY_LIST_URL, this.deleteGroceryList),
+        generateAxiosModalCallback(
+          this,
+          DELETE_GROCERY_LIST_URL,
+          this.deleteGroceryList
+        ),
         'Delete',
-        'Error deleting ' + groceryList['title'])
+        'Error deleting ' + groceryList['store']
+      )
     },
     showDeletePantryItemModal (pantryItem) {
       showModal(
@@ -375,19 +488,35 @@ export default {
         'Deleting ' + pantryItem['item'],
         [],
         { item: pantryItem['item'] },
-        generateAxiosModalCallback(this, DELETE_PANTRY_ITEM_URL, this.deletePantryItem),
+        generateAxiosModalCallback(
+          this,
+          DELETE_PANTRY_ITEM_URL,
+          this.deletePantryItem
+        ),
         'Delete',
-        'Error deleting ' + pantryItem['item'])
+        'Error deleting ' + pantryItem['item']
+      )
     },
     showDeleteStoreCategoryModal (storeCategory) {
       showModal(
         this,
-        'Deleting category ' + storeCategory['category'] + ' for store ' + storeCategory['store'],
+        'Deleting category ' +
+          storeCategory['category'] +
+          ' for store ' +
+          storeCategory['store'],
         [],
         { store: storeCategory['store'], category: storeCategory['category'] },
-        generateAxiosModalCallback(this, DELETE_STORE_CATEGORY_URL, this.deleteStoreCategory),
+        generateAxiosModalCallback(
+          this,
+          DELETE_STORE_CATEGORY_URL,
+          this.deleteStoreCategory
+        ),
         'Delete',
-        'Error deleting category ' + storeCategory['category'] + ' for store ' + storeCategory['store'])
+        'Error deleting category ' +
+          storeCategory['category'] +
+          ' for store ' +
+          storeCategory['store']
+      )
     },
     showDeleteKnownWordModal (knownWord) {
       showModal(
@@ -395,59 +524,96 @@ export default {
         'Deleting ' + knownWord['word'],
         [],
         { word: knownWord['word'] },
-        generateAxiosModalCallback(this, DELETE_KNOWN_WORD_URL, this.deleteKnownWord),
+        generateAxiosModalCallback(
+          this,
+          DELETE_KNOWN_WORD_URL,
+          this.deleteKnownWord
+        ),
         'Delete',
-        'Error deleting ' + knownWord['word'])
+        'Error deleting ' + knownWord['word']
+      )
     },
     addToPantry (groceryList) {
       callAxiosAndSetButterBar(
-        this, IMPORT_GROCERY_LIST_TO_PANTRY_URL, { id: groceryList['id'] },
-        'Imported ' + groceryList['title'] + ' to the pantry.',
-        'Error importing ' + groceryList['title'] + ' to the pantry.',
+        this,
+        IMPORT_GROCERY_LIST_TO_PANTRY_URL,
+        { id: groceryList['id'] },
+        'Imported ' + groceryList['store'] + ' to the pantry.',
+        'Error importing ' + groceryList['store'] + ' to the pantry.',
         response => {
           this.updatePantryPageDisplay()
           this.closeImportModal()
-        })
+        }
+      )
     },
     editGroceryListMetadata (response) {
-      let currentGroceryListIndex =
-        this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
+      let currentGroceryListIndex = this.groceryLists.findIndex(
+        groceryList => groceryList['id'] === response['data']['id']
+      )
       let newGroceryListItem = this.groceryLists[currentGroceryListIndex]
-      let oldTitle = this.groceryLists[currentGroceryListIndex]['title']
       let oldStore = this.groceryLists[currentGroceryListIndex]['store']
-      newGroceryListItem['title'] = response['data']['title']
       newGroceryListItem['store'] = response['data']['store']
       newGroceryListItem['date'] = response['data']['date']
       this.groceryLists.splice(currentGroceryListIndex, 1, newGroceryListItem)
-      setButterBarMessage(this, 'Saved the data of ' + oldStore + ': ' + oldTitle, ButterBarType.INFO)
+      setButterBarMessage(
+        this,
+        'Saved the data of ' + oldStore,
+        ButterBarType.INFO
+      )
     },
     editGroceryList (groceryList) {
       callAxiosAndSetButterBar(
-        this, EDIT_GROCERY_LIST_URL, { id: groceryList['id'], list: groceryList['list'] },
-        'Saved the contents of ' + groceryList['title'],
-        'Error saving the contents of ' + groceryList['title'],
+        this,
+        EDIT_GROCERY_LIST_URL,
+        { id: groceryList['id'], list: groceryList['list'] },
+        'Saved the contents of ' + groceryList['store'],
+        'Error saving the contents of ' + groceryList['store'],
         response => {
-          let currentGroceryListIndex =
-            this.groceryLists.findIndex(groceryList => groceryList['id'] === response['data']['id'])
+          let currentGroceryListIndex = this.groceryLists.findIndex(
+            groceryList => groceryList['id'] === response['data']['id']
+          )
           response['data']['saved'] = true
-          this.groceryLists.splice(currentGroceryListIndex, 1, response['data'])
-        })
+          this.groceryLists.splice(
+            currentGroceryListIndex,
+            1,
+            response['data']
+          )
+        }
+      )
     },
     deleteGroceryList (response) {
       let deletedGroceryList = response['data']
       this.groceryLists.splice(
-        this.groceryLists.findIndex(groceryList => groceryList['id'] === deletedGroceryList['id']), 1)
-      setButterBarMessage(this, 'Deleted ' + deletedGroceryList['title'], ButterBarType.INFO)
+        this.groceryLists.findIndex(
+          groceryList => groceryList['id'] === deletedGroceryList['id']
+        ),
+        1
+      )
+      setButterBarMessage(
+        this,
+        'Deleted ' + deletedGroceryList['store'],
+        ButterBarType.INFO
+      )
     },
     deletePantryItem (response) {
       let deletedPantryItem = response['data']
       this.pantry.splice(
-        this.pantry.findIndex(pantry => pantry['item'] === deletedPantryItem['item']), 1)
-      setButterBarMessage(this, 'Deleted ' + deletedPantryItem['item'] + ' from the pantry', ButterBarType.INFO)
+        this.pantry.findIndex(
+          pantry => pantry['item'] === deletedPantryItem['item']
+        ),
+        1
+      )
+      setButterBarMessage(
+        this,
+        'Deleted ' + deletedPantryItem['item'] + ' from the pantry',
+        ButterBarType.INFO
+      )
     },
     addPantryItem () {
       callAxiosAndSetButterBar(
-        this, ADD_PANTRY_ITEM_URL, { item: this.pantryItemToAdd },
+        this,
+        ADD_PANTRY_ITEM_URL,
+        { item: this.pantryItemToAdd },
         'Added ' + this.pantryItemToAdd + ' to the pantry',
         'Error adding ' + this.pantryItemToAdd + ' to the pantry',
         response => {
@@ -455,29 +621,49 @@ export default {
           let pantryItem = response['data']
           this.pantry.push(pantryItem)
           this.$refs['pantry-item-to-add'].focus()
-        })
+        }
+      )
     },
     deleteStoreCategory (response) {
       let deletedStoreCategory = response['data']
       this.storeCategories.splice(
-        this.storeCategories.findIndex(storeCategory => storeCategory['store'] === deletedStoreCategory['store'] &&
-          storeCategory['category'] === deletedStoreCategory['category']), 1)
+        this.storeCategories.findIndex(
+          storeCategory =>
+            storeCategory['store'] === deletedStoreCategory['store'] &&
+            storeCategory['category'] === deletedStoreCategory['category']
+        ),
+        1
+      )
       setButterBarMessage(
         this,
-        'Deleted category ' + deletedStoreCategory['category'] + ' from the store ' + deletedStoreCategory['store'],
-        'Error deleting category ' + deletedStoreCategory['category'] + ' from the store ' + deletedStoreCategory['store'],
-        ButterBarType.INFO)
+        'Deleted category ' +
+          deletedStoreCategory['category'] +
+          ' from the store ' +
+          deletedStoreCategory['store'],
+        'Error deleting category ' +
+          deletedStoreCategory['category'] +
+          ' from the store ' +
+          deletedStoreCategory['store'],
+        ButterBarType.INFO
+      )
     },
     addStoreCategory () {
       callAxiosAndSetButterBar(
-        this, ADD_STORE_CATEGORY_URL,
+        this,
+        ADD_STORE_CATEGORY_URL,
         {
           store: this.storeCategoryStoreToAdd,
           category: this.storeCategoryCategoryToAdd,
           label: this.storeCategoryLabelToAdd
         },
-        'Added ' + this.storeCategoryCategoryToAdd + ' to the store ' + this.storeCategoryStoreToAdd,
-        'Error adding ' + this.storeCategoryCategoryToAdd + ' to the store ' + this.storeCategoryStoreToAdd,
+        'Added ' +
+          this.storeCategoryCategoryToAdd +
+          ' to the store ' +
+          this.storeCategoryStoreToAdd,
+        'Error adding ' +
+          this.storeCategoryCategoryToAdd +
+          ' to the store ' +
+          this.storeCategoryStoreToAdd,
         response => {
           this.storeCategoryStoreToAdd = ''
           this.storeCategoryCategoryToAdd = ''
@@ -485,19 +671,28 @@ export default {
           let storeCategory = response['data']
           this.storeCategories.push(storeCategory)
           this.$refs['store-category-store-to-add'].focus()
-        })
+        }
+      )
     },
     deleteKnownWord (response) {
       let deletedKnownWord = response['data']
       this.knownWords.splice(
-        this.knownWords.findIndex(knownWord => knownWord['word'] === deletedKnownWord['word']), 1)
-      setButterBarMessage(this, 'Deleted ' + deletedKnownWord['word'] + ' from the list of known words', ButterBarType.INFO)
+        this.knownWords.findIndex(
+          knownWord => knownWord['word'] === deletedKnownWord['word']
+        ),
+        1
+      )
+      setButterBarMessage(
+        this,
+        'Deleted ' + deletedKnownWord['word'] + ' from the list of known words',
+        ButterBarType.INFO
+      )
     },
     addToKnownWords (groceryList, knownWordsData) {
       let knownWordsDataWithBooleans = knownWordsData.slice()
       for (let index in knownWordsDataWithBooleans) {
         knownWordsDataWithBooleans[index].should_save =
-            knownWordsDataWithBooleans[index].shouldAddToPantry === 'true'
+          knownWordsDataWithBooleans[index].shouldAddToPantry === 'true'
         delete knownWordsDataWithBooleans[index].shouldAddToPantry
       }
       let that = this
@@ -513,11 +708,13 @@ export default {
         },
         function () {
           that.importModalErrorText = 'Error in adding words.'
-        })
+        }
+      )
     },
     addKnownWord () {
       callAxiosAndSetButterBar(
-        this, ADD_KNOWN_WORD_URL,
+        this,
+        ADD_KNOWN_WORD_URL,
         {
           word: this.knownWordToAdd,
           category: this.knownWordToAddCategory,
@@ -531,24 +728,28 @@ export default {
           let knownWord = response['data']
           this.knownWords.push(knownWord)
           this.$refs['known-word-to-add'].focus()
-        })
+        }
+      )
     },
     addGroceryList () {
       callAxiosAndSetButterBar(
-        this, ADD_GROCERY_LIST_URL, {
-          title: this.groceryListTitleToAdd, store: this.groceryListStoreToAdd, date: this.groceryListDateToAdd
+        this,
+        ADD_GROCERY_LIST_URL,
+        {
+          store: this.groceryListStoreToAdd,
+          date: this.groceryListDateToAdd
         },
-        'Added ' + this.groceryListTitleToAdd + ' to the grocery lists',
-        'Error adding ' + this.groceryListTitleToAdd + ' to the grocery lists',
+        'Added ' + this.groceryListStoreToAdd + ' to the grocery lists',
+        'Error adding ' + this.groceryListStoreToAdd + ' to the grocery lists',
         response => {
-          this.groceryListTitleToAdd = ''
           this.groceryListStoreToAdd = ''
           this.groceryListDateToAdd = ''
           let groceryList = response['data']
           groceryList['saved'] = true
           this.groceryLists.push(groceryList)
           this.$refs['grocery-list-store-to-add'].focus()
-        })
+        }
+      )
     },
     updatePantryPageDisplay () {
       callAxiosAndSetButterBar(
@@ -557,7 +758,7 @@ export default {
         {},
         null,
         'Failed to move note.',
-        (response) => {
+        response => {
           for (let index in response['data']['grocery_lists']) {
             response['data']['grocery_lists'][index]['saved'] = true
           }
@@ -565,7 +766,8 @@ export default {
           this.storeCategories = response['data']['store_categories']
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
-        })
+        }
+      )
     }
   }
 }

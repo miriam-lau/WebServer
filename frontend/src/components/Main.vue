@@ -44,32 +44,32 @@
 //   router/index.js
 //   Add a new component.
 //   assets/style.css.
-import Codenames from "./Codenames";
-import CurrentDocuments from "./CurrentDocuments";
-import InventoryTracker from "./InventoryTracker";
-import RecipesPage from "./RecipesPage";
-import RestaurantsPage from "./RestaurantsPage";
-import PantryPage from "./PantryPage";
-import NotesPage from "./NotesPage";
-import Dominion from "./Dominion";
-import DominionGame from "./DominionGame";
-import LotrGame from "./LotrGame";
-import { mapMutations } from "vuex";
+import Codenames from './Codenames'
+import CurrentDocuments from './CurrentDocuments'
+import InventoryTracker from './InventoryTracker'
+import RecipesPage from './RecipesPage'
+import RestaurantsPage from './RestaurantsPage'
+import PantryPage from './PantryPage'
+import NotesPage from './NotesPage'
+import Dominion from './Dominion'
+import DominionGame from './DominionGame'
+import LotrGame from './LotrGame'
+import { mapMutations } from 'vuex'
 
 export default {
-  name: "Main",
-  data() {
+  name: 'Main',
+  data () {
     return {
-      loginUsername: "",
+      loginUsername: '',
       navigationClass: this.setNavigationClass()
-    };
+    }
   },
-  created() {
-    this.setUsername(this.$cookies.get("username"));
+  created () {
+    this.setUsername(this.$cookies.get('username'))
   },
   watch: {
-    $route: function() {
-      this.navigationClass = this.setNavigationClass();
+    $route: function () {
+      this.navigationClass = this.setNavigationClass()
     }
   },
   components: {
@@ -85,38 +85,38 @@ export default {
     NotesPage
   },
   methods: {
-    ...mapMutations(["setUsername"]),
-    saveUsername() {
-      this.setUsername(this.loginUsername);
-      this.$cookies.set("username", this.loginUsername, "1y");
+    ...mapMutations(['setUsername']),
+    saveUsername () {
+      this.setUsername(this.loginUsername)
+      this.$cookies.set('username', this.loginUsername, '1y')
     },
-    navigateTo(path) {
-      this.$router.push({ name: path });
+    navigateTo (path) {
+      this.$router.push({ name: path })
     },
-    setNavigationClass() {
+    setNavigationClass () {
       switch (this.$route.name) {
-        case "currentDocuments":
-          return "nav-current-documents";
-        case "codenames":
-          return "nav-codenames";
-        case "recipesPage":
-          return "nav-recipes-page";
-        case "restaurantsPage":
-          return "nav-restaurants-page";
-        case "pantryPage":
-          return "nav-pantry-page";
-        case "notesPage":
-          return "nav-notes-page";
-        case "inventoryTracker":
-          return "nav-inventory-tracker";
-        case "dominion":
-          return "nav-dominion";
-        case "dominionGame":
-          return "nav-dominion-game";
-        case "lotrGame":
-          return "nav-lotr-game";
+        case 'currentDocuments':
+          return 'nav-current-documents'
+        case 'codenames':
+          return 'nav-codenames'
+        case 'recipesPage':
+          return 'nav-recipes-page'
+        case 'restaurantsPage':
+          return 'nav-restaurants-page'
+        case 'pantryPage':
+          return 'nav-pantry-page'
+        case 'notesPage':
+          return 'nav-notes-page'
+        case 'inventoryTracker':
+          return 'nav-inventory-tracker'
+        case 'dominion':
+          return 'nav-dominion'
+        case 'dominionGame':
+          return 'nav-dominion-game'
+        case 'lotrGame':
+          return 'nav-lotr-game'
       }
     }
   }
-};
+}
 </script>

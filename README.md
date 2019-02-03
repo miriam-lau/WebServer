@@ -247,7 +247,6 @@ create table dish_images (
 
 create table grocery_lists (
   id serial primary key,
-  title varchar(150) not null,
   date date,
   store varchar(150),
   imported boolean not null,
