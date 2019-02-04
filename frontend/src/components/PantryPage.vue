@@ -62,8 +62,8 @@
           </div>
           <div v-if="groceryList['saved']">
             <span v-if="groceryList['imported']">Imported.</span>
-            <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
             <button @click="showExportGroceryListModal(groceryList)">Export list</button>
+            <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
           </div>
           <div v-else>
             Unsaved.
@@ -173,40 +173,8 @@
             <td><input v-model="storeCategoriesToAisles[selectedStore][category]"></td>
           </tr>
         </table>
-        <button @click="addStoreAisles">Add Store Aisles</button>
+        <button @click="addStoreAisles">Save Store Aisles</button>
       </div>
-      <div class="input-form">
-        Store:
-        <input v-model="storeCategoryStoreToAdd" ref="store-category-store-to-add">
-        Category:
-        <input v-model="storeCategoryCategoryToAdd">
-        Label:
-        <input v-model="storeCategoryLabelToAdd">
-        <button @click="addStoreCategory">Add Store Category</button>
-      </div>
-      <table class="table">
-        <tr>
-          <th>Store</th>
-          <th>Category</th>
-          <th>Label</th>
-          <th>Delete</th>
-        </tr>
-        <tr
-          :key="storeCategory['store'] + '@@' + storeCategory['category']"
-          v-for="storeCategory in storeCategories"
-        >
-          <td>{{ storeCategory['store'] }}</td>
-          <td>{{ storeCategory['category'] }}</td>
-          <td>{{ storeCategory['label'] }}</td>
-          <td>
-            <font-awesome-icon
-              icon="trash"
-              class="icon"
-              @click="showDeleteStoreCategoryModal(storeCategory)"
-            />
-          </td>
-        </tr>
-      </table>
     </div>
     <FormModal
       :show="formModal_show"
@@ -268,9 +236,6 @@ const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
 const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
-const DELETE_STORE_CATEGORY_URL = getFullBackendUrlForPath(
-  '/delete_store_category'
-)
 const ADD_STORE_URL = getFullBackendUrlForPath('/add_store')
 const ADD_STORE_AISLES_URL = getFullBackendUrlForPath('/add_store_aisles')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
@@ -287,8 +252,6 @@ export default {
       groceryListDateToAdd: '',
       pantryItemToAdd: '',
       storeToAdd: '',
-      storeCategoryCategoryToAdd: '',
-      storeCategoryLabelToAdd: '',
       knownWordToAdd: '',
       knownWordToAddCategory: '',
       knownWordToAddShouldSave: 'True',
@@ -528,27 +491,6 @@ export default {
         'Error deleting ' + pantryItem['item']
       )
     },
-    showDeleteStoreCategoryModal (storeCategory) {
-      showModal(
-        this,
-        'Deleting category ' +
-          storeCategory['category'] +
-          ' for store ' +
-          storeCategory['store'],
-        [],
-        { store: storeCategory['store'], category: storeCategory['category'] },
-        generateAxiosModalCallback(
-          this,
-          DELETE_STORE_CATEGORY_URL,
-          this.deleteStoreCategory
-        ),
-        'Delete',
-        'Error deleting category ' +
-          storeCategory['category'] +
-          ' for store ' +
-          storeCategory['store']
-      )
-    },
     showDeleteKnownWordModal (knownWord) {
       showModal(
         this,
@@ -655,54 +597,19 @@ export default {
         }
       )
     },
-    deleteStoreCategory (response) {
-      let deletedStoreCategory = response['data']
-      this.storeCategories.splice(
-        this.storeCategories.findIndex(
-          storeCategory =>
-            storeCategory['store'] === deletedStoreCategory['store'] &&
-            storeCategory['category'] === deletedStoreCategory['category']
-        ),
-        1
-      )
-      setButterBarMessage(
-        this,
-        'Deleted category ' +
-          deletedStoreCategory['category'] +
-          ' from the store ' +
-          deletedStoreCategory['store'],
-        'Error deleting category ' +
-          deletedStoreCategory['category'] +
-          ' from the store ' +
-          deletedStoreCategory['store'],
-        ButterBarType.INFO
-      )
-    },
     addStoreAisles () {
       callAxiosAndSetButterBar(
         this,
         ADD_STORE_AISLES_URL,
         {
-          store: this.storeCategoryStoreToAdd,
-          category: this.storeCategoryCategoryToAdd,
-          label: this.storeCategoryLabelToAdd
+          store: this.selectedStore,
+          categories_to_aisles: this.storeCategoriesToAisles[this.selectedStore]
         },
-        'Added ' +
-          this.storeCategoryCategoryToAdd +
-          ' to the store ' +
-          this.storeCategoryStoreToAdd,
-        'Error adding ' +
-          this.storeCategoryCategoryToAdd +
-          ' to the store ' +
-          this.storeCategoryStoreToAdd,
-        response => {
-          this.storeCategoryStoreToAdd = ''
-          this.storeCategoryCategoryToAdd = ''
-          this.storeCategoryLabelToAdd = ''
-          let storeCategory = response['data']
-          this.storeCategories.push(storeCategory)
-          this.$refs['store-category-store-to-add'].focus()
-        }
+        'Added aisles to the store ' +
+          this.selectedStore,
+        'Error adding aisles to the store ' +
+          this.selectedStore,
+        response => {}
       )
     },
     addStore () {
@@ -718,6 +625,10 @@ export default {
           this.storeToAdd = ''
           let store = response['data']['store']
           this.stores.push(store)
+          this.storeCategoriesToAisles[store] = {}
+          for (let category in this.categories) {
+            this.storeCategoriesToAisles[store][category] = ''
+          }
           this.$refs['store-to-add'].focus()
         }
       )
@@ -736,6 +647,7 @@ export default {
         ButterBarType.INFO
       )
     },
+    // TODO: Adding to known words should update categories.
     addToKnownWords (groceryList, knownWordsData) {
       let knownWordsDataWithBooleans = knownWordsData.slice()
       for (let index in knownWordsDataWithBooleans) {

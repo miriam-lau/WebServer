@@ -353,19 +353,12 @@ def add_pantry_item():
   return jsonify(pantry_page.add_pantry_item(pantry_item))
 
 
-@app.route("/delete_store_category", methods=["POST"])
-def delete_store_category():
+@app.route("/add_store_aisles", methods=["POST"])
+def add_store_aisles():
   store = request.json["store"]
-  category = request.json["category"]
-  return jsonify(pantry_page.delete_store_category(store, category))
-
-
-@app.route("/add_store_category", methods=["POST"])
-def add_store_category():
-  store = request.json["store"]
-  category = request.json["category"]
-  label = request.json["label"]
-  return jsonify(pantry_page.add_store_category(store, category, label))
+  categories_to_aisles = request.json["categories_to_aisles"]
+  pantry_page.add_store_aisles(store, categories_to_aisles)
+  return ''
 
 
 @app.route("/add_store", methods=["POST"])

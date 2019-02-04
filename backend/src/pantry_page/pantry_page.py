@@ -207,20 +207,20 @@ class PantryPage:
       cur.close()
       raise
 
-  def add_store_category(self, store, category, label):
-    if not category or not store or not label:
-      raise Exception("store, category, and label must all not be empty.")
+  def add_store_aisles(self, store, categories_to_aisles):
+    if not store:
+      raise Exception("store must not be empty.")
 
     cur = self._database.get_cursor()
 
     try:
-      cur.execute(
-          "INSERT INTO grocery_store_categories(store, category, label) VALUES(%s, %s, %s) RETURNING *",
-          (store, category, label))
-      ret = cur.fetchone()
+      cur.execute("DELETE FROM grocery_store_categories where store = %s", (store,))
+      for category in categories_to_aisles:
+        cur.execute(
+            "INSERT INTO grocery_store_categories(store, category, label) VALUES(%s, %s, %s) RETURNING *",
+            (store, category, categories_to_aisles[category]))
       self._database.commit()
       cur.close()
-      return ret
     except psycopg2.Error:
       self._database.rollback()
       cur.close()
