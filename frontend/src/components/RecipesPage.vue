@@ -331,6 +331,15 @@ export default {
       }
       return (rating1 + rating2) / 2
     },
+    compareCookbooks (cookbook1, cookbook2) {
+      if (cookbook1.values[0] < cookbook2.values[0]) {
+        return -1
+      }
+      if (cookbook1.values[0] > cookbook2.values[0]) {
+        return 1
+      }
+      return 0
+    },
     showCookbooks () {
       this.backLinks = []
       this.title = 'Cookbooks'
@@ -340,7 +349,8 @@ export default {
       this.infoDicts = []
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Recipes Made', 'Recipes Liked']
-      this.childTableValues = this.entity['children'].map(cookbookId => {
+
+      let unsortedCookbooks = this.entity['children'].map(cookbookId => {
         let cookbook = this.recipesPageData['cookbook'][cookbookId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { cookbook: '' + cookbook['id'] })
         let numRecipesMade = this.getNumRecipesMadeFromCookbook(cookbook)
@@ -351,9 +361,26 @@ export default {
           values: [cookbook['name'], numRecipesMade, successRate]
         }
       })
+
+      this.childTableValues = unsortedCookbooks.sort(this.compareCookbooks)
     },
     navigateTo (name, queryParams) {
       this.$router.push({ name: name, query: queryParams })
+    },
+    compareRecipes (recipe1, recipe2) {
+      if (recipe1.values[4] < recipe2.values[4]) {
+        return -1
+      }
+      if (recipe1.values[4] > recipe2.values[4]) {
+        return 1
+      }
+      if (recipe1.values[0] < recipe2.values[0]) {
+        return -1
+      }
+      if (recipe1.values[0] > recipe2.values[0]) {
+        return 1
+      }
+      return 0
     },
     showCookbook (cookbook) {
       let id = cookbook['id']
@@ -377,7 +404,8 @@ export default {
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Times Made', 'Best Rating', 'Latest Rating', 'Category']
-      this.childTableValues = cookbook['children'].map(recipeId => {
+
+      let unsortedRecipes = cookbook['children'].map(recipeId => {
         let recipe = this.recipesPageData['recipe'][recipeId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { recipe: '' + recipeId })
         return {
@@ -391,6 +419,20 @@ export default {
             recipe['category']]
         }
       })
+
+      this.childTableValues = unsortedRecipes.sort(this.compareRecipes)
+    },
+    compareRecipeDates (recipeDate1, recipeDate2) {
+      let date1 = new Date(Date.parse(recipeDate1.values[0]))
+      let date2 = new Date(Date.parse(recipeDate2.values[0]))
+
+      if (date1 < date2) {
+        return 1
+      }
+      if (date1 > date2) {
+        return -1
+      }
+      return 0
     },
     showRecipe (recipe) {
       let id = recipe['id']
@@ -426,7 +468,8 @@ export default {
       this.hasChildren = true
       this.childTableHeaders = ['Date', 'Overall Rating', 'Miriam\'s Rating', 'Miriam\'s Comments',
         'James\' Rating', 'James\' Comments']
-      this.childTableValues = recipe['children'].map(recipeMealId => {
+
+      let unsortedRecipeDates = recipe['children'].map(recipeMealId => {
         let recipeMeal = this.recipesPageData['recipe_meal'][recipeMealId]
         let handleClick = this.navigateTo.bind(this, 'recipesPage', { 'recipe-meal': '' + recipeMeal['id'] })
         return {
@@ -437,6 +480,8 @@ export default {
             recipeMeal['user_2_rating'].toFixed(1), recipeMeal['user_2_comments']]
         }
       })
+
+      this.childTableValues = unsortedRecipeDates.sort(this.compareRecipeDates)
     },
     showRecipeMeal (recipeMeal) {
       let id = recipeMeal['id']

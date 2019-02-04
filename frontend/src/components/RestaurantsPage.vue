@@ -401,10 +401,24 @@ export default {
       unsortedCityValues.sort(this.compareCities)
 
       this.childTableValues = unsortedCityValues
-      console.log(unsortedCityValues)
     },
     navigateTo (name, queryParams) {
       this.$router.push({ name: name, query: queryParams })
+    },
+    compareRestaurants (restaurant1, restaurant2) {
+      if (restaurant1.values[3] < restaurant2.values[3]) {
+        return -1
+      }
+      if (restaurant1.values[3] > restaurant2.values[3]) {
+        return 1
+      }
+      if (restaurant1.values[0] < restaurant2.values[0]) {
+        return -1
+      }
+      if (restaurant1.values[0] > restaurant2.values[0]) {
+        return 1
+      }
+      return 0
     },
     showCity (city) {
       let id = city['id']
@@ -424,7 +438,8 @@ export default {
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Dishes Tried', 'Best Rating', 'Category']
-      this.childTableValues = city['children'].map(restaurantId => {
+
+      let unsortedRestaurantValues = city['children'].map(restaurantId => {
         let restaurant = this.restaurantsPageData['restaurant'][restaurantId]
         let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { restaurant: '' + restaurant['id'] })
         return {
@@ -437,6 +452,23 @@ export default {
             restaurant['category']]
         }
       })
+
+      this.childTableValues = unsortedRestaurantValues.sort(this.compareRestaurants)
+    },
+    compareDishes (dish1, dish2) {
+      if (dish1.values[3] < dish2.values[3]) {
+        return -1
+      }
+      if (dish1.values[3] > dish2.values[3]) {
+        return 1
+      }
+      if (dish1.values[0] < dish2.values[0]) {
+        return -1
+      }
+      if (dish1.values[0] > dish2.values[0]) {
+        return 1
+      }
+      return 0
     },
     showRestaurant (restaurant) {
       let id = restaurant['id']
@@ -464,7 +496,8 @@ export default {
       ]
       this.hasChildren = true
       this.childTableHeaders = ['Name', 'Num Times Tried', 'Best Rating', 'Category']
-      this.childTableValues = restaurant['children'].map(dishId => {
+
+      let unsortedDishValues = restaurant['children'].map(dishId => {
         let dish = this.restaurantsPageData['dish'][dishId]
         let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { dish: '' + dish['id'] })
         return {
@@ -477,6 +510,20 @@ export default {
             dish['category']]
         }
       })
+
+      this.childTableValues = unsortedDishValues.sort(this.compareDishes)
+    },
+    compareDishDates (dishDate1, dishDate2) {
+      let date1 = new Date(Date.parse(dishDate1.values[0]))
+      let date2 = new Date(Date.parse(dishDate2.values[0]))
+
+      if (date1 < date2) {
+        return 1
+      }
+      if (date1 > date2) {
+        return -1
+      }
+      return 0
     },
     showDish (dish) {
       let id = dish['id']
@@ -509,7 +556,8 @@ export default {
       this.hasChildren = true
       this.childTableHeaders = ['Date', 'Overall Rating', 'Miriam\'s Rating', 'Miriam\'s Comments',
         'James\' Rating', 'James\' Comments']
-      this.childTableValues = dish['children'].map(dishMealId => {
+
+      let unsortedDishValues = dish['children'].map(dishMealId => {
         let dishMeal = this.restaurantsPageData['dish_meal'][dishMealId]
         let handleClick = this.navigateTo.bind(this, 'restaurantsPage', { 'dish-meal': '' + dishMeal['id'] })
         return {
@@ -520,6 +568,8 @@ export default {
             dishMeal['user_2_comments']]
         }
       })
+
+      this.childTableValues = unsortedDishValues.sort(this.compareDishDates)
     },
     showDishMeal (dishMeal) {
       let id = dishMeal['id']
