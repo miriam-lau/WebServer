@@ -514,11 +514,14 @@ export default {
       this.childTableValues = unsortedDishValues.sort(this.compareDishes)
     },
     compareDishDates (dishDate1, dishDate2) {
-      if (dishDate1.values[0] < dishDate2.values[0]) {
-        return -1
-      }
-      if (dishDate1.values[0] > dishDate2.values[0]) {
+      let date1 = new Date(Date.parse(dishDate1.values[0]))
+      let date2 = new Date(Date.parse(dishDate2.values[0]))
+
+      if (date1 < date2) {
         return 1
+      }
+      if (date1 > date2) {
+        return -1
       }
       return 0
     },
