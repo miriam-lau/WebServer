@@ -43,8 +43,17 @@ class PantryPage:
           "SELECT * from grocery_known_words order by should_save desc, word")
       known_words = cur.fetchall()
       cur.execute(
-          "SELECT * from grocery_store_categories order by store, category")
-      store_categories = cur.fetchall()
+          "SELECT store from grocery_stores order by store")
+      store_objects = cur.fetchall()
+      stores = []
+      for store_object in store_objects:
+        stores.append(store_object["store"])
+      cur.execute(
+          "SELECT DISTINCT category from grocery_known_words order by category")
+      category_objects = cur.fetchall()
+      categories = []
+      for category_object in category_objects:
+        categories.append(category_object["category"])
 
       known_words_map = {}
       for known_word in known_words:
@@ -57,12 +66,26 @@ class PantryPage:
         list_text.sort()
         grocery_list["list"] = "\n".join(list_text)
 
+      cur.execute(
+          "SELECT * from grocery_store_categories")
+      store_category_objects = cur.fetchall()
+      store_categories_to_aisles = {}
+      for store in stores:
+        store_categories_to_aisles[store] = {}
+        store_object = store_categories_to_aisles[store]
+        for category in categories:
+          store_object[category] = ''
+      for store_category_object in store_category_objects:
+        store_categories_to_aisles[store_category_object['store']][store_category_object['category']] = store_category_object['label']
+
       cur.close()
       return {
           "grocery_lists": grocery_lists,
           "pantry": pantry_items,
-          "store_categories": store_categories,
-          "known_words": known_words
+          "store_categories_to_aisles": store_categories_to_aisles,
+          "known_words": known_words,
+          "stores": stores,
+          "categories": categories
       }
     except psycopg2.Error:
       self._database.rollback()
@@ -194,6 +217,25 @@ class PantryPage:
       cur.execute(
           "INSERT INTO grocery_store_categories(store, category, label) VALUES(%s, %s, %s) RETURNING *",
           (store, category, label))
+      ret = cur.fetchone()
+      self._database.commit()
+      cur.close()
+      return ret
+    except psycopg2.Error:
+      self._database.rollback()
+      cur.close()
+      raise
+
+  def add_store(self, store):
+    if not store:
+      raise Exception("store must all not be empty.")
+
+    cur = self._database.get_cursor()
+
+    try:
+      cur.execute(
+          "INSERT INTO grocery_stores(store) VALUES(%s) RETURNING *",
+          (store,))
       ret = cur.fetchone()
       self._database.commit()
       cur.close()

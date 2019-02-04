@@ -266,6 +266,10 @@ create table grocery_store_categories (
   primary key (store, category)
 );
 
+create table grocery_stores (
+  store varchar(150) primary key
+);
+
 create table pantry (
   item varchar(150) primary key
 );

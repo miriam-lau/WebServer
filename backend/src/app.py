@@ -368,6 +368,12 @@ def add_store_category():
   return jsonify(pantry_page.add_store_category(store, category, label))
 
 
+@app.route("/add_store", methods=["POST"])
+def add_store():
+  store = request.json["store"]
+  return jsonify(pantry_page.add_store(store))
+
+
 @app.route("/delete_known_word", methods=["POST"])
 def delete_known_word():
   known_word = request.json["word"]

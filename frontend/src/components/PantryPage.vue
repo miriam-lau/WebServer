@@ -149,6 +149,32 @@
     </div>
     <div v-else-if="currentPage === 'store-categories'">
       <h2>Store Categories</h2>
+      <div class="add-store-input-form">
+        Store:
+        <input v-model="storeToAdd" ref="store-to-add">
+        <button @click="addStore">Add Store</button>
+      </div>
+      Select store: <select v-model="selectedStore">
+        <option disabled value="">Please select one</option>
+        <option :key="store" v-for="store in stores">{{store}}</option>
+      </select>
+      <div v-if="selectedStore">
+        Aisles for {{selectedStore}}
+        <table class="table">
+          <tr>
+            <th>Category</th>
+            <th>Aisle</th>
+          </tr>
+          <tr
+            :key="selectedStore + '@@' + category"
+            v-for="category in categories"
+          >
+            <td>{{ category }}</td>
+            <td><input v-model="storeCategoriesToAisles[selectedStore][category]"></td>
+          </tr>
+        </table>
+        <button @click="addStoreAisles">Add Store Aisles</button>
+      </div>
       <div class="input-form">
         Store:
         <input v-model="storeCategoryStoreToAdd" ref="store-category-store-to-add">
@@ -245,7 +271,8 @@ const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
 const DELETE_STORE_CATEGORY_URL = getFullBackendUrlForPath(
   '/delete_store_category'
 )
-const ADD_STORE_CATEGORY_URL = getFullBackendUrlForPath('/add_store_category')
+const ADD_STORE_URL = getFullBackendUrlForPath('/add_store')
+const ADD_STORE_AISLES_URL = getFullBackendUrlForPath('/add_store_aisles')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
 
 export default {
@@ -259,7 +286,7 @@ export default {
       groceryListStoreToAdd: '',
       groceryListDateToAdd: '',
       pantryItemToAdd: '',
-      storeCategoryStoreToAdd: '',
+      storeToAdd: '',
       storeCategoryCategoryToAdd: '',
       storeCategoryLabelToAdd: '',
       knownWordToAdd: '',
@@ -276,6 +303,10 @@ export default {
       willIgnoreWords: [],
       unrecognizedWords: [],
       alreadyInPantryWords: [],
+      stores: [],
+      selectedStore: '',
+      categories: [],
+      storeCategoriesToAisles: {},
 
       formModal_show: false,
       formModal_title: '',
@@ -647,10 +678,10 @@ export default {
         ButterBarType.INFO
       )
     },
-    addStoreCategory () {
+    addStoreAisles () {
       callAxiosAndSetButterBar(
         this,
-        ADD_STORE_CATEGORY_URL,
+        ADD_STORE_AISLES_URL,
         {
           store: this.storeCategoryStoreToAdd,
           category: this.storeCategoryCategoryToAdd,
@@ -671,6 +702,23 @@ export default {
           let storeCategory = response['data']
           this.storeCategories.push(storeCategory)
           this.$refs['store-category-store-to-add'].focus()
+        }
+      )
+    },
+    addStore () {
+      callAxiosAndSetButterBar(
+        this,
+        ADD_STORE_URL,
+        {
+          store: this.storeToAdd
+        },
+        'Added ' + this.storeToAdd,
+        'Error adding ' + this.storeToAdd,
+        response => {
+          this.storeToAdd = ''
+          let store = response['data']['store']
+          this.stores.push(store)
+          this.$refs['store-to-add'].focus()
         }
       )
     },
@@ -766,6 +814,9 @@ export default {
           this.storeCategories = response['data']['store_categories']
           this.pantry = response['data']['pantry']
           this.knownWords = response['data']['known_words']
+          this.stores = response['data']['stores']
+          this.categories = response['data']['categories']
+          this.storeCategoriesToAisles = response['data']['store_categories_to_aisles']
         }
       )
     }

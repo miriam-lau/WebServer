@@ -22,3 +22,7 @@ nav.nav-pantry-known-words .nav-pantry-known-words,
 nav.nav-pantry-store-categories .nav-pantry-store-categories {
         background-color:#e35885;
 }
+
+.add-store-input-form {
+  margin-bottom: 20px;
+}
