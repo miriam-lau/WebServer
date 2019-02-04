@@ -370,6 +370,45 @@ class PantryPage:
       cur.close()
       raise
 
+  def validate_known_words(self, grocery_list_id):
+    cur = self._database.get_cursor()
+
+    try:
+      cur.execute(
+          "SELECT * from grocery_lists where id = %s", (grocery_list_id,))
+      grocery_list = cur.fetchone()
+      if grocery_list is None:
+        raise Exception("Grocery list could not be found.")
+
+      cur.execute("SELECT * from grocery_known_words")
+      known_words = cur.fetchall()
+      known_words_map = {}
+      for known_word in known_words:
+        known_words_map[known_word["word"]] = True
+
+      ret = {
+        "unrecognized": [],
+      }
+
+      for grocery_list_line in (grocery_list["list"].split("\n")):
+        grocery_list_line = grocery_list_line.strip()
+        if len(grocery_list_line) > 0 and grocery_list_line[0] == '?':
+          continue
+        if grocery_list_line == '':
+          continue
+        grocery_list_word = PantryPage._get_grocery_word_from_line(
+            grocery_list_line)
+        if not grocery_list_word in known_words_map:
+          ret["unrecognized"].append(grocery_list_word)
+
+      cur.close()
+      return ret
+
+    except psycopg2.Error:
+      self._database.rollback()
+      cur.close()
+      raise
+
   def get_export_text(self, grocery_list_id):
     cur = self._database.get_cursor()
 

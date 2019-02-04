@@ -62,8 +62,8 @@
           </div>
           <div v-if="groceryList['saved']">
             <span v-if="groceryList['imported']">Imported.</span>
-            <button @click="showExportGroceryListModal(groceryList)">Export list</button>
-            <button @click="attemptAddToPantry(groceryList)">Add to Pantry</button>
+            <button @click="validateKnownWords(groceryList, showExportGroceryListModal)">Export list</button>
+            <button @click="validateKnownWords(groceryList, attemptAddToPantry)">Add to Pantry</button>
           </div>
           <div v-else>
             Unsaved.
@@ -83,6 +83,16 @@
         :handleImportButtonClick="this.addToPantry"
         :addToKnownWords="this.addToKnownWords"
         :showErrorText="this.importModalShowErrorText"
+      />
+      <AddToKnownWordsModal
+        :callback="addToKnownWordsCallback"
+        :close="closeAddToKnownWordsModal"
+        :show="shouldShowAddToKnownWordsModal"
+        :errorText="addToKnownWordsModalErrorText"
+        :groceryList="groceryListToAddKnownWordsFor"
+        :unrecognizedWords="unrecognizedWords"
+        :addToKnownWords="addToKnownWords"
+        :showErrorText="addToKnownWordsModalShowErrorText"
       />
       <ExportGroceryListModal
         :close="closeExportModal"
@@ -209,6 +219,7 @@ import {
 
 import EditableDiv from './shared/EditableDiv'
 import ImportToPantryModal from './pantry_page/ImportToPantryModal'
+import AddToKnownWordsModal from './pantry_page/AddToKnownWordsModal'
 import ExportGroceryListModal from './pantry_page/ExportGroceryListModal'
 import {
   getFullBackendUrlForPath,
@@ -236,6 +247,7 @@ const ADD_PANTRY_ITEM_URL = getFullBackendUrlForPath('/add_pantry_item')
 const DELETE_KNOWN_WORD_URL = getFullBackendUrlForPath('/delete_known_word')
 const ADD_KNOWN_WORD_URL = getFullBackendUrlForPath('/add_known_word')
 const ADD_KNOWN_WORDS_URL = getFullBackendUrlForPath('/add_known_words')
+const VALIDATE_KNOWN_WORDS_URL = getFullBackendUrlForPath('/validate_known_words')
 const ADD_STORE_URL = getFullBackendUrlForPath('/add_store')
 const ADD_STORE_AISLES_URL = getFullBackendUrlForPath('/add_store_aisles')
 const PANTRY_EXPORT_TEXT_URL = getFullBackendUrlForPath('/pantry_export_text')
@@ -256,12 +268,15 @@ export default {
       knownWordToAddCategory: '',
       knownWordToAddShouldSave: 'True',
       groceryListToImport: {},
+      groceryListToAddKnownWordsFor: {},
       exportLines: [],
       pantryGroceryListKey: 0,
       shouldShowImportModal: false,
       shouldShowExportModal: false,
+      shouldShowAddToKnownWordsModal: false,
       currentPage: '',
       importModalErrorText: '',
+      addToKnownWordsModalErrorText: '',
       willImportWords: [],
       willIgnoreWords: [],
       unrecognizedWords: [],
@@ -270,6 +285,7 @@ export default {
       selectedStore: '',
       categories: [],
       storeCategoriesToAisles: {},
+      addToKnownWordsCallback: Function,
 
       formModal_show: false,
       formModal_title: '',
@@ -293,6 +309,7 @@ export default {
     EditableDiv,
     ImportToPantryModal,
     ExportGroceryListModal,
+    AddToKnownWordsModal,
     ButterBar
   },
   computed: {
@@ -360,6 +377,9 @@ export default {
     importModalShowErrorText (text) {
       this.importModalErrorText = text
     },
+    addToKnownWordsModalShowErrorText (text) {
+      this.addToKnownWordsModalErrorText = text
+    },
     attemptAddToPantry (groceryList) {
       callAxiosAndSetButterBar(
         this,
@@ -378,13 +398,36 @@ export default {
         }
       )
     },
+    showAddToKnownWordsModal (groceryList, unrecognizedWords, callback) {
+      this.groceryListToAddKnownWordsFor = groceryList
+      this.unrecognizedWords = unrecognizedWords
+      this.shouldShowAddToKnownWordsModal = true
+      this.addToKnownWordsModalErrorText = ''
+      this.addToKnownWordsCallback = callback
+    },
+    validateKnownWords (groceryList, callback) {
+      callAxiosAndSetButterBar(
+        this,
+        VALIDATE_KNOWN_WORDS_URL,
+        { id: groceryList['id'] },
+        null,
+        'Failed to validate known words.',
+        response => {
+          if (response['data']['unrecognized'].length === 0) {
+            callback(groceryList)
+          } else {
+            this.showAddToKnownWordsModal(groceryList, response['data']['unrecognized'], callback)
+          }
+        }
+      )
+    },
     showExportGroceryListModal (groceryList) {
       callAxiosAndSetButterBar(
         this,
         PANTRY_EXPORT_TEXT_URL,
         { id: groceryList['id'] },
         null,
-        'Failed to move note.',
+        'Failed to export grocery list.',
         response => {
           this.showExportModal(groceryList, response['data'])
         }
@@ -409,6 +452,9 @@ export default {
     },
     closeImportModal () {
       this.shouldShowImportModal = false
+    },
+    closeAddToKnownWordsModal () {
+      this.shouldShowAddToKnownWordsModal = false
     },
     showImportModal (
       groceryList,
@@ -648,7 +694,7 @@ export default {
       )
     },
     // TODO: Adding to known words should update categories.
-    addToKnownWords (groceryList, knownWordsData) {
+    addToKnownWords (groceryList, knownWordsData, callback) {
       let knownWordsDataWithBooleans = knownWordsData.slice()
       for (let index in knownWordsDataWithBooleans) {
         knownWordsDataWithBooleans[index].should_save =
@@ -664,7 +710,7 @@ export default {
           for (let index in knownWords) {
             that.knownWords.push(knownWords[index])
           }
-          that.attemptAddToPantry(groceryList)
+          callback(groceryList)
         },
         function () {
           that.importModalErrorText = 'Error in adding words.'
