@@ -46,14 +46,14 @@ npm run dev -- --hot --host 0.0.0.0 (works in windows)
 
 ## Copying the recipe/restaurant databases to Google Drive
 
-# Recipes
+### Recipes
 In psql as webserver user:
 copy (select recipe_meals.date as "Date", cookbooks.name as "Cookbook", recipes.name as "Recipe", ROUND(CAST((recipe_meals.user_1_rating + recipe_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", recipe_meals.user_1_rating as "Miriam's Rating", recipe_meals.user_2_rating as "James' Rating", recipes.category as "Category", recipes.notes as "Notes", recipe_meals.user_1_comments as "Miriam's Comments", recipe_meals.user_2_comments as "James' Comments", cookbooks.notes as "Cookbook Notes" from cookbooks,recipes,recipe_meals where recipes.parent_id = cookbooks.id and recipe_meals.parent_id = recipes.id) to '/home/webserver/Recipe Ratings.csv' with (format csv,header, delimiter ',');
 
 To copy to the mac:
 scp webserver@192.168.86.100:"/home/webserver/Recipe\ Ratings.csv" .
 
-# Restaurants
+### Restaurants
 
 In psql as webserver user:
 copy (select dish_meals.date as "Date", cities.name as "City", restaurants.name as "Restaurant", dishes.name as "Dish", ROUND(CAST((dish_meals.user_1_rating + dish_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", dish_meals.user_1_rating as "Miriam's Rating", dish_meals.user_2_rating as "James' Rating", dishes.category as "Dish Category", restaurants.category as "Restaurant Category", dishes.notes as "Notes", dish_meals.user_1_comments as "Miriam's Comments", dish_meals.user_2_comments as "James' Comments", restaurants.address as "Address", cities.state as "State", cities.country as "Country", restaurants.notes as "Restaurant Notes" from cities,restaurants,dishes,dish_meals where restaurants.parent_id = cities.id and dishes.parent_id = restaurants.id and dish_meals.parent_id = dishes.id) to '/home/webserver/Restaurant Ratings.csv' with (format csv,header, delimiter ',');
