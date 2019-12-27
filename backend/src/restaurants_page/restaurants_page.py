@@ -223,7 +223,6 @@ class RestaurantsPage:
 
     try:
       ret = {}
-
       cities_dict = {}
       cities_dict[0] = {
           "entity_type": "cities",
@@ -269,3 +268,23 @@ class RestaurantsPage:
       self._database.rollback()
       cur.close()
       raise
+
+  # Unused.
+  def generate_spreadsheet_from_data(self):
+    cur = self._database.get_cursor()
+
+    try:
+      ret = {}
+
+      outputquery = "COPY (SELECT cities.name as city_name, cities.state, cities.country, restaurants.name as restaurant_name, restaurants.category as restaurant_category, restaurants.address, restaurants.notes as restaurant_notes, dishes.name as dish_name, dishes.category as dish_category, dishes.notes as dish_notes, dish_meals.date, dish_meals.user_1_rating, dish_meals.user_2_rating, dish_meals.user_1_comments, dish_meals.user_2_comments  from cities, restaurants, dishes, dish_meals where restaurants.parent_id = cities.id AND dishes.parent_id = restaurants.id AND dish_meals.parent_id = dishes.id) TO STDOUT WITH CSV HEADER"
+
+      with open("resultsfile", "w", encoding="utf-8") as f:
+        cur.copy_expert(outputquery, f)
+
+      cur.close()
+      return ret
+    except Exception as e:
+      self._database.rollback()
+      cur.close()
+      raise
+
