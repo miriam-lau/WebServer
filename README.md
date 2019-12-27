@@ -39,10 +39,10 @@ https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-da
 
 ## To run in dev mode:
 from backend/src:<br/>
-flask run --reload --debugger --host=0.0.0.0<br><br/>
+flask run --reload --debugger --host=0.0.0.0<br><br/> (windws without --reload)
 
 from frontend/:<br/>
-npm run dev -- --hot --host 0.0.0.0
+npm run dev -- --hot --host 0.0.0.0 (works in windows)
 
 ## Database configuration
 
