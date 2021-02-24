@@ -1,37 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import CurrentDocuments from '@/components/CurrentDocuments'
-import HobbyTracker from '@/components/HobbyTracker'
-import InventoryTracker from '@/components/InventoryTracker'
-import Codenames from '@/components/Codenames'
 import RecipesPage from '@/components/RecipesPage'
 import RestaurantsPage from '@/components/RestaurantsPage'
 import PantryPage from '@/components/PantryPage'
-import NotesPage from '@/components/NotesPage'
 import NotFound from '@/components/NotFound'
-import Dominion from '@/components/Dominion'
-import DominionGame from '@/components/DominionGame'
-import LotrGame from '@/components/LotrGame'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
-      path: '/current-documents',
-      name: 'currentDocuments',
-      component: CurrentDocuments
-    },
-    {
-      path: '/hobby-tracker',
-      name: 'hobbyTracker',
-      component: HobbyTracker
-    },
-    {
-      path: '/codenames',
-      name: 'codenames',
-      component: Codenames
-    },
     {
       path: '/recipes',
       name: 'recipesPage',
@@ -58,31 +35,6 @@ export default new Router({
       name: 'pantryPage',
       component: PantryPage,
       alias: '/pantry/*'
-    },
-    {
-      path: '/notes',
-      name: 'notesPage',
-      component: NotesPage
-    },
-    {
-      path: '/inventory-tracker',
-      name: 'inventoryTracker',
-      component: InventoryTracker
-    },
-    {
-      path: '/dominion',
-      name: 'dominion',
-      component: Dominion
-    },
-    {
-      path: '/dominion-game',
-      name: 'dominionGame',
-      component: DominionGame
-    },
-    {
-      path: '/lotr-game',
-      name: 'lotrGame',
-      component: LotrGame
     },
     {
       path: '*',

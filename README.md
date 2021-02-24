@@ -3,75 +3,62 @@
 
 ## Build Setup
 
-git clone git@github.com:miriam-lau/WebServer.git<br>
-install python<br>
-install npm<br>
-install postgres<br>
-in postgres, <br>
-create database webserver;<br>
-create user webserver with password <password>;<br>
-grant all privileges on database webserver to webserver;<br>
+* git clone git@github.com:miriam-lau/WebServer.git
+* install python
+* install npm
+* install postgres
+* In postgres: 
+  * create database webserver;
+  * create user webserver with password <password>;
+  * grant all privileges on database webserver to webserver;
 
-<br>
-From WebServer/<br>
-python3 -m pip install --user virtualenv<br>
-python3 -m virtualenv env<br>
-pip3 install flask flask-socketio eventlet<br>
-pip3 install psycopg2<br>
-pip3 install -U flask-cors<br>
-pip3 install pyyaml<br>
-pip3 install beautifulsoup4<br><br>
+## Setting up the backend server
+Navigate to the /backend/ directory.
+```
+python3 -m pip install --user virtualenv
+python3 -m virtualenv env
+python3 -m pip install flask flask-socketio eventlet
+python3 -m pip install psycopg2
+python3 -m pip install -U flask-cors
+python3 -m pip install pyyaml
+python3 -m pip install beautifulsoup4
+```
 
-// navigate to "frontend" directory
-npm install -g vue-cli<br>
-npm install vue-cookies --save<br>
-npm install vuex --save<br>
-npm install axios --save<br>
-npm i --save @fortawesome/fontawesome-svg-core<br>
-npm i --save @fortawesome/free-solid-svg-icons<br>
-npm install --save @fortawesome/vue-fontawesome<br>
-npm install vue-masonry --save<br>
-<br>
-psql databasename < data_base_dump
+## Setting up the frontend server
+Navigate to the /frontend/ directory.
+```
+npm install -g vue-cli
+npm install vue-cookies --save
+npm install vuex --save
+npm install axios --save
+npm i --save @fortawesome/fontawesome-svg-core
+npm i --save @fortawesome/free-solid-svg-icons
+npm install --save @fortawesome/vue-fontawesome
+npm install vue-masonry --save
+```
 
-## Restoring the database in windows
-https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7
+## Running the backend server
+Navigate to /backend/src/
 
-## To run in dev mode:
-from backend/src:<br/>
-flask run --reload --debugger --host=0.0.0.0<br><br/> (windws without --reload)
+On windows:
+```
+flask run --reload --debugger --host=0.0.0.0
+```
+On all others:
+```
+flask run --debugger --host=0.0.0.0
+```
 
-from frontend/:<br/>
-npm run dev -- --hot --host 0.0.0.0 (works in windows)
+## Running the frontend server
+Navigate to /frontend/
+```
+npm run dev -- --hot --host 0.0.0.0
+```
 
-## Copying the recipe/restaurant databases to Google Drive
+## Database setup
 
-### Recipes
-In psql as webserver user:<br/>
-copy (select recipe_meals.date as "Date", cookbooks.name as "Cookbook", recipes.name as "Recipe", ROUND(CAST((recipe_meals.user_1_rating + recipe_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", recipe_meals.user_1_rating as "Miriam's Rating", recipe_meals.user_2_rating as "James' Rating", recipes.category as "Category", recipes.notes as "Notes", recipe_meals.user_1_comments as "Miriam's Comments", recipe_meals.user_2_comments as "James' Comments", cookbooks.notes as "Cookbook Notes" from cookbooks,recipes,recipe_meals where recipes.parent_id = cookbooks.id and recipe_meals.parent_id = recipes.id) to '/home/webserver/Recipe Ratings.csv' with (format csv,header, delimiter ',');
-
-To copy to the mac:<br/>
-scp webserver@192.168.86.100:"/home/webserver/Recipe\ Ratings.csv" .
-
-### Restaurants
-
-In psql as webserver user:<br/>
-copy (select dish_meals.date as "Date", cities.name as "City", restaurants.name as "Restaurant", dishes.name as "Dish", ROUND(CAST((dish_meals.user_1_rating + dish_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", dish_meals.user_1_rating as "Miriam's Rating", dish_meals.user_2_rating as "James' Rating", dishes.category as "Dish Category", restaurants.category as "Restaurant Category", dishes.notes as "Notes", dish_meals.user_1_comments as "Miriam's Comments", dish_meals.user_2_comments as "James' Comments", restaurants.address as "Address", cities.state as "State", cities.country as "Country", restaurants.notes as "Restaurant Notes" from cities,restaurants,dishes,dish_meals where restaurants.parent_id = cities.id and dishes.parent_id = restaurants.id and dish_meals.parent_id = dishes.id) to '/home/webserver/Restaurant Ratings.csv' with (format csv,header, delimiter ',');
-
-To copy to the mac:<br/>
-scp webserver@192.168.86.100:"/home/webserver/Restaurant\ Ratings.csv" .
-
-## Database configuration
-
-# The table orders by app are:
-# users
-# current_documents
-# hobby_tracker
-# codenames
-# recipes
-# restaurants
-# pantry
-
+Copy the code below into the database cmd line to set up the database. 
+```
 drop table users cascade;
 drop table cookbooks cascade;
 drop table recipes cascade;
@@ -332,3 +319,22 @@ create table lotr_most_recent_deck (
   player varchar(50) references users primary key,
   xml text
 );
+
+```
+## [Optional] Copying the recipe/restaurant databases to Google Drive
+This generates a spreadsheet with the entries in the recipes and restaurants databases.<br/><br/>
+
+For Recipes: Run the following command in psql as the webserver user:
+```
+copy (select recipe_meals.date as "Date", cookbooks.name as "Cookbook", recipes.name as "Recipe", ROUND(CAST((recipe_meals.user_1_rating + recipe_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", recipe_meals.user_1_rating as "Miriam's Rating", recipe_meals.user_2_rating as "James' Rating", recipes.category as "Category", recipes.notes as "Notes", recipe_meals.user_1_comments as "Miriam's Comments", recipe_meals.user_2_comments as "James' Comments", cookbooks.notes as "Cookbook Notes" from cookbooks,recipes,recipe_meals where recipes.parent_id = cookbooks.id and recipe_meals.parent_id = recipes.id) to '/home/webserver/Recipe Ratings.csv' with (format csv,header, delimiter ',');
+scp webserver@192.168.86.100:"/home/webserver/Recipe\ Ratings.csv" .
+```
+
+For Restaurants: Run the following command in psql as the webserver user:
+```
+copy (select dish_meals.date as "Date", cities.name as "City", restaurants.name as "Restaurant", dishes.name as "Dish", ROUND(CAST((dish_meals.user_1_rating + dish_meals.user_2_rating)/2 as numeric), 2) as "Average Rating", dish_meals.user_1_rating as "Miriam's Rating", dish_meals.user_2_rating as "James' Rating", dishes.category as "Dish Category", restaurants.category as "Restaurant Category", dishes.notes as "Notes", dish_meals.user_1_comments as "Miriam's Comments", dish_meals.user_2_comments as "James' Comments", restaurants.address as "Address", cities.state as "State", cities.country as "Country", restaurants.notes as "Restaurant Notes" from cities,restaurants,dishes,dish_meals where restaurants.parent_id = cities.id and dishes.parent_id = restaurants.id and dish_meals.parent_id = dishes.id) to '/home/webserver/Restaurant Ratings.csv' with (format csv,header, delimiter ',');
+scp webserver@192.168.86.100:"/home/webserver/Restaurant\ Ratings.csv" .
+```
+
+## [Optional] How to back up and restore the database in windows
+https://stackoverflow.com/questions/28048412/how-to-backup-restore-postgresql-database-in-windows7

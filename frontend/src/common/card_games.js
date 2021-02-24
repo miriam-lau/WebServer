@@ -159,10 +159,6 @@ function defaultPlayerToInvite (component) {
     return 'Miriam'
   } else if (username === 'Miriam') {
     return 'James'
-  } else if (username === 'Angeline') {
-    return 'Sujinda'
-  } else if (username === 'Sujinda') {
-    return 'Angeline'
   }
   return ''
 }
